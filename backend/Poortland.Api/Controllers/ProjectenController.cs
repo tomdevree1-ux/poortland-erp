@@ -1,0 +1,64 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Poortland.Api.Data;
+
+namespace Poortland.Api.Controllers;
+
+[ApiController]
+[Route("api/v1/projecten")]
+[Authorize]
+public class ProjectenController(PoortlandDbContext db) : ControllerBase
+{
+    // FR-006: dossieroverzicht met zoeken en filteren (TS-06 sectie 3).
+    [HttpGet]
+    public async Task<IActionResult> Lijst([FromQuery] OrderStatus? status, [FromQuery] string? zoek)
+    {
+        var query = db.Projecten.AsNoTracking()
+            .Include(p => p.Klant)
+            .Where(p => p.VerwijderdOp == null);
+        if (status is { } s) query = query.Where(p => p.Status == s);
+        if (!string.IsNullOrWhiteSpace(zoek))
+        {
+            var patroon = $"%{zoek}%";
+            query = query.Where(p => EF.Functions.ILike(p.Werfadres, patroon)
+                || EF.Functions.ILike(p.Omschrijving ?? "", patroon)
+                || EF.Functions.ILike(p.Klant!.Naam, patroon));
+        }
+        var projecten = await query.OrderByDescending(p => p.AangemaaktOp).Take(200)
+            .Select(p => new
+            {
+                p.Id, p.Werfadres, p.Omschrijving, p.Status, p.GarantieMaanden, p.VerwachteOpleverdatum,
+                p.AangemaaktOp,
+                Klant = new { p.Klant!.Id, p.Klant.Naam, p.Klant.Gemeente },
+                OfferteWaarde = p.Offertes.Where(o => o.VerwijderdOp == null)
+                    .OrderByDescending(o => o.VersieOfferte)
+                    .Select(o => (decimal?)o.TotaalExclBtw).FirstOrDefault()
+            })
+            .ToListAsync();
+        return Ok(projecten);
+    }
+
+    // FR-006: het volledige dossier op 1 scherm (TS-06 sectie 2).
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> Detail(Guid id)
+    {
+        var project = await db.Projecten.AsNoTracking()
+            .Include(p => p.Klant)
+            .FirstOrDefaultAsync(p => p.Id == id && p.VerwijderdOp == null);
+        if (project is null) return NotFound();
+        var offertes = await db.Offertes.AsNoTracking()
+            .Where(o => o.ProjectId == id && o.VerwijderdOp == null)
+            .OrderByDescending(o => o.VersieOfferte).ToListAsync();
+        var order = await db.Orders.AsNoTracking()
+            .Where(o => offertes.Select(x => x.Id).Contains(o.OfferteId) && o.VerwijderdOp == null)
+            .FirstOrDefaultAsync();
+        var communicatie = await db.Communicaties.AsNoTracking()
+            .Where(c => c.ProjectId == id && c.VerwijderdOp == null)
+            .OrderByDescending(c => c.VerzondenOp).Take(50).ToListAsync();
+        var contactmomenten = await db.Contactmomenten.AsNoTracking()
+            .Where(c => c.ProjectId == id && c.VerwijderdOp == null)
+            .OrderByDescending(c => c.Datum).Take(50).ToListAsync();
+        return Ok(new { project, offertes, order, communicatie, contactmomenten });
+    }
+}

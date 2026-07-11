@@ -1,0 +1,44 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Build
+        run: dotnet build backend/Poortland.Api -c Release
+      - name: Unit tests (xUnit)
+        run: dotnet test backend/Poortland.Tests -c Release
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Installeer
+        working-directory: frontend
+        run: npm ci || npm install
+      - name: Typecheck en build
+        working-directory: frontend
+        env:
+          VITE_SUPABASE_URL: https://ci.supabase.co
+          VITE_SUPABASE_ANON_KEY: ci
+        run: npm run build
+
+  secretscan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Zoek naar gelekte sleutels
+        run: |
+          ! grep -rn --include='*.cs' --include='*.ts' --include='*.tsx' --include='*.json' \
+            -E 'sb_secret_|service_role' --exclude-dir=node_modules . || (echo 'Mogelijke sleutel in de repo' && exit 1)
