@@ -10,3 +10,4 @@ obj/
 /tmp/
 test-results/
 playwright-report/
+appsettings.Development.json
