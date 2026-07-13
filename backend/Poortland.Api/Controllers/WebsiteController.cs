@@ -16,7 +16,8 @@ public class WebsiteController(PoortlandDbContext db, ClaimsContext claims,
     WebsiteContentService service, SupabaseOpslag opslag) : ControllerBase
 {
     public record MediaWijziging(string? Titel, string? AltTekst, string? Categorie, int? Volgnummer,
-        bool? PersonenInBeeld, bool? ToestemmingBevestigd);
+        bool? PersonenInBeeld, bool? ToestemmingBevestigd,
+        string? ProductSoort, string? PoortType, string? PoortUitvoering);
     public record PopupInvoer(string Titel, string BodyTekst, DateOnly ActiefVan, DateOnly ActiefTot);
 
     [HttpGet("media")]
@@ -33,6 +34,7 @@ public class WebsiteController(PoortlandDbContext db, ClaimsContext claims,
                 ? opslag.PubliekeUrl("website_publiek", m.BestandPadThumb)
                 : await opslag.SignedUrl("website_origineel", $"{m.Id}/thumb.webp");
             resultaat.Add(new { m.Id, m.Titel, m.AltTekst, m.Categorie, m.Volgnummer, m.Status,
+                m.ProductSoort, m.PoortType, m.PoortUitvoering,
                 m.Breedte, m.Hoogte, m.PersonenInBeeld, m.ToestemmingBevestigd, m.GepubliceerdOp, voorbeeld });
         }
         return Ok(resultaat);
@@ -41,10 +43,13 @@ public class WebsiteController(PoortlandDbContext db, ClaimsContext claims,
     [HttpPost("media")]
     [VereistRol("verkoop")]
     [RequestSizeLimit(20 * 1024 * 1024)]
-    public async Task<IActionResult> Upload([FromForm] IFormFile bestand, [FromForm] string titel, [FromForm] string? categorie)
+    public async Task<IActionResult> Upload([FromForm] IFormFile bestand, [FromForm] string titel,
+        [FromForm] string? categorie, [FromForm] string? productSoort,
+        [FromForm] string? poortType, [FromForm] string? poortUitvoering)
     {
         await using var stream = bestand.OpenReadStream();
-        var media = await service.Upload(stream, bestand.FileName, bestand.ContentType, titel, categorie);
+        var media = await service.Upload(stream, bestand.FileName, bestand.ContentType, titel,
+            categorie, productSoort, poortType, poortUitvoering);
         return Ok(media);
     }
 
@@ -60,6 +65,10 @@ public class WebsiteController(PoortlandDbContext db, ClaimsContext claims,
         if (invoer.Volgnummer is { } v) media.Volgnummer = v;
         if (invoer.PersonenInBeeld is { } p) media.PersonenInBeeld = p;
         if (invoer.ToestemmingBevestigd is { } t) media.ToestemmingBevestigd = t;
+        if (invoer.ProductSoort is not null) media.ProductSoort = invoer.ProductSoort;
+        if (invoer.PoortType is not null) media.PoortType = invoer.PoortType == "" ? null : invoer.PoortType;
+        if (invoer.PoortUitvoering is not null) media.PoortUitvoering = invoer.PoortUitvoering == "" ? null : invoer.PoortUitvoering;
+        if (media.ProductSoort == "overkapping") { media.PoortType = null; media.PoortUitvoering = null; }
         await db.SaveChangesAsync();
         if (media.Status == WebsiteContentStatus.Gepubliceerd) await service.HerbouwContentJson();
         return Ok(media);

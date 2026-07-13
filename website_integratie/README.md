@@ -16,7 +16,12 @@ Zet op de gewenste plek (galerijpagina, footermenu, waar dan ook):
 
     <div data-poortland-galerij></div>
 
-Optioneel per categorie: `<div data-poortland-galerij data-categorie="realisaties"></div>`.
+Weergaven en filters: `data-weergave="strook"` (horizontale scrol voor
+productpagina's), `data-weergave="banner"` (lopende band op de homepagina),
+`data-filters="true"` (realisaties met filterchips) en de filters
+`data-product-soort` (poort of overkapping), `data-poort-type` (hout, metaal of
+hout_metaal) en `data-uitvoering` (draaipoort of schuifpoort). Voorbeelden staan
+in Poortland_Website_ERP_Koppeling.md in de projectmap.
 De popup verschijnt automatisch wanneer er in het ERP een gepubliceerde popup
 binnen de actieve periode staat, hoogstens 1 keer per bezoeker per 7 dagen,
 sluitbaar met Escape. Publiceren en depubliceren in het ERP werkt binnen 5 minuten

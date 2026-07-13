@@ -209,6 +209,9 @@ public class WebsiteMedia : BasisEntiteit
     public string Titel { get; set; } = "";
     public string? AltTekst { get; set; }
     public string? Categorie { get; set; }
+    public string? ProductSoort { get; set; }
+    public string? PoortType { get; set; }
+    public string? PoortUitvoering { get; set; }
     public int Volgnummer { get; set; }
     public WebsiteContentStatus Status { get; set; } = WebsiteContentStatus.Concept;
     public string BestandPadOrigineel { get; set; } = "";

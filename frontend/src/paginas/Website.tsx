@@ -4,7 +4,7 @@ import { clsx } from 'clsx'
 import { api } from '../lib/api'
 import { datum } from '../lib/formaat'
 import type { Media, Popup } from '../lib/types'
-import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Paneel, PotloodKnop, TekstVak } from '../ui'
+import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Paneel, PotloodKnop, Selecteer, TekstVak } from '../ui'
 
 /* TS-17 Websitebeheer volgens de platform UX regels: leesmodus eerst,
    bewerken via het potlood met Opslaan en Annuleren. */
@@ -27,6 +27,10 @@ export default function Website() {
   )
 }
 
+const productLabels: Record<string, string> = { poort: 'Poort', overkapping: 'Overkapping' }
+const poortTypeLabels: Record<string, string> = { hout: 'Houten poort', metaal: 'Metalen poort', hout_metaal: 'Combinatie hout en metaal' }
+const uitvoeringLabels: Record<string, string> = { draaipoort: 'Draaipoort', schuifpoort: 'Schuifpoort' }
+
 function FotoTab() {
   const qc = useQueryClient()
   const bestandRef = useRef<HTMLInputElement>(null)
@@ -34,14 +38,26 @@ function FotoTab() {
   const { data: media } = useQuery({ queryKey: ['media'], queryFn: () => api.get<Media[]>('/website/media') })
   const ververs = () => { zetFout(undefined); qc.invalidateQueries({ queryKey: ['media'] }) }
 
+  const [uploadOpen, zetUploadOpen] = useState(false)
+  const leegUpload = { bestand: null as File | null, titel: '', productSoort: '', poortType: '', poortUitvoering: '' }
+  const [uploadVorm, zetUploadVorm] = useState(leegUpload)
+  function openUpload() { zetUploadVorm(leegUpload); zetUploadOpen(true) }
   const upload = useMutation({
-    mutationFn: async (bestand: File) => {
+    mutationFn: async () => {
+      const v = uploadVorm
+      if (!v.bestand) throw new Error('Kies eerst een foto.')
       const form = new FormData()
-      form.append('bestand', bestand)
-      form.append('titel', bestand.name.replace(/\.[^.]+$/, ''))
+      form.append('bestand', v.bestand)
+      form.append('titel', v.titel || v.bestand.name.replace(/\.[^.]+$/, ''))
+      form.append('productSoort', v.productSoort)
+      if (v.productSoort === 'poort') {
+        form.append('poortType', v.poortType)
+        form.append('poortUitvoering', v.poortUitvoering)
+      }
       return api.formulier<Media>('/website/media', form)
     },
-    onSuccess: ververs, onError: f => zetFout((f as Error).message)
+    onSuccess: () => { ververs(); zetUploadOpen(false) },
+    onError: f => zetFout((f as Error).message)
   })
   const publiceer = useMutation({
     mutationFn: (id: string) => api.post<Media>(`/website/media/${id}/publiceer`),
@@ -53,18 +69,23 @@ function FotoTab() {
   })
 
   const [bewerkFoto, zetBewerkFoto] = useState<Media | null>(null)
-  const [fotoVorm, zetFotoVorm] = useState<{ titel: string; altTekst: string; categorie: string
+  const [fotoVorm, zetFotoVorm] = useState<{ titel: string; altTekst: string
+    productSoort: string; poortType: string; poortUitvoering: string
     personenInBeeld: boolean; toestemmingBevestigd: boolean } | null>(null)
   function openBewerk(m: Media) {
     zetBewerkFoto(m)
     zetFotoVorm({
-      titel: m.titel, altTekst: m.altTekst ?? '', categorie: m.categorie ?? '',
+      titel: m.titel, altTekst: m.altTekst ?? '',
+      productSoort: m.productSoort ?? '', poortType: m.poortType ?? '',
+      poortUitvoering: m.poortUitvoering ?? '',
       personenInBeeld: m.personenInBeeld, toestemmingBevestigd: m.toestemmingBevestigd
     })
   }
   const bewaarFoto = useMutation({
     mutationFn: () => api.patch<Media>(`/website/media/${bewerkFoto!.id}`, {
-      titel: fotoVorm!.titel, altTekst: fotoVorm!.altTekst, categorie: fotoVorm!.categorie || null,
+      titel: fotoVorm!.titel, altTekst: fotoVorm!.altTekst,
+      productSoort: fotoVorm!.productSoort || null,
+      poortType: fotoVorm!.poortType, poortUitvoering: fotoVorm!.poortUitvoering,
       personenInBeeld: fotoVorm!.personenInBeeld, toestemmingBevestigd: fotoVorm!.toestemmingBevestigd
     }),
     onSuccess: () => { ververs(); zetBewerkFoto(null) },
@@ -74,12 +95,8 @@ function FotoTab() {
   return (
     <>
       <div className="mb-4 flex items-center justify-between">
-        <p className="text-sm text-inkt-muted">Gepubliceerde foto's verschijnen in de galerij van de site. EXIF gegevens worden automatisch gestript.</p>
-        <input ref={bestandRef} type="file" accept="image/jpeg,image/png,image/webp,image/heic" hidden
-          onChange={e => e.target.files?.[0] && upload.mutate(e.target.files[0])} />
-        <Knop variant="primair" onClick={() => bestandRef.current?.click()} disabled={upload.isPending}>
-          {upload.isPending ? 'Bezig met verwerken…' : 'Foto uploaden ↗'}
-        </Knop>
+        <p className="text-sm text-inkt-muted">Gepubliceerde foto's verschijnen op de site volgens hun indeling: productpagina's tonen enkel het eigen poorttype, realisaties tonen alles met filters en de banner mengt alles. EXIF gegevens worden automatisch gestript.</p>
+        <Knop variant="primair" onClick={openUpload}>Foto uploaden ↗</Knop>
       </div>
       {fout && <div className="mb-4"><Melding soort="fout">{fout}</Melding></div>}
       <div className="grid grid-cols-3 gap-5">
@@ -94,8 +111,11 @@ function FotoTab() {
                 <Badge status={m.status} />
               </div>
               <dl className="text-xs text-inkt-muted">
+                <div className="flex justify-between py-0.5"><dt>Product</dt>
+                  <dd>{m.productSoort ? (m.productSoort === 'poort'
+                    ? [poortTypeLabels[m.poortType ?? ''] ?? 'Poort', uitvoeringLabels[m.poortUitvoering ?? '']].filter(Boolean).join(' · ')
+                    : 'Overkapping') : '—'}</dd></div>
                 <div className="flex justify-between py-0.5"><dt>Alt tekst</dt><dd className="max-w-40 truncate text-right">{m.altTekst || '—'}</dd></div>
-                <div className="flex justify-between py-0.5"><dt>Categorie</dt><dd>{m.categorie || '—'}</dd></div>
                 {m.personenInBeeld && <div className="flex justify-between py-0.5"><dt>Personen in beeld</dt>
                   <dd>{m.toestemmingBevestigd ? 'toestemming ok' : 'toestemming nodig'}</dd></div>}
               </dl>
@@ -111,14 +131,80 @@ function FotoTab() {
       </div>
       {media?.length === 0 && <p className="text-sm text-inkt-muted">Nog geen foto's.</p>}
 
+      <Modaal open={uploadOpen} titel="Foto uploaden" onSluit={() => zetUploadOpen(false)}>
+        <form className="space-y-4" onSubmit={e => { e.preventDefault(); upload.mutate() }}>
+          <input ref={bestandRef} type="file" accept="image/jpeg,image/png,image/webp,image/heic" hidden
+            onChange={e => {
+              const bestand = e.target.files?.[0] ?? null
+              zetUploadVorm(v => ({ ...v, bestand, titel: v.titel || (bestand ? bestand.name.replace(/\.[^.]+$/, '') : '') }))
+            }} />
+          <div className="flex items-center gap-3">
+            <Knop type="button" variant="secundair" onClick={() => bestandRef.current?.click()}>Kies foto</Knop>
+            <span className="truncate text-sm text-inkt-muted">{uploadVorm.bestand?.name ?? 'Nog geen foto gekozen'}</span>
+          </div>
+          <Invoer label="Titel" value={uploadVorm.titel} onChange={e => zetUploadVorm({ ...uploadVorm, titel: e.target.value })} required />
+          <Selecteer label="Product" value={uploadVorm.productSoort}
+            onChange={e => zetUploadVorm({ ...uploadVorm, productSoort: e.target.value, poortType: '', poortUitvoering: '' })}>
+            <option value="">Maak een keuze</option>
+            <option value="poort">Poort</option>
+            <option value="overkapping">Overkapping</option>
+          </Selecteer>
+          {uploadVorm.productSoort === 'poort' && (
+            <div className="grid grid-cols-2 gap-4">
+              <Selecteer label="Poorttype" value={uploadVorm.poortType}
+                onChange={e => zetUploadVorm({ ...uploadVorm, poortType: e.target.value })}>
+                <option value="">Maak een keuze</option>
+                <option value="hout">Houten poort</option>
+                <option value="metaal">Metalen poort</option>
+                <option value="hout_metaal">Combinatie hout en metaal</option>
+              </Selecteer>
+              <Selecteer label="Uitvoering" value={uploadVorm.poortUitvoering}
+                onChange={e => zetUploadVorm({ ...uploadVorm, poortUitvoering: e.target.value })}>
+                <option value="">Maak een keuze</option>
+                <option value="draaipoort">Draaipoort</option>
+                <option value="schuifpoort">Schuifpoort</option>
+              </Selecteer>
+            </div>
+          )}
+          <div className="flex justify-end gap-2">
+            <Knop type="button" variant="ghost" onClick={() => zetUploadOpen(false)}>Annuleren</Knop>
+            <Knop variant="primair" disabled={upload.isPending || !uploadVorm.bestand || !uploadVorm.productSoort
+              || (uploadVorm.productSoort === 'poort' && (!uploadVorm.poortType || !uploadVorm.poortUitvoering))}>
+              {upload.isPending ? 'Bezig met verwerken…' : 'Uploaden'}
+            </Knop>
+          </div>
+        </form>
+      </Modaal>
+
       <Modaal open={!!bewerkFoto} titel="Foto bewerken" onSluit={() => zetBewerkFoto(null)}>
         {fotoVorm && (
           <form className="space-y-4" onSubmit={e => { e.preventDefault(); bewaarFoto.mutate() }}>
             <Invoer label="Titel" value={fotoVorm.titel} onChange={e => zetFotoVorm({ ...fotoVorm, titel: e.target.value })} required />
             <Invoer label="Alt tekst" placeholder="Beschrijf de foto voor de bezoeker"
               value={fotoVorm.altTekst} onChange={e => zetFotoVorm({ ...fotoVorm, altTekst: e.target.value })} />
-            <Invoer label="Categorie" optioneel placeholder="bijvoorbeeld realisaties"
-              value={fotoVorm.categorie} onChange={e => zetFotoVorm({ ...fotoVorm, categorie: e.target.value })} />
+            <Selecteer label="Product" value={fotoVorm.productSoort}
+              onChange={e => zetFotoVorm({ ...fotoVorm, productSoort: e.target.value, poortType: '', poortUitvoering: '' })}>
+              <option value="">Maak een keuze</option>
+              <option value="poort">Poort</option>
+              <option value="overkapping">Overkapping</option>
+            </Selecteer>
+            {fotoVorm.productSoort === 'poort' && (
+              <div className="grid grid-cols-2 gap-4">
+                <Selecteer label="Poorttype" value={fotoVorm.poortType}
+                  onChange={e => zetFotoVorm({ ...fotoVorm, poortType: e.target.value })}>
+                  <option value="">Maak een keuze</option>
+                  <option value="hout">Houten poort</option>
+                  <option value="metaal">Metalen poort</option>
+                  <option value="hout_metaal">Combinatie hout en metaal</option>
+                </Selecteer>
+                <Selecteer label="Uitvoering" value={fotoVorm.poortUitvoering}
+                  onChange={e => zetFotoVorm({ ...fotoVorm, poortUitvoering: e.target.value })}>
+                  <option value="">Maak een keuze</option>
+                  <option value="draaipoort">Draaipoort</option>
+                  <option value="schuifpoort">Schuifpoort</option>
+                </Selecteer>
+              </div>
+            )}
             <label className="flex items-center gap-2 text-sm text-inkt-body">
               <input type="checkbox" checked={fotoVorm.personenInBeeld}
                 onChange={e => zetFotoVorm({ ...fotoVorm, personenInBeeld: e.target.checked })} />

@@ -19,10 +19,25 @@ public class WebsiteContentService(PoortlandDbContext db, ClaimsContext claims, 
     static readonly string[] ToegelatenTypes = ["image/jpeg", "image/png", "image/webp", "image/heic"];
     const int MaxBytes = 15 * 1024 * 1024;
 
-    public async Task<WebsiteMedia> Upload(Stream bestand, string bestandsnaam, string contentType, string titel, string? categorie)
+    static readonly string[] ProductSoorten = ["poort", "overkapping"];
+    static readonly string[] PoortTypes = ["hout", "metaal", "hout_metaal"];
+    static readonly string[] Uitvoeringen = ["draaipoort", "schuifpoort"];
+
+    public async Task<WebsiteMedia> Upload(Stream bestand, string bestandsnaam, string contentType,
+        string titel, string? categorie, string? productSoort, string? poortType, string? poortUitvoering)
     {
         if (!ToegelatenTypes.Contains(contentType))
             throw new DomeinFout("Toegelaten formaten: jpeg, png, webp of heic.");
+        if (productSoort is null || !ProductSoorten.Contains(productSoort))
+            throw new DomeinFout("Kies of de foto een poort of een overkapping toont.");
+        if (productSoort == "poort")
+        {
+            if (poortType is null || !PoortTypes.Contains(poortType))
+                throw new DomeinFout("Kies het poorttype: hout, metaal of de combinatie.");
+            if (poortUitvoering is null || !Uitvoeringen.Contains(poortUitvoering))
+                throw new DomeinFout("Kies de uitvoering: draaipoort of schuifpoort.");
+        }
+        else { poortType = null; poortUitvoering = null; }
         using var geheugen = new MemoryStream();
         await bestand.CopyToAsync(geheugen);
         if (geheugen.Length > MaxBytes) throw new DomeinFout("Maximaal 15 MB per foto.");
@@ -49,6 +64,7 @@ public class WebsiteContentService(PoortlandDbContext db, ClaimsContext claims, 
         var media = new WebsiteMedia
         {
             Id = id, Titel = titel, Categorie = categorie,
+            ProductSoort = productSoort, PoortType = poortType, PoortUitvoering = poortUitvoering,
             Volgnummer = (await db.WebsiteMedias.MaxAsync(m => (int?)m.Volgnummer) ?? 0) + 1,
             BestandPadOrigineel = padOrigineel,
             Breedte = web.breedte, Hoogte = web.hoogte,
@@ -138,7 +154,9 @@ public class WebsiteContentService(PoortlandDbContext db, ClaimsContext claims, 
             {
                 url = opslag.PubliekeUrl(BucketPubliek, m.BestandPadWeb!),
                 thumb = opslag.PubliekeUrl(BucketPubliek, m.BestandPadThumb!),
-                alt = m.AltTekst, categorie = m.Categorie, breedte = m.Breedte, hoogte = m.Hoogte
+                alt = m.AltTekst, categorie = m.Categorie,
+                productSoort = m.ProductSoort, poortType = m.PoortType, uitvoering = m.PoortUitvoering,
+                breedte = m.Breedte, hoogte = m.Hoogte
             })
             .ToListAsync();
         var vandaag = DateOnly.FromDateTime(DateTime.Today);
