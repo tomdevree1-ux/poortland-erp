@@ -16,6 +16,7 @@ export interface Lead {
   omgezetProjectId?: string; aangemaaktOp: string
   typeAanvraag?: string; gemeente?: string; gewensteTiming?: string
   privacyAkkoord?: boolean; privacyAkkoordOp?: string; wizardGegevens?: string
+  gearchiveerdOp?: string
   fotos?: LeadFoto[]
 }
 export interface Klant {

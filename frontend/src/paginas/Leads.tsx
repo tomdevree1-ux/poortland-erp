@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import { api } from '../lib/api'
 import { datum, leeg } from '../lib/formaat'
-import type { Lead, MedewerkerKeuze } from '../lib/types'
+import type { Lead } from '../lib/types'
 import { Badge, Invoer, Knop, LegeStaat, Modaal, PaginaKop, Selecteer, TekstVak, Th, Td } from '../ui'
 
 const kanaalTekst: Record<string, string> = {
@@ -23,20 +23,18 @@ export default function Leads() {
   const qc = useQueryClient()
   const [status, zetStatus] = useState('')
   const [zoek, zetZoek] = useState('')
+  const [weergave, zetWeergave] = useState('actief')
   const [nieuwOpen, zetNieuwOpen] = useState(false)
   const { data: leads } = useQuery({
-    queryKey: ['leads', status, zoek],
+    queryKey: ['leads', status, zoek, weergave],
     queryFn: () => api.get<Lead[]>(`/leads?${new URLSearchParams({
-      ...(status ? { status } : {}), ...(zoek ? { zoek } : {}) })}`)
+      ...(status ? { status } : {}), ...(zoek ? { zoek } : {}),
+      ...(weergave === 'archief' ? { archief: 'true' } : {}) })}`)
   })
-  const { data: medewerkers } = useQuery({
-    queryKey: ['medewerkers-overzicht'],
-    queryFn: () => api.get<MedewerkerKeuze[]>('/medewerkers/overzicht')
-  })
-  const [vorm, zetVorm] = useState({ kanaal: 'telefoon', naam: '', email: '', telefoon: '', eersteVraag: '', eigenaarId: '', typeAanvraag: '', gemeente: '', gewensteTiming: '' })
+  const [vorm, zetVorm] = useState({ kanaal: 'telefoon', naam: '', email: '', telefoon: '', eersteVraag: '', typeAanvraag: '', gemeente: '', gewensteTiming: '' })
   const maak = useMutation({
     mutationFn: () => api.post<Lead>('/leads', {
-      ...vorm, eigenaarId: vorm.eigenaarId || undefined,
+      ...vorm,
       typeAanvraag: vorm.typeAanvraag || undefined, gewensteTiming: vorm.gewensteTiming || undefined,
       gemeente: vorm.gemeente || undefined
     }),
@@ -54,6 +52,10 @@ export default function Leads() {
           <option value="gekwalificeerd">Gekwalificeerd</option>
           <option value="omgezet">Omgezet</option>
           <option value="verloren">Verloren</option>
+        </Selecteer>
+        <Selecteer value={weergave} onChange={e => zetWeergave(e.target.value)} className="w-36">
+          <option value="actief">Actief</option>
+          <option value="archief">Archief</option>
         </Selecteer>
         <Invoer placeholder="Zoek naam, email of vraag…" value={zoek} onChange={e => zetZoek(e.target.value)} className="flex-1" />
       </div>
@@ -81,19 +83,13 @@ export default function Leads() {
       )}
       <Modaal open={nieuwOpen} titel="Nieuwe lead" onSluit={() => zetNieuwOpen(false)}>
         <form className="space-y-4" onSubmit={e => { e.preventDefault(); maak.mutate() }}>
-          <div className="grid grid-cols-2 gap-4">
-            <Selecteer label="Kanaal" value={vorm.kanaal} onChange={e => zetVorm({ ...vorm, kanaal: e.target.value })}>
-              <option value="telefoon">Telefoon</option>
-              <option value="email">Email</option>
-              <option value="socialeMedia">Sociale media</option>
-              <option value="contactWebsite">Contact (website)</option>
-              <option value="offerteaanvraagWebsite">Offerteaanvraag (website)</option>
-            </Selecteer>
-            <Selecteer label="Eigenaar" value={vorm.eigenaarId} onChange={e => zetVorm({ ...vorm, eigenaarId: e.target.value })}>
-              <option value="">Ikzelf</option>
-              {medewerkers?.map(m => <option key={m.id} value={m.id}>{m.naam}</option>)}
-            </Selecteer>
-          </div>
+          <Selecteer label="Kanaal" value={vorm.kanaal} onChange={e => zetVorm({ ...vorm, kanaal: e.target.value })}>
+            <option value="telefoon">Telefoon</option>
+            <option value="email">Email</option>
+            <option value="socialeMedia">Sociale media</option>
+            <option value="contactWebsite">Contact (website)</option>
+            <option value="offerteaanvraagWebsite">Offerteaanvraag (website)</option>
+          </Selecteer>
           <Invoer label="Naam" value={vorm.naam} onChange={e => zetVorm({ ...vorm, naam: e.target.value })} required />
           <div className="grid grid-cols-2 gap-4">
             <Invoer label="Email" optioneel type="email" value={vorm.email} onChange={e => zetVorm({ ...vorm, email: e.target.value })} />

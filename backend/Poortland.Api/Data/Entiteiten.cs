@@ -49,6 +49,7 @@ public class Contactpersoon : BasisEntiteit
 {
     public Guid KlantId { get; set; }
     public string Naam { get; set; } = "";
+    public string? Voornaam { get; set; }
     public string? Functie { get; set; }
     public string? Email { get; set; }
     public string? Telefoon { get; set; }
@@ -84,6 +85,7 @@ public class Lead : BasisEntiteit
     public bool PrivacyAkkoord { get; set; }
     public DateTimeOffset? PrivacyAkkoordOp { get; set; }
     public string? WizardGegevens { get; set; }
+    public DateTimeOffset? GearchiveerdOp { get; set; }
     public List<LeadBijlage> Bijlagen { get; set; } = new();
 }
 

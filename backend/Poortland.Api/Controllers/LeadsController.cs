@@ -28,9 +28,10 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
 
     [HttpGet]
     public async Task<IActionResult> Lijst([FromQuery] LeadStatus? status, [FromQuery] LeadKanaal? kanaal,
-        [FromQuery] Guid? eigenaar, [FromQuery] string? zoek)
+        [FromQuery] Guid? eigenaar, [FromQuery] string? zoek, [FromQuery] bool archief = false)
     {
         var query = db.Leads.AsNoTracking().Where(l => l.VerwijderdOp == null);
+        query = archief ? query.Where(l => l.GearchiveerdOp != null) : query.Where(l => l.GearchiveerdOp == null);
         if (status is { } s) query = query.Where(l => l.Status == s);
         if (kanaal is { } k) query = query.Where(l => l.Kanaal == k);
         if (eigenaar is { } e) query = query.Where(l => l.EigenaarId == e);
@@ -62,7 +63,7 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
             lead.Naam, lead.Email, lead.Telefoon, lead.EersteVraag, lead.Prijsindicatie,
             lead.VerliesReden, lead.OmgezetProjectId, lead.TypeAanvraag, lead.Gemeente,
             lead.GewensteTiming, lead.PrivacyAkkoord, lead.PrivacyAkkoordOp, lead.WizardGegevens,
-            lead.AangemaaktOp, fotos
+            lead.GearchiveerdOp, lead.AangemaaktOp, fotos
         });
     }
 
@@ -199,6 +200,41 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
         bijlage.VerwijderdOp = DateTimeOffset.UtcNow; // soft delete, opruiming volgt retentie
         await db.SaveChangesAsync();
         return Ok(new { bijlage.Id, verwijderd = true });
+    }
+
+    // Archiveren haalt de lead uit de inbox zonder het statusmodel te raken.
+    [HttpPost("{id:guid}/archiveer")]
+    [VereistRol("verkoop")]
+    public async Task<IActionResult> Archiveer(Guid id)
+    {
+        var lead = await db.Leads.FirstOrDefaultAsync(l => l.Id == id && l.VerwijderdOp == null);
+        if (lead is null) return NotFound();
+        lead.GearchiveerdOp = DateTimeOffset.UtcNow;
+        await db.SaveChangesAsync();
+        return Ok(new { lead.Id, gearchiveerd = true });
+    }
+
+    [HttpPost("{id:guid}/herstel")]
+    [VereistRol("verkoop")]
+    public async Task<IActionResult> Herstel(Guid id)
+    {
+        var lead = await db.Leads.FirstOrDefaultAsync(l => l.Id == id && l.VerwijderdOp == null);
+        if (lead is null) return NotFound();
+        lead.GearchiveerdOp = null;
+        await db.SaveChangesAsync();
+        return Ok(new { lead.Id, gearchiveerd = false });
+    }
+
+    // Verwijderen is aan de beheerder (rollenmatrix: lead D) en blijft soft delete.
+    [HttpDelete("{id:guid}")]
+    [VereistRol("beheerder")]
+    public async Task<IActionResult> Verwijder(Guid id)
+    {
+        var lead = await db.Leads.FirstOrDefaultAsync(l => l.Id == id && l.VerwijderdOp == null);
+        if (lead is null) return NotFound();
+        lead.VerwijderdOp = DateTimeOffset.UtcNow;
+        await db.SaveChangesAsync();
+        return Ok(new { lead.Id, verwijderd = true });
     }
 
     [HttpPost("{id:guid}/kwalificeer")]

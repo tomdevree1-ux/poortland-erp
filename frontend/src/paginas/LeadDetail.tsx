@@ -29,6 +29,13 @@ export default function LeadDetail() {
   const { data: lead } = useQuery({ queryKey: ['lead', leadId], queryFn: () => api.get<Lead>(`/leads/${leadId}`) })
   const [omzetOpen, zetOmzetOpen] = useState(false)
   const [verliesOpen, zetVerliesOpen] = useState(false)
+  const [verwijderOpen, zetVerwijderOpen] = useState(false)
+  const { data: mij } = useQuery({
+    queryKey: ['mij'],
+    queryFn: () => api.get<{ rollen: string[] }>('/medewerkers/mij'),
+    staleTime: 5 * 60 * 1000
+  })
+  const isBeheerder = mij?.rollen.includes('beheerder') ?? false
   const [fout, zetFout] = useState<string>()
   const ververs = () => { zetFout(undefined); qc.invalidateQueries({ queryKey: ['lead', leadId] }) }
   const bewerkbaar = lead?.status === 'nieuw' || lead?.status === 'gekwalificeerd'
@@ -86,6 +93,15 @@ export default function LeadDetail() {
     onSuccess: () => { ververs(); zetVerliesOpen(false) },
     onError: f => zetFout((f as Error).message)
   })
+  const archiveer = useMutation({
+    mutationFn: (herstel: boolean) => api.post(`/leads/${leadId}/${herstel ? 'herstel' : 'archiveer'}`),
+    onSuccess: ververs, onError: f => zetFout((f as Error).message)
+  })
+  const verwijderen = useMutation({
+    mutationFn: () => api.del(`/leads/${leadId}`),
+    onSuccess: () => navigeer({ to: '/leads' }),
+    onError: f => zetFout((f as Error).message)
+  })
 
   if (!lead) return null
   const wizard = parseWizard(lead.wizardGegevens)
@@ -93,10 +109,17 @@ export default function LeadDetail() {
     <>
       <PaginaKop eyebrow="Verkoop · lead" titel={leeg(lead.naam ?? lead.email)}
         actie={<div className="flex gap-2">
-          {lead.status === 'nieuw' && <Knop variant="primair" onClick={() => kwalificeer.mutate()}>Kwalificeren</Knop>}
-          {lead.status === 'gekwalificeerd' && <Knop variant="primair" onClick={() => zetOmzetOpen(true)}>Omzetten naar dossier ↗</Knop>}
-          {bewerkbaar && <Knop variant="ghost" onClick={() => zetVerliesOpen(true)}>Verliezen</Knop>}
+          {!lead.gearchiveerdOp && lead.status === 'nieuw' && <Knop variant="primair" onClick={() => kwalificeer.mutate()}>Kwalificeren</Knop>}
+          {!lead.gearchiveerdOp && lead.status === 'gekwalificeerd' && <Knop variant="primair" onClick={() => zetOmzetOpen(true)}>Omzetten naar dossier ↗</Knop>}
+          {!lead.gearchiveerdOp && bewerkbaar && <Knop variant="ghost" onClick={() => zetVerliesOpen(true)}>Verliezen</Knop>}
+          <Knop variant="neutraal" onClick={() => archiveer.mutate(!!lead.gearchiveerdOp)}>
+            {lead.gearchiveerdOp ? 'Herstellen' : 'Archiveren'}
+          </Knop>
+          {isBeheerder && <Knop variant="destructief" onClick={() => zetVerwijderOpen(true)}>Verwijderen</Knop>}
         </div>} />
+      {lead.gearchiveerdOp && <div className="mb-4"><Melding soort="info">
+        Deze lead staat in het archief sinds {datum(lead.gearchiveerdOp)}. Herstel hem om verder te werken.
+      </Melding></div>}
       {fout && <div className="mb-4"><Melding soort="fout">{fout}</Melding></div>}
 
       <div className="grid grid-cols-2 gap-6">
@@ -193,6 +216,17 @@ export default function LeadDetail() {
             <Knop variant="primair" disabled={omzetten.isPending}>{omzetten.isPending ? 'Bezig…' : 'Omzetten'}</Knop>
           </div>
         </form>
+      </Modaal>
+
+      <Modaal open={verwijderOpen} titel="Lead verwijderen?" onSluit={() => zetVerwijderOpen(false)}>
+        <p className="mb-4 text-sm text-inkt-body">
+          Dit verwijdert de lead van {leeg(lead.naam ?? lead.email)} definitief uit de werking.
+          De audit trail bewaart de historiek. Deze actie kan niet ongedaan worden gemaakt.
+        </p>
+        <div className="flex justify-end gap-2">
+          <Knop type="button" variant="ghost" onClick={() => zetVerwijderOpen(false)}>Annuleren</Knop>
+          <Knop variant="destructief" disabled={verwijderen.isPending} onClick={() => verwijderen.mutate()}>Verwijderen</Knop>
+        </div>
       </Modaal>
 
       <Modaal open={verliesOpen} titel="Lead verliezen" onSluit={() => zetVerliesOpen(false)}>

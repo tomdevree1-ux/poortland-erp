@@ -9,6 +9,7 @@ namespace Poortland.Api.Controllers;
 public record KlantInvoer(KlantType Type, string Naam, string? BtwNummer, string? Straat, string? Postcode,
     string? Gemeente, string? Email, string? Telefoon, Taal Communicatietaal, string? Communicatievoorkeur);
 public record ContactmomentInvoer(Guid? ProjectId, string Type, string? Notitie);
+public record ContactpersoonInvoer(string Naam, string? Voornaam, string? Functie, string? Email, string? Telefoon);
 
 [ApiController]
 [Route("api/v1/klanten")]
@@ -73,6 +74,46 @@ public class KlantenController(PoortlandDbContext db, ClaimsContext claims) : Co
         klant.Communicatietaal = invoer.Communicatietaal; klant.Communicatievoorkeur = invoer.Communicatievoorkeur;
         await db.SaveChangesAsync();
         return Ok(klant);
+    }
+
+    // Contactpersonen bij de klant: tuinman, architect, elektricien, concierge...
+    [HttpPost("{id:guid}/contactpersonen")]
+    [VereistRol("verkoop")]
+    public async Task<IActionResult> MaakContactpersoon(Guid id, ContactpersoonInvoer invoer)
+    {
+        var persoon = new Contactpersoon
+        {
+            KlantId = id, Naam = invoer.Naam, Voornaam = invoer.Voornaam, Functie = invoer.Functie,
+            Email = invoer.Email, Telefoon = invoer.Telefoon, AangemaaktDoor = claims.MedewerkerId
+        };
+        db.Contactpersonen.Add(persoon);
+        await db.SaveChangesAsync();
+        return Ok(persoon);
+    }
+
+    [HttpPatch("{id:guid}/contactpersonen/{persoonId:guid}")]
+    [VereistRol("verkoop")]
+    public async Task<IActionResult> WijzigContactpersoon(Guid id, Guid persoonId, ContactpersoonInvoer invoer)
+    {
+        var persoon = await db.Contactpersonen
+            .FirstOrDefaultAsync(c => c.Id == persoonId && c.KlantId == id && c.VerwijderdOp == null);
+        if (persoon is null) return NotFound();
+        persoon.Naam = invoer.Naam; persoon.Voornaam = invoer.Voornaam; persoon.Functie = invoer.Functie;
+        persoon.Email = invoer.Email; persoon.Telefoon = invoer.Telefoon;
+        await db.SaveChangesAsync();
+        return Ok(persoon);
+    }
+
+    [HttpDelete("{id:guid}/contactpersonen/{persoonId:guid}")]
+    [VereistRol("verkoop")]
+    public async Task<IActionResult> VerwijderContactpersoon(Guid id, Guid persoonId)
+    {
+        var persoon = await db.Contactpersonen
+            .FirstOrDefaultAsync(c => c.Id == persoonId && c.KlantId == id && c.VerwijderdOp == null);
+        if (persoon is null) return NotFound();
+        persoon.VerwijderdOp = DateTimeOffset.UtcNow; // soft delete (TS-01)
+        await db.SaveChangesAsync();
+        return Ok(new { persoon.Id, verwijderd = true });
     }
 
     [HttpPost("{id:guid}/contactmomenten")]
