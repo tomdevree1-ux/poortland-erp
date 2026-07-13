@@ -11,7 +11,7 @@ public record OfferteInvoer(List<RegelInvoer> Regels, decimal KortingPercentage,
 
 public class OfferteService(
     PoortlandDbContext db, ClaimsContext claims, InstellingenService instellingen,
-    OffertePdfService pdf, IEmailVerzender email)
+    OffertePdfService pdf, IEmailVerzender email, SupabaseOpslag opslag)
 {
     public async Task<Offerte> Maak(Guid projectId, Taal? taal)
     {
@@ -106,6 +106,11 @@ public class OfferteService(
         offerte.VerzondenOp = DateTimeOffset.UtcNow;
 
         var pdfBytes = pdf.Genereer(offerte);
+        // SSOT nuance: het verzonden document wordt bevroren bewaard zodat het
+        // niet mee verandert wanneer klantgegevens later wijzigen.
+        string? documentPad = $"offertes/{offerte.Nummer}-v{offerte.VersieOfferte}.pdf";
+        try { await opslag.Upload("documenten", documentPad, pdfBytes, "application/pdf"); }
+        catch { documentPad = null; } // dev zonder opslagsleutel: verzenden blijft werken
         var onderwerp = $"Offerte {offerte.Nummer} van Poortland";
         var tekst = $"Beste {klant.Naam}\n\nIn bijlage vindt u offerte {offerte.Nummer} (geldig tot {offerte.GeldigTot:dd/MM/yyyy}).\n\nMet vriendelijke groeten\nPoortland";
         var status = CommunicatieStatus.Gelogd;
@@ -117,7 +122,7 @@ public class OfferteService(
         db.Communicaties.Add(new Communicatie
         {
             KlantId = klant.Id, ProjectId = offerte.ProjectId, OfferteId = offerte.Id,
-            Onderwerp = onderwerp, Inhoud = tekst, VerzondenOp = DateTimeOffset.UtcNow,
+            Onderwerp = onderwerp, Inhoud = tekst, InhoudPad = documentPad, VerzondenOp = DateTimeOffset.UtcNow,
             Status = status, AangemaaktDoor = claims.MedewerkerId
         });
         await db.SaveChangesAsync();

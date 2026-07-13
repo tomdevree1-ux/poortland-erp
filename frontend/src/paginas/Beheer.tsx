@@ -46,7 +46,7 @@ export default function Beheer() {
   return (
     <>
       <PaginaKop eyebrow="Beheer · toegang" titel="Medewerkers"
-        actie={<Knop variant="primair" onClick={() => zetUitnodigOpen(true)}>Medewerker uitnodigen ↗</Knop>} />
+        actie={<Knop variant="primair" onClick={() => { zetVorm({ email: '', naam: '', voornaam: '', rollen: [] }); zetUitnodigOpen(true) }}>Medewerker uitnodigen ↗</Knop>} />
       {fout && <div className="mb-4"><Melding soort="fout">{fout}</Melding></div>}
       <table className="w-full border-separate border-spacing-0">
         <thead><tr><Th>Naam</Th><Th>Email</Th><Th>Rollen</Th><Th>Toegang</Th></tr></thead>

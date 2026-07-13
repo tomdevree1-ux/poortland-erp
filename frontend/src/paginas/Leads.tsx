@@ -32,7 +32,9 @@ export default function Leads() {
       ...(status ? { status } : {}), ...(zoek ? { zoek } : {}),
       ...(weergave === 'archief' ? { archief: 'true' } : {}) })}`)
   })
-  const [vorm, zetVorm] = useState({ kanaal: 'telefoon', naam: '', voornaam: '', email: '', telefoon: '', eersteVraag: '', typeAanvraag: '', gemeente: '', gewensteTiming: '' })
+  const leegVorm = { kanaal: 'telefoon', naam: '', voornaam: '', email: '', telefoon: '', eersteVraag: '', typeAanvraag: '', gemeente: '', gewensteTiming: '' }
+  const [vorm, zetVorm] = useState(leegVorm)
+  function openNieuw() { zetVorm(leegVorm); zetNieuwOpen(true) }
   const maak = useMutation({
     mutationFn: () => api.post<Lead>('/leads', {
       ...vorm,
@@ -45,7 +47,7 @@ export default function Leads() {
   return (
     <>
       <PaginaKop eyebrow="Verkoop · leadinbox" titel="Leads"
-        actie={<Knop variant="primair" onClick={() => zetNieuwOpen(true)}>Nieuwe lead ↗</Knop>} />
+        actie={<Knop variant="primair" onClick={openNieuw}>Nieuwe lead ↗</Knop>} />
       <div className="mb-4 flex gap-3">
         <Selecteer value={status} onChange={e => zetStatus(e.target.value)} className="w-48">
           <option value="">Alle statussen</option>

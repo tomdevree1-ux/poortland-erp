@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useParams } from '@tanstack/react-router'
 import { clsx } from 'clsx'
@@ -84,8 +84,37 @@ export default function LeadDetail() {
     queryFn: () => api.get<Klant[]>(`/klanten?${new URLSearchParams(zoekKlant ? { zoek: zoekKlant } : {})}`),
     enabled: omzetOpen
   })
-  const [nieuweKlant, zetNieuweKlant] = useState({ type: 'particulier', naam: '', voornaam: '', btwNummer: '', straat: '', postcode: '', gemeente: '' })
+  const leegKlant = { type: 'particulier', naam: '', voornaam: '', btwNummer: '', straat: '', postcode: '', gemeente: '', email: '', telefoon: '' }
+  const [nieuweKlant, zetNieuweKlant] = useState(leegKlant)
   const [werfadres, zetWerfadres] = useState('')
+
+  // Isolatieregel: bij het wisselen van lead wordt alle formulierstaat gewist
+  // zodat gegevens van record A nooit zichtbaar zijn bij record B.
+  useEffect(() => {
+    zetOmzetOpen(false); zetVerliesOpen(false); zetVerwijderOpen(false); zetBewerkOpen(false)
+    zetKlantKeuze(''); zetZoekKlant(''); zetNieuweKlant(leegKlant); zetWerfadres('')
+    zetReden(''); zetVorm(null); zetFout(undefined)
+  }, [leadId])
+
+  // SSOT: het omzetvenster opent altijd vers en vooraf ingevuld vanuit de lead.
+  function openOmzetten() {
+    if (!lead) return
+    zetKlantKeuze(''); zetZoekKlant(''); zetWerfadres('')
+    zetNieuweKlant({
+      ...leegKlant,
+      naam: lead.naam ?? '', voornaam: lead.voornaam ?? '', gemeente: lead.gemeente ?? '',
+      email: lead.email ?? '', telefoon: lead.telefoon ?? ''
+    })
+    zetOmzetOpen(true)
+  }
+
+  function neemKlantadresOver() {
+    const bestaand = klantKeuze ? klanten?.find(k => k.id === klantKeuze) : null
+    const bron = bestaand ?? nieuweKlant
+    const adres = [bron.straat, [bron.postcode, bron.gemeente].filter(Boolean).join(' ')]
+      .filter(x => x && String(x).trim()).join(', ')
+    if (adres) zetWerfadres(adres)
+  }
   const omzetten = useMutation({
     mutationFn: () => api.post<{ projectId: string }>(`/leads/${leadId}/omzetten`, {
       klantId: klantKeuze || null,
@@ -95,7 +124,8 @@ export default function LeadDetail() {
         voornaam: nieuweKlant.voornaam || lead?.voornaam || null,
         gemeente: nieuweKlant.gemeente || lead?.gemeente || null,
         btwNummer: nieuweKlant.btwNummer || null,
-        email: lead?.email, telefoon: lead?.telefoon
+        email: nieuweKlant.email || lead?.email || null,
+        telefoon: nieuweKlant.telefoon || lead?.telefoon || null
       },
       werfadres, omschrijving: lead?.eersteVraag
     }),
@@ -125,7 +155,7 @@ export default function LeadDetail() {
       <PaginaKop eyebrow="Verkoop · lead" titel={persoon(lead.voornaam, lead.naam) || leeg(lead.email)}
         actie={<div className="flex gap-2">
           {!lead.gearchiveerdOp && lead.status === 'nieuw' && <Knop variant="primair" onClick={() => kwalificeer.mutate()}>Kwalificeren</Knop>}
-          {!lead.gearchiveerdOp && lead.status === 'gekwalificeerd' && <Knop variant="primair" onClick={() => zetOmzetOpen(true)}>Omzetten naar dossier ↗</Knop>}
+          {!lead.gearchiveerdOp && lead.status === 'gekwalificeerd' && <Knop variant="primair" onClick={openOmzetten}>Omzetten naar dossier ↗</Knop>}
           {bewerkbaar && <Knop variant="ghost" onClick={() => zetVerliesOpen(true)}>Verliezen</Knop>}
           <Knop variant="neutraal" onClick={() => archiveer.mutate(!!lead.gearchiveerdOp)}>
             {lead.gearchiveerdOp ? 'Herstellen' : 'Archiveren'}
@@ -260,21 +290,32 @@ export default function LeadDetail() {
                   <option value="particulier">Particulier</option>
                   <option value="bedrijf">Bedrijf</option>
                 </Selecteer>
-                <Invoer label="Naam" value={nieuweKlant.naam || lead.naam || ''} onChange={e => zetNieuweKlant({ ...nieuweKlant, naam: e.target.value })} required={!klantKeuze} />
+                <Invoer label="Naam" value={nieuweKlant.naam} onChange={e => zetNieuweKlant({ ...nieuweKlant, naam: e.target.value })} required={!klantKeuze} />
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <Invoer label="Voornaam" optioneel value={nieuweKlant.voornaam || lead.voornaam || ''} onChange={e => zetNieuweKlant({ ...nieuweKlant, voornaam: e.target.value })} />
+                <Invoer label="Voornaam" optioneel value={nieuweKlant.voornaam} onChange={e => zetNieuweKlant({ ...nieuweKlant, voornaam: e.target.value })} />
               </div>
               {nieuweKlant.type === 'bedrijf' &&
                 <Invoer label="Btw nummer" value={nieuweKlant.btwNummer} onChange={e => zetNieuweKlant({ ...nieuweKlant, btwNummer: e.target.value })} required />}
               <div className="grid grid-cols-3 gap-4">
                 <Invoer label="Straat" optioneel value={nieuweKlant.straat} onChange={e => zetNieuweKlant({ ...nieuweKlant, straat: e.target.value })} />
                 <Invoer label="Postcode" optioneel value={nieuweKlant.postcode} onChange={e => zetNieuweKlant({ ...nieuweKlant, postcode: e.target.value })} />
-                <Invoer label="Gemeente" optioneel value={nieuweKlant.gemeente || lead.gemeente || ''} onChange={e => zetNieuweKlant({ ...nieuweKlant, gemeente: e.target.value })} />
+                <Invoer label="Gemeente" optioneel value={nieuweKlant.gemeente} onChange={e => zetNieuweKlant({ ...nieuweKlant, gemeente: e.target.value })} />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <Invoer label="Email" optioneel type="email" value={nieuweKlant.email} onChange={e => zetNieuweKlant({ ...nieuweKlant, email: e.target.value })} />
+                <Invoer label="Telefoon" optioneel value={nieuweKlant.telefoon} onChange={e => zetNieuweKlant({ ...nieuweKlant, telefoon: e.target.value })} />
               </div>
             </div>
           )}
-          <Invoer label="Werfadres" value={werfadres} onChange={e => zetWerfadres(e.target.value)} required />
+          <div>
+            <div className="flex items-end justify-between gap-4">
+              <Invoer label="Werfadres" value={werfadres} onChange={e => zetWerfadres(e.target.value)} required className="flex-1" />
+              <Knop type="button" variant="ghost" className="h-10 whitespace-nowrap px-3 text-xs" onClick={neemKlantadresOver}>
+                Neem klantadres over
+              </Knop>
+            </div>
+          </div>
           <div className="flex justify-end gap-2">
             <Knop type="button" variant="ghost" onClick={() => zetOmzetOpen(false)}>Annuleren</Knop>
             <Knop variant="primair" disabled={omzetten.isPending}>{omzetten.isPending ? 'Bezig…' : 'Omzetten'}</Knop>

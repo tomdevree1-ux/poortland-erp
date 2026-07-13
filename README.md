@@ -45,7 +45,22 @@ Controleer bij elk nieuw of gewijzigd scherm automatisch of ze kloppen.
   `persoon()` uit lib/formaat.ts als voornaam gevolgd door naam.
 - Bij bedrijven blijft naam de bedrijfsnaam en blijft voornaam leeg.
 
-**4. Consistentie**
+**4. Eén bron van waarheid en gegevensisolatie (SSOT)**
+
+- Gekende gegevens worden altijd vooraf ingevuld en nooit opnieuw gevraagd:
+  leadgegevens vullen de nieuwe klant, het klantadres is overneembaar als
+  werfadres en de communicatietaal van de klant stuurt de offertetaal.
+- Klantgegevens leven uitsluitend op de klant. Schermen en documenten tonen ze
+  via de relatie en kopiëren ze nooit. De ene uitzondering is bewust: bij het
+  verzenden wordt de offerte als bevroren PDF bewaard in de private bucket
+  documenten, zodat het historische document niet mee verandert.
+- Formulierstaat wordt gereset bij het openen van elk venster en bij het wisselen
+  van record. Gegevens van record A mogen nooit zichtbaar zijn bij record B.
+- Elke query op onderliggende gegevens filtert op het ouder id (contactpersoon op
+  klant, foto op lead, regel op offerte) en de databank bewaakt dit met vreemde
+  sleutels, unieke sleutels en RLS. Nieuwe endpoints volgen dit patroon altijd.
+
+**5. Consistentie**
 
 - Overal dezelfde navigatielogica, dezelfde hover en cursorfeedback, dezelfde
   iconen en benamingen (Bewerken, Opslaan, Annuleren) en dezelfde scheiding
