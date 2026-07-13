@@ -37,8 +37,21 @@ open(".env.build", "w").write(
 print(f"   domein: https://{domein}")
 PY
 
-echo "2/4 Code naar de server"
-ssh -o StrictHostKeyChecking=accept-new "$DOEL" "mkdir -p /opt/poortland"
+echo "2/4 Wachten tot de server bereikbaar is en code overzetten"
+KLAAR=""
+for i in $(seq 1 36); do
+  if ssh -o StrictHostKeyChecking=accept-new -o ConnectTimeout=5 "$DOEL" true 2>/dev/null; then
+    KLAAR=ja
+    break
+  fi
+  echo "   nog niet bereikbaar, poging $i van 36"
+  sleep 5
+done
+if [ -z "$KLAAR" ]; then
+  echo "Server na 3 minuten niet bereikbaar over SSH. Kijk in de Hetzner console en probeer opnieuw."
+  exit 1
+fi
+ssh "$DOEL" "mkdir -p /opt/poortland"
 rsync -az --delete \
   --exclude node_modules --exclude dist --exclude bin --exclude obj --exclude .git \
   ../ "$DOEL:/opt/poortland/"
