@@ -9,7 +9,7 @@ export default function Dashboard() {
   const { data } = useQuery({ queryKey: ['dashboard'], queryFn: () => api.get<Kerncijfers>('/dashboard') })
   return (
     <>
-      <PaginaKop eyebrow="Atelier · overzicht" titel="Dashboard"
+      <PaginaKop eyebrow="Operations · overzicht" titel="Dashboard"
         actie={<Link to="/leads"><Knop variant="primair">Nieuwe lead ↗</Knop></Link>} />
       <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
         <Kerncijfer label="Open leads" waarde={data?.openLeads ?? '—'} />

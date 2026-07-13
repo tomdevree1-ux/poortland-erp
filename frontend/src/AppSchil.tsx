@@ -40,7 +40,7 @@ export default function AppSchil() {
           <span className="flex h-9 w-9 items-center justify-center border-[1.4px] border-inkt/60 font-display text-xl">P</span>
           <div>
             <div className="text-sm font-semibold uppercase tracking-[0.3em]">Poortland</div>
-            <div className="text-2xs uppercase tracking-[0.2em] text-inkt-muted">Atelier</div>
+            <div className="text-2xs uppercase tracking-[0.2em] text-inkt-muted">Operations</div>
           </div>
         </div>
         <nav className="mt-2 flex-1 space-y-0.5 px-3">
@@ -72,7 +72,7 @@ export default function AppSchil() {
       </aside>
       <div className="ml-[236px] flex-1">
         <header className="sticky top-0 z-40 flex h-[56px] items-center justify-between border-b border-inkt/[.07] bg-vlak-canvas/90 px-8 backdrop-blur">
-          <div className="text-2xs font-bold uppercase tracking-[0.26em] text-bronze-600">Atelier · overzicht</div>
+          <div className="text-2xs font-bold uppercase tracking-[0.26em] text-bronze-600">Operations · overzicht</div>
           <div className="cijfers text-xs text-inkt-muted">
             KW {Math.ceil((new Date().getMonth() + 1) / 3)} · {new Date().getFullYear()}
           </div>

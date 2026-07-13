@@ -14,7 +14,7 @@ export default function Dossiers() {
   })
   return (
     <>
-      <PaginaKop eyebrow="Atelier · overzicht" titel="Dossiers" />
+      <PaginaKop eyebrow="Operations · overzicht" titel="Dossiers" />
       <div className="mb-4">
         <Invoer placeholder="Zoek dossier, klant of adres…" value={zoek} onChange={e => zetZoek(e.target.value)} />
       </div>
