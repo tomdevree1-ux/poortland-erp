@@ -54,6 +54,62 @@ De marketingwebsite leest uitsluitend `content.json` en publieke afbeeldingen ui
 `website_publiek`, bij voorkeur achter Cloudflare. Publiceren en depubliceren in het ERP
 herschrijft dat bestand (cache 5 minuten). De website krijgt geen sleutels en geen schrijftoegang.
 
+## Omgevingen en promotie naar productie
+
+TS-15 voorziet ontwikkeling, test, staging en productie als aparte Supabase projecten
+met dezelfde migratieset. Het huidige project (Poortland ERP dev) doet dienst als
+ontwikkel en stagingomgeving tot de uitrol. Productie wordt een eigen project in de
+Poortland organisatie en NOOIT een hergebruik van deze omgeving.
+
+### Checklist bij het opzetten van elke nieuwe omgeving (zeker productie)
+
+**Supabase dashboard, per project opnieuw**
+
+| Instelling | Staging (nu) | Productie |
+|---|---|---|
+| Authentication → URL Configuration → Site URL | http://localhost:5173 | https://erp.poortland.be (het echte domein) |
+| Additional Redirect URLs | leeg | het productiedomein plus eventuele preview omgevingen |
+| Authentication → Hooks → Customize Access Token | custom_access_token_hook aan | idem, per project opnieuw activeren |
+| Auth emails (SMTP) | ingebouwde mailer (beperkt) | eigen SMTP via Brevo met het Poortland afzenderadres |
+| API sleutels | publishable en secret van dev | nieuwe sleutels van het productieproject, nooit hergebruiken |
+| MFA beleid | aanbevolen | verplicht voor beheerder en boekhouding (TS-02) |
+
+**Databank (via migraties en seeds, geen handwerk)**
+
+- Dezelfde migratiereeks 0001 en verder afspelen via CI (TS-15 sectie 5).
+- Nieuw en uniek wachtwoord voor erp_app per omgeving, gezet buiten de migraties.
+- instelling.bootstrap_beheerder_email op het adres van de zaakvoerder zetten vóór de eerste aanmelding.
+- instelling.bedrijfsgegevens nakijken voor de offertehoofding.
+- Synthetische data blijft in dev en staging. Productie start leeg plus de migratie uit Lotus Notes (TS-14).
+
+**Backend (appsettings per omgeving of omgevingsvariabelen)**
+
+- ConnectionStrings:Poortland naar de pooler van het productieproject.
+- Supabase:Url en Supabase:ServiceKey van het productieproject.
+- Email:Modus van console naar brevo plus BrevoApiKey en het echte afzenderadres.
+- Frontend:Origin (CORS) van localhost naar het productiedomein.
+- Turnstile:Secret invullen zodat het publieke leadformulier beschermd is.
+- Sentry DSN aanzetten (TS-15, EU regio).
+
+**Frontend (buildtime variabelen)**
+
+- VITE_SUPABASE_URL en VITE_SUPABASE_ANON_KEY van het productieproject.
+- De dev proxy in vite.config.ts geldt alleen lokaal. In productie serveert Cloudflare
+  de statische build en routeert het pad /api naar de backend container op hetzelfde
+  domein. Zo blijft de API relatief bereikbaar en is er geen CORS nodig.
+
+**Websitebeheer (TS-17, opgelet)**
+
+- De marketingwebsite leest content.json op een URL die het projectref bevat.
+  Bij productie moet de website naar het productieproject wijzen en nooit naar staging,
+  anders verschijnt testcontent op de echte site.
+
+**Overig**
+
+- Backups: PITR nakijken en de onafhankelijke nachtelijke dump inrichten (TS-15 sectie 7).
+- DNS, WAF en rate limiting via Cloudflare voor het productiedomein.
+- De go live checklist van TS-16 doorlopen vóór de omschakeling.
+
 ## Omgevingen
 
 Dev nu in een eigen Poortland organisatie op Supabase. Test, staging en productie volgen
