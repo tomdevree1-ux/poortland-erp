@@ -5,7 +5,8 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 source server.env 2>/dev/null || { echo "Run eerst zet_server_op.sh"; exit 1; }
-DOMEIN="${DOMEIN:-$(echo "$SERVER_IP" | tr '.' '-').nip.io}"
+IP_STREEPJES=$(echo $SERVER_IP | tr . -)
+DOMEIN="${DOMEIN:-$IP_STREEPJES.nip.io}"
 DOEL="root@$SERVER_IP"
 
 echo "1/4 Omgevingsbestand opbouwen uit je lokale instellingen"
