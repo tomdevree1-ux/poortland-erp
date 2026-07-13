@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { api } from '../lib/api'
-import { leeg } from '../lib/formaat'
+import { leeg, persoon } from '../lib/formaat'
 import type { Klant } from '../lib/types'
 import { Invoer, LegeStaat, PaginaKop, Th, Td, rijKlik } from '../ui'
 
@@ -26,7 +26,7 @@ export default function Klanten() {
             {klanten?.map(k => (
               <tr key={k.id} className={rijKlik}
                 onClick={() => navigeer({ to: '/klanten/$klantId', params: { klantId: k.id } })}>
-                <Td className="font-semibold">{k.naam}</Td>
+                <Td className="font-semibold">{persoon(k.voornaam, k.naam)}</Td>
                 <Td>{k.type === 'bedrijf' ? 'Bedrijf' : 'Particulier'}</Td>
                 <Td>{leeg(k.gemeente)}</Td>
                 <Td>{leeg(k.email)}</Td>

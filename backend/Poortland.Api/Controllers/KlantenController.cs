@@ -6,7 +6,7 @@ using Poortland.Api.Data;
 
 namespace Poortland.Api.Controllers;
 
-public record KlantInvoer(KlantType Type, string Naam, string? BtwNummer, string? Straat, string? Postcode,
+public record KlantInvoer(KlantType Type, string Naam, string? Voornaam, string? BtwNummer, string? Straat, string? Postcode,
     string? Gemeente, string? Email, string? Telefoon, Taal Communicatietaal, string? Communicatievoorkeur);
 public record ContactmomentInvoer(Guid? ProjectId, string Type, string? Notitie);
 public record ContactpersoonInvoer(string Naam, string? Voornaam, string? Functie, string? Email, string? Telefoon);
@@ -24,6 +24,7 @@ public class KlantenController(PoortlandDbContext db, ClaimsContext claims) : Co
         {
             var patroon = $"%{zoek}%";
             query = query.Where(k => EF.Functions.ILike(k.Naam, patroon)
+                || EF.Functions.ILike(k.Voornaam ?? "", patroon)
                 || EF.Functions.ILike(k.Gemeente ?? "", patroon)
                 || EF.Functions.ILike(k.Email ?? "", patroon));
         }
@@ -52,7 +53,7 @@ public class KlantenController(PoortlandDbContext db, ClaimsContext claims) : Co
     {
         var klant = new Klant
         {
-            Type = invoer.Type, Naam = invoer.Naam, BtwNummer = invoer.BtwNummer, Straat = invoer.Straat,
+            Type = invoer.Type, Naam = invoer.Naam, Voornaam = invoer.Voornaam, BtwNummer = invoer.BtwNummer, Straat = invoer.Straat,
             Postcode = invoer.Postcode, Gemeente = invoer.Gemeente, Email = invoer.Email,
             Telefoon = invoer.Telefoon, Communicatietaal = invoer.Communicatietaal,
             Communicatievoorkeur = invoer.Communicatievoorkeur, AangemaaktDoor = claims.MedewerkerId
@@ -68,7 +69,7 @@ public class KlantenController(PoortlandDbContext db, ClaimsContext claims) : Co
     {
         var klant = await db.Klanten.FirstOrDefaultAsync(k => k.Id == id && k.VerwijderdOp == null);
         if (klant is null) return NotFound();
-        klant.Type = invoer.Type; klant.Naam = invoer.Naam; klant.BtwNummer = invoer.BtwNummer;
+        klant.Type = invoer.Type; klant.Naam = invoer.Naam; klant.Voornaam = invoer.Voornaam; klant.BtwNummer = invoer.BtwNummer;
         klant.Straat = invoer.Straat; klant.Postcode = invoer.Postcode; klant.Gemeente = invoer.Gemeente;
         klant.Email = invoer.Email; klant.Telefoon = invoer.Telefoon;
         klant.Communicatietaal = invoer.Communicatietaal; klant.Communicatievoorkeur = invoer.Communicatievoorkeur;

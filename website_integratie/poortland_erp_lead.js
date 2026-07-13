@@ -4,7 +4,7 @@
    poortlandVerstuurLead({
      endpoint: 'https://ERP_BACKEND_DOMEIN/api/v1/leads/webformulier',
      soort: 'contact', // of 'offerteaanvraag'
-     velden: { naam, email, telefoon, gemeente, typeAanvraag, gewensteTiming, vraag },
+     velden: { naam, voornaam, email, telefoon, gemeente, typeAanvraag, gewensteTiming, vraag },
      wizardGegevens: { stappen: [...] }, // enkel bij offerteaanvraag
      fotos: bestandInput.files,          // optioneel, maximaal 5
      turnstileToken: token               // verplicht in productie
@@ -15,7 +15,7 @@ window.poortlandVerstuurLead = async function (opties) {
   var form = new FormData();
   form.append('soort', opties.soort === 'offerteaanvraag' ? 'offerteaanvraag' : 'contact');
   var velden = opties.velden || {};
-  ['naam', 'email', 'telefoon', 'gemeente', 'typeAanvraag', 'gewensteTiming', 'vraag'].forEach(function (sleutel) {
+  ['naam', 'voornaam', 'email', 'telefoon', 'gemeente', 'typeAanvraag', 'gewensteTiming', 'vraag'].forEach(function (sleutel) {
     if (velden[sleutel]) form.append(sleutel, velden[sleutel]);
   });
   form.append('privacyAkkoord', 'true'); // enkel versturen na het aangevinkte akkoord

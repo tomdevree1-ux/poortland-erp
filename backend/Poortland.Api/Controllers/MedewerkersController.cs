@@ -12,7 +12,7 @@ namespace Poortland.Api.Controllers;
 [Authorize]
 public class MedewerkersController(PoortlandDbContext db, ClaimsContext claims) : ControllerBase
 {
-    public record UitnodigingInvoer(string Email, string Naam, List<Rol> Rollen);
+    public record UitnodigingInvoer(string Email, string Naam, string? Voornaam, List<Rol> Rollen);
     public record RollenInvoer(List<Rol> Rollen);
     public record ActiefInvoer(bool IsActief);
 
@@ -39,7 +39,7 @@ public class MedewerkersController(PoortlandDbContext db, ClaimsContext claims) 
             .Include(m => m.Rollen)
             .Where(m => m.VerwijderdOp == null)
             .OrderBy(m => m.Naam)
-            .Select(m => new { m.Id, m.Naam, m.Email, m.Telefoon, m.IsActief,
+            .Select(m => new { m.Id, m.Naam, m.Voornaam, m.Email, m.Telefoon, m.IsActief,
                 Rollen = m.Rollen.Select(r => r.Rol) })
             .ToListAsync());
 
@@ -48,12 +48,13 @@ public class MedewerkersController(PoortlandDbContext db, ClaimsContext claims) 
     [VereistRol("beheerder")]
     public async Task<IActionResult> NodigUit(UitnodigingInvoer invoer, [FromServices] SupabaseAdmin admin)
     {
-        await admin.NodigUit(invoer.Email, invoer.Naam);
+        await admin.NodigUit(invoer.Email, ($"{invoer.Voornaam} {invoer.Naam}").Trim());
         // De databanktrigger maakte de medewerker aan bij de auth insert.
         var medewerker = await db.Medewerkers.FirstOrDefaultAsync(m => m.Email == invoer.Email.ToLowerInvariant())
             ?? await db.Medewerkers.FirstOrDefaultAsync(m => m.Email == invoer.Email);
         if (medewerker is null) return StatusCode(500, new { fout = "Uitnodiging verstuurd maar de medewerker is niet gevonden." });
         medewerker.Naam = invoer.Naam;
+        medewerker.Voornaam = invoer.Voornaam;
         foreach (var rol in invoer.Rollen.Distinct())
             db.MedewerkerRollen.Add(new MedewerkerRol { MedewerkerId = medewerker.Id, Rol = rol });
         await db.SaveChangesAsync();

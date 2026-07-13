@@ -17,6 +17,7 @@ public class Medewerker : BasisEntiteit
 {
     public Guid? AuthUserId { get; set; }
     public string Naam { get; set; } = "";
+    public string? Voornaam { get; set; }
     public string Email { get; set; } = "";
     public string? Telefoon { get; set; }
     public bool IsActief { get; set; } = true;
@@ -33,6 +34,7 @@ public class Klant : BasisEntiteit
 {
     public KlantType Type { get; set; }
     public string Naam { get; set; } = "";
+    public string? Voornaam { get; set; }
     public string? BtwNummer { get; set; }
     public string? Straat { get; set; }
     public string? Postcode { get; set; }
@@ -73,6 +75,7 @@ public class Lead : BasisEntiteit
     public Guid EigenaarId { get; set; }
     public DateOnly? Opvolgdatum { get; set; }
     public string? Naam { get; set; }
+    public string? Voornaam { get; set; }
     public string? Email { get; set; }
     public string? Telefoon { get; set; }
     public string? EersteVraag { get; set; }

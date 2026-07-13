@@ -8,3 +8,8 @@ export const datum = (iso?: string | null) =>
   iso ? new Intl.DateTimeFormat('nl-BE', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(iso)) : '—'
 
 export const leeg = (waarde?: string | null) => (waarde && waarde.trim() !== '' ? waarde : '—')
+
+// Gegevensregel Poortland: naam en voornaam altijd gescheiden opslaan
+// en samen tonen als voornaam plus naam.
+export const persoon = (voornaam?: string | null, naam?: string | null) =>
+  [voornaam, naam].filter(Boolean).join(' ')

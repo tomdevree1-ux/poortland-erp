@@ -5,7 +5,7 @@ using Poortland.Api.Data;
 namespace Poortland.Api.Domein;
 
 public record OmzettenVerzoek(Guid? KlantId, NieuweKlant? NieuweKlant, string Werfadres, string? Omschrijving);
-public record NieuweKlant(KlantType Type, string Naam, string? BtwNummer, string? Straat, string? Postcode,
+public record NieuweKlant(KlantType Type, string Naam, string? Voornaam, string? BtwNummer, string? Straat, string? Postcode,
     string? Gemeente, string? Email, string? Telefoon, Taal Communicatietaal = Taal.Nl);
 
 public class LeadService(PoortlandDbContext db, ClaimsContext claims)
@@ -50,7 +50,7 @@ public class LeadService(PoortlandDbContext db, ClaimsContext claims)
             var n = verzoek.NieuweKlant ?? throw new DomeinFout("Kies een bestaande klant of geef een nieuwe op.");
             klant = new Klant
             {
-                Type = n.Type, Naam = n.Naam, BtwNummer = n.BtwNummer, Straat = n.Straat,
+                Type = n.Type, Naam = n.Naam, Voornaam = n.Voornaam ?? lead.Voornaam, BtwNummer = n.BtwNummer, Straat = n.Straat,
                 Postcode = n.Postcode, Gemeente = n.Gemeente ?? lead.Gemeente,
                 Email = n.Email ?? lead.Email, Telefoon = n.Telefoon ?? lead.Telefoon,
                 Communicatietaal = n.Communicatietaal,

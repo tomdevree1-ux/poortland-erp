@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useParams } from '@tanstack/react-router'
 import { clsx } from 'clsx'
 import { api } from '../lib/api'
-import { datum, euro, leeg } from '../lib/formaat'
+import { datum, euro, leeg, persoon } from '../lib/formaat'
 import type { Klant, Lead } from '../lib/types'
 import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Paneel, PotloodKnop, Selecteer, TekstVak } from '../ui'
 import { timingOpties, typeAanvraagOpties } from './Leads'
@@ -51,12 +51,12 @@ export default function LeadDetail() {
     onError: f => zetFout((f as Error).message)
   })
 
-  const [vorm, zetVorm] = useState<{ naam: string; email: string; telefoon: string; gemeente: string
+  const [vorm, zetVorm] = useState<{ naam: string; voornaam: string; email: string; telefoon: string; gemeente: string
     typeAanvraag: string; gewensteTiming: string; eersteVraag: string } | null>(null)
   function openBewerk() {
     if (!lead) return
     zetVorm({
-      naam: lead.naam ?? '', email: lead.email ?? '', telefoon: lead.telefoon ?? '',
+      naam: lead.naam ?? '', voornaam: lead.voornaam ?? '', email: lead.email ?? '', telefoon: lead.telefoon ?? '',
       gemeente: lead.gemeente ?? '', typeAanvraag: lead.typeAanvraag ?? '',
       gewensteTiming: lead.gewensteTiming ?? '', eersteVraag: lead.eersteVraag ?? ''
     })
@@ -84,7 +84,7 @@ export default function LeadDetail() {
     queryFn: () => api.get<Klant[]>(`/klanten?${new URLSearchParams(zoekKlant ? { zoek: zoekKlant } : {})}`),
     enabled: omzetOpen
   })
-  const [nieuweKlant, zetNieuweKlant] = useState({ type: 'particulier', naam: '', btwNummer: '', straat: '', postcode: '', gemeente: '' })
+  const [nieuweKlant, zetNieuweKlant] = useState({ type: 'particulier', naam: '', voornaam: '', btwNummer: '', straat: '', postcode: '', gemeente: '' })
   const [werfadres, zetWerfadres] = useState('')
   const omzetten = useMutation({
     mutationFn: () => api.post<{ projectId: string }>(`/leads/${leadId}/omzetten`, {
@@ -92,6 +92,7 @@ export default function LeadDetail() {
       nieuweKlant: klantKeuze ? null : {
         ...nieuweKlant,
         naam: nieuweKlant.naam || lead?.naam || '',
+        voornaam: nieuweKlant.voornaam || lead?.voornaam || null,
         gemeente: nieuweKlant.gemeente || lead?.gemeente || null,
         btwNummer: nieuweKlant.btwNummer || null,
         email: lead?.email, telefoon: lead?.telefoon
@@ -121,7 +122,7 @@ export default function LeadDetail() {
   const wizard = parseWizard(lead.wizardGegevens)
   return (
     <>
-      <PaginaKop eyebrow="Verkoop · lead" titel={leeg(lead.naam ?? lead.email)}
+      <PaginaKop eyebrow="Verkoop · lead" titel={persoon(lead.voornaam, lead.naam) || leeg(lead.email)}
         actie={<div className="flex gap-2">
           {!lead.gearchiveerdOp && lead.status === 'nieuw' && <Knop variant="primair" onClick={() => kwalificeer.mutate()}>Kwalificeren</Knop>}
           {!lead.gearchiveerdOp && lead.status === 'gekwalificeerd' && <Knop variant="primair" onClick={() => zetOmzetOpen(true)}>Omzetten naar dossier ↗</Knop>}
@@ -144,6 +145,7 @@ export default function LeadDetail() {
               <dd>{leeg(lead.typeAanvraag ? typeTekst[lead.typeAanvraag] ?? lead.typeAanvraag : null)}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Gewenste timing</dt>
               <dd>{leeg(lead.gewensteTiming ? timingTekst[lead.gewensteTiming] ?? lead.gewensteTiming : null)}</dd></div>
+            <div className="flex justify-between"><dt className="text-inkt-muted">Naam</dt><dd>{leeg(persoon(lead.voornaam, lead.naam))}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Gemeente</dt><dd>{leeg(lead.gemeente)}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Email</dt><dd>{leeg(lead.email)}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Telefoon</dt><dd>{leeg(lead.telefoon)}</dd></div>
@@ -198,12 +200,15 @@ export default function LeadDetail() {
           <form className="space-y-4" onSubmit={e => {
             e.preventDefault()
             wijzig.mutate({
-              naam: vorm.naam, email: vorm.email || null, telefoon: vorm.telefoon || null,
+              naam: vorm.naam, voornaam: vorm.voornaam || null, email: vorm.email || null, telefoon: vorm.telefoon || null,
               gemeente: vorm.gemeente || null, typeAanvraag: vorm.typeAanvraag || null,
               gewensteTiming: vorm.gewensteTiming || null, eersteVraag: vorm.eersteVraag || null
             })
           }}>
-            <Invoer label="Naam" value={vorm.naam} onChange={e => zetVorm({ ...vorm, naam: e.target.value })} required />
+            <div className="grid grid-cols-2 gap-4">
+              <Invoer label="Voornaam" optioneel value={vorm.voornaam} onChange={e => zetVorm({ ...vorm, voornaam: e.target.value })} />
+              <Invoer label="Naam" value={vorm.naam} onChange={e => zetVorm({ ...vorm, naam: e.target.value })} required />
+            </div>
             <div className="grid grid-cols-2 gap-4">
               <Invoer label="Email" optioneel type="email" value={vorm.email} onChange={e => zetVorm({ ...vorm, email: e.target.value })} />
               <Invoer label="Telefoon" optioneel value={vorm.telefoon} onChange={e => zetVorm({ ...vorm, telefoon: e.target.value })} />
@@ -256,6 +261,9 @@ export default function LeadDetail() {
                   <option value="bedrijf">Bedrijf</option>
                 </Selecteer>
                 <Invoer label="Naam" value={nieuweKlant.naam || lead.naam || ''} onChange={e => zetNieuweKlant({ ...nieuweKlant, naam: e.target.value })} required={!klantKeuze} />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <Invoer label="Voornaam" optioneel value={nieuweKlant.voornaam || lead.voornaam || ''} onChange={e => zetNieuweKlant({ ...nieuweKlant, voornaam: e.target.value })} />
               </div>
               {nieuweKlant.type === 'bedrijf' &&
                 <Invoer label="Btw nummer" value={nieuweKlant.btwNummer} onChange={e => zetNieuweKlant({ ...nieuweKlant, btwNummer: e.target.value })} required />}

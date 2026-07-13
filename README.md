@@ -37,7 +37,15 @@ Controleer bij elk nieuw of gewijzigd scherm automatisch of ze kloppen.
 - Domeinacties (kwalificeren, verzenden, publiceren, archiveren en dergelijke)
   zijn geen bewerkingen en blijven gewone actieknoppen.
 
-**3. Consistentie**
+**3. Gegevensregel naam en voornaam**
+
+- Naam en voornaam zijn altijd en overal twee aparte velden: bij leads, klanten,
+  contactpersonen, medewerkers en in elk formulier of contract dat personen bevat
+  (ook het websiteformulier). Weergave gebeurt samengesteld via de helper
+  `persoon()` uit lib/formaat.ts als voornaam gevolgd door naam.
+- Bij bedrijven blijft naam de bedrijfsnaam en blijft voornaam leeg.
+
+**4. Consistentie**
 
 - Overal dezelfde navigatielogica, dezelfde hover en cursorfeedback, dezelfde
   iconen en benamingen (Bewerken, Opslaan, Annuleren) en dezelfde scheiding

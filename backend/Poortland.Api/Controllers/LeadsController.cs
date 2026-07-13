@@ -8,10 +8,10 @@ using Poortland.Api.Domein;
 
 namespace Poortland.Api.Controllers;
 
-public record LeadInvoer(LeadKanaal Kanaal, string? Naam, string? Email, string? Telefoon,
+public record LeadInvoer(LeadKanaal Kanaal, string? Naam, string? Voornaam, string? Email, string? Telefoon,
     string? EersteVraag, Guid? EigenaarId, DateOnly? Opvolgdatum,
     string? TypeAanvraag, string? Gemeente, string? GewensteTiming);
-public record LeadWijziging(string? Naam, string? Email, string? Telefoon, string? EersteVraag,
+public record LeadWijziging(string? Naam, string? Voornaam, string? Email, string? Telefoon, string? EersteVraag,
     string? TypeAanvraag, string? Gemeente, string? GewensteTiming, DateOnly? Opvolgdatum,
     string? WizardGegevens);
 public record KwalificatieInvoer(decimal? Prijsindicatie, DateOnly? Opvolgdatum);
@@ -39,6 +39,7 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
         {
             var patroon = $"%{zoek}%";
             query = query.Where(l => EF.Functions.ILike(l.Naam ?? "", patroon)
+                || EF.Functions.ILike(l.Voornaam ?? "", patroon)
                 || EF.Functions.ILike(l.Email ?? "", patroon)
                 || EF.Functions.ILike(l.Gemeente ?? "", patroon)
                 || EF.Functions.ILike(l.EersteVraag ?? "", patroon));
@@ -60,7 +61,7 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
         return Ok(new
         {
             lead.Id, lead.KlantId, lead.Kanaal, lead.Status, lead.EigenaarId, lead.Opvolgdatum,
-            lead.Naam, lead.Email, lead.Telefoon, lead.EersteVraag, lead.Prijsindicatie,
+            lead.Naam, lead.Voornaam, lead.Email, lead.Telefoon, lead.EersteVraag, lead.Prijsindicatie,
             lead.VerliesReden, lead.OmgezetProjectId, lead.TypeAanvraag, lead.Gemeente,
             lead.GewensteTiming, lead.PrivacyAkkoord, lead.PrivacyAkkoordOp, lead.WizardGegevens,
             lead.GearchiveerdOp, lead.AangemaaktOp, fotos
@@ -73,7 +74,7 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
     {
         var lead = new Lead
         {
-            Kanaal = invoer.Kanaal, Naam = invoer.Naam, Email = invoer.Email, Telefoon = invoer.Telefoon,
+            Kanaal = invoer.Kanaal, Naam = invoer.Naam, Voornaam = invoer.Voornaam, Email = invoer.Email, Telefoon = invoer.Telefoon,
             EersteVraag = invoer.EersteVraag, Opvolgdatum = invoer.Opvolgdatum,
             TypeAanvraag = invoer.TypeAanvraag, Gemeente = invoer.Gemeente,
             GewensteTiming = invoer.GewensteTiming,
@@ -93,6 +94,7 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
         var lead = await db.Leads.FirstOrDefaultAsync(l => l.Id == id && l.VerwijderdOp == null);
         if (lead is null) return NotFound();
         if (invoer.Naam is not null) lead.Naam = invoer.Naam;
+        if (invoer.Voornaam is not null) lead.Voornaam = invoer.Voornaam;
         if (invoer.Email is not null) lead.Email = invoer.Email;
         if (invoer.Telefoon is not null) lead.Telefoon = invoer.Telefoon;
         if (invoer.EersteVraag is not null) lead.EersteVraag = invoer.EersteVraag;
@@ -134,7 +136,7 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
         var lead = new Lead
         {
             Kanaal = invoer.Soort == "offerteaanvraag" ? LeadKanaal.OfferteaanvraagWebsite : LeadKanaal.ContactWebsite,
-            Naam = invoer.Naam, Email = invoer.Email, Telefoon = invoer.Telefoon,
+            Naam = invoer.Naam, Voornaam = invoer.Voornaam, Email = invoer.Email, Telefoon = invoer.Telefoon,
             Gemeente = invoer.Gemeente, EersteVraag = invoer.Vraag,
             TypeAanvraag = invoer.TypeAanvraag, GewensteTiming = invoer.GewensteTiming,
             PrivacyAkkoord = true, PrivacyAkkoordOp = DateTimeOffset.UtcNow,
@@ -158,7 +160,7 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
         return Ok(new { boodschap = "Bedankt. We nemen binnen twee werkdagen contact op." });
     }
 
-    public record WebformulierInvoer(string? Soort, string Naam, string Email, string? Telefoon,
+    public record WebformulierInvoer(string? Soort, string Naam, string? Voornaam, string Email, string? Telefoon,
         string? Gemeente, string? TypeAanvraag, string? GewensteTiming, string? Vraag,
         bool PrivacyAkkoord, string? WizardGegevens, string? TurnstileToken, IFormFileCollection? Fotos);
 

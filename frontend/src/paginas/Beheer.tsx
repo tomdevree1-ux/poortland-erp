@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { api } from '../lib/api'
+import { persoon } from '../lib/formaat'
 import type { MedewerkerRij, Rol } from '../lib/types'
 import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Th, Td, rijKlik } from '../ui'
 
@@ -15,10 +16,10 @@ export default function Beheer() {
   const { data: medewerkers } = useQuery({ queryKey: ['medewerkers'], queryFn: () => api.get<MedewerkerRij[]>('/medewerkers') })
   const ververs = () => { zetFout(undefined); qc.invalidateQueries({ queryKey: ['medewerkers'] }) }
 
-  const [vorm, zetVorm] = useState({ email: '', naam: '', rollen: [] as Rol[] })
+  const [vorm, zetVorm] = useState({ email: '', naam: '', voornaam: '', rollen: [] as Rol[] })
   const nodigUit = useMutation({
     mutationFn: () => api.post('/medewerkers/uitnodigen', vorm),
-    onSuccess: () => { ververs(); zetUitnodigOpen(false); zetVorm({ email: '', naam: '', rollen: [] }) },
+    onSuccess: () => { ververs(); zetUitnodigOpen(false); zetVorm({ email: '', naam: '', voornaam: '', rollen: [] }) },
     onError: f => zetFout((f as Error).message)
   })
 
@@ -52,7 +53,7 @@ export default function Beheer() {
         <tbody>
           {medewerkers?.map(m => (
             <tr key={m.id} className={rijKlik} onClick={() => openBewerk(m)}>
-              <Td className="font-semibold">{m.naam}</Td>
+              <Td className="font-semibold">{persoon(m.voornaam, m.naam)}</Td>
               <Td>{m.email}</Td>
               <Td>
                 <div className="flex flex-wrap gap-1.5">
@@ -106,7 +107,10 @@ export default function Beheer() {
 
       <Modaal open={uitnodigOpen} titel="Medewerker uitnodigen" onSluit={() => zetUitnodigOpen(false)}>
         <form className="space-y-4" onSubmit={e => { e.preventDefault(); nodigUit.mutate() }}>
-          <Invoer label="Naam" value={vorm.naam} onChange={e => zetVorm({ ...vorm, naam: e.target.value })} required />
+          <div className="grid grid-cols-2 gap-4">
+            <Invoer label="Voornaam" optioneel value={vorm.voornaam} onChange={e => zetVorm({ ...vorm, voornaam: e.target.value })} />
+            <Invoer label="Naam" value={vorm.naam} onChange={e => zetVorm({ ...vorm, naam: e.target.value })} required />
+          </div>
           <Invoer label="Email" type="email" value={vorm.email} onChange={e => zetVorm({ ...vorm, email: e.target.value })} required />
           <div>
             <div className="mb-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-inkt-muted">Rollen</div>

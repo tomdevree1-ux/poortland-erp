@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { api } from '../lib/api'
-import { datum, leeg } from '../lib/formaat'
+import { datum, leeg, persoon } from '../lib/formaat'
 import type { Lead } from '../lib/types'
 import { Badge, Invoer, Knop, Modaal, PaginaKop, Selecteer, TekstVak, Th, Td, rijKlik } from '../ui'
 
@@ -32,7 +32,7 @@ export default function Leads() {
       ...(status ? { status } : {}), ...(zoek ? { zoek } : {}),
       ...(weergave === 'archief' ? { archief: 'true' } : {}) })}`)
   })
-  const [vorm, zetVorm] = useState({ kanaal: 'telefoon', naam: '', email: '', telefoon: '', eersteVraag: '', typeAanvraag: '', gemeente: '', gewensteTiming: '' })
+  const [vorm, zetVorm] = useState({ kanaal: 'telefoon', naam: '', voornaam: '', email: '', telefoon: '', eersteVraag: '', typeAanvraag: '', gemeente: '', gewensteTiming: '' })
   const maak = useMutation({
     mutationFn: () => api.post<Lead>('/leads', {
       ...vorm,
@@ -69,7 +69,7 @@ export default function Leads() {
             {leads?.map(lead => (
               <tr key={lead.id} className={rijKlik}
                 onClick={() => navigeer({ to: '/leads/$leadId', params: { leadId: lead.id } })}>
-                <Td className="font-semibold">{leeg(lead.naam ?? lead.email)}</Td>
+                <Td className="font-semibold">{persoon(lead.voornaam, lead.naam) || leeg(lead.email)}</Td>
                 <Td>{kanaalTekst[lead.kanaal] ?? lead.kanaal}</Td>
                 <Td className="max-w-72 truncate text-inkt-muted">{leeg(lead.eersteVraag)}</Td>
                 <Td><Badge status={lead.status} /></Td>
@@ -88,7 +88,10 @@ export default function Leads() {
             <option value="contactWebsite">Contact (website)</option>
             <option value="offerteaanvraagWebsite">Offerteaanvraag (website)</option>
           </Selecteer>
-          <Invoer label="Naam" value={vorm.naam} onChange={e => zetVorm({ ...vorm, naam: e.target.value })} required />
+          <div className="grid grid-cols-2 gap-4">
+            <Invoer label="Voornaam" optioneel value={vorm.voornaam} onChange={e => zetVorm({ ...vorm, voornaam: e.target.value })} />
+            <Invoer label="Naam" value={vorm.naam} onChange={e => zetVorm({ ...vorm, naam: e.target.value })} required />
+          </div>
           <div className="grid grid-cols-2 gap-4">
             <Invoer label="Email" optioneel type="email" value={vorm.email} onChange={e => zetVorm({ ...vorm, email: e.target.value })} />
             <Invoer label="Telefoon" optioneel value={vorm.telefoon} onChange={e => zetVorm({ ...vorm, telefoon: e.target.value })} />

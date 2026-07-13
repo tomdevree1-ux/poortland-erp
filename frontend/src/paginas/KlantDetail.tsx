@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link, useParams } from '@tanstack/react-router'
 import { api } from '../lib/api'
-import { datum, leeg } from '../lib/formaat'
+import { datum, leeg, persoon as volledigeNaam } from '../lib/formaat'
 import type { Klant } from '../lib/types'
 import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Paneel, PotloodKnop, Selecteer } from '../ui'
 
@@ -61,12 +61,12 @@ export default function KlantDetail() {
   })
 
   const [klantOpen, zetKlantOpen] = useState(false)
-  const [klantVorm, zetKlantVorm] = useState<{ type: string; naam: string; btwNummer: string; straat: string
+  const [klantVorm, zetKlantVorm] = useState<{ type: string; naam: string; voornaam: string; btwNummer: string; straat: string
     postcode: string; gemeente: string; email: string; telefoon: string; communicatietaal: string } | null>(null)
   function openKlantBewerk() {
     const k = data!.klant
     zetKlantVorm({
-      type: k.type, naam: k.naam, btwNummer: k.btwNummer ?? '', straat: k.straat ?? '',
+      type: k.type, naam: k.naam, voornaam: k.voornaam ?? '', btwNummer: k.btwNummer ?? '', straat: k.straat ?? '',
       postcode: k.postcode ?? '', gemeente: k.gemeente ?? '', email: k.email ?? '',
       telefoon: k.telefoon ?? '', communicatietaal: k.communicatietaal
     })
@@ -74,7 +74,7 @@ export default function KlantDetail() {
   }
   const bewaarKlant = useMutation({
     mutationFn: () => api.patch(`/klanten/${klantId}`, {
-      ...klantVorm, btwNummer: klantVorm!.btwNummer || null,
+      ...klantVorm, voornaam: klantVorm!.voornaam || null, btwNummer: klantVorm!.btwNummer || null,
       straat: klantVorm!.straat || null, postcode: klantVorm!.postcode || null,
       gemeente: klantVorm!.gemeente || null, email: klantVorm!.email || null,
       telefoon: klantVorm!.telefoon || null, communicatievoorkeur: null
@@ -87,7 +87,7 @@ export default function KlantDetail() {
   const { klant, projecten, contactmomenten } = data
   return (
     <>
-      <PaginaKop eyebrow="Klantfiche" titel={klant.naam} />
+      <PaginaKop eyebrow="Klantfiche" titel={volledigeNaam(klant.voornaam, klant.naam)} />
       {fout && <div className="mb-4"><Melding soort="fout">{fout}</Melding></div>}
       <div className="grid grid-cols-2 gap-6">
         <Paneel titel="Gegevens" actie={<PotloodKnop onClick={openKlantBewerk} />}>
@@ -169,6 +169,8 @@ export default function KlantDetail() {
               </Selecteer>
               <Invoer label="Naam" value={klantVorm.naam} onChange={e => zetKlantVorm({ ...klantVorm, naam: e.target.value })} required />
             </div>
+            {klantVorm.type === 'particulier' &&
+              <Invoer label="Voornaam" optioneel value={klantVorm.voornaam} onChange={e => zetKlantVorm({ ...klantVorm, voornaam: e.target.value })} />}
             {klantVorm.type === 'bedrijf' &&
               <Invoer label="Btw nummer" value={klantVorm.btwNummer} onChange={e => zetKlantVorm({ ...klantVorm, btwNummer: e.target.value })} required />}
             <div className="grid grid-cols-3 gap-4">

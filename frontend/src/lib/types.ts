@@ -11,7 +11,7 @@ export type Rol = 'verkoop' | 'planning' | 'productie' | 'montage' | 'boekhoudin
 export interface LeadFoto { id: string; bestandsnaam: string; url: string }
 export interface Lead {
   id: string; kanaal: LeadKanaal; status: LeadStatus; eigenaarId: string
-  naam?: string; email?: string; telefoon?: string; eersteVraag?: string
+  naam?: string; voornaam?: string; email?: string; telefoon?: string; eersteVraag?: string
   prijsindicatie?: number; opvolgdatum?: string; verliesReden?: string
   omgezetProjectId?: string; aangemaaktOp: string
   typeAanvraag?: string; gemeente?: string; gewensteTiming?: string
@@ -20,7 +20,7 @@ export interface Lead {
   fotos?: LeadFoto[]
 }
 export interface Klant {
-  id: string; type: 'particulier' | 'bedrijf'; naam: string; btwNummer?: string
+  id: string; type: 'particulier' | 'bedrijf'; naam: string; voornaam?: string; btwNummer?: string
   straat?: string; postcode?: string; gemeente?: string; email?: string; telefoon?: string
   communicatietaal: 'nl' | 'fr' | 'en'
 }
@@ -63,5 +63,5 @@ export interface Kerncijfers {
 }
 export interface MedewerkerKeuze { id: string; naam: string }
 export interface MedewerkerRij {
-  id: string; naam: string; email: string; telefoon?: string; isActief: boolean; rollen: Rol[]
+  id: string; naam: string; voornaam?: string; email: string; telefoon?: string; isActief: boolean; rollen: Rol[]
 }
