@@ -28,7 +28,7 @@ public class MedewerkersController(PoortlandDbContext db, ClaimsContext claims) 
     [HttpGet("overzicht")]
     public async Task<IActionResult> Overzicht() =>
         Ok(await db.Database.SqlQuery<MedewerkerKeuze>(
-            $@"select id as ""Id"", naam as ""Naam"" from medewerker_overzicht where is_actief order by naam")
+            $@"select id as ""Id"", naam as ""Naam"" from medewerker_keuzes() where is_actief order by naam")
             .ToListAsync());
     public record MedewerkerKeuze(Guid Id, string Naam);
 

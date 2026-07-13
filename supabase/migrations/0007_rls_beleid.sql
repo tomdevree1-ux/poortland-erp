@@ -159,6 +159,8 @@ create policy audit_select on audit_log for select using (mag('audit','R'));
 -- offerte_reeks: geen policies, dus geen directe toegang. De nummering loopt
 -- via de security definer functie in migratie 0009.
 
+-- Nota: deze view is in migratie 0011 vervangen door de functie medewerker_keuzes()
+-- na de security advisors. Historie blijft staan voor wie de reeks vers afspeelt.
 -- Namen van collega's voor keuzelijsten (eigenaar van een lead of taak):
 -- een beperkte weergave zonder contactgegevens, leesbaar voor de applicatie.
 create view medewerker_overzicht as
