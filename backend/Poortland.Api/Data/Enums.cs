@@ -4,7 +4,7 @@ namespace Poortland.Api.Data;
 public enum Rol { Verkoop, Planning, Productie, Montage, Boekhouding, Beheerder, Systeem }
 public enum KlantType { Particulier, Bedrijf }
 public enum Taal { Nl, Fr, En }
-public enum LeadKanaal { Telefoon, Email, Webformulier, SocialeMedia }
+public enum LeadKanaal { Telefoon, Email, Webformulier, SocialeMedia, ContactWebsite, OfferteaanvraagWebsite }
 public enum LeadStatus { Nieuw, Gekwalificeerd, Omgezet, Verloren }
 public enum OfferteStatus { Nieuw, Verzonden, Goedgekeurd, Geweigerd, Verlopen }
 public enum OrderStatus { Aangemaakt, InProductie, ExterneBehandeling, KlaarVoorMontage, Gemonteerd, Afgesloten, Geannuleerd }

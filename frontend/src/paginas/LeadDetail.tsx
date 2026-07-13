@@ -1,10 +1,26 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useParams } from '@tanstack/react-router'
+import { clsx } from 'clsx'
 import { api } from '../lib/api'
 import { datum, euro, leeg } from '../lib/formaat'
 import type { Klant, Lead } from '../lib/types'
 import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Paneel, Selecteer, TekstVak } from '../ui'
+import { timingOpties, typeAanvraagOpties } from './Leads'
+
+const typeTekst = Object.fromEntries(typeAanvraagOpties)
+const timingTekst = Object.fromEntries(timingOpties)
+
+interface WizardStap { titel: string; velden: { label: string; waarde: string }[] }
+
+function parseWizard(json?: string): WizardStap[] | null {
+  if (!json) return null
+  try {
+    const data = JSON.parse(json)
+    if (Array.isArray(data?.stappen)) return data.stappen as WizardStap[]
+    return null
+  } catch { return null }
+}
 
 export default function LeadDetail() {
   const { leadId } = useParams({ from: '/app/leads/$leadId' })
@@ -14,11 +30,30 @@ export default function LeadDetail() {
   const [omzetOpen, zetOmzetOpen] = useState(false)
   const [verliesOpen, zetVerliesOpen] = useState(false)
   const [fout, zetFout] = useState<string>()
+  const ververs = () => { zetFout(undefined); qc.invalidateQueries({ queryKey: ['lead', leadId] }) }
+  const bewerkbaar = lead?.status === 'nieuw' || lead?.status === 'gekwalificeerd'
 
   const kwalificeer = useMutation({
     mutationFn: () => api.post<Lead>(`/leads/${leadId}/kwalificeer`, { prijsindicatie: null, opvolgdatum: null }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['lead', leadId] }),
-    onError: f => zetFout((f as Error).message)
+    onSuccess: ververs, onError: f => zetFout((f as Error).message)
+  })
+  const wijzig = useMutation({
+    mutationFn: (deel: Record<string, unknown>) => api.patch<Lead>(`/leads/${leadId}`, deel),
+    onSuccess: ververs, onError: f => zetFout((f as Error).message)
+  })
+
+  const bestandRef = useRef<HTMLInputElement>(null)
+  const uploadFoto = useMutation({
+    mutationFn: (bestand: File) => {
+      const form = new FormData()
+      form.append('bestand', bestand)
+      return api.formulier(`/leads/${leadId}/fotos`, form)
+    },
+    onSuccess: ververs, onError: f => zetFout((f as Error).message)
+  })
+  const verwijderFoto = useMutation({
+    mutationFn: (fotoId: string) => api.del(`/leads/${leadId}/fotos/${fotoId}`),
+    onSuccess: ververs, onError: f => zetFout((f as Error).message)
   })
 
   const [klantKeuze, zetKlantKeuze] = useState('')
@@ -33,7 +68,13 @@ export default function LeadDetail() {
   const omzetten = useMutation({
     mutationFn: () => api.post<{ projectId: string }>(`/leads/${leadId}/omzetten`, {
       klantId: klantKeuze || null,
-      nieuweKlant: klantKeuze ? null : { ...nieuweKlant, btwNummer: nieuweKlant.btwNummer || null, email: lead?.email, telefoon: lead?.telefoon },
+      nieuweKlant: klantKeuze ? null : {
+        ...nieuweKlant,
+        naam: nieuweKlant.naam || lead?.naam || '',
+        gemeente: nieuweKlant.gemeente || lead?.gemeente || null,
+        btwNummer: nieuweKlant.btwNummer || null,
+        email: lead?.email, telefoon: lead?.telefoon
+      },
       werfadres, omschrijving: lead?.eersteVraag
     }),
     onSuccess: r => navigeer({ to: '/dossiers/$projectId', params: { projectId: r.projectId } }),
@@ -42,35 +83,82 @@ export default function LeadDetail() {
   const [reden, zetReden] = useState('')
   const verliezen = useMutation({
     mutationFn: () => api.post<Lead>(`/leads/${leadId}/verliezen`, { reden }),
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['lead', leadId] }); zetVerliesOpen(false) },
+    onSuccess: () => { ververs(); zetVerliesOpen(false) },
     onError: f => zetFout((f as Error).message)
   })
 
   if (!lead) return null
+  const wizard = parseWizard(lead.wizardGegevens)
   return (
     <>
       <PaginaKop eyebrow="Verkoop · lead" titel={leeg(lead.naam ?? lead.email)}
         actie={<div className="flex gap-2">
           {lead.status === 'nieuw' && <Knop variant="primair" onClick={() => kwalificeer.mutate()}>Kwalificeren</Knop>}
           {lead.status === 'gekwalificeerd' && <Knop variant="primair" onClick={() => zetOmzetOpen(true)}>Omzetten naar dossier ↗</Knop>}
-          {(lead.status === 'nieuw' || lead.status === 'gekwalificeerd') &&
-            <Knop variant="ghost" onClick={() => zetVerliesOpen(true)}>Verliezen</Knop>}
+          {bewerkbaar && <Knop variant="ghost" onClick={() => zetVerliesOpen(true)}>Verliezen</Knop>}
         </div>} />
       {fout && <div className="mb-4"><Melding soort="fout">{fout}</Melding></div>}
+
       <div className="grid grid-cols-2 gap-6">
-        <Paneel titel="Gegevens">
+        <Paneel titel="Aanvraag">
           <dl className="space-y-2 text-sm">
             <div className="flex justify-between"><dt className="text-inkt-muted">Status</dt><dd><Badge status={lead.status} /></dd></div>
+            <div className="flex justify-between"><dt className="text-inkt-muted">Type aanvraag</dt>
+              <dd>{leeg(lead.typeAanvraag ? typeTekst[lead.typeAanvraag] ?? lead.typeAanvraag : null)}</dd></div>
+            <div className="flex justify-between"><dt className="text-inkt-muted">Gewenste timing</dt>
+              <dd>{leeg(lead.gewensteTiming ? timingTekst[lead.gewensteTiming] ?? lead.gewensteTiming : null)}</dd></div>
+            <div className="flex justify-between"><dt className="text-inkt-muted">Gemeente</dt><dd>{leeg(lead.gemeente)}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Email</dt><dd>{leeg(lead.email)}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Telefoon</dt><dd>{leeg(lead.telefoon)}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Opvolgdatum</dt><dd>{datum(lead.opvolgdatum)}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Prijsindicatie</dt><dd className="cijfers">{euro(lead.prijsindicatie)}</dd></div>
+            {lead.privacyAkkoord && (
+              <div className="flex justify-between"><dt className="text-inkt-muted">Privacy akkoord</dt>
+                <dd>ja · {datum(lead.privacyAkkoordOp)}</dd></div>
+            )}
             {lead.verliesReden && <div className="flex justify-between"><dt className="text-inkt-muted">Reden verlies</dt><dd>{lead.verliesReden}</dd></div>}
           </dl>
         </Paneel>
-        <Paneel titel="Eerste vraag">
-          <p className="text-sm leading-relaxed text-inkt-body">{leeg(lead.eersteVraag)}</p>
+
+        <Paneel titel="Omschrijving van het project">
+          {bewerkbaar ? (
+            <TekstVak defaultValue={lead.eersteVraag ?? ''} rows={6}
+              onBlur={e => e.target.value !== (lead.eersteVraag ?? '') && wijzig.mutate({ eersteVraag: e.target.value })} />
+          ) : (
+            <p className="text-sm leading-relaxed text-inkt-body">{leeg(lead.eersteVraag)}</p>
+          )}
         </Paneel>
+
+        <Paneel titel="Foto's van de plek" actie={bewerkbaar && (
+          <>
+            <input ref={bestandRef} type="file" accept="image/jpeg,image/png,image/webp,image/heic" hidden
+              onChange={e => e.target.files?.[0] && uploadFoto.mutate(e.target.files[0])} />
+            <Knop variant="secundair" className="h-8 px-3 text-xs" onClick={() => bestandRef.current?.click()}
+              disabled={uploadFoto.isPending}>{uploadFoto.isPending ? 'Bezig…' : 'Foto toevoegen'}</Knop>
+          </>)}>
+          {!lead.fotos?.length ? (
+            <p className="text-sm text-inkt-muted">Nog geen foto's. Vanaf het webformulier komen ze hier automatisch binnen.</p>
+          ) : (
+            <div className="grid grid-cols-3 gap-3">
+              {lead.fotos.map(f => (
+                <figure key={f.id} className="group relative overflow-hidden rounded-control border border-inkt/10 bg-vlak-sunken">
+                  <a href={f.url} target="_blank" rel="noreferrer">
+                    <img src={f.url} alt={f.bestandsnaam} className="aspect-[4/3] w-full object-cover" />
+                  </a>
+                  {bewerkbaar && (
+                    <button className="focusring absolute right-1 top-1 hidden rounded-chip bg-corten-600 px-1.5 text-xs text-stone2-50 group-hover:block"
+                      onClick={() => verwijderFoto.mutate(f.id)} aria-label="Foto verwijderen">×</button>
+                  )}
+                </figure>
+              ))}
+            </div>
+          )}
+        </Paneel>
+
+        {wizard && (
+          <WizardPaneel stappen={wizard} bewerkbaar={bewerkbaar}
+            bijBewaren={stappen => wijzig.mutate({ wizardGegevens: JSON.stringify({ stappen }) })} />
+        )}
       </div>
 
       <Modaal open={omzetOpen} titel="Omzetten naar klant en dossier" onSluit={() => zetOmzetOpen(false)}>
@@ -88,14 +176,14 @@ export default function LeadDetail() {
                   <option value="particulier">Particulier</option>
                   <option value="bedrijf">Bedrijf</option>
                 </Selecteer>
-                <Invoer label="Naam" value={nieuweKlant.naam} onChange={e => zetNieuweKlant({ ...nieuweKlant, naam: e.target.value })} required={!klantKeuze} />
+                <Invoer label="Naam" value={nieuweKlant.naam || lead.naam || ''} onChange={e => zetNieuweKlant({ ...nieuweKlant, naam: e.target.value })} required={!klantKeuze} />
               </div>
               {nieuweKlant.type === 'bedrijf' &&
                 <Invoer label="Btw nummer" value={nieuweKlant.btwNummer} onChange={e => zetNieuweKlant({ ...nieuweKlant, btwNummer: e.target.value })} required />}
               <div className="grid grid-cols-3 gap-4">
                 <Invoer label="Straat" optioneel value={nieuweKlant.straat} onChange={e => zetNieuweKlant({ ...nieuweKlant, straat: e.target.value })} />
                 <Invoer label="Postcode" optioneel value={nieuweKlant.postcode} onChange={e => zetNieuweKlant({ ...nieuweKlant, postcode: e.target.value })} />
-                <Invoer label="Gemeente" optioneel value={nieuweKlant.gemeente} onChange={e => zetNieuweKlant({ ...nieuweKlant, gemeente: e.target.value })} />
+                <Invoer label="Gemeente" optioneel value={nieuweKlant.gemeente || lead.gemeente || ''} onChange={e => zetNieuweKlant({ ...nieuweKlant, gemeente: e.target.value })} />
               </div>
             </div>
           )}
@@ -117,5 +205,53 @@ export default function LeadDetail() {
         </form>
       </Modaal>
     </>
+  )
+}
+
+/* De offertewizard van de website, hier als bewerkbare wizard (TS-04 aanvulling).
+   Structuurcontract: { stappen: [{ titel, velden: [{ label, waarde }] }] }. */
+function WizardPaneel({ stappen, bewerkbaar, bijBewaren }:
+  { stappen: WizardStap[]; bewerkbaar: boolean; bijBewaren: (stappen: WizardStap[]) => void }) {
+  const [actief, zetActief] = useState(0)
+  const [lokaal, zetLokaal] = useState(stappen)
+  const [gewijzigd, zetGewijzigd] = useState(false)
+  const stap = lokaal[actief]
+  if (!stap) return null
+
+  function zetVeld(index: number, waarde: string) {
+    const kopie = lokaal.map((s, si) => si === actief
+      ? { ...s, velden: s.velden.map((v, vi) => (vi === index ? { ...v, waarde } : v)) }
+      : s)
+    zetLokaal(kopie)
+    zetGewijzigd(true)
+  }
+
+  return (
+    <Paneel titel="Offerteaanvraag (wizard van de website)" className="col-span-2"
+      actie={gewijzigd && bewerkbaar && (
+        <Knop variant="secundair" className="h-8 px-3 text-xs"
+          onClick={() => { bijBewaren(lokaal); zetGewijzigd(false) }}>Wijzigingen bewaren</Knop>)}>
+      <div className="mb-5 flex items-center gap-2">
+        {lokaal.map((s, i) => (
+          <button key={i} type="button" onClick={() => zetActief(i)}
+            className={clsx('focusring flex items-center gap-2 rounded-chip px-2.5 py-1 text-xs font-semibold',
+              i === actief ? 'bg-bronze-500/15 text-bronze-600' : 'text-inkt-muted hover:text-inkt')}>
+            <span className={clsx('flex h-5 w-5 items-center justify-center rounded-full border text-[10px]',
+              i === actief ? 'border-bronze-500 text-bronze-600' : 'border-inkt/20')}>{i + 1}</span>
+            {s.titel}
+          </button>
+        ))}
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        {stap.velden.map((veld, i) => (
+          <Invoer key={`${actief}-${i}`} label={veld.label} value={veld.waarde} disabled={!bewerkbaar}
+            onChange={e => zetVeld(i, e.target.value)} />
+        ))}
+      </div>
+      <div className="mt-5 flex justify-between">
+        <Knop variant="ghost" type="button" disabled={actief === 0} onClick={() => zetActief(actief - 1)}>Vorige</Knop>
+        <Knop variant="neutraal" type="button" disabled={actief === lokaal.length - 1} onClick={() => zetActief(actief + 1)}>Volgende</Knop>
+      </div>
+    </Paneel>
   )
 }

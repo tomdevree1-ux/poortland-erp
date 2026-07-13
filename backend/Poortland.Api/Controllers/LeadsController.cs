@@ -9,16 +9,23 @@ using Poortland.Api.Domein;
 namespace Poortland.Api.Controllers;
 
 public record LeadInvoer(LeadKanaal Kanaal, string? Naam, string? Email, string? Telefoon,
-    string? EersteVraag, Guid? EigenaarId, DateOnly? Opvolgdatum);
-public record WebformulierInvoer(string Naam, string Email, string? Telefoon, string Vraag, string? TurnstileToken);
+    string? EersteVraag, Guid? EigenaarId, DateOnly? Opvolgdatum,
+    string? TypeAanvraag, string? Gemeente, string? GewensteTiming);
+public record LeadWijziging(string? Naam, string? Email, string? Telefoon, string? EersteVraag,
+    string? TypeAanvraag, string? Gemeente, string? GewensteTiming, DateOnly? Opvolgdatum,
+    string? WizardGegevens);
 public record KwalificatieInvoer(decimal? Prijsindicatie, DateOnly? Opvolgdatum);
 public record VerliesInvoer(string Reden);
 
 [ApiController]
 [Route("api/v1/leads")]
 [Authorize]
-public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadService service) : ControllerBase
+public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadService service,
+    SupabaseOpslag opslag) : ControllerBase
 {
+    const string BucketUploads = "lead_uploads";
+    static readonly string[] FotoTypes = ["image/jpeg", "image/png", "image/webp", "image/heic"];
+
     [HttpGet]
     public async Task<IActionResult> Lijst([FromQuery] LeadStatus? status, [FromQuery] LeadKanaal? kanaal,
         [FromQuery] Guid? eigenaar, [FromQuery] string? zoek)
@@ -32,6 +39,7 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
             var patroon = $"%{zoek}%";
             query = query.Where(l => EF.Functions.ILike(l.Naam ?? "", patroon)
                 || EF.Functions.ILike(l.Email ?? "", patroon)
+                || EF.Functions.ILike(l.Gemeente ?? "", patroon)
                 || EF.Functions.ILike(l.EersteVraag ?? "", patroon));
         }
         var leads = await query.OrderByDescending(l => l.AangemaaktOp).Take(200).ToListAsync();
@@ -41,8 +49,21 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> Detail(Guid id)
     {
-        var lead = await db.Leads.AsNoTracking().FirstOrDefaultAsync(l => l.Id == id && l.VerwijderdOp == null);
-        return lead is null ? NotFound() : Ok(lead);
+        var lead = await db.Leads.AsNoTracking()
+            .Include(l => l.Bijlagen.Where(b => b.VerwijderdOp == null))
+            .FirstOrDefaultAsync(l => l.Id == id && l.VerwijderdOp == null);
+        if (lead is null) return NotFound();
+        var fotos = new List<object>();
+        foreach (var b in lead.Bijlagen)
+            fotos.Add(new { b.Id, b.Bestandsnaam, url = await opslag.SignedUrl(BucketUploads, b.BestandPad, 600) });
+        return Ok(new
+        {
+            lead.Id, lead.KlantId, lead.Kanaal, lead.Status, lead.EigenaarId, lead.Opvolgdatum,
+            lead.Naam, lead.Email, lead.Telefoon, lead.EersteVraag, lead.Prijsindicatie,
+            lead.VerliesReden, lead.OmgezetProjectId, lead.TypeAanvraag, lead.Gemeente,
+            lead.GewensteTiming, lead.PrivacyAkkoord, lead.PrivacyAkkoordOp, lead.WizardGegevens,
+            lead.AangemaaktOp, fotos
+        });
     }
 
     [HttpPost]
@@ -53,6 +74,8 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
         {
             Kanaal = invoer.Kanaal, Naam = invoer.Naam, Email = invoer.Email, Telefoon = invoer.Telefoon,
             EersteVraag = invoer.EersteVraag, Opvolgdatum = invoer.Opvolgdatum,
+            TypeAanvraag = invoer.TypeAanvraag, Gemeente = invoer.Gemeente,
+            GewensteTiming = invoer.GewensteTiming,
             EigenaarId = invoer.EigenaarId ?? claims.MedewerkerId!.Value,
             AangemaaktDoor = claims.MedewerkerId
         };
@@ -61,14 +84,40 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
         return CreatedAtAction(nameof(Detail), new { id = lead.Id }, lead);
     }
 
-    // FR-001: het publieke webformulier, beschermd met Turnstile (TS-04 sectie 2).
+    // Alle contactvelden en de wizard blijven bewerkbaar in het ERP.
+    [HttpPatch("{id:guid}")]
+    [VereistRol("verkoop")]
+    public async Task<IActionResult> Wijzig(Guid id, LeadWijziging invoer)
+    {
+        var lead = await db.Leads.FirstOrDefaultAsync(l => l.Id == id && l.VerwijderdOp == null);
+        if (lead is null) return NotFound();
+        if (invoer.Naam is not null) lead.Naam = invoer.Naam;
+        if (invoer.Email is not null) lead.Email = invoer.Email;
+        if (invoer.Telefoon is not null) lead.Telefoon = invoer.Telefoon;
+        if (invoer.EersteVraag is not null) lead.EersteVraag = invoer.EersteVraag;
+        if (invoer.TypeAanvraag is not null) lead.TypeAanvraag = invoer.TypeAanvraag;
+        if (invoer.Gemeente is not null) lead.Gemeente = invoer.Gemeente;
+        if (invoer.GewensteTiming is not null) lead.GewensteTiming = invoer.GewensteTiming;
+        if (invoer.Opvolgdatum is { } datum) lead.Opvolgdatum = datum;
+        if (invoer.WizardGegevens is not null) lead.WizardGegevens = invoer.WizardGegevens;
+        await db.SaveChangesAsync();
+        return Ok(lead);
+    }
+
+    // FR-001: publieke captatie vanaf de website met Turnstile (TS-04 sectie 2).
+    // Het contactformulier en de offertewizard komen hier samen binnen.
     [HttpPost("webformulier")]
     [AllowAnonymous]
-    public async Task<IActionResult> Webformulier(WebformulierInvoer invoer,
+    [RequestSizeLimit(60 * 1024 * 1024)]
+    public async Task<IActionResult> Webformulier([FromForm] WebformulierInvoer invoer,
         [FromServices] TurnstileValidator turnstile)
     {
         if (!await turnstile.Valideer(invoer.TurnstileToken, HttpContext.Connection.RemoteIpAddress?.ToString()))
             return BadRequest(new { fout = "Verificatie mislukt. Probeer opnieuw." });
+        if (!invoer.PrivacyAkkoord)
+            return BadRequest(new { fout = "Ga akkoord met de verwerking van je gegevens." });
+        if (invoer.Fotos is { Count: > 5 })
+            return BadRequest(new { fout = "Maximaal 5 foto's per aanvraag." });
 
         claims.VulAlsSysteem();
         await DbClaims.ZetClaims(db, claims, HttpContext.RequestAborted);
@@ -80,14 +129,76 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
             .FirstOrDefaultAsync();
         if (eigenaar == Guid.Empty)
             return StatusCode(503, new { fout = "Nog geen medewerkers ingericht." });
-        db.Leads.Add(new Lead
+
+        var lead = new Lead
         {
-            Kanaal = LeadKanaal.Webformulier, Naam = invoer.Naam, Email = invoer.Email,
-            Telefoon = invoer.Telefoon, EersteVraag = invoer.Vraag, EigenaarId = eigenaar,
+            Kanaal = invoer.Soort == "offerteaanvraag" ? LeadKanaal.OfferteaanvraagWebsite : LeadKanaal.ContactWebsite,
+            Naam = invoer.Naam, Email = invoer.Email, Telefoon = invoer.Telefoon,
+            Gemeente = invoer.Gemeente, EersteVraag = invoer.Vraag,
+            TypeAanvraag = invoer.TypeAanvraag, GewensteTiming = invoer.GewensteTiming,
+            PrivacyAkkoord = true, PrivacyAkkoordOp = DateTimeOffset.UtcNow,
+            WizardGegevens = string.IsNullOrWhiteSpace(invoer.WizardGegevens) ? null : invoer.WizardGegevens,
+            EigenaarId = eigenaar,
             Opvolgdatum = DateOnly.FromDateTime(DateTime.Today.AddDays(2))
-        });
+        };
+        db.Leads.Add(lead);
         await db.SaveChangesAsync();
-        return Ok(new { boodschap = "Bedankt. We nemen snel contact op." });
+
+        if (invoer.Fotos is not null)
+        {
+            foreach (var foto in invoer.Fotos)
+            {
+                if (foto.Length == 0 || foto.Length > 10 * 1024 * 1024) continue;
+                if (!FotoTypes.Contains(foto.ContentType)) continue;
+                await BewaarFoto(lead.Id, foto);
+            }
+            await db.SaveChangesAsync();
+        }
+        return Ok(new { boodschap = "Bedankt. We nemen binnen twee werkdagen contact op." });
+    }
+
+    public record WebformulierInvoer(string? Soort, string Naam, string Email, string? Telefoon,
+        string? Gemeente, string? TypeAanvraag, string? GewensteTiming, string? Vraag,
+        bool PrivacyAkkoord, string? WizardGegevens, string? TurnstileToken, IFormFileCollection? Fotos);
+
+    async Task BewaarFoto(Guid leadId, IFormFile foto)
+    {
+        var extensie = Path.GetExtension(foto.FileName);
+        if (string.IsNullOrWhiteSpace(extensie)) extensie = ".jpg";
+        var pad = $"{leadId}/{Guid.NewGuid()}{extensie}";
+        using var geheugen = new MemoryStream();
+        await foto.CopyToAsync(geheugen);
+        await opslag.Upload(BucketUploads, pad, geheugen.ToArray(), foto.ContentType);
+        db.LeadBijlagen.Add(new LeadBijlage
+        {
+            LeadId = leadId, Bestandsnaam = foto.FileName, ContentType = foto.ContentType, BestandPad = pad,
+            AangemaaktDoor = claims.MedewerkerId
+        });
+    }
+
+    [HttpPost("{id:guid}/fotos")]
+    [VereistRol("verkoop")]
+    [RequestSizeLimit(20 * 1024 * 1024)]
+    public async Task<IActionResult> UploadFoto(Guid id, [FromForm] IFormFile bestand)
+    {
+        if (!FotoTypes.Contains(bestand.ContentType))
+            return BadRequest(new { fout = "Toegelaten formaten: jpeg, png, webp of heic." });
+        var lead = await db.Leads.FirstOrDefaultAsync(l => l.Id == id && l.VerwijderdOp == null);
+        if (lead is null) return NotFound();
+        await BewaarFoto(id, bestand);
+        await db.SaveChangesAsync();
+        return Ok(new { boodschap = "Foto toegevoegd." });
+    }
+
+    [HttpDelete("{id:guid}/fotos/{bijlageId:guid}")]
+    [VereistRol("verkoop")]
+    public async Task<IActionResult> VerwijderFoto(Guid id, Guid bijlageId)
+    {
+        var bijlage = await db.LeadBijlagen.FirstOrDefaultAsync(b => b.Id == bijlageId && b.LeadId == id && b.VerwijderdOp == null);
+        if (bijlage is null) return NotFound();
+        bijlage.VerwijderdOp = DateTimeOffset.UtcNow; // soft delete, opruiming volgt retentie
+        await db.SaveChangesAsync();
+        return Ok(new { bijlage.Id, verwijderd = true });
     }
 
     [HttpPost("{id:guid}/kwalificeer")]

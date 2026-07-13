@@ -64,6 +64,35 @@ en accenten maar nooit als achtergrondvlak.
 - BS-02: de enumwaarde `systeem` bestaat voor achtergrondtaken met minimale rechten
   (invulling van het open punt in TS-02 sectie 9).
 
+## Leadcaptatie vanaf de website (contract)
+
+De marketingwebsite stuurt het contactformulier en de offertewizard naar 1 publiek
+endpoint, beschermd met Cloudflare Turnstile. De twee kanalen heten in het ERP
+Contact (website) en Offerteaanvraag (website).
+
+`POST /api/v1/leads/webformulier` als multipart formulier met deze velden:
+
+| Veld | Verplicht | Betekenis |
+|---|---|---|
+| soort | ja | contact of offerteaanvraag (bepaalt het kanaal) |
+| naam | ja | naam van de aanvrager |
+| email | ja | emailadres |
+| telefoon | nee | telefoonnummer |
+| gemeente | nee | gemeente van de werf |
+| typeAanvraag | nee | nieuwe-poort, hekwerk, automatisatie, onderhoud, showroom of andere |
+| gewensteTiming | nee | zo-snel, 3-maand, 6-maand of orientatie |
+| vraag | nee | omschrijving van het project |
+| privacyAkkoord | ja | moet true zijn, wordt met tijdstip gelogd (AVG) |
+| wizardGegevens | nee | json tekst, enkel bij offerteaanvraag, zie structuur hieronder |
+| fotos | nee | maximaal 5 afbeeldingen (jpeg, png, webp of heic, elk maximaal 10 MB) |
+| turnstileToken | ja in productie | Cloudflare Turnstile antwoord |
+
+Structuur van wizardGegevens: `{ "stappen": [{ "titel": "...", "velden": [{ "label": "...", "waarde": "..." }] }] }`.
+Het ERP toont die stappen als bewerkbare wizard in het leaddetail. Alle contactvelden
+staan op de lead en reizen mee bij omzetting: contactgegevens en gemeente naar de
+klant en de omschrijving naar het project. Foto's landen privaat in de bucket
+lead_uploads en zijn in het ERP zichtbaar via kortlevende signed URLs.
+
 ## Website koppeling (TS-17)
 
 De marketingwebsite leest uitsluitend `content.json` en publieke afbeeldingen uit de bucket

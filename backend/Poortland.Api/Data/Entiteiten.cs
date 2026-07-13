@@ -78,6 +78,21 @@ public class Lead : BasisEntiteit
     public decimal? Prijsindicatie { get; set; }
     public string? VerliesReden { get; set; }
     public Guid? OmgezetProjectId { get; set; }
+    public string? TypeAanvraag { get; set; }
+    public string? Gemeente { get; set; }
+    public string? GewensteTiming { get; set; }
+    public bool PrivacyAkkoord { get; set; }
+    public DateTimeOffset? PrivacyAkkoordOp { get; set; }
+    public string? WizardGegevens { get; set; }
+    public List<LeadBijlage> Bijlagen { get; set; } = new();
+}
+
+public class LeadBijlage : BasisEntiteit
+{
+    public Guid LeadId { get; set; }
+    public string Bestandsnaam { get; set; } = "";
+    public string ContentType { get; set; } = "";
+    public string BestandPad { get; set; } = "";
 }
 
 public class Project : BasisEntiteit

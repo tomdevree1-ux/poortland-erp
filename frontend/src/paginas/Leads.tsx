@@ -7,8 +7,17 @@ import type { Lead, MedewerkerKeuze } from '../lib/types'
 import { Badge, Invoer, Knop, LegeStaat, Modaal, PaginaKop, Selecteer, TekstVak, Th, Td } from '../ui'
 
 const kanaalTekst: Record<string, string> = {
-  telefoon: 'Telefoon', email: 'Email', webformulier: 'Webformulier', socialeMedia: 'Sociale media'
+  telefoon: 'Telefoon', email: 'Email', webformulier: 'Webformulier', socialeMedia: 'Sociale media',
+  contactWebsite: 'Contact (website)', offerteaanvraagWebsite: 'Offerteaanvraag (website)'
 }
+export const typeAanvraagOpties = [
+  ['nieuwe-poort', 'Nieuwe poort'], ['hekwerk', 'Hekwerk'], ['automatisatie', 'Automatisatie'],
+  ['onderhoud', 'Onderhoud of service'], ['showroom', 'Showroombezoek'], ['andere', 'Andere vraag']
+] as const
+export const timingOpties = [
+  ['zo-snel', 'Zo snel mogelijk'], ['3-maand', 'Binnen drie maanden'],
+  ['6-maand', 'Binnen zes maanden'], ['orientatie', 'Nog in oriëntatie']
+] as const
 
 export default function Leads() {
   const qc = useQueryClient()
@@ -24,9 +33,13 @@ export default function Leads() {
     queryKey: ['medewerkers-overzicht'],
     queryFn: () => api.get<MedewerkerKeuze[]>('/medewerkers/overzicht')
   })
-  const [vorm, zetVorm] = useState({ kanaal: 'telefoon', naam: '', email: '', telefoon: '', eersteVraag: '', eigenaarId: '' })
+  const [vorm, zetVorm] = useState({ kanaal: 'telefoon', naam: '', email: '', telefoon: '', eersteVraag: '', eigenaarId: '', typeAanvraag: '', gemeente: '', gewensteTiming: '' })
   const maak = useMutation({
-    mutationFn: () => api.post<Lead>('/leads', { ...vorm, eigenaarId: vorm.eigenaarId || undefined }),
+    mutationFn: () => api.post<Lead>('/leads', {
+      ...vorm, eigenaarId: vorm.eigenaarId || undefined,
+      typeAanvraag: vorm.typeAanvraag || undefined, gewensteTiming: vorm.gewensteTiming || undefined,
+      gemeente: vorm.gemeente || undefined
+    }),
     onSuccess: () => { qc.invalidateQueries({ queryKey: ['leads'] }); zetNieuwOpen(false) }
   })
 
@@ -73,6 +86,8 @@ export default function Leads() {
               <option value="telefoon">Telefoon</option>
               <option value="email">Email</option>
               <option value="socialeMedia">Sociale media</option>
+              <option value="contactWebsite">Contact (website)</option>
+              <option value="offerteaanvraagWebsite">Offerteaanvraag (website)</option>
             </Selecteer>
             <Selecteer label="Eigenaar" value={vorm.eigenaarId} onChange={e => zetVorm({ ...vorm, eigenaarId: e.target.value })}>
               <option value="">Ikzelf</option>
@@ -84,7 +99,18 @@ export default function Leads() {
             <Invoer label="Email" optioneel type="email" value={vorm.email} onChange={e => zetVorm({ ...vorm, email: e.target.value })} />
             <Invoer label="Telefoon" optioneel value={vorm.telefoon} onChange={e => zetVorm({ ...vorm, telefoon: e.target.value })} />
           </div>
-          <TekstVak label="Eerste vraag" optioneel value={vorm.eersteVraag} onChange={e => zetVorm({ ...vorm, eersteVraag: e.target.value })} />
+          <div className="grid grid-cols-2 gap-4">
+            <Selecteer label="Type aanvraag" optioneel value={vorm.typeAanvraag} onChange={e => zetVorm({ ...vorm, typeAanvraag: e.target.value })}>
+              <option value="">Nog niet gekend</option>
+              {typeAanvraagOpties.map(([w, tekst]) => <option key={w} value={w}>{tekst}</option>)}
+            </Selecteer>
+            <Selecteer label="Gewenste timing" optioneel value={vorm.gewensteTiming} onChange={e => zetVorm({ ...vorm, gewensteTiming: e.target.value })}>
+              <option value="">Nog niet gekend</option>
+              {timingOpties.map(([w, tekst]) => <option key={w} value={w}>{tekst}</option>)}
+            </Selecteer>
+          </div>
+          <Invoer label="Gemeente" optioneel value={vorm.gemeente} onChange={e => zetVorm({ ...vorm, gemeente: e.target.value })} />
+          <TekstVak label="Omschrijving van het project" optioneel value={vorm.eersteVraag} onChange={e => zetVorm({ ...vorm, eersteVraag: e.target.value })} />
           <div className="flex justify-end gap-2">
             <Knop type="button" variant="ghost" onClick={() => zetNieuwOpen(false)}>Annuleren</Knop>
             <Knop variant="primair" disabled={maak.isPending}>{maak.isPending ? 'Bezig…' : 'Bewaren'}</Knop>

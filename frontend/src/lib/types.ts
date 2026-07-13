@@ -1,6 +1,6 @@
 // Spiegels van de backend contracten (bouwspec 6.6).
 export type LeadStatus = 'nieuw' | 'gekwalificeerd' | 'omgezet' | 'verloren'
-export type LeadKanaal = 'telefoon' | 'email' | 'webformulier' | 'socialeMedia'
+export type LeadKanaal = 'telefoon' | 'email' | 'webformulier' | 'socialeMedia' | 'contactWebsite' | 'offerteaanvraagWebsite'
 export type OfferteStatus = 'nieuw' | 'verzonden' | 'goedgekeurd' | 'geweigerd' | 'verlopen'
 export type OrderStatus = 'aangemaakt' | 'inProductie' | 'externeBehandeling' | 'klaarVoorMontage' | 'gemonteerd' | 'afgesloten' | 'geannuleerd'
 export type BtwTarief = 'p0' | 'p6' | 'p21'
@@ -8,11 +8,15 @@ export type Eenheid = 'stuk' | 'lopendeMeter' | 'vierkanteMeter'
 export type ContentStatus = 'concept' | 'gepubliceerd' | 'gearchiveerd'
 export type Rol = 'verkoop' | 'planning' | 'productie' | 'montage' | 'boekhouding' | 'beheerder'
 
+export interface LeadFoto { id: string; bestandsnaam: string; url: string }
 export interface Lead {
   id: string; kanaal: LeadKanaal; status: LeadStatus; eigenaarId: string
   naam?: string; email?: string; telefoon?: string; eersteVraag?: string
   prijsindicatie?: number; opvolgdatum?: string; verliesReden?: string
   omgezetProjectId?: string; aangemaaktOp: string
+  typeAanvraag?: string; gemeente?: string; gewensteTiming?: string
+  privacyAkkoord?: boolean; privacyAkkoordOp?: string; wizardGegevens?: string
+  fotos?: LeadFoto[]
 }
 export interface Klant {
   id: string; type: 'particulier' | 'bedrijf'; naam: string; btwNummer?: string

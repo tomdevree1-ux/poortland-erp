@@ -11,6 +11,7 @@ public class PoortlandDbContext(DbContextOptions<PoortlandDbContext> opties) : D
     public DbSet<Contactpersoon> Contactpersonen => Set<Contactpersoon>();
     public DbSet<Contactmoment> Contactmomenten => Set<Contactmoment>();
     public DbSet<Lead> Leads => Set<Lead>();
+    public DbSet<LeadBijlage> LeadBijlagen => Set<LeadBijlage>();
     public DbSet<Project> Projecten => Set<Project>();
     public DbSet<Artikel> Artikelen => Set<Artikel>();
     public DbSet<Offerte> Offertes => Set<Offerte>();
@@ -66,6 +67,9 @@ public class PoortlandDbContext(DbContextOptions<PoortlandDbContext> opties) : D
         model.Entity<Contactpersoon>().ToTable("contactpersoon");
         model.Entity<Contactmoment>().ToTable("contactmoment");
         model.Entity<Lead>().ToTable("lead");
+        model.Entity<Lead>().Property(l => l.WizardGegevens).HasColumnType("jsonb");
+        model.Entity<Lead>().HasMany(l => l.Bijlagen).WithOne().HasForeignKey(b => b.LeadId);
+        model.Entity<LeadBijlage>().ToTable("lead_bijlage");
         model.Entity<Project>().ToTable("project");
         model.Entity<Project>().HasOne(p => p.Klant).WithMany().HasForeignKey(p => p.KlantId);
         model.Entity<Project>().HasMany(p => p.Offertes).WithOne(o => o.Project).HasForeignKey(o => o.ProjectId);

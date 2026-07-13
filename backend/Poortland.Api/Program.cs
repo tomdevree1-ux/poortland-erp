@@ -70,7 +70,9 @@ builder.Services.AddSingleton<IEmailVerzender>(sp =>
 builder.Services.AddHttpClient();
 builder.Services.AddHostedService<DagelijkseTaken>();
 
-builder.Services.AddControllers(o => o.Filters.Add<Poortland.Api.FoutFilter>());
+builder.Services.AddControllers(o => o.Filters.Add<Poortland.Api.FoutFilter>())
+    .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(
+        new System.Text.Json.Serialization.JsonStringEnumConverter(System.Text.Json.JsonNamingPolicy.CamelCase)));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors(o => o.AddDefaultPolicy(p => p

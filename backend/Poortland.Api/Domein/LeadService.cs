@@ -51,7 +51,7 @@ public class LeadService(PoortlandDbContext db, ClaimsContext claims)
             klant = new Klant
             {
                 Type = n.Type, Naam = n.Naam, BtwNummer = n.BtwNummer, Straat = n.Straat,
-                Postcode = n.Postcode, Gemeente = n.Gemeente,
+                Postcode = n.Postcode, Gemeente = n.Gemeente ?? lead.Gemeente,
                 Email = n.Email ?? lead.Email, Telefoon = n.Telefoon ?? lead.Telefoon,
                 Communicatietaal = n.Communicatietaal,
                 AangemaaktDoor = claims.MedewerkerId
