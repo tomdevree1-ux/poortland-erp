@@ -3,12 +3,12 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useParams } from '@tanstack/react-router'
 import { clsx } from 'clsx'
 import { api } from '../lib/api'
-import { datum, euro, leeg } from '../lib/formaat'
+import { datum, euro, leeg, persoon } from '../lib/formaat'
 import type { Klant, Offerte } from '../lib/types'
 import { Badge, Knop, PaginaKop, Paneel, Th, Td, rijKlik } from '../ui'
 
 interface Dossier {
-  project: { id: string; werfadres: string; omschrijving?: string; status: string; garantieMaanden: number; klant: Klant }
+  project: { id: string; nummer?: number; werfadres: string; omschrijving?: string; status: string; garantieMaanden: number; klant: Klant }
   offertes: Offerte[]
   order?: { id: string; datumGoedkeuring: string; status: string }
   communicatie: { id: string; onderwerp: string; verzondenOp: string; status: string }[]
@@ -33,13 +33,29 @@ export default function DossierDetail() {
   ] as const
   return (
     <>
-      <PaginaKop eyebrow="Dossier" titel={project.klant.naam}
+      <PaginaKop eyebrow={project.nummer ? `Dossier ${project.nummer}` : 'Dossier'}
+        titel={persoon(project.klant.voornaam, project.klant.naam)}
         actie={<Knop variant="primair" onClick={() => maakOfferte.mutate()} disabled={maakOfferte.isPending}>
           {offertes.length ? 'Nieuwe offerteversie ↗' : 'Offerte maken ↗'}</Knop>} />
-      <div className="mb-5 flex items-center gap-6 rounded-card border border-inkt/[.07] bg-vlak-surface px-5 py-3 text-sm">
-        <span className="text-inkt-muted">{project.werfadres}</span>
-        <Badge status={project.status} />
-        <span className="text-inkt-muted">Garantie {project.garantieMaanden} maanden</span>
+      <div className="mb-5 rounded-card border border-inkt/[.07] bg-vlak-surface px-5 py-4">
+        <div className="flex items-center justify-between gap-6">
+          <div className="flex items-center gap-5">
+            <span className="cijfers font-display text-3xl font-semibold text-bronze-600">{project.nummer ?? '—'}</span>
+            <div className="text-sm">
+              <div className="font-semibold">{project.werfadres}</div>
+              <div className="text-inkt-muted">
+                {[project.klant.telefoon, project.klant.email].filter(Boolean).join(' · ') || '—'}
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-4 text-sm">
+            <Badge status={project.status} />
+            <span className="text-inkt-muted">Garantie {project.garantieMaanden} maanden</span>
+          </div>
+        </div>
+        {project.omschrijving && (
+          <div className="mt-3 border-t border-inkt/[.06] pt-2.5 text-sm text-inkt-body">{project.omschrijving}</div>
+        )}
       </div>
       <div className="mb-5 flex gap-1 border-b border-inkt/10">
         {tabs.map(([sleutel, tekst]) => (

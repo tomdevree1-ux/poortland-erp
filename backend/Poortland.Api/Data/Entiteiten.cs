@@ -103,6 +103,7 @@ public class LeadBijlage : BasisEntiteit
 public class Project : BasisEntiteit
 {
     public Guid KlantId { get; set; }
+    public int Nummer { get; set; }
     public string Werfadres { get; set; } = "";
     public string? Omschrijving { get; set; }
     public OrderStatus Status { get; set; } = OrderStatus.Aangemaakt;

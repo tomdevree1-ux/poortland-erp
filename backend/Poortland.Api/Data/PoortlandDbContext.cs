@@ -72,6 +72,7 @@ public class PoortlandDbContext(DbContextOptions<PoortlandDbContext> opties) : D
         model.Entity<LeadBijlage>().ToTable("lead_bijlage");
         model.Entity<Project>().ToTable("project");
         model.Entity<Project>().HasOne(p => p.Klant).WithMany().HasForeignKey(p => p.KlantId);
+        model.Entity<Project>().Property(p => p.Nummer).ValueGeneratedOnAdd();
         model.Entity<Project>().HasMany(p => p.Offertes).WithOne(o => o.Project).HasForeignKey(o => o.ProjectId);
         model.Entity<Artikel>().ToTable("artikel");
         model.Entity<Offerte>().ToTable("offerte");

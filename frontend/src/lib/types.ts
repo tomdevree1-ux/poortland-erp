@@ -25,9 +25,9 @@ export interface Klant {
   communicatietaal: 'nl' | 'fr' | 'en'
 }
 export interface ProjectRij {
-  id: string; werfadres: string; omschrijving?: string; status: OrderStatus
+  id: string; nummer?: number; werfadres: string; omschrijving?: string; status: OrderStatus
   garantieMaanden: number; verwachteOpleverdatum?: string; aangemaaktOp: string
-  klant: { id: string; naam: string; gemeente?: string }; offerteWaarde?: number
+  klant: { id: string; naam: string; voornaam?: string; gemeente?: string }; offerteWaarde?: number
 }
 export interface Offerteregel {
   id?: string; volgnummer?: number; soort: string; artikelId?: string; omschrijving: string
