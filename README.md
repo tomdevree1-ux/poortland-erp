@@ -13,6 +13,14 @@ Supabase EU (Postgres met RLS, Auth en Storage), React met Vite in TypeScript al
 | frontend | React PWA met het huisstijlthema |
 | e2e | Playwright scenario's gekoppeld aan de acceptatiecriteria |
 
+## Huisstijlafspraak interface
+
+Geen donkere vlakken in de ERP interface, vastgelegd op vraag van Poortland (2026-07-13).
+Het hele werkvlak inclusief login en sidebar staat op papier en perkament tinten,
+conform het voorbeeldscherm van de huisstijlgids (blad 08): de sidebar op net iets
+dieper papier met een bronzen accentrand. Bosgroen blijft beschikbaar voor tekst
+en accenten maar nooit als achtergrondvlak.
+
 ## Lokaal draaien
 
 1. **Databank.** De migraties staan al op het dev project (of speel ze af met de Supabase CLI:

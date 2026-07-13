@@ -35,12 +35,12 @@ export default function AppSchil() {
 
   return (
     <div className="flex min-h-screen">
-      <aside className="fixed inset-y-0 left-0 flex w-[236px] flex-col bg-forest-900 text-stone2-200">
+      <aside className="fixed inset-y-0 left-0 flex w-[236px] flex-col border-r border-bronze-500/45 bg-vlak-sunken text-inkt">
         <div className="flex items-center gap-3 px-5 py-5">
-          <span className="flex h-9 w-9 items-center justify-center border-[1.4px] border-stone2-200/80 font-display text-xl">P</span>
+          <span className="flex h-9 w-9 items-center justify-center border-[1.4px] border-inkt/60 font-display text-xl">P</span>
           <div>
             <div className="text-sm font-semibold uppercase tracking-[0.3em]">Poortland</div>
-            <div className="text-2xs uppercase tracking-[0.2em] text-stone2-500">Atelier</div>
+            <div className="text-2xs uppercase tracking-[0.2em] text-inkt-muted">Atelier</div>
           </div>
         </div>
         <nav className="mt-2 flex-1 space-y-0.5 px-3">
@@ -53,19 +53,19 @@ export default function AppSchil() {
                 <Link key={item.naar} to={item.naar}
                   className={clsx('flex items-center gap-3 rounded-control px-3 py-2 text-sm transition',
                     actief
-                      ? 'border-l-2 border-bronze-500 bg-stone2-100 font-semibold text-forest-900'
-                      : 'text-stone2-300/80 hover:bg-forest-800 hover:text-stone2-100')}>
+                      ? 'border-l-2 border-bronze-500 bg-vlak-canvas font-semibold text-forest-900 shadow-sm'
+                      : 'text-inkt-muted hover:bg-stone2-100 hover:text-inkt')}>
                   <Icoon size={16} strokeWidth={1.8} />
                   {item.label}
                 </Link>
               )
             })}
         </nav>
-        <div className="border-t border-stone2-200/10 px-5 py-4">
+        <div className="border-t border-inkt/10 px-5 py-4">
           <div className="text-sm font-semibold">{mij?.medewerker?.naam ?? '…'}</div>
-          <div className="text-xs text-stone2-500">{rollen.join(' · ') || 'geen rollen'}</div>
+          <div className="text-xs text-inkt-faint">{rollen.join(' · ') || 'geen rollen'}</div>
           <button onClick={uitloggen}
-            className="focusring mt-3 flex items-center gap-2 text-xs text-stone2-400 hover:text-stone2-100">
+            className="focusring mt-3 flex items-center gap-2 text-xs text-inkt-muted hover:text-inkt">
             <LogOut size={14} /> Uitloggen
           </button>
         </div>

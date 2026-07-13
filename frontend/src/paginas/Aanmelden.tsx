@@ -59,16 +59,16 @@ export default function Aanmelden() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-forest-950 p-6">
+    <div className="flex min-h-screen items-center justify-center bg-vlak-canvas p-6">
       <div className="w-full max-w-sm">
-        <div className="mb-8 flex items-center gap-3 text-stone2-200">
-          <span className="flex h-11 w-11 items-center justify-center border-[1.4px] border-stone2-200 font-display text-2xl">P</span>
+        <div className="mb-8 flex items-center gap-3 text-inkt">
+          <span className="flex h-11 w-11 items-center justify-center border-[1.4px] border-inkt/70 font-display text-2xl">P</span>
           <div>
             <div className="text-base font-semibold uppercase tracking-[0.3em]">Poortland</div>
-            <div className="text-2xs uppercase tracking-[0.2em] text-stone2-500">Het atelier, op 1 scherm</div>
+            <div className="text-2xs uppercase tracking-[0.2em] text-inkt-muted">Het atelier, op 1 scherm</div>
           </div>
         </div>
-        <div className="rounded-card bg-vlak-surface p-6 shadow-xl">
+        <div className="rounded-card border border-inkt/10 bg-vlak-surface p-6 shadow-lg">
           <Eyebrow>{stap === 'mfa' ? 'Tweede stap' : stap === 'reset' ? 'Wachtwoord vergeten' : 'Aanmelden'}</Eyebrow>
           <h1 className="mb-5 mt-1 font-display text-3xl font-medium text-inkt">
             {stap === 'mfa' ? 'Bevestig met je code.' : stap === 'reset' ? 'Vraag een reset aan.' : 'Welkom terug.'}

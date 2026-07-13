@@ -12,7 +12,7 @@ export default defineConfig({
         name: 'Poortland ERP',
         short_name: 'Poortland',
         description: 'Het atelier, op 1 scherm.',
-        theme_color: '#0F160F',
+        theme_color: '#FAF6EE',
         background_color: '#FAF6EE',
         display: 'standalone',
         icons: [{ src: '/icoon.svg', sizes: 'any', type: 'image/svg+xml' }]

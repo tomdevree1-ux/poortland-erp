@@ -73,7 +73,7 @@ function FotoTab() {
         <div className="grid grid-cols-3 gap-5">
           {media?.map(m => (
             <div key={m.id} className="overflow-hidden rounded-card border border-inkt/[.07] bg-vlak-surface">
-              <div className="aspect-[4/3] bg-forest-800">
+              <div className="aspect-[4/3] bg-vlak-sunken">
                 <img src={m.voorbeeld} alt={m.altTekst ?? m.titel} className="h-full w-full object-cover" />
               </div>
               <div className="space-y-3 p-4">
@@ -169,9 +169,9 @@ function PopupTab() {
         </form>
       </Paneel>
       <Paneel titel="Voorbeeld op de website">
-        <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-card bg-forest-950 p-6">
-          <div className="absolute inset-x-0 top-0 flex h-8 items-center gap-1.5 bg-forest-900 px-3">
-            <span className="h-2 w-2 rounded-full bg-stone2-500/40" /><span className="h-2 w-2 rounded-full bg-stone2-500/40" /><span className="h-2 w-2 rounded-full bg-stone2-500/40" />
+        <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-card border border-inkt/10 bg-vlak-sunken p-6">
+          <div className="absolute inset-x-0 top-0 flex h-8 items-center gap-1.5 bg-stone2-300 px-3">
+            <span className="h-2 w-2 rounded-full bg-inkt/20" /><span className="h-2 w-2 rounded-full bg-inkt/20" /><span className="h-2 w-2 rounded-full bg-inkt/20" />
           </div>
           <div className="w-full max-w-xs rounded-card bg-stone2-50 p-5 shadow-2xl">
             <div className="text-2xs font-bold uppercase tracking-[0.26em] text-bronze-600">Poortland</div>
