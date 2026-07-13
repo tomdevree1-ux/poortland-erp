@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { keepPreviousData, useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { api } from '../lib/api'
+import { useZoekterm } from '../lib/zoek'
 import { datum, leeg, persoon } from '../lib/formaat'
 import type { Lead } from '../lib/types'
 import { Badge, Invoer, Knop, Modaal, PaginaKop, Selecteer, TekstVak, Th, Td, rijKlik } from '../ui'
@@ -23,14 +24,15 @@ export default function Leads() {
   const qc = useQueryClient()
   const navigeer = useNavigate()
   const [status, zetStatus] = useState('')
-  const [zoek, zetZoek] = useState('')
+  const { invoer, zetInvoer, term } = useZoekterm()
   const [weergave, zetWeergave] = useState('actief')
   const [nieuwOpen, zetNieuwOpen] = useState(false)
-  const { data: leads } = useQuery({
-    queryKey: ['leads', status, zoek, weergave],
+  const { data: leads, isFetching } = useQuery({
+    queryKey: ['leads', status, term, weergave],
     queryFn: () => api.get<Lead[]>(`/leads?${new URLSearchParams({
-      ...(status ? { status } : {}), ...(zoek ? { zoek } : {}),
-      ...(weergave === 'archief' ? { archief: 'true' } : {}) })}`)
+      ...(status ? { status } : {}), ...(term ? { zoek: term } : {}),
+      ...(weergave === 'archief' ? { archief: 'true' } : {}) })}`),
+    placeholderData: keepPreviousData
   })
   const leegVorm = { kanaal: 'telefoon', naam: '', voornaam: '', email: '', telefoon: '', eersteVraag: '', typeAanvraag: '', gemeente: '', gewensteTiming: '' }
   const [vorm, zetVorm] = useState(leegVorm)
@@ -60,7 +62,8 @@ export default function Leads() {
           <option value="actief">Actief</option>
           <option value="archief">Archief</option>
         </Selecteer>
-        <Invoer placeholder="Zoek naam, email of vraag…" value={zoek} onChange={e => zetZoek(e.target.value)} className="flex-1" />
+        <Invoer placeholder="Zoek naam, email of vraag…" value={invoer} onChange={e => zetInvoer(e.target.value)} className="flex-1" />
+        {isFetching && term && <span className="self-center text-xs text-inkt-faint">zoeken…</span>}
       </div>
       {(
         <table className="w-full border-separate border-spacing-0">
@@ -80,6 +83,9 @@ export default function Leads() {
             ))}
           </tbody>
         </table>
+      )}
+      {leads?.length === 0 && term && (
+        <p className="mt-4 text-sm text-inkt-muted">Geen resultaten voor "{term}".</p>
       )}
       <Modaal open={nieuwOpen} titel="Nieuwe lead" onSluit={() => zetNieuwOpen(false)}>
         <form className="space-y-4" onSubmit={e => { e.preventDefault(); maak.mutate() }}>

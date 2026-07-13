@@ -60,7 +60,64 @@ Controleer bij elk nieuw of gewijzigd scherm automatisch of ze kloppen.
   klant, foto op lead, regel op offerte) en de databank bewaakt dit met vreemde
   sleutels, unieke sleutels en RLS. Nieuwe endpoints volgen dit patroon altijd.
 
-**5. Consistentie**
+**5. Zoekregels (bindend voor elk zoekveld)**
+
+Vastgelegd op vraag van Poortland (2026-07-13). Gelden voor alle bestaande en
+toekomstige zoekvelden, tabellen en selectielijsten.
+
+- **Realtime met debounce.** Zoeken werkt terwijl de gebruiker typt, zonder Enter
+  of zoekknop, met een debounce van 250 ms. Eerdere zoekopdrachten worden
+  vervangen door de meest recente. Bestaande resultaten blijven staan tot de
+  nieuwe er zijn (nooit knipperen of verspringen) en trage zoekopdrachten tonen
+  een subtiele indicator "zoeken…". Gebruik hiervoor altijd `useZoekterm()` uit
+  lib/zoek.ts samen met `placeholderData: keepPreviousData`.
+- **Partiële invoer.** Overeenkomsten tellen aan het begin van een woord, binnen
+  een woord en over meerdere velden van hetzelfde record. Hoofdletterongevoelig
+  en met genormaliseerde spaties. Accenten en leestekens worden waar relevant
+  genormaliseerd.
+- **Minimale zoeklengte.** Pure nummers en codes zoeken vanaf 1 teken, tekst
+  vanaf 2 tekens en fouttolerantie start pas vanaf 3 tot 4 tekens. Onder het
+  minimum wordt niet gezocht en zeker niet fuzzy.
+- **Relevantievolgorde.** Exact volledig, dan exact begin van waarde, exact begin
+  van woord, exact deel van waarde, overeenkomst over meerdere velden en pas
+  daarna beperkte fuzzy. Sleutelvelden (dossiernummer, offertenummer,
+  artikelcode, officiële naam) wegen zwaarder dan omschrijvingen en notities.
+  Recent gebruik mag alleen gelijke tekstscores breken en nooit een betere
+  tekstuele match verdringen.
+- **Gecontroleerde fouttolerantie.** Hoogstens 1 ontbrekende, extra of foutieve
+  letter of 2 omgewisselde letters, alleen bij voldoende lange termen, boven een
+  minimumscore en wanneer sterke exacte resultaten ontbreken. Nooit fuzzy op
+  codes, nummers, bedragen, datums en unieke identificatoren. Fuzzy resultaten
+  staan onder de exacte in een aparte sectie "Mogelijk bedoelde resultaten".
+- **Niet vervuilen.** Liever weinig sterke resultaten dan veel zwakke: een
+  minimumscore, geen zoeken op stopwoorden of algemene woorden, geen semantische
+  verwantschap tenzij uitdrukkelijk gevraagd, een beperkt aantal resultaten met
+  een optie voor meer en nooit meerdere zwakke overeenkomsten optellen tot een
+  schijnbaar sterke.
+- **Meerdere woorden.** Woorden worden gecombineerd op hetzelfde record en de
+  volgorde is vrij: "claes stijn" vindt Stijn Claes. Alles gevonden weegt
+  zwaarder dan één woord gevonden en exacte combinaties winnen.
+- **Presentatie.** Markeer het overeenkomende tekstdeel, toon nooit technische
+  scores, maak waar nuttig duidelijk in welk veld de match zat, toon een heldere
+  melding bij geen resultaten (Geen resultaten voor "term") en geef bij een
+  vermoedelijke typefout een subtiele suggestie (Bedoelde je …). Pas een
+  zoekterm nooit stil aan.
+- **Prestaties.** Geïndexeerde velden (de gin en trigram indexen staan in de
+  migraties), alleen functioneel relevante velden, serverzijde zoeken met een
+  resultaatlimiet en zichtbare resultaten binnen ongeveer 300 ms onder normale
+  omstandigheden.
+- **Rechten.** Resultaten worden serverzijde gefilterd op rechten (API guard
+  plus RLS). Afgeschermde gegevens lekken nooit via suggesties, aantallen,
+  markering of foutmeldingen.
+- **Consistentie.** Overal dezelfde logica. Afwijkingen per module alleen met
+  een duidelijke functionele reden en expliciet vastgelegd in deze README.
+
+Status: de klientzijde basis (debounce, minima, stabiele resultaten, indicator
+en meldingen) is overal actief. De serverzijdige relevantiesortering, markering,
+meerwoordencombinatie en fuzzy met pg_trgm score vormen een eigen bouwslag op
+het bestaande indexfundament en staan gepland vóór de datasets groot worden.
+
+**6. Consistentie**
 
 - Overal dezelfde navigatielogica, dezelfde hover en cursorfeedback, dezelfde
   iconen en benamingen (Bewerken, Opslaan, Annuleren) en dezelfde scheiding

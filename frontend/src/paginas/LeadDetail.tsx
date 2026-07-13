@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useParams } from '@tanstack/react-router'
 import { clsx } from 'clsx'
 import { api } from '../lib/api'
+import { useZoekterm } from '../lib/zoek'
 import { datum, euro, leeg, persoon } from '../lib/formaat'
 import type { Klant, Lead } from '../lib/types'
 import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Paneel, PotloodKnop, Selecteer, TekstVak } from '../ui'
@@ -78,10 +79,10 @@ export default function LeadDetail() {
   })
 
   const [klantKeuze, zetKlantKeuze] = useState('')
-  const [zoekKlant, zetZoekKlant] = useState('')
+  const klantZoek = useZoekterm()
   const { data: klanten } = useQuery({
-    queryKey: ['klanten', zoekKlant],
-    queryFn: () => api.get<Klant[]>(`/klanten?${new URLSearchParams(zoekKlant ? { zoek: zoekKlant } : {})}`),
+    queryKey: ['klanten', klantZoek.term],
+    queryFn: () => api.get<Klant[]>(`/klanten?${new URLSearchParams(klantZoek.term ? { zoek: klantZoek.term } : {})}`),
     enabled: omzetOpen
   })
   const leegKlant = { type: 'particulier', naam: '', voornaam: '', btwNummer: '', straat: '', postcode: '', gemeente: '', email: '', telefoon: '' }
@@ -92,14 +93,14 @@ export default function LeadDetail() {
   // zodat gegevens van record A nooit zichtbaar zijn bij record B.
   useEffect(() => {
     zetOmzetOpen(false); zetVerliesOpen(false); zetVerwijderOpen(false); zetBewerkOpen(false)
-    zetKlantKeuze(''); zetZoekKlant(''); zetNieuweKlant(leegKlant); zetWerfadres('')
+    zetKlantKeuze(''); klantZoek.zetInvoer(''); zetNieuweKlant(leegKlant); zetWerfadres('')
     zetReden(''); zetVorm(null); zetFout(undefined)
   }, [leadId])
 
   // SSOT: het omzetvenster opent altijd vers en vooraf ingevuld vanuit de lead.
   function openOmzetten() {
     if (!lead) return
-    zetKlantKeuze(''); zetZoekKlant(''); zetWerfadres('')
+    zetKlantKeuze(''); klantZoek.zetInvoer(''); zetWerfadres('')
     zetNieuweKlant({
       ...leegKlant,
       naam: lead.naam ?? '', voornaam: lead.voornaam ?? '', gemeente: lead.gemeente ?? '',
@@ -278,7 +279,7 @@ export default function LeadDetail() {
       <Modaal open={omzetOpen} titel="Omzetten naar klant en dossier" onSluit={() => zetOmzetOpen(false)}>
         <form className="space-y-4" onSubmit={e => { e.preventDefault(); omzetten.mutate() }}>
           <Invoer label="Zoek bestaande klant" optioneel placeholder="Naam of gemeente…"
-            value={zoekKlant} onChange={e => zetZoekKlant(e.target.value)} />
+            value={klantZoek.invoer} onChange={e => klantZoek.zetInvoer(e.target.value)} />
           <Selecteer label="Bestaande klant" optioneel value={klantKeuze} onChange={e => zetKlantKeuze(e.target.value)}>
             <option value="">Nieuwe klant aanmaken</option>
             {klanten?.map(k => <option key={k.id} value={k.id}>{k.naam} · {k.gemeente ?? ''}</option>)}
