@@ -4,7 +4,11 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-source server.env 2>/dev/null || { echo "Run eerst zet_server_op.sh"; exit 1; }
+if [ ! -f server.env ]; then
+  echo "Run eerst zet_server_op.sh (server.env ontbreekt)"
+  exit 1
+fi
+source server.env
 IP_STREEPJES=$(echo $SERVER_IP | tr . -)
 DOMEIN="${DOMEIN:-$IP_STREEPJES.nip.io}"
 DOEL="root@$SERVER_IP"

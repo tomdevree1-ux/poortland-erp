@@ -7,7 +7,7 @@ TOKEN = os.environ.get("HETZNER_TOKEN")
 if not TOKEN:
     sys.exit("Zet eerst: export HETZNER_TOKEN=jouw_api_token")
 NAAM = os.environ.get("SERVER_NAAM", "poortland-dev")
-TYPE = os.environ.get("TYPE", "cx22")
+TYPE = os.environ.get("TYPE", "")  # leeg betekent: automatisch kiezen
 LOCATIE = os.environ.get("LOCATIE", "fsn1")
 API = "https://api.hetzner.cloud/v1"
 MAP = pathlib.Path(__file__).resolve().parent
@@ -55,6 +55,25 @@ else:
                "source_ips": ["0.0.0.0/0", "::/0"]} for poort in ("22", "80", "443")]
     fw_id = roep("POST", "/firewalls", {"name": "poortland", "rules": regels})["firewall"]["id"]
     print("   firewall aangemaakt")
+
+def kies_servertype():
+    """Kleinste niet vervallen x86 type met minstens 2 kernen en 4 GB in de locatie."""
+    types = roep("GET", "/server_types?per_page=50")["server_types"]
+    def bruikbaar(st):
+        vervallen = st.get("deprecated") or st.get("deprecation")
+        beschikbaar = any(p["location"] == LOCATIE for p in st.get("prices", []))
+        return not vervallen and beschikbaar and st["architecture"] == "x86"
+    kandidaten = [st for st in types if bruikbaar(st)]
+    if not kandidaten:
+        sys.exit("Geen bruikbare servertypes gevonden, kijk in de Hetzner console.")
+    passend = [st for st in kandidaten if st["cores"] >= 2 and st["memory"] >= 4]
+    keuze = min(passend or kandidaten, key=lambda st: (st["cores"], st["memory"]))
+    return keuze["name"]
+
+
+if not TYPE:
+    TYPE = kies_servertype()
+    print(f"   automatisch gekozen servertype: {TYPE}")
 
 print(f"3/4 Server {NAAM} ({TYPE}, {LOCATIE})")
 servers = roep("GET", f"/servers?name={NAAM}")["servers"]
