@@ -15,6 +15,14 @@ Supabase EU (Postgres met RLS, Auth en Storage), React met Vite in TypeScript al
 
 ## Huisstijlafspraak interface
 
+**Nooit native browseropmaak voor interface elementen**, vastgelegd op vraag van
+Poortland (2026-07-13). Dropdowns, dialogen, meldingen en bevestigingen gebruiken
+altijd de platformcomponenten uit `frontend/src/ui.tsx` (Selecteer, Modaal, Melding).
+Native `<select>` zonder eigen paneel en `alert`, `confirm` en `prompt` zijn verboden
+in de hele codebase. Nieuwe formulier of feedbackelementen komen eerst als component
+in ui.tsx in de huisstijl en worden pas daarna in schermen gebruikt.
+
+
 Geen donkere vlakken in de ERP interface, vastgelegd op vraag van Poortland (2026-07-13).
 Het hele werkvlak inclusief login en sidebar staat op papier en perkament tinten,
 conform het voorbeeldscherm van de huisstijlgids (blad 08): de sidebar op net iets

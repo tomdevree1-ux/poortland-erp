@@ -1,3 +1,4 @@
+import { Children, isValidElement, useEffect, useRef, useState } from 'react'
 import { clsx } from 'clsx'
 import type { ReactNode, ButtonHTMLAttributes, InputHTMLAttributes, SelectHTMLAttributes, TextareaHTMLAttributes } from 'react'
 
@@ -59,15 +60,68 @@ export function TekstVak({ label, optioneel, className, ...rest }:
   )
 }
 
-export function Selecteer({ label, optioneel, children, className, ...rest }:
-  SelectHTMLAttributes<HTMLSelectElement> & { label?: string; optioneel?: boolean }) {
+/* Platformdropdown: nooit de browseropmaak (interfaceregel Poortland).
+   Zelfde API als een native select zodat bestaande schermen niets merken. */
+export function Selecteer({ label, optioneel, children, className, value, onChange, disabled, klein }:
+  SelectHTMLAttributes<HTMLSelectElement> & { label?: string; optioneel?: boolean; klein?: boolean }) {
+  const [open, zetOpen] = useState(false)
+  const wortel = useRef<HTMLDivElement>(null)
+  const opties: { waarde: string; tekst: string }[] = []
+  Children.forEach(children, kind => {
+    if (isValidElement(kind) && kind.type === 'option') {
+      const p = kind.props as { value?: string | number; children?: ReactNode }
+      opties.push({ waarde: String(p.value ?? ''), tekst: String(p.children ?? '') })
+    }
+  })
+  useEffect(() => {
+    if (!open) return
+    const sluitBuiten = (e: MouseEvent) => {
+      if (wortel.current && !wortel.current.contains(e.target as Node)) zetOpen(false)
+    }
+    const sluitToets = (e: KeyboardEvent) => { if (e.key === 'Escape') zetOpen(false) }
+    document.addEventListener('mousedown', sluitBuiten)
+    document.addEventListener('keydown', sluitToets)
+    return () => {
+      document.removeEventListener('mousedown', sluitBuiten)
+      document.removeEventListener('keydown', sluitToets)
+    }
+  }, [open])
+  const huidige = opties.find(o => o.waarde === String(value ?? ''))
+  const kies = (waarde: string) => {
+    onChange?.({ target: { value: waarde } } as unknown as React.ChangeEvent<HTMLSelectElement>)
+    zetOpen(false)
+  }
   return (
-    <div className={className}>
+    <div className={className} ref={wortel}>
       {label && <VeldLabel optioneel={optioneel}>{label}</VeldLabel>}
-      <select
-        className="focusring h-10 w-full rounded-control border border-inkt/15 bg-vlak-surface px-3 text-[15px] text-inkt"
-        {...rest}
-      >{children}</select>
+      <div className="relative">
+        <button type="button" disabled={disabled} onClick={() => zetOpen(!open)}
+          aria-haspopup="listbox" aria-expanded={open}
+          className={clsx('focusring flex w-full items-center justify-between gap-2 rounded-control border border-inkt/15 bg-vlak-surface px-3 text-left text-inkt disabled:cursor-not-allowed disabled:opacity-40',
+            klein ? 'h-8 text-sm' : 'h-10 text-[15px]')}>
+          <span className={clsx('truncate', !huidige?.tekst && 'text-inkt-faint')}>
+            {huidige?.tekst || 'Maak een keuze'}
+          </span>
+          <span aria-hidden="true" className="text-[10px] text-bronze-600">▾</span>
+        </button>
+        {open && (
+          <ul role="listbox" className="absolute z-30 mt-1 max-h-64 w-full min-w-44 overflow-auto rounded-control border border-inkt/10 bg-vlak-surface py-1 shadow-lg">
+            {opties.map(o => {
+              const actief = o.waarde === String(value ?? '')
+              return (
+                <li key={o.waarde}>
+                  <button type="button" role="option" aria-selected={actief} onClick={() => kies(o.waarde)}
+                    className={clsx('flex w-full items-center justify-between gap-3 px-3 py-2 text-left text-sm hover:bg-bronze-500/10',
+                      actief ? 'font-semibold text-bronze-600' : 'text-inkt-body')}>
+                    <span className="truncate">{o.tekst}</span>
+                    {actief && <span aria-hidden="true">✓</span>}
+                  </button>
+                </li>
+              )
+            })}
+          </ul>
+        )}
+      </div>
     </div>
   )
 }

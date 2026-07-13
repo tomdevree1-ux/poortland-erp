@@ -119,20 +119,20 @@ export default function OfferteEditor() {
                   <Td rechts><input disabled={!bewerkbaar} type="number" step="0.01" min="0.01" className="focusring w-20 bg-transparent text-right"
                     value={r.aantal} onChange={e => wijzig(i, { aantal: Number(e.target.value) })} /></Td>
                   <Td>
-                    <select disabled={!bewerkbaar} className="focusring bg-transparent" value={r.eenheid}
+                    <Selecteer klein className="w-24" disabled={!bewerkbaar} value={r.eenheid}
                       onChange={e => wijzig(i, { eenheid: e.target.value as Offerteregel['eenheid'] })}>
                       <option value="stuk">stuk</option><option value="lopendeMeter">lm</option><option value="vierkanteMeter">m2</option>
-                    </select>
+                    </Selecteer>
                   </Td>
                   <Td rechts><input disabled={!bewerkbaar} type="number" step="0.01" className="focusring w-24 bg-transparent text-right"
                     value={r.eenheidsprijs} onChange={e => wijzig(i, { eenheidsprijs: Number(e.target.value) })} /></Td>
                   <Td rechts><input disabled={!bewerkbaar} type="number" step="0.01" min="0" className="focusring w-20 bg-transparent text-right"
                     value={r.kortingBedrag} onChange={e => wijzig(i, { kortingBedrag: Number(e.target.value) })} /></Td>
                   <Td>
-                    <select disabled={!bewerkbaar} className="focusring bg-transparent" value={r.btw}
+                    <Selecteer klein className="w-24" disabled={!bewerkbaar} value={r.btw}
                       onChange={e => wijzig(i, { btw: e.target.value as Offerteregel['btw'] })}>
                       <option value="p21">21%</option><option value="p6">6%</option><option value="p0">0%</option>
-                    </select>
+                    </Selecteer>
                   </Td>
                   <Td rechts>{euro(r.totaal)}</Td>
                   <Td rechts>{bewerkbaar && <button className="focusring text-corten-600" onClick={() => zetRegels(regels.filter((_, x) => x !== i))}>×</button>}</Td>
