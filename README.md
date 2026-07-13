@@ -9,7 +9,7 @@ Supabase EU (Postgres met RLS, Auth en Storage), React met Vite in TypeScript al
 | Map | Inhoud |
 |---|---|
 | supabase/migrations | Volledig schema: enums, tabellen, audit, statusbewaking, rechtenmatrix, RLS en seeds |
-| backend | ASP.NET Core API (Poortland.Api) plus xUnit tests (Poortland.Tests) |
+| backend | ASP.NET Core API op .NET 10 (Poortland.Api) plus xUnit tests (Poortland.Tests) |
 | frontend | React PWA met het huisstijlthema |
 | e2e | Playwright scenario's gekoppeld aan de acceptatiecriteria |
 
