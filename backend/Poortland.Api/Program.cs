@@ -10,6 +10,10 @@ using Poortland.Api.Domein;
 using QuestPDF.Infrastructure;
 
 QuestPDF.Settings.License = LicenseType.Community;
+var fontMap = Path.Combine(AppContext.BaseDirectory, "Fonts");
+if (Directory.Exists(fontMap))
+    foreach (var fontPad in Directory.GetFiles(fontMap, "*.ttf"))
+        QuestPDF.Drawing.FontManager.RegisterFont(File.OpenRead(fontPad));
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;

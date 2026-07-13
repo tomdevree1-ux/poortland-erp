@@ -95,6 +95,37 @@ public class OfferteService(
         offerte.TotaalInclBtw = incl;
     }
 
+    // Instellingen voor het documentsjabloon (configuratie boven code).
+    public async Task<(Bedrijfsgegevens bedrijf, string voorwaarden, int voorschotPct)> LaadSjabloonGegevens()
+    {
+        var json = await instellingen.Tekst("bedrijfsgegevens");
+        Bedrijfsgegevens bedrijf;
+        try
+        {
+            var d = System.Text.Json.JsonDocument.Parse(json ?? "{}").RootElement;
+            string Veld(string naam, string standaard) =>
+                d.TryGetProperty(naam, out var w) ? w.GetString() ?? standaard : standaard;
+            bedrijf = new Bedrijfsgegevens(
+                Veld("naam", "Poortland nv"), Veld("straat", ""), Veld("postcode", ""),
+                Veld("gemeente", "Mechelen"), Veld("telefoon", ""), Veld("btw", ""));
+        }
+        catch
+        {
+            bedrijf = new Bedrijfsgegevens("Poortland nv", "", "", "Mechelen", "", "");
+        }
+        var voorwaarden = await instellingen.Tekst("offerte_voorwaarden")
+            ?? "Voorschot bij bestelling, saldo na plaatsing. Garantie 24 maanden.";
+        var voorschotPct = await instellingen.Getal("voorschot_percentage", 30);
+        return (bedrijf, voorwaarden, voorschotPct);
+    }
+
+    public async Task<(byte[] bytes, Offerte offerte)> GenereerPdf(Guid id)
+    {
+        var offerte = await Laad(id);
+        var (bedrijf, voorwaarden, voorschotPct) = await LaadSjabloonGegevens();
+        return (pdf.Genereer(offerte, bedrijf, voorwaarden, voorschotPct), offerte);
+    }
+
     // TS-05 sectie 5: verzenden per email en de communicatie bij het dossier bewaren.
     public async Task<Offerte> Verzenden(Guid id)
     {
@@ -105,7 +136,8 @@ public class OfferteService(
         offerte.Status = OfferteStatus.Verzonden;
         offerte.VerzondenOp = DateTimeOffset.UtcNow;
 
-        var pdfBytes = pdf.Genereer(offerte);
+        var (bedrijf, voorwaarden, voorschotPct) = await LaadSjabloonGegevens();
+        var pdfBytes = pdf.Genereer(offerte, bedrijf, voorwaarden, voorschotPct);
         // SSOT nuance: het verzonden document wordt bevroren bewaard zodat het
         // niet mee verandert wanneer klantgegevens later wijzigen.
         string? documentPad = $"offertes/{offerte.Nummer}-v{offerte.VersieOfferte}.pdf";

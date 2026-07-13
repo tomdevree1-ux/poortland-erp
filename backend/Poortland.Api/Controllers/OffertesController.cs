@@ -13,7 +13,7 @@ public record MaakOfferteInvoer(Taal? Taal);
 [ApiController]
 [Route("api/v1")]
 [Authorize]
-public class OffertesController(OfferteService service, OffertePdfService pdf) : ControllerBase
+public class OffertesController(OfferteService service) : ControllerBase
 {
     [HttpPost("projecten/{projectId:guid}/offertes")]
     [VereistRol("verkoop")]
@@ -57,7 +57,7 @@ public class OffertesController(OfferteService service, OffertePdfService pdf) :
     [HttpGet("offertes/{id:guid}/pdf")]
     public async Task<IActionResult> Pdf(Guid id)
     {
-        var offerte = await service.Laad(id);
-        return File(pdf.Genereer(offerte), "application/pdf", $"{offerte.Nummer}.pdf");
+        var (bytes, offerte) = await service.GenereerPdf(id);
+        return File(bytes, "application/pdf", $"{offerte.Nummer}.pdf");
     }
 }
