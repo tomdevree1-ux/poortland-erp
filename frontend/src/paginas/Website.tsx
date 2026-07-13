@@ -35,7 +35,7 @@ function FotoTab() {
   const qc = useQueryClient()
   const bestandRef = useRef<HTMLInputElement>(null)
   const [fout, zetFout] = useState<string>()
-  const { data: media } = useQuery({ queryKey: ['media'], queryFn: () => api.get<Media[]>('/website/media') })
+  const { data: media, error: laadFout } = useQuery({ queryKey: ['media'], queryFn: () => api.get<Media[]>('/website/media') })
   const ververs = () => { zetFout(undefined); qc.invalidateQueries({ queryKey: ['media'] }) }
 
   const [uploadOpen, zetUploadOpen] = useState(false)
@@ -99,11 +99,14 @@ function FotoTab() {
         <Knop variant="primair" onClick={openUpload}>Foto uploaden ↗</Knop>
       </div>
       {fout && <div className="mb-4"><Melding soort="fout">{fout}</Melding></div>}
+      {laadFout && <div className="mb-4"><Melding soort="fout">De foto's konden niet geladen worden: {(laadFout as Error).message}</Melding></div>}
       <div className="grid grid-cols-3 gap-5">
         {media?.map(m => (
           <div key={m.id} className="overflow-hidden rounded-card border border-inkt/[.07] bg-vlak-surface">
             <div className="aspect-[4/3] bg-vlak-sunken">
-              <img src={m.voorbeeld} alt={m.altTekst ?? m.titel} className="h-full w-full object-cover" />
+              {m.voorbeeld
+                ? <img src={m.voorbeeld} alt={m.altTekst ?? m.titel} className="h-full w-full object-cover" />
+                : <div className="flex h-full items-center justify-center text-xs uppercase tracking-[0.2em] text-inkt-faint">geen voorbeeld</div>}
             </div>
             <div className="space-y-2 p-4">
               <div className="flex items-center justify-between gap-2">

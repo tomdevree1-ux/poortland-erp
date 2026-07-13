@@ -54,7 +54,7 @@ export interface Media {
   productSoort?: 'poort' | 'overkapping'; poortType?: 'hout' | 'metaal' | 'hout_metaal'
   poortUitvoering?: 'draaipoort' | 'schuifpoort'
   status: ContentStatus; breedte?: number; hoogte?: number
-  personenInBeeld: boolean; toestemmingBevestigd: boolean; gepubliceerdOp?: string; voorbeeld: string
+  personenInBeeld: boolean; toestemmingBevestigd: boolean; gepubliceerdOp?: string; voorbeeld?: string
 }
 export interface Popup {
   id: string; titel: string; bodyTekst: string; actiefVan: string; actiefTot: string; status: ContentStatus

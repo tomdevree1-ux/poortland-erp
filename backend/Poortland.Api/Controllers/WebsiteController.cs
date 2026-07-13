@@ -30,9 +30,15 @@ public class WebsiteController(PoortlandDbContext db, ClaimsContext claims,
         foreach (var m in lijst)
         {
             // Voorbeeld in het ERP via een kortlevende signed URL op het private origineel.
-            var voorbeeld = m.BestandPadThumb is not null && m.Status == WebsiteContentStatus.Gepubliceerd
-                ? opslag.PubliekeUrl("website_publiek", m.BestandPadThumb)
-                : await opslag.SignedUrl("website_origineel", $"{m.Id}/thumb.webp");
+            // Weerbaar per foto: een ontbrekend bestand blokkeert nooit de hele lijst.
+            string? voorbeeld = null;
+            try
+            {
+                voorbeeld = m.BestandPadThumb is not null && m.Status == WebsiteContentStatus.Gepubliceerd
+                    ? opslag.PubliekeUrl("website_publiek", m.BestandPadThumb)
+                    : await opslag.SignedUrl("website_origineel", $"{m.Id}/thumb.webp");
+            }
+            catch { /* voorbeeld blijft leeg en de kaart toont een plaatshouder */ }
             resultaat.Add(new { m.Id, m.Titel, m.AltTekst, m.Categorie, m.Volgnummer, m.Status,
                 m.ProductSoort, m.PoortType, m.PoortUitvoering,
                 m.Breedte, m.Hoogte, m.PersonenInBeeld, m.ToestemmingBevestigd, m.GepubliceerdOp, voorbeeld });
