@@ -65,7 +65,7 @@ export default function Aanmelden() {
           <span className="flex h-11 w-11 items-center justify-center border-[1.4px] border-inkt/70 font-display text-2xl">P</span>
           <div>
             <div className="text-base font-semibold uppercase tracking-[0.3em]">Poortland</div>
-            <div className="text-2xs uppercase tracking-[0.2em] text-inkt-muted">Het atelier, op 1 scherm</div>
+            <div className="text-2xs uppercase tracking-[0.2em] text-inkt-muted">Operations</div>
           </div>
         </div>
         <div className="rounded-card border border-inkt/10 bg-vlak-surface p-6 shadow-lg">

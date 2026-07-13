@@ -11,7 +11,7 @@ export default defineConfig({
       manifest: {
         name: 'Poortland ERP',
         short_name: 'Poortland',
-        description: 'Het atelier, op 1 scherm.',
+        description: 'Poortland Operations',
         theme_color: '#FAF6EE',
         background_color: '#FAF6EE',
         display: 'standalone',
