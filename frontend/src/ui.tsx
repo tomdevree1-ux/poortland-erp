@@ -1,5 +1,5 @@
 import { Children, isValidElement, useEffect, useRef, useState } from 'react'
-import { Pencil } from 'lucide-react'
+import { Pencil, Plus, Trash2 } from 'lucide-react'
 import { clsx } from 'clsx'
 import type { ReactNode, ButtonHTMLAttributes, InputHTMLAttributes, SelectHTMLAttributes, TextareaHTMLAttributes } from 'react'
 
@@ -255,6 +255,25 @@ export function PotloodKnop({ onClick, label = 'Bewerken' }: { onClick: () => vo
     <button type="button" onClick={onClick} aria-label={label} title={label}
       className="focusring flex h-8 w-8 items-center justify-center rounded-control text-inkt-muted hover:bg-bronze-500/10 hover:text-bronze-600">
       <Pencil size={15} strokeWidth={1.8} />
+    </button>
+  )
+}
+
+/* Plus voor iets nieuws aanmaken, potlood voor iets bestaands bewerken. */
+export function PlusKnop({ onClick, label = 'Toevoegen' }: { onClick: () => void; label?: string }) {
+  return (
+    <button type="button" onClick={onClick} aria-label={label} title={label}
+      className="focusring flex h-8 w-8 items-center justify-center rounded-control text-inkt-muted hover:bg-bronze-500/10 hover:text-bronze-600">
+      <Plus size={16} strokeWidth={1.8} />
+    </button>
+  )
+}
+
+export function VuilbakKnop({ onClick, label = 'Verwijderen' }: { onClick: () => void; label?: string }) {
+  return (
+    <button type="button" onClick={onClick} aria-label={label} title={label}
+      className="focusring flex h-8 w-8 items-center justify-center rounded-control text-inkt-muted hover:bg-corten-600/10 hover:text-corten-600">
+      <Trash2 size={15} strokeWidth={1.8} />
     </button>
   )
 }

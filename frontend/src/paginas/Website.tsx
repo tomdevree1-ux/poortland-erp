@@ -4,7 +4,7 @@ import { clsx } from 'clsx'
 import { api } from '../lib/api'
 import { datum } from '../lib/formaat'
 import type { Media, Popup } from '../lib/types'
-import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Paneel, PotloodKnop, Selecteer, TekstVak } from '../ui'
+import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Paneel, PlusKnop, PotloodKnop, Selecteer, TekstVak, VuilbakKnop } from '../ui'
 
 /* TS-17 Websitebeheer volgens de platform UX regels: leesmodus eerst,
    bewerken via het potlood met Opslaan en Annuleren. */
@@ -36,6 +36,12 @@ function FotoTab() {
   const bestandRef = useRef<HTMLInputElement>(null)
   const [fout, zetFout] = useState<string>()
   const { data: media, error: laadFout } = useQuery({ queryKey: ['media'], queryFn: () => api.get<Media[]>('/website/media') })
+  const { data: mij } = useQuery({
+    queryKey: ['mij'],
+    queryFn: () => api.get<{ rollen: string[] }>('/medewerkers/mij'),
+    staleTime: 5 * 60_000
+  })
+  const isBeheerder = mij?.rollen.includes('beheerder') ?? false
   const ververs = () => { zetFout(undefined); qc.invalidateQueries({ queryKey: ['media'] }) }
 
   const [uploadOpen, zetUploadOpen] = useState(false)
@@ -68,6 +74,13 @@ function FotoTab() {
     onSuccess: ververs, onError: f => zetFout((f as Error).message)
   })
 
+  const [verwijderFoto, zetVerwijderFoto] = useState<Media | null>(null)
+  const verwijder = useMutation({
+    mutationFn: (id: string) => api.del(`/website/media/${id}`),
+    onSuccess: () => { ververs(); zetVerwijderFoto(null) },
+    onError: f => { zetFout((f as Error).message); zetVerwijderFoto(null) }
+  })
+
   const [bewerkFoto, zetBewerkFoto] = useState<Media | null>(null)
   const [fotoVorm, zetFotoVorm] = useState<{ titel: string; altTekst: string
     productSoort: string; poortType: string; poortUitvoering: string
@@ -94,9 +107,9 @@ function FotoTab() {
 
   return (
     <>
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-4 flex items-center justify-between gap-6">
         <p className="text-sm text-inkt-muted">Gepubliceerde foto's verschijnen op de site volgens hun indeling: productpagina's tonen enkel het eigen poorttype, realisaties tonen alles met filters en de banner mengt alles. EXIF gegevens worden automatisch gestript.</p>
-        <Knop variant="primair" onClick={openUpload}>Foto uploaden ↗</Knop>
+        <Knop variant="primair" className="shrink-0 whitespace-nowrap" onClick={openUpload}>Foto uploaden</Knop>
       </div>
       {fout && <div className="mb-4"><Melding soort="fout">{fout}</Melding></div>}
       {laadFout && <div className="mb-4"><Melding soort="fout">De foto's konden niet geladen worden: {(laadFout as Error).message}</Melding></div>}
@@ -123,6 +136,7 @@ function FotoTab() {
                   <dd>{m.toestemmingBevestigd ? 'toestemming ok' : 'toestemming nodig'}</dd></div>}
               </dl>
               <div className="flex items-center justify-end gap-2">
+                {isBeheerder && <VuilbakKnop onClick={() => zetVerwijderFoto(m)} label="Foto verwijderen" />}
                 <PotloodKnop onClick={() => openBewerk(m)} />
                 {m.status !== 'gepubliceerd'
                   ? <Knop variant="secundair" className="h-8 px-3 text-xs" onClick={() => publiceer.mutate(m.id)}>Publiceren</Knop>
@@ -133,6 +147,36 @@ function FotoTab() {
         ))}
       </div>
       {media?.length === 0 && <p className="text-sm text-inkt-muted">Nog geen foto's.</p>}
+
+      <Modaal open={!!verwijderFoto} titel="Foto verwijderen" onSluit={() => zetVerwijderFoto(null)}>
+        {verwijderFoto && (verwijderFoto.status === 'gepubliceerd' ? (
+          <div className="space-y-4">
+            <p className="text-sm text-inkt-body">
+              "{verwijderFoto.titel}" staat nu op de website. Depubliceer de foto eerst, daarna kan je ze verwijderen.
+            </p>
+            <div className="flex justify-end gap-2">
+              <Knop variant="ghost" onClick={() => zetVerwijderFoto(null)}>Annuleren</Knop>
+              <Knop variant="secundair" disabled={depubliceer.isPending}
+                onClick={() => depubliceer.mutate(verwijderFoto.id, { onSuccess: () => zetVerwijderFoto(null) })}>
+                {depubliceer.isPending ? 'Bezig…' : 'Depubliceren'}
+              </Knop>
+            </div>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <p className="text-sm text-inkt-body">
+              Je verwijdert "{verwijderFoto.titel}" uit de fotomodule. De foto stond niet op de website en dit kan niet ongedaan gemaakt worden.
+            </p>
+            <div className="flex justify-end gap-2">
+              <Knop variant="ghost" onClick={() => zetVerwijderFoto(null)}>Annuleren</Knop>
+              <Knop variant="destructief" disabled={verwijder.isPending}
+                onClick={() => verwijder.mutate(verwijderFoto.id)}>
+                {verwijder.isPending ? 'Bezig…' : 'Verwijderen'}
+              </Knop>
+            </div>
+          </div>
+        ))}
+      </Modaal>
 
       <Modaal open={uploadOpen} titel="Foto uploaden" onSluit={() => zetUploadOpen(false)}>
         <form className="space-y-4" onSubmit={e => { e.preventDefault(); upload.mutate() }}>
@@ -272,7 +316,9 @@ function PopupTab() {
           <Knop variant="primair" className="h-8 px-3 text-xs" disabled={bewaar.isPending}
             onClick={() => bewaar.mutate()}>Opslaan</Knop>
         </div>
-      ) : <PotloodKnop onClick={startBewerken} />}>
+      ) : concept
+        ? <PotloodKnop onClick={startBewerken} />
+        : <PlusKnop onClick={startBewerken} label="Popup opstellen" />}>
         {fout && <div className="mb-4"><Melding soort="fout">{fout}</Melding></div>}
         {actief && (
           <div className="mb-4">
@@ -310,7 +356,7 @@ function PopupTab() {
             </div>
           </>
         ) : (
-          <p className="text-sm text-inkt-muted">Nog geen popup. Klik op het potlood om er een op te stellen.</p>
+          <p className="text-sm text-inkt-muted">Nog geen popup. Klik op het plusteken om er een op te stellen.</p>
         )}
         <p className="mt-4 text-xs text-inkt-faint">
           Maximaal 1 actieve popup. Bezoekers zien hem hoogstens 1 keer per 7 dagen en hij is sluitbaar met Escape.

@@ -22,9 +22,15 @@ public class SupabaseOpslag(HttpClient http, IConfiguration config)
         { Content = new ByteArrayContent(inhoud) };
         r.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
         r.Headers.Add("x-upsert", "true");
-        if (cacheControl is not null) r.Content.Headers.Add("cache-control", cacheControl);
+        // Cache control is een algemene header en hoort dus op het verzoek zelf.
+        // Op Content.Headers gooit .NET een InvalidOperationException en precies
+        // dat brak de allereerste publicatie (content.json bleef uit).
+        if (cacheControl is not null) r.Headers.TryAddWithoutValidation("cache-control", cacheControl);
         ZetHeaders(r);
-        (await http.SendAsync(r)).EnsureSuccessStatusCode();
+        var antwoord = await http.SendAsync(r);
+        if (!antwoord.IsSuccessStatusCode)
+            throw new InvalidOperationException(
+                $"Opslag weigerde {bucket}/{pad}: {(int)antwoord.StatusCode} {await antwoord.Content.ReadAsStringAsync()}");
     }
 
     public async Task Verwijder(string bucket, params string[] paden)
