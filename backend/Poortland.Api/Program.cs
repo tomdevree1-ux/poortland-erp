@@ -75,8 +75,11 @@ builder.Services.AddControllers(o => o.Filters.Add<Poortland.Api.FoutFilter>())
         new System.Text.Json.Serialization.JsonStringEnumConverter(System.Text.Json.JsonNamingPolicy.CamelCase)));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+var corsOrigins = config.GetSection("Cors:Origins").Get<string[]>();
+if (corsOrigins is null or [] )
+    corsOrigins = [config["Frontend:Origin"] ?? "http://localhost:5173"];
 builder.Services.AddCors(o => o.AddDefaultPolicy(p => p
-    .WithOrigins(config["Frontend:Origin"] ?? "http://localhost:5173")
+    .WithOrigins(corsOrigins)
     .AllowAnyHeader().AllowAnyMethod()));
 
 var app = builder.Build();
