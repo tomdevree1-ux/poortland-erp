@@ -4,7 +4,7 @@ import { Link } from '@tanstack/react-router'
 import { api } from '../lib/api'
 import { datum, leeg } from '../lib/formaat'
 import type { Lead } from '../lib/types'
-import { Badge, Invoer, Knop, LegeStaat, Modaal, PaginaKop, Selecteer, TekstVak, Th, Td } from '../ui'
+import { Badge, Invoer, Knop, Modaal, PaginaKop, Selecteer, TekstVak, Th, Td } from '../ui'
 
 const kanaalTekst: Record<string, string> = {
   telefoon: 'Telefoon', email: 'Email', webformulier: 'Webformulier', socialeMedia: 'Sociale media',
@@ -59,10 +59,7 @@ export default function Leads() {
         </Selecteer>
         <Invoer placeholder="Zoek naam, email of vraag…" value={zoek} onChange={e => zetZoek(e.target.value)} className="flex-1" />
       </div>
-      {leads && leads.length === 0 ? (
-        <LegeStaat titel="Nog geen leads" tekst="Elke aanvraag uit de 4 kanalen komt hier samen."
-          actie={<Knop variant="primair" onClick={() => zetNieuwOpen(true)}>Nieuwe lead ↗</Knop>} />
-      ) : (
+      {(
         <table className="w-full border-separate border-spacing-0">
           <thead><tr>
             <Th>Naam</Th><Th>Kanaal</Th><Th>Eerste vraag</Th><Th>Status</Th><Th>Opvolgen</Th><Th />
