@@ -1,0 +1,14 @@
+# Frontend: statische build geserveerd door Caddy die ook /api doorstuurt.
+FROM node:22 AS bouw
+WORKDIR /bron
+COPY frontend/package.json frontend/package-lock.json* ./
+RUN npm install --no-audit --no-fund
+COPY frontend/ .
+ARG VITE_SUPABASE_URL
+ARG VITE_SUPABASE_ANON_KEY
+ENV VITE_SUPABASE_URL=$VITE_SUPABASE_URL VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY
+RUN npm run build
+
+FROM caddy:2
+COPY infra/Caddyfile /etc/caddy/Caddyfile
+COPY --from=bouw /bron/dist /srv

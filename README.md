@@ -99,6 +99,17 @@ De marketingwebsite leest uitsluitend `content.json` en publieke afbeeldingen ui
 `website_publiek`, bij voorkeur achter Cloudflare. Publiceren en depubliceren in het ERP
 herschrijft dat bestand (cache 5 minuten). De website krijgt geen sleutels en geen schrijftoegang.
 
+## Dev server op Hetzner (infra map)
+
+Eenmalig: Hetzner account met betaalmethode, een project en een API token
+(Security, API tokens, lezen en schrijven). Daarna vanuit de infra map:
+`export HETZNER_TOKEN=...` gevolgd door `bash zet_server_op.sh` (maakt SSH
+sleutel, firewall en een cx22 server in Falkenstein aan) en `bash rol_uit.sh`
+(bouwt en start alles in Docker met Caddy en automatische TLS op een nip.io
+domein of een eigen domein via `export DOMEIN=...`). Opnieuw uitrollen na
+wijzigingen is gewoon nogmaals `bash rol_uit.sh`. De geheimen reizen mee uit
+appsettings.Development.json naar een niet gecommit .env.deploy bestand.
+
 ## Omgevingen en promotie naar productie
 
 TS-15 voorziet ontwikkeling, test, staging en productie als aparte Supabase projecten

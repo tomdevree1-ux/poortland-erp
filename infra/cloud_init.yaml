@@ -1,0 +1,10 @@
+#cloud-config
+# Poortland ERP dev server (TS-15): Docker plus compose, verder niets.
+package_update: true
+packages:
+  - docker.io
+  - docker-compose-v2
+  - rsync
+runcmd:
+  - systemctl enable --now docker
+  - mkdir -p /opt/poortland

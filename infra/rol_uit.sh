@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+# Poortland ERP · code uitrollen naar de dev server.
+# Gebruik: bash rol_uit.sh   (na zet_server_op.sh; DOMEIN optioneel via export)
+set -euo pipefail
+cd "$(dirname "$0")"
+
+source server.env 2>/dev/null || { echo "Run eerst zet_server_op.sh"; exit 1; }
+DOMEIN="${DOMEIN:-$(echo "$SERVER_IP" | tr '.' '-').nip.io}"
+DOEL="root@$SERVER_IP"
+
+echo "1/4 Omgevingsbestand opbouwen uit je lokale instellingen"
+python3 - "$DOMEIN" <<'PY'
+import json, sys
+domein = sys.argv[1]
+d = json.load(open("../backend/Poortland.Api/appsettings.Development.json"))
+fe = dict(regel.strip().split("=", 1) for regel in open("../frontend/.env") if "=" in regel)
+regels = [
+    f"ConnectionStrings__Poortland={d['ConnectionStrings']['Poortland']}",
+    f"Supabase__Url={d['Supabase']['Url']}",
+    f"Supabase__ServiceKey={d['Supabase'].get('ServiceKey','')}",
+    "Email__Modus=console",
+    "ASPNETCORE_ENVIRONMENT=Production",
+    f"Cors__Origins__0=https://{domein}",
+    f"Frontend__Origin=https://{domein}",
+]
+extra = d.get("Cors", {}).get("Origins", [])
+for i, o in enumerate(x for x in extra if not x.startswith("http://localhost")):
+    regels.append(f"Cors__Origins__{i+1}={o}")
+open(".env.deploy", "w").write("\n".join(regels) + "\n")
+open(".env.build", "w").write(
+    f"DOMEIN={domein}\nVITE_SUPABASE_URL={fe['VITE_SUPABASE_URL']}\nVITE_SUPABASE_ANON_KEY={fe['VITE_SUPABASE_ANON_KEY']}\n")
+print(f"   domein: https://{domein}")
+PY
+
+echo "2/4 Code naar de server"
+ssh -o StrictHostKeyChecking=accept-new "$DOEL" "mkdir -p /opt/poortland"
+rsync -az --delete \
+  --exclude node_modules --exclude dist --exclude bin --exclude obj --exclude .git \
+  ../ "$DOEL:/opt/poortland/"
+
+echo "3/4 Bouwen en starten op de server (eerste keer duurt enkele minuten)"
+ssh "$DOEL" "cd /opt/poortland/infra && set -a && source .env.build && set +a && docker compose up -d --build"
+
+echo "4/4 Gezondheidscheck"
+sleep 8
+if curl -skm 10 "https://$DOMEIN/gezond" | grep -q gezond; then
+  echo ""
+  echo "LIVE: https://$DOMEIN"
+  echo "Leadendpoint voor de website: https://$DOMEIN/api/v1/leads/webformulier"
+  echo ""
+  echo "Nog 2 dashboardstappen in Supabase (Authentication, URL Configuration):"
+  echo "  Site URL: https://$DOMEIN"
+  echo "  Additional Redirect URLs: http://localhost:5173 erbij houden voor lokaal werk"
+else
+  echo "Nog niet bereikbaar. Certificaat kan 1 minuut duren, probeer: curl https://$DOMEIN/gezond"
+fi
