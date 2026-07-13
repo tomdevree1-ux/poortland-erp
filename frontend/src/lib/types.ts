@@ -39,7 +39,7 @@ export interface Offerte {
   taal: string; geldigTot: string; kortingPercentage: number; kortingBedrag: number
   totaalExclBtw: number; totaalBtw: number; totaalInclBtw: number
   verzondenOp?: string; beslistOp?: string; weigerReden?: string
-  regels: Offerteregel[]; aangemaaktOp: string
+  regels: Offerteregel[]; aangemaaktOp: string; gewijzigdOp?: string
 }
 export interface Artikel {
   id: string; code: string; omschrijving: string; eenheid: Eenheid

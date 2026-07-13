@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { Link } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { api } from '../lib/api'
 import { leeg } from '../lib/formaat'
 import type { Klant } from '../lib/types'
-import { Invoer, LegeStaat, PaginaKop, Th, Td } from '../ui'
+import { Invoer, LegeStaat, PaginaKop, Th, Td, rijKlik } from '../ui'
 
 export default function Klanten() {
+  const navigeer = useNavigate()
   const [zoek, zetZoek] = useState('')
   const { data: klanten } = useQuery({
     queryKey: ['klanten', zoek],
@@ -20,15 +21,15 @@ export default function Klanten() {
         <LegeStaat titel="Nog geen klanten" tekst="Klanten ontstaan bij het omzetten van een lead of hier via de verkoop." />
       ) : (
         <table className="w-full border-separate border-spacing-0">
-          <thead><tr><Th>Naam</Th><Th>Type</Th><Th>Gemeente</Th><Th>Email</Th><Th /></tr></thead>
+          <thead><tr><Th>Naam</Th><Th>Type</Th><Th>Gemeente</Th><Th>Email</Th></tr></thead>
           <tbody>
             {klanten?.map(k => (
-              <tr key={k.id} className="hover:bg-bronze-500/[.06]">
+              <tr key={k.id} className={rijKlik}
+                onClick={() => navigeer({ to: '/klanten/$klantId', params: { klantId: k.id } })}>
                 <Td className="font-semibold">{k.naam}</Td>
                 <Td>{k.type === 'bedrijf' ? 'Bedrijf' : 'Particulier'}</Td>
                 <Td>{leeg(k.gemeente)}</Td>
                 <Td>{leeg(k.email)}</Td>
-                <Td rechts><Link to="/klanten/$klantId" params={{ klantId: k.id }} className="text-sm font-semibold text-bronze-600 hover:text-bronze-500">Openen</Link></Td>
               </tr>
             ))}
           </tbody>

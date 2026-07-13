@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Link } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { api } from '../lib/api'
 import { datum, leeg } from '../lib/formaat'
 import type { Lead } from '../lib/types'
-import { Badge, Invoer, Knop, Modaal, PaginaKop, Selecteer, TekstVak, Th, Td } from '../ui'
+import { Badge, Invoer, Knop, Modaal, PaginaKop, Selecteer, TekstVak, Th, Td, rijKlik } from '../ui'
 
 const kanaalTekst: Record<string, string> = {
   telefoon: 'Telefoon', email: 'Email', webformulier: 'Webformulier', socialeMedia: 'Sociale media',
@@ -21,6 +21,7 @@ export const timingOpties = [
 
 export default function Leads() {
   const qc = useQueryClient()
+  const navigeer = useNavigate()
   const [status, zetStatus] = useState('')
   const [zoek, zetZoek] = useState('')
   const [weergave, zetWeergave] = useState('actief')
@@ -62,17 +63,17 @@ export default function Leads() {
       {(
         <table className="w-full border-separate border-spacing-0">
           <thead><tr>
-            <Th>Naam</Th><Th>Kanaal</Th><Th>Eerste vraag</Th><Th>Status</Th><Th>Opvolgen</Th><Th />
+            <Th>Naam</Th><Th>Kanaal</Th><Th>Eerste vraag</Th><Th>Status</Th><Th>Opvolgen</Th>
           </tr></thead>
           <tbody>
             {leads?.map(lead => (
-              <tr key={lead.id} className="hover:bg-bronze-500/[.06]">
+              <tr key={lead.id} className={rijKlik}
+                onClick={() => navigeer({ to: '/leads/$leadId', params: { leadId: lead.id } })}>
                 <Td className="font-semibold">{leeg(lead.naam ?? lead.email)}</Td>
                 <Td>{kanaalTekst[lead.kanaal] ?? lead.kanaal}</Td>
                 <Td className="max-w-72 truncate text-inkt-muted">{leeg(lead.eersteVraag)}</Td>
                 <Td><Badge status={lead.status} /></Td>
                 <Td>{datum(lead.opvolgdatum)}</Td>
-                <Td rechts><Link to="/leads/$leadId" params={{ leadId: lead.id }} className="text-sm font-semibold text-bronze-600 hover:text-bronze-500">Openen</Link></Td>
               </tr>
             ))}
           </tbody>

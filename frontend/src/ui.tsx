@@ -1,4 +1,5 @@
 import { Children, isValidElement, useEffect, useRef, useState } from 'react'
+import { Pencil } from 'lucide-react'
 import { clsx } from 'clsx'
 import type { ReactNode, ButtonHTMLAttributes, InputHTMLAttributes, SelectHTMLAttributes, TextareaHTMLAttributes } from 'react'
 
@@ -242,4 +243,18 @@ export function Th({ children, rechts }: { children?: ReactNode; rechts?: boolea
 }
 export function Td({ children, rechts, className }: { children?: ReactNode; rechts?: boolean; className?: string }) {
   return <td className={clsx('border-b border-inkt/[.06] px-3 py-2.5 text-sm', rechts && 'cijfers text-right', className)}>{children}</td>
+}
+
+
+/* Platform UX regels (README): rijen zijn klikbaar zonder Openen knoppen en
+   bewerken start altijd bewust via het potlood, met Opslaan en Annuleren. */
+export const rijKlik = 'cursor-pointer transition hover:bg-bronze-500/[.08]'
+
+export function PotloodKnop({ onClick, label = 'Bewerken' }: { onClick: () => void; label?: string }) {
+  return (
+    <button type="button" onClick={onClick} aria-label={label} title={label}
+      className="focusring flex h-8 w-8 items-center justify-center rounded-control text-inkt-muted hover:bg-bronze-500/10 hover:text-bronze-600">
+      <Pencil size={15} strokeWidth={1.8} />
+    </button>
+  )
 }

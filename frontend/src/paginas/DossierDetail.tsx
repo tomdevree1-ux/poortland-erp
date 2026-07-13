@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Link, useNavigate, useParams } from '@tanstack/react-router'
+import { useNavigate, useParams } from '@tanstack/react-router'
 import { clsx } from 'clsx'
 import { api } from '../lib/api'
 import { datum, euro, leeg } from '../lib/formaat'
 import type { Klant, Offerte } from '../lib/types'
-import { Badge, Knop, PaginaKop, Paneel, Th, Td } from '../ui'
+import { Badge, Knop, PaginaKop, Paneel, Th, Td, rijKlik } from '../ui'
 
 interface Dossier {
   project: { id: string; werfadres: string; omschrijving?: string; status: string; garantieMaanden: number; klant: Klant }
@@ -88,16 +88,16 @@ export default function DossierDetail() {
             </div>
           )}
           <table className="w-full border-separate border-spacing-0">
-            <thead><tr><Th>Nummer</Th><Th>Versie</Th><Th>Status</Th><Th>Geldig tot</Th><Th rechts>Totaal excl.</Th><Th /></tr></thead>
+            <thead><tr><Th>Nummer</Th><Th>Versie</Th><Th>Status</Th><Th>Geldig tot</Th><Th rechts>Totaal excl.</Th></tr></thead>
             <tbody>
               {offertes.map(o => (
-                <tr key={o.id} className="hover:bg-bronze-500/[.06]">
+                <tr key={o.id} className={rijKlik}
+                  onClick={() => navigeer({ to: '/offertes/$offerteId', params: { offerteId: o.id } })}>
                   <Td className="font-semibold">{o.nummer}</Td>
                   <Td>v{o.versieOfferte}</Td>
                   <Td><Badge status={o.status} /></Td>
                   <Td>{datum(o.geldigTot)}</Td>
                   <Td rechts>{euro(o.totaalExclBtw)}</Td>
-                  <Td rechts><Link to="/offertes/$offerteId" params={{ offerteId: o.id }} className="text-sm font-semibold text-bronze-600 hover:text-bronze-500">Openen</Link></Td>
                 </tr>
               ))}
             </tbody>

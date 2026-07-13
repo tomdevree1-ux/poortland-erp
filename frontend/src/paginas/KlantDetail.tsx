@@ -4,7 +4,7 @@ import { Link, useParams } from '@tanstack/react-router'
 import { api } from '../lib/api'
 import { datum, leeg } from '../lib/formaat'
 import type { Klant } from '../lib/types'
-import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Paneel, Selecteer } from '../ui'
+import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Paneel, PotloodKnop, Selecteer } from '../ui'
 
 interface Contactpersoon { id: string; naam: string; voornaam?: string; functie?: string; email?: string; telefoon?: string }
 interface KlantDossier {
@@ -60,6 +60,29 @@ export default function KlantDetail() {
     onSuccess: ververs, onError: f => zetFout((f as Error).message)
   })
 
+  const [klantOpen, zetKlantOpen] = useState(false)
+  const [klantVorm, zetKlantVorm] = useState<{ type: string; naam: string; btwNummer: string; straat: string
+    postcode: string; gemeente: string; email: string; telefoon: string; communicatietaal: string } | null>(null)
+  function openKlantBewerk() {
+    const k = data!.klant
+    zetKlantVorm({
+      type: k.type, naam: k.naam, btwNummer: k.btwNummer ?? '', straat: k.straat ?? '',
+      postcode: k.postcode ?? '', gemeente: k.gemeente ?? '', email: k.email ?? '',
+      telefoon: k.telefoon ?? '', communicatietaal: k.communicatietaal
+    })
+    zetKlantOpen(true)
+  }
+  const bewaarKlant = useMutation({
+    mutationFn: () => api.patch(`/klanten/${klantId}`, {
+      ...klantVorm, btwNummer: klantVorm!.btwNummer || null,
+      straat: klantVorm!.straat || null, postcode: klantVorm!.postcode || null,
+      gemeente: klantVorm!.gemeente || null, email: klantVorm!.email || null,
+      telefoon: klantVorm!.telefoon || null, communicatievoorkeur: null
+    }),
+    onSuccess: () => { ververs(); zetKlantOpen(false) },
+    onError: f => zetFout((f as Error).message)
+  })
+
   if (!data) return null
   const { klant, projecten, contactmomenten } = data
   return (
@@ -67,7 +90,7 @@ export default function KlantDetail() {
       <PaginaKop eyebrow="Klantfiche" titel={klant.naam} />
       {fout && <div className="mb-4"><Melding soort="fout">{fout}</Melding></div>}
       <div className="grid grid-cols-2 gap-6">
-        <Paneel titel="Gegevens">
+        <Paneel titel="Gegevens" actie={<PotloodKnop onClick={openKlantBewerk} />}>
           <dl className="space-y-2 text-sm">
             <div className="flex justify-between"><dt className="text-inkt-muted">Type</dt><dd>{klant.type === 'bedrijf' ? 'Bedrijf' : 'Particulier'}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Adres</dt><dd>{leeg([klant.straat, klant.postcode, klant.gemeente].filter(Boolean).join(', '))}</dd></div>
@@ -87,17 +110,17 @@ export default function KlantDetail() {
           ) : (
             <ul className="space-y-2 text-sm">
               {klant.contactpersonen.map(p => (
-                <li key={p.id} className="flex items-start justify-between gap-3 rounded-control border border-inkt/[.07] bg-vlak-surface px-3 py-2">
+                <li key={p.id}
+                  className="flex cursor-pointer items-start justify-between gap-3 rounded-control border border-inkt/[.07] bg-vlak-surface px-3 py-2 transition hover:bg-bronze-500/[.08]"
+                  onClick={() => openBewerk(p)}>
                   <div>
                     <div className="font-semibold">{[p.voornaam, p.naam].filter(Boolean).join(' ')}
                       {p.functie && <span className="ml-2 rounded-chip bg-bronze-500/15 px-1.5 py-0.5 text-xs font-semibold text-bronze-600">{p.functie}</span>}
                     </div>
                     <div className="text-inkt-muted">{[p.telefoon, p.email].filter(Boolean).join(' · ') || '—'}</div>
                   </div>
-                  <div className="flex gap-1">
-                    <button className="focusring text-xs font-semibold text-bronze-600 hover:text-bronze-500" onClick={() => openBewerk(p)}>Bewerken</button>
-                    <button className="focusring ml-2 text-corten-600" aria-label="Verwijderen" onClick={() => verwijderPersoon.mutate(p.id)}>×</button>
-                  </div>
+                  <button className="focusring text-corten-600" aria-label="Verwijderen"
+                    onClick={e => { e.stopPropagation(); verwijderPersoon.mutate(p.id) }}>×</button>
                 </li>
               ))}
             </ul>
@@ -135,6 +158,40 @@ export default function KlantDetail() {
           </div>
         </Paneel>
       </div>
+
+      <Modaal open={klantOpen} titel="Klantgegevens bewerken" onSluit={() => zetKlantOpen(false)}>
+        {klantVorm && (
+          <form className="space-y-4" onSubmit={e => { e.preventDefault(); bewaarKlant.mutate() }}>
+            <div className="grid grid-cols-2 gap-4">
+              <Selecteer label="Type" value={klantVorm.type} onChange={e => zetKlantVorm({ ...klantVorm, type: e.target.value })}>
+                <option value="particulier">Particulier</option>
+                <option value="bedrijf">Bedrijf</option>
+              </Selecteer>
+              <Invoer label="Naam" value={klantVorm.naam} onChange={e => zetKlantVorm({ ...klantVorm, naam: e.target.value })} required />
+            </div>
+            {klantVorm.type === 'bedrijf' &&
+              <Invoer label="Btw nummer" value={klantVorm.btwNummer} onChange={e => zetKlantVorm({ ...klantVorm, btwNummer: e.target.value })} required />}
+            <div className="grid grid-cols-3 gap-4">
+              <Invoer label="Straat" optioneel value={klantVorm.straat} onChange={e => zetKlantVorm({ ...klantVorm, straat: e.target.value })} />
+              <Invoer label="Postcode" optioneel value={klantVorm.postcode} onChange={e => zetKlantVorm({ ...klantVorm, postcode: e.target.value })} />
+              <Invoer label="Gemeente" optioneel value={klantVorm.gemeente} onChange={e => zetKlantVorm({ ...klantVorm, gemeente: e.target.value })} />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <Invoer label="Email" optioneel type="email" value={klantVorm.email} onChange={e => zetKlantVorm({ ...klantVorm, email: e.target.value })} />
+              <Invoer label="Telefoon" optioneel value={klantVorm.telefoon} onChange={e => zetKlantVorm({ ...klantVorm, telefoon: e.target.value })} />
+            </div>
+            <Selecteer label="Communicatietaal" value={klantVorm.communicatietaal} onChange={e => zetKlantVorm({ ...klantVorm, communicatietaal: e.target.value })}>
+              <option value="nl">Nederlands</option>
+              <option value="fr">Frans</option>
+              <option value="en">Engels</option>
+            </Selecteer>
+            <div className="flex justify-end gap-2">
+              <Knop type="button" variant="ghost" onClick={() => zetKlantOpen(false)}>Annuleren</Knop>
+              <Knop variant="primair" disabled={bewaarKlant.isPending}>{bewaarKlant.isPending ? 'Bezig…' : 'Opslaan'}</Knop>
+            </div>
+          </form>
+        )}
+      </Modaal>
 
       <Modaal open={persoonOpen} titel={bewerkId ? 'Contactpersoon bewerken' : 'Contactpersoon toevoegen'}
         onSluit={() => zetPersoonOpen(false)}>

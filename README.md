@@ -13,6 +13,38 @@ Supabase EU (Postgres met RLS, Auth en Storage), React met Vite in TypeScript al
 | frontend | React PWA met het huisstijlthema |
 | e2e | Playwright scenario's gekoppeld aan de acceptatiecriteria |
 
+## Platform UX regels (bindend voor elk scherm)
+
+Vastgelegd op vraag van Poortland (2026-07-13). Deze regels gelden platformbreed
+voor alle bestaande en toekomstige modules, tabellen, lijsten en detailweergaven.
+Controleer bij elk nieuw of gewijzigd scherm automatisch of ze kloppen.
+
+**1. Records openen vanuit tabellen en lijsten**
+
+- Geen knoppen of links met Openen of Bekijken in rijen.
+- De volledige rij is klikbaar: handcursor plus duidelijke hover indicatie
+  (gebruik de klasse `rijKlik` uit ui.tsx) en 1 klik opent het detail.
+- Interactieve elementen binnen een rij (selectievakjes, iconen, menu's) blijven
+  apart bedienbaar met `stopPropagation` zodat ze de rij niet onbedoeld openen.
+
+**2. Wijzigen van gegevens**
+
+- Gegevens staan standaard in leesmodus, nooit rechtstreeks bewerkbaar.
+- Bewerken start altijd bewust via het potlood (`PotloodKnop` uit ui.tsx) of een
+  duidelijke knop Bewerken. Pas dan worden velden bewerkbaar en verschijnen
+  Opslaan en Annuleren. Na opslaan of annuleren keert het scherm terug naar
+  leesmodus.
+- Domeinacties (kwalificeren, verzenden, publiceren, archiveren en dergelijke)
+  zijn geen bewerkingen en blijven gewone actieknoppen.
+
+**3. Consistentie**
+
+- Overal dezelfde navigatielogica, dezelfde hover en cursorfeedback, dezelfde
+  iconen en benamingen (Bewerken, Opslaan, Annuleren) en dezelfde scheiding
+  tussen leesmodus en bewerkmodus.
+- Geen alternatieve interactiepatronen toevoegen tenzij Poortland er
+  uitdrukkelijk om vraagt.
+
 ## Huisstijlafspraak interface
 
 **Nooit native browseropmaak voor interface elementen**, vastgelegd op vraag van

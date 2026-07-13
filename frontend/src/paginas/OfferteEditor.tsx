@@ -4,7 +4,7 @@ import { Link, useParams } from '@tanstack/react-router'
 import { api } from '../lib/api'
 import { datum, euro } from '../lib/formaat'
 import type { Artikel, Offerte, Offerteregel } from '../lib/types'
-import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Paneel, Selecteer, TekstVak, Th, Td } from '../ui'
+import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Paneel, PotloodKnop, Selecteer, TekstVak, Th, Td } from '../ui'
 
 /* Offerte editor (TS-05 sectie 8): regels uit de catalogus of vrij, kortingen
    en automatisch berekende totalen. De backend rekent, dit scherm toont. */
@@ -19,15 +19,27 @@ export default function OfferteEditor() {
   const [fout, zetFout] = useState<string>()
   const [weigerOpen, zetWeigerOpen] = useState(false)
   const [reden, zetReden] = useState('')
-  const bewerkbaar = offerte?.status === 'nieuw'
+  const [bewerkModus, zetBewerkModus] = useState(false)
+  const magBewerken = offerte?.status === 'nieuw'
+  const bewerkbaar = magBewerken && bewerkModus
 
   useEffect(() => {
+    if (offerte && !bewerkModus) {
+      zetRegels(offerte.regels.map(r => ({ ...r })))
+      zetKortingPct(offerte.kortingPercentage)
+      zetKortingBedrag(offerte.kortingBedrag)
+    }
+  }, [offerte?.id, offerte?.status, offerte?.gewijzigdOp, bewerkModus])
+
+  function annuleerBewerken() {
     if (offerte) {
       zetRegels(offerte.regels.map(r => ({ ...r })))
       zetKortingPct(offerte.kortingPercentage)
       zetKortingBedrag(offerte.kortingBedrag)
     }
-  }, [offerte?.id, offerte?.status])
+    zetFout(undefined)
+    zetBewerkModus(false)
+  }
 
   function voegArtikelToe(artikelId: string) {
     const artikel = artikelen?.find(a => a.id === artikelId)
@@ -52,7 +64,7 @@ export default function OfferteEditor() {
         kortingBedrag: Number(r.kortingBedrag), btw: r.btw })),
       kortingPercentage: Number(kortingPct), kortingBedrag: Number(kortingBedrag), geldigTot: null
     }),
-    onSuccess: () => { zetFout(undefined); qc.invalidateQueries({ queryKey: ['offerte', offerteId] }) },
+    onSuccess: () => { zetFout(undefined); zetBewerkModus(false); qc.invalidateQueries({ queryKey: ['offerte', offerteId] }) },
     onError: f => zetFout((f as Error).message)
   })
   const actie = (pad: string, body?: unknown) => useMutation({
@@ -77,16 +89,25 @@ export default function OfferteEditor() {
   return (
     <>
       <PaginaKop eyebrow={`Offerte · versie ${offerte.versieOfferte}`} titel={offerte.nummer}
-        actie={<div className="flex gap-2">
-          <a href={`/api/v1/offertes/${offerte.id}/pdf`} target="_blank" rel="noreferrer">
-            <Knop variant="neutraal">PDF</Knop></a>
-          {bewerkbaar && <Knop variant="secundair" onClick={() => bewaar.mutate()} disabled={bewaar.isPending}>Bewaren</Knop>}
-          {bewerkbaar && <Knop variant="primair" onClick={() => { bewaar.mutate(undefined, { onSuccess: () => verzenden.mutate() }) }}>Verzenden ↗</Knop>}
-          {offerte.status === 'verzonden' && <Knop variant="primair" onClick={() => akkoord.mutate()}>Akkoord klant ↗</Knop>}
-          {offerte.status === 'verzonden' && <Knop variant="ghost" onClick={() => zetWeigerOpen(true)}>Weigeren</Knop>}
-          {(offerte.status === 'verzonden' || offerte.status === 'goedgekeurd' || offerte.status === 'geweigerd' || offerte.status === 'verlopen') &&
-            <Knop variant="neutraal" onClick={() => nieuweVersie.mutate()}>Nieuwe versie</Knop>}
-        </div>} />
+        actie={bewerkModus ? (
+          <div className="flex gap-2">
+            <Knop variant="ghost" onClick={annuleerBewerken}>Annuleren</Knop>
+            <Knop variant="primair" onClick={() => bewaar.mutate()} disabled={bewaar.isPending}>
+              {bewaar.isPending ? 'Bezig…' : 'Opslaan'}</Knop>
+          </div>
+        ) : (
+          <div className="flex gap-2">
+            <a href={`/api/v1/offertes/${offerte.id}/pdf`} target="_blank" rel="noreferrer">
+              <Knop variant="neutraal">PDF</Knop></a>
+            {magBewerken && <Knop variant="secundair" onClick={() => zetBewerkModus(true)}>Bewerken</Knop>}
+            {magBewerken && offerte.regels.length > 0 &&
+              <Knop variant="primair" onClick={() => verzenden.mutate()}>Verzenden ↗</Knop>}
+            {offerte.status === 'verzonden' && <Knop variant="primair" onClick={() => akkoord.mutate()}>Akkoord klant ↗</Knop>}
+            {offerte.status === 'verzonden' && <Knop variant="ghost" onClick={() => zetWeigerOpen(true)}>Weigeren</Knop>}
+            {(offerte.status === 'verzonden' || offerte.status === 'goedgekeurd' || offerte.status === 'geweigerd' || offerte.status === 'verlopen') &&
+              <Knop variant="neutraal" onClick={() => nieuweVersie.mutate()}>Nieuwe versie</Knop>}
+          </div>
+        )} />
       <div className="mb-4 flex items-center gap-4 text-sm text-inkt-muted">
         <Badge status={offerte.status} />
         <span>Geldig tot {datum(offerte.geldigTot)}</span>
@@ -94,7 +115,7 @@ export default function OfferteEditor() {
           className="font-semibold text-bronze-600 hover:text-bronze-500">Naar het dossier</Link>
       </div>
       {fout && <div className="mb-4"><Melding soort="fout">{fout}</Melding></div>}
-      {!bewerkbaar && offerte.status !== 'goedgekeurd' && (
+      {!magBewerken && offerte.status !== 'goedgekeurd' && (
         <div className="mb-4"><Melding soort="info">
           Deze versie is {offerte.status}. Wijzigingen vragen een nieuwe versie (TS-05).
         </Melding></div>
@@ -155,7 +176,7 @@ export default function OfferteEditor() {
               <dt>Totaal incl. btw</dt><dd>{euro(offerte.totaalInclBtw)}</dd></div>
           </dl>
         </div>
-        {bewerkbaar && <p className="mt-3 text-xs text-inkt-faint">De totalen worden berekend bij het bewaren. De backend rekent, het scherm toont.</p>}
+        {bewerkbaar && <p className="mt-3 text-xs text-inkt-faint">De totalen worden berekend bij het opslaan. De backend rekent, het scherm toont.</p>}
       </Paneel>
 
       <Modaal open={weigerOpen} titel="Offerte geweigerd" onSluit={() => zetWeigerOpen(false)}>

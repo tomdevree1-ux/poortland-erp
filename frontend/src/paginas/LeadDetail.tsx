@@ -5,7 +5,7 @@ import { clsx } from 'clsx'
 import { api } from '../lib/api'
 import { datum, euro, leeg } from '../lib/formaat'
 import type { Klant, Lead } from '../lib/types'
-import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Paneel, Selecteer, TekstVak } from '../ui'
+import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Paneel, PotloodKnop, Selecteer, TekstVak } from '../ui'
 import { timingOpties, typeAanvraagOpties } from './Leads'
 
 const typeTekst = Object.fromEntries(typeAanvraagOpties)
@@ -30,15 +30,16 @@ export default function LeadDetail() {
   const [omzetOpen, zetOmzetOpen] = useState(false)
   const [verliesOpen, zetVerliesOpen] = useState(false)
   const [verwijderOpen, zetVerwijderOpen] = useState(false)
+  const [bewerkOpen, zetBewerkOpen] = useState(false)
+  const [fout, zetFout] = useState<string>()
   const { data: mij } = useQuery({
     queryKey: ['mij'],
     queryFn: () => api.get<{ rollen: string[] }>('/medewerkers/mij'),
     staleTime: 5 * 60 * 1000
   })
   const isBeheerder = mij?.rollen.includes('beheerder') ?? false
-  const [fout, zetFout] = useState<string>()
   const ververs = () => { zetFout(undefined); qc.invalidateQueries({ queryKey: ['lead', leadId] }) }
-  const bewerkbaar = lead?.status === 'nieuw' || lead?.status === 'gekwalificeerd'
+  const bewerkbaar = (lead?.status === 'nieuw' || lead?.status === 'gekwalificeerd') && !lead?.gearchiveerdOp
 
   const kwalificeer = useMutation({
     mutationFn: () => api.post<Lead>(`/leads/${leadId}/kwalificeer`, { prijsindicatie: null, opvolgdatum: null }),
@@ -46,8 +47,21 @@ export default function LeadDetail() {
   })
   const wijzig = useMutation({
     mutationFn: (deel: Record<string, unknown>) => api.patch<Lead>(`/leads/${leadId}`, deel),
-    onSuccess: ververs, onError: f => zetFout((f as Error).message)
+    onSuccess: () => { ververs(); zetBewerkOpen(false) },
+    onError: f => zetFout((f as Error).message)
   })
+
+  const [vorm, zetVorm] = useState<{ naam: string; email: string; telefoon: string; gemeente: string
+    typeAanvraag: string; gewensteTiming: string; eersteVraag: string } | null>(null)
+  function openBewerk() {
+    if (!lead) return
+    zetVorm({
+      naam: lead.naam ?? '', email: lead.email ?? '', telefoon: lead.telefoon ?? '',
+      gemeente: lead.gemeente ?? '', typeAanvraag: lead.typeAanvraag ?? '',
+      gewensteTiming: lead.gewensteTiming ?? '', eersteVraag: lead.eersteVraag ?? ''
+    })
+    zetBewerkOpen(true)
+  }
 
   const bestandRef = useRef<HTMLInputElement>(null)
   const uploadFoto = useMutation({
@@ -111,7 +125,7 @@ export default function LeadDetail() {
         actie={<div className="flex gap-2">
           {!lead.gearchiveerdOp && lead.status === 'nieuw' && <Knop variant="primair" onClick={() => kwalificeer.mutate()}>Kwalificeren</Knop>}
           {!lead.gearchiveerdOp && lead.status === 'gekwalificeerd' && <Knop variant="primair" onClick={() => zetOmzetOpen(true)}>Omzetten naar dossier ↗</Knop>}
-          {!lead.gearchiveerdOp && bewerkbaar && <Knop variant="ghost" onClick={() => zetVerliesOpen(true)}>Verliezen</Knop>}
+          {bewerkbaar && <Knop variant="ghost" onClick={() => zetVerliesOpen(true)}>Verliezen</Knop>}
           <Knop variant="neutraal" onClick={() => archiveer.mutate(!!lead.gearchiveerdOp)}>
             {lead.gearchiveerdOp ? 'Herstellen' : 'Archiveren'}
           </Knop>
@@ -123,7 +137,7 @@ export default function LeadDetail() {
       {fout && <div className="mb-4"><Melding soort="fout">{fout}</Melding></div>}
 
       <div className="grid grid-cols-2 gap-6">
-        <Paneel titel="Aanvraag">
+        <Paneel titel="Aanvraag" actie={bewerkbaar && <PotloodKnop onClick={openBewerk} />}>
           <dl className="space-y-2 text-sm">
             <div className="flex justify-between"><dt className="text-inkt-muted">Status</dt><dd><Badge status={lead.status} /></dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Type aanvraag</dt>
@@ -143,13 +157,8 @@ export default function LeadDetail() {
           </dl>
         </Paneel>
 
-        <Paneel titel="Omschrijving van het project">
-          {bewerkbaar ? (
-            <TekstVak defaultValue={lead.eersteVraag ?? ''} rows={6}
-              onBlur={e => e.target.value !== (lead.eersteVraag ?? '') && wijzig.mutate({ eersteVraag: e.target.value })} />
-          ) : (
-            <p className="text-sm leading-relaxed text-inkt-body">{leeg(lead.eersteVraag)}</p>
-          )}
+        <Paneel titel="Omschrijving van het project" actie={bewerkbaar && <PotloodKnop onClick={openBewerk} />}>
+          <p className="whitespace-pre-line text-sm leading-relaxed text-inkt-body">{leeg(lead.eersteVraag)}</p>
         </Paneel>
 
         <Paneel titel="Foto's van de plek" actie={bewerkbaar && (
@@ -170,7 +179,7 @@ export default function LeadDetail() {
                   </a>
                   {bewerkbaar && (
                     <button className="focusring absolute right-1 top-1 hidden rounded-chip bg-corten-600 px-1.5 text-xs text-stone2-50 group-hover:block"
-                      onClick={() => verwijderFoto.mutate(f.id)} aria-label="Foto verwijderen">×</button>
+                      onClick={e => { e.stopPropagation(); verwijderFoto.mutate(f.id) }} aria-label="Foto verwijderen">×</button>
                   )}
                 </figure>
               ))}
@@ -179,10 +188,57 @@ export default function LeadDetail() {
         </Paneel>
 
         {wizard && (
-          <WizardPaneel stappen={wizard} bewerkbaar={bewerkbaar}
+          <WizardPaneel stappen={wizard} magBewerken={bewerkbaar}
             bijBewaren={stappen => wijzig.mutate({ wizardGegevens: JSON.stringify({ stappen }) })} />
         )}
       </div>
+
+      <Modaal open={bewerkOpen} titel="Lead bewerken" onSluit={() => zetBewerkOpen(false)}>
+        {vorm && (
+          <form className="space-y-4" onSubmit={e => {
+            e.preventDefault()
+            wijzig.mutate({
+              naam: vorm.naam, email: vorm.email || null, telefoon: vorm.telefoon || null,
+              gemeente: vorm.gemeente || null, typeAanvraag: vorm.typeAanvraag || null,
+              gewensteTiming: vorm.gewensteTiming || null, eersteVraag: vorm.eersteVraag || null
+            })
+          }}>
+            <Invoer label="Naam" value={vorm.naam} onChange={e => zetVorm({ ...vorm, naam: e.target.value })} required />
+            <div className="grid grid-cols-2 gap-4">
+              <Invoer label="Email" optioneel type="email" value={vorm.email} onChange={e => zetVorm({ ...vorm, email: e.target.value })} />
+              <Invoer label="Telefoon" optioneel value={vorm.telefoon} onChange={e => zetVorm({ ...vorm, telefoon: e.target.value })} />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <Selecteer label="Type aanvraag" optioneel value={vorm.typeAanvraag} onChange={e => zetVorm({ ...vorm, typeAanvraag: e.target.value })}>
+                <option value="">Nog niet gekend</option>
+                {typeAanvraagOpties.map(([w, tekst]) => <option key={w} value={w}>{tekst}</option>)}
+              </Selecteer>
+              <Selecteer label="Gewenste timing" optioneel value={vorm.gewensteTiming} onChange={e => zetVorm({ ...vorm, gewensteTiming: e.target.value })}>
+                <option value="">Nog niet gekend</option>
+                {timingOpties.map(([w, tekst]) => <option key={w} value={w}>{tekst}</option>)}
+              </Selecteer>
+            </div>
+            <Invoer label="Gemeente" optioneel value={vorm.gemeente} onChange={e => zetVorm({ ...vorm, gemeente: e.target.value })} />
+            <TekstVak label="Omschrijving van het project" optioneel value={vorm.eersteVraag}
+              onChange={e => zetVorm({ ...vorm, eersteVraag: e.target.value })} />
+            <div className="flex justify-end gap-2">
+              <Knop type="button" variant="ghost" onClick={() => zetBewerkOpen(false)}>Annuleren</Knop>
+              <Knop variant="primair" disabled={wijzig.isPending}>{wijzig.isPending ? 'Bezig…' : 'Opslaan'}</Knop>
+            </div>
+          </form>
+        )}
+      </Modaal>
+
+      <Modaal open={verwijderOpen} titel="Lead verwijderen?" onSluit={() => zetVerwijderOpen(false)}>
+        <p className="mb-4 text-sm text-inkt-body">
+          Dit verwijdert de lead van {leeg(lead.naam ?? lead.email)} definitief uit de werking.
+          De audit trail bewaart de historiek. Deze actie kan niet ongedaan worden gemaakt.
+        </p>
+        <div className="flex justify-end gap-2">
+          <Knop type="button" variant="ghost" onClick={() => zetVerwijderOpen(false)}>Annuleren</Knop>
+          <Knop variant="destructief" disabled={verwijderen.isPending} onClick={() => verwijderen.mutate()}>Verwijderen</Knop>
+        </div>
+      </Modaal>
 
       <Modaal open={omzetOpen} titel="Omzetten naar klant en dossier" onSluit={() => zetOmzetOpen(false)}>
         <form className="space-y-4" onSubmit={e => { e.preventDefault(); omzetten.mutate() }}>
@@ -218,17 +274,6 @@ export default function LeadDetail() {
         </form>
       </Modaal>
 
-      <Modaal open={verwijderOpen} titel="Lead verwijderen?" onSluit={() => zetVerwijderOpen(false)}>
-        <p className="mb-4 text-sm text-inkt-body">
-          Dit verwijdert de lead van {leeg(lead.naam ?? lead.email)} definitief uit de werking.
-          De audit trail bewaart de historiek. Deze actie kan niet ongedaan worden gemaakt.
-        </p>
-        <div className="flex justify-end gap-2">
-          <Knop type="button" variant="ghost" onClick={() => zetVerwijderOpen(false)}>Annuleren</Knop>
-          <Knop variant="destructief" disabled={verwijderen.isPending} onClick={() => verwijderen.mutate()}>Verwijderen</Knop>
-        </div>
-      </Modaal>
-
       <Modaal open={verliesOpen} titel="Lead verliezen" onSluit={() => zetVerliesOpen(false)}>
         <form className="space-y-4" onSubmit={e => { e.preventDefault(); verliezen.mutate() }}>
           <TekstVak label="Reden" value={reden} onChange={e => zetReden(e.target.value)} required />
@@ -242,31 +287,34 @@ export default function LeadDetail() {
   )
 }
 
-/* De offertewizard van de website, hier als bewerkbare wizard (TS-04 aanvulling).
-   Structuurcontract: { stappen: [{ titel, velden: [{ label, waarde }] }] }. */
-function WizardPaneel({ stappen, bewerkbaar, bijBewaren }:
-  { stappen: WizardStap[]; bewerkbaar: boolean; bijBewaren: (stappen: WizardStap[]) => void }) {
+/* De offertewizard van de website: leesmodus eerst en bewerken via het potlood
+   met Opslaan en Annuleren (platform UX regels). */
+function WizardPaneel({ stappen, magBewerken, bijBewaren }:
+  { stappen: WizardStap[]; magBewerken: boolean; bijBewaren: (stappen: WizardStap[]) => void }) {
   const [actief, zetActief] = useState(0)
+  const [bewerkModus, zetBewerkModus] = useState(false)
   const [lokaal, zetLokaal] = useState(stappen)
-  const [gewijzigd, zetGewijzigd] = useState(false)
-  const stap = lokaal[actief]
+  const stap = (bewerkModus ? lokaal : stappen)[actief]
   if (!stap) return null
 
+  function start() { zetLokaal(stappen.map(s => ({ ...s, velden: s.velden.map(v => ({ ...v })) }))); zetBewerkModus(true) }
   function zetVeld(index: number, waarde: string) {
-    const kopie = lokaal.map((s, si) => si === actief
+    zetLokaal(lokaal.map((s, si) => si === actief
       ? { ...s, velden: s.velden.map((v, vi) => (vi === index ? { ...v, waarde } : v)) }
-      : s)
-    zetLokaal(kopie)
-    zetGewijzigd(true)
+      : s))
   }
 
   return (
     <Paneel titel="Offerteaanvraag (wizard van de website)" className="col-span-2"
-      actie={gewijzigd && bewerkbaar && (
-        <Knop variant="secundair" className="h-8 px-3 text-xs"
-          onClick={() => { bijBewaren(lokaal); zetGewijzigd(false) }}>Wijzigingen bewaren</Knop>)}>
+      actie={bewerkModus ? (
+        <div className="flex gap-2">
+          <Knop variant="ghost" className="h-8 px-3 text-xs" onClick={() => zetBewerkModus(false)}>Annuleren</Knop>
+          <Knop variant="primair" className="h-8 px-3 text-xs"
+            onClick={() => { bijBewaren(lokaal); zetBewerkModus(false) }}>Opslaan</Knop>
+        </div>
+      ) : magBewerken && <PotloodKnop onClick={start} />}>
       <div className="mb-5 flex items-center gap-2">
-        {lokaal.map((s, i) => (
+        {(bewerkModus ? lokaal : stappen).map((s, i) => (
           <button key={i} type="button" onClick={() => zetActief(i)}
             className={clsx('focusring flex items-center gap-2 rounded-chip px-2.5 py-1 text-xs font-semibold',
               i === actief ? 'bg-bronze-500/15 text-bronze-600' : 'text-inkt-muted hover:text-inkt')}>
@@ -276,15 +324,26 @@ function WizardPaneel({ stappen, bewerkbaar, bijBewaren }:
           </button>
         ))}
       </div>
-      <div className="grid grid-cols-2 gap-4">
-        {stap.velden.map((veld, i) => (
-          <Invoer key={`${actief}-${i}`} label={veld.label} value={veld.waarde} disabled={!bewerkbaar}
-            onChange={e => zetVeld(i, e.target.value)} />
-        ))}
-      </div>
+      {bewerkModus ? (
+        <div className="grid grid-cols-2 gap-4">
+          {stap.velden.map((veld, i) => (
+            <Invoer key={`${actief}-${i}`} label={veld.label} value={veld.waarde}
+              onChange={e => zetVeld(i, e.target.value)} />
+          ))}
+        </div>
+      ) : (
+        <dl className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm">
+          {stap.velden.map((veld, i) => (
+            <div key={i} className="flex justify-between gap-4 border-b border-inkt/[.06] py-1.5">
+              <dt className="text-inkt-muted">{veld.label}</dt>
+              <dd className="text-right font-medium">{veld.waarde || '—'}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
       <div className="mt-5 flex justify-between">
         <Knop variant="ghost" type="button" disabled={actief === 0} onClick={() => zetActief(actief - 1)}>Vorige</Knop>
-        <Knop variant="neutraal" type="button" disabled={actief === lokaal.length - 1} onClick={() => zetActief(actief + 1)}>Volgende</Knop>
+        <Knop variant="neutraal" type="button" disabled={actief === stappen.length - 1} onClick={() => zetActief(actief + 1)}>Volgende</Knop>
       </div>
     </Paneel>
   )
