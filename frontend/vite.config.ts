@@ -19,6 +19,17 @@ export default defineConfig({
       }
     })
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        // Stabiele libraries in aparte chunks zodat ze gecachet blijven over uitrollen heen.
+        manualChunks: {
+          vendor: ['react', 'react-dom', '@tanstack/react-router', '@tanstack/react-query'],
+          supabase: ['@supabase/supabase-js']
+        }
+      }
+    }
+  },
   server: {
     port: 5173,
     proxy: {
