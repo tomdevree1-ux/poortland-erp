@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { api } from '../lib/api'
 import { persoon } from '../lib/formaat'
 import type { MedewerkerRij, Rol } from '../lib/types'
-import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Th, Td, rijKlik } from '../ui'
+import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Selectievak, Th, Td, rijKlik } from '../ui'
 
 const alleRollen: Rol[] = ['verkoop', 'planning', 'productie', 'montage', 'boekhouding', 'beheerder']
 
@@ -24,16 +24,17 @@ export default function Beheer() {
   })
 
   const [bewerk, zetBewerk] = useState<MedewerkerRij | null>(null)
-  const [bewerkVorm, zetBewerkVorm] = useState<{ rollen: Rol[]; isActief: boolean } | null>(null)
+  const [bewerkVorm, zetBewerkVorm] = useState<{ voornaam: string; naam: string; rollen: Rol[]; isActief: boolean } | null>(null)
   function openBewerk(m: MedewerkerRij) {
     zetBewerk(m)
-    zetBewerkVorm({ rollen: [...m.rollen], isActief: m.isActief })
+    zetBewerkVorm({ voornaam: m.voornaam ?? '', naam: m.naam ?? '', rollen: [...m.rollen], isActief: m.isActief })
   }
   const bewaar = useMutation({
     mutationFn: async () => {
       await api.put(`/medewerkers/${bewerk!.id}/rollen`, { rollen: bewerkVorm!.rollen })
-      if (bewerkVorm!.isActief !== bewerk!.isActief)
-        await api.patch(`/medewerkers/${bewerk!.id}`, { isActief: bewerkVorm!.isActief })
+      await api.patch(`/medewerkers/${bewerk!.id}`, {
+        isActief: bewerkVorm!.isActief, naam: bewerkVorm!.naam, voornaam: bewerkVorm!.voornaam || null
+      })
     },
     onSuccess: () => { ververs(); zetBewerk(null) },
     onError: f => zetFout((f as Error).message)
@@ -72,10 +73,14 @@ export default function Beheer() {
         MFA met een authenticator is verplicht voor beheerder en boekhouding.
       </p>
 
-      <Modaal open={!!bewerk} titel={bewerk ? `${bewerk.naam} bewerken` : ''} onSluit={() => zetBewerk(null)}>
+      <Modaal open={!!bewerk} titel={bewerk ? `${persoon(bewerk.voornaam, bewerk.naam)} bewerken` : ''} onSluit={() => zetBewerk(null)}>
         {bewerk && bewerkVorm && (
           <form className="space-y-4" onSubmit={e => { e.preventDefault(); bewaar.mutate() }}>
             <div className="text-sm text-inkt-muted">{bewerk.email}</div>
+            <div className="grid grid-cols-2 gap-4">
+              <Invoer label="Voornaam" optioneel value={bewerkVorm.voornaam} onChange={e => zetBewerkVorm({ ...bewerkVorm, voornaam: e.target.value })} />
+              <Invoer label="Naam" value={bewerkVorm.naam} onChange={e => zetBewerkVorm({ ...bewerkVorm, naam: e.target.value })} required />
+            </div>
             <div>
               <div className="mb-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-inkt-muted">Rollen</div>
               <div className="flex flex-wrap gap-1.5">
@@ -91,14 +96,12 @@ export default function Beheer() {
                 })}
               </div>
             </div>
-            <label className="flex items-center gap-2 text-sm text-inkt-body">
-              <input type="checkbox" checked={bewerkVorm.isActief}
-                onChange={e => zetBewerkVorm({ ...bewerkVorm, isActief: e.target.checked })} />
+            <Selectievak checked={bewerkVorm.isActief} onChange={v => zetBewerkVorm({ ...bewerkVorm, isActief: v })}>
               Actieve toegang (uitvinken blokkeert het aanmelden)
-            </label>
+            </Selectievak>
             <div className="flex justify-end gap-2">
               <Knop type="button" variant="ghost" onClick={() => zetBewerk(null)}>Annuleren</Knop>
-              <Knop variant="primair" disabled={bewaar.isPending || bewerkVorm.rollen.length === 0}>
+              <Knop variant="primair" disabled={bewaar.isPending || bewerkVorm.rollen.length === 0 || !bewerkVorm.naam.trim()}>
                 {bewaar.isPending ? 'Bezig…' : 'Opslaan'}</Knop>
             </div>
           </form>

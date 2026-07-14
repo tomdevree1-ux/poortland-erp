@@ -4,7 +4,7 @@ import { clsx } from 'clsx'
 import { api } from '../lib/api'
 import { datum } from '../lib/formaat'
 import type { Media, Popup } from '../lib/types'
-import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Paneel, PlusKnop, PotloodKnop, Selecteer, TekstVak, VuilbakKnop } from '../ui'
+import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Paneel, PlusKnop, PotloodKnop, Selecteer, Selectievak, TekstVak, VuilbakKnop } from '../ui'
 
 /* TS-17 Websitebeheer volgens de platform UX regels: leesmodus eerst,
    bewerken via het potlood met Opslaan en Annuleren. */
@@ -252,17 +252,14 @@ function FotoTab() {
                 </Selecteer>
               </div>
             )}
-            <label className="flex items-center gap-2 text-sm text-inkt-body">
-              <input type="checkbox" checked={fotoVorm.personenInBeeld}
-                onChange={e => zetFotoVorm({ ...fotoVorm, personenInBeeld: e.target.checked })} />
+            <Selectievak checked={fotoVorm.personenInBeeld} onChange={v => zetFotoVorm({ ...fotoVorm, personenInBeeld: v })}>
               Personen in beeld
-            </label>
+            </Selectievak>
             {fotoVorm.personenInBeeld && (
-              <label className="flex items-center gap-2 text-sm text-corten-600">
-                <input type="checkbox" checked={fotoVorm.toestemmingBevestigd}
-                  onChange={e => zetFotoVorm({ ...fotoVorm, toestemmingBevestigd: e.target.checked })} />
+              <Selectievak className="text-corten-600" checked={fotoVorm.toestemmingBevestigd}
+                onChange={v => zetFotoVorm({ ...fotoVorm, toestemmingBevestigd: v })}>
                 Toestemming van de personen bevestigd
-              </label>
+              </Selectievak>
             )}
             <div className="flex justify-end gap-2">
               <Knop type="button" variant="ghost" onClick={() => zetBewerkFoto(null)}>Annuleren</Knop>

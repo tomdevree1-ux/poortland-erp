@@ -14,7 +14,7 @@ public class MedewerkersController(PoortlandDbContext db, ClaimsContext claims) 
 {
     public record UitnodigingInvoer(string Email, string Naam, string? Voornaam, List<Rol> Rollen);
     public record RollenInvoer(List<Rol> Rollen);
-    public record ActiefInvoer(bool IsActief);
+    public record MedewerkerWijziging(bool? IsActief, string? Naam, string? Voornaam);
 
     [HttpGet("mij")]
     public async Task<IActionResult> Mij()
@@ -76,12 +76,14 @@ public class MedewerkersController(PoortlandDbContext db, ClaimsContext claims) 
     // LOGIN-03: deactiveren blokkeert de toegang bij het eerstvolgende verzoek.
     [HttpPatch("{id:guid}")]
     [VereistRol("beheerder")]
-    public async Task<IActionResult> Wijzig(Guid id, ActiefInvoer invoer)
+    public async Task<IActionResult> Wijzig(Guid id, MedewerkerWijziging invoer)
     {
         var medewerker = await db.Medewerkers.FirstOrDefaultAsync(m => m.Id == id && m.VerwijderdOp == null);
         if (medewerker is null) return NotFound();
-        medewerker.IsActief = invoer.IsActief;
+        if (invoer.IsActief is { } actief) medewerker.IsActief = actief;
+        if (invoer.Naam is not null) medewerker.Naam = invoer.Naam;
+        if (invoer.Voornaam is not null) medewerker.Voornaam = invoer.Voornaam;
         await db.SaveChangesAsync();
-        return Ok(new { medewerker.Id, medewerker.IsActief });
+        return Ok(new { medewerker.Id, medewerker.Naam, medewerker.Voornaam, medewerker.IsActief });
     }
 }

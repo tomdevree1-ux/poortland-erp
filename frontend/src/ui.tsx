@@ -161,6 +161,22 @@ export function Badge({ status }: { status: string }) {
   )
 }
 
+/* Selectievak in de huisstijl (geen ruwe browservinkjes, platformbreed). */
+export function Selectievak({ checked, onChange, children, className }:
+  { checked: boolean; onChange: (v: boolean) => void; children: ReactNode; className?: string }) {
+  return (
+    <label className={clsx('flex cursor-pointer items-start gap-2.5 text-sm text-inkt-body', className)}>
+      <span aria-hidden="true"
+        className={clsx('mt-px flex h-[18px] w-[18px] flex-none items-center justify-center rounded-[4px] border text-[11px] font-bold transition',
+          checked ? 'border-bronze-500 bg-bronze-500 text-forest-950' : 'border-inkt/25 bg-transparent text-transparent')}>
+        ✓
+      </span>
+      <input type="checkbox" checked={checked} onChange={e => onChange(e.target.checked)} className="sr-only" />
+      <span>{children}</span>
+    </label>
+  )
+}
+
 export function Eyebrow({ children }: { children: ReactNode }) {
   return <div className="text-2xs font-bold uppercase tracking-[0.26em] text-bronze-600">{children}</div>
 }

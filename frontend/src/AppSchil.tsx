@@ -4,6 +4,7 @@ import { clsx } from 'clsx'
 import { FolderOpen, Users, Inbox, ListTodo, Globe, Settings, LogOut } from 'lucide-react'
 import { supabase } from './lib/supabase'
 import { api } from './lib/api'
+import { persoon } from './lib/formaat'
 
 /* Het vaste skelet uit de huisstijlgids blad 07: bosgroene sidebar (236),
    sticky topbar en het werkvlak op warm perkament. */
@@ -22,7 +23,7 @@ export default function AppSchil() {
   const pad = useRouterState({ select: s => s.location.pathname })
   const { data: mij } = useQuery({
     queryKey: ['mij'],
-    queryFn: () => api.get<{ medewerker: { naam: string }; rollen: string[] }>('/medewerkers/mij'),
+    queryFn: () => api.get<{ medewerker: { naam: string; voornaam?: string }; rollen: string[] }>('/medewerkers/mij'),
     staleTime: 5 * 60 * 1000
   })
   const rollen = mij?.rollen ?? []
@@ -61,7 +62,7 @@ export default function AppSchil() {
             })}
         </nav>
         <div className="border-t border-inkt/10 px-5 py-4">
-          <div className="text-sm font-semibold">{mij?.medewerker?.naam ?? '…'}</div>
+          <div className="text-sm font-semibold">{persoon(mij?.medewerker?.voornaam, mij?.medewerker?.naam) || '…'}</div>
           <div className="text-xs text-inkt-faint">{rollen.join(' · ') || 'geen rollen'}</div>
           <button onClick={uitloggen}
             className="focusring mt-3 flex items-center gap-2 text-xs text-inkt-muted hover:text-inkt">
