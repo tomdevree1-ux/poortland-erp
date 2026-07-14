@@ -132,11 +132,12 @@ const badgeStijl: Record<string, string> = {
   neutraal: 'bg-inkt/[.08] text-stone2-700',
   brons: 'bg-bronze-500/[.16] text-bronze-600',
   olijf: 'bg-olive-500/[.18] text-olive-600',
+  frisgroen: 'bg-olive-400/[.20] text-olive-600',
   corten: 'bg-corten-500/[.16] text-corten-600',
   kritiek: 'bg-corten-600 text-stone2-50'
 }
 export const statusToon: Record<string, string> = {
-  nieuw: 'neutraal', gekwalificeerd: 'brons', omgezet: 'olijf', verloren: 'corten',
+  nieuw: 'frisgroen', gekwalificeerd: 'brons', omgezet: 'olijf', verloren: 'corten',
   verzonden: 'brons', goedgekeurd: 'olijf', geweigerd: 'kritiek', verlopen: 'corten',
   aangemaakt: 'neutraal', inProductie: 'brons', externeBehandeling: 'brons',
   klaarVoorMontage: 'brons', gemonteerd: 'olijf', afgesloten: 'olijf', geannuleerd: 'kritiek',
