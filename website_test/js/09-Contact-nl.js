@@ -96,7 +96,7 @@ function ContactNL({
     label: 'Poorten'
   }, {
     value: 'overkappingen',
-    label: 'Overkappingen'
+    label: 'Overkapping'
   }, {
     value: 'automatisatie',
     label: 'Automatisatie'
@@ -172,7 +172,7 @@ function ContactNL({
       flexDirection: 'column',
       gap: 24
     }
-  }, [['Atelier en showroom', 'Hombeeksesteenweg 164-166, 2800 Mechelen'], ['Telefoon', '+32 (0)15 432 111'], ['Email', 'info@poortland.be'], ['Openingsuren', 'Open op afspraak, maandag tot zaterdag']].map(([k, v]) => /*#__PURE__*/React.createElement("div", {
+  }, [['Atelier en showroom', 'Hombeeksesteenweg 164-166\n2800 Mechelen'], ['Telefoon', '+32 (0)15 432 111'], ['Email', 'info@poortland.be'], ['Openingsuren', 'Open op afspraak, maandag tot zaterdag']].map(([k, v]) => /*#__PURE__*/React.createElement("div", {
     key: k
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -188,7 +188,8 @@ function ContactNL({
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 15,
-      color: 'var(--stone-200)'
+      color: 'var(--stone-200)',
+      whiteSpace: 'pre-line'
     }
   }, v))))), /*#__PURE__*/React.createElement(Reveal, {
     delay: 90
@@ -324,8 +325,8 @@ function ContactNL({
   }, "(meerdere mogelijk)")), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
-      flexWrap: 'wrap',
-      gap: 10
+      flexWrap: 'nowrap',
+      gap: 7
     }
   }, typeOpties.map(o => {
     const aan = types.indexOf(o.value) !== -1;
@@ -336,9 +337,9 @@ function ContactNL({
       "aria-pressed": aan,
       style: {
         fontFamily: 'var(--font-sans)',
-        fontSize: 13,
+        fontSize: 12.5,
         cursor: 'pointer',
-        padding: '9px 13px',
+        padding: '8px 12px',
         borderRadius: 999,
         whiteSpace: 'nowrap',
         transition: 'all var(--dur) var(--ease-out)',
