@@ -22,8 +22,10 @@ var config = builder.Configuration;
 var connectionString = config.GetConnectionString("Poortland")
     ?? throw new InvalidOperationException("ConnectionStrings:Poortland ontbreekt");
 var dataSource = PoortlandDbContext.MaakDataSource(connectionString);
-builder.Services.AddDbContext<PoortlandDbContext>(o =>
-    o.UseNpgsql(dataSource).UseSnakeCaseNamingConvention());
+builder.Services.AddScoped<ClaimsInterceptor>();
+builder.Services.AddDbContext<PoortlandDbContext>((sp, o) =>
+    o.UseNpgsql(dataSource).UseSnakeCaseNamingConvention()
+     .AddInterceptors(sp.GetRequiredService<ClaimsInterceptor>()));
 
 // Authenticatie: Supabase Auth JWT (BS-01). HS256 met JwtSecret of anders JWKS.
 var supabaseUrl = (config["Supabase:Url"] ?? "").TrimEnd('/');
