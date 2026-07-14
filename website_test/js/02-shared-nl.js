@@ -2596,7 +2596,13 @@ function OfferteModal({
     onChange: e => set('timing', e.target.value),
     style: Object.assign({}, inputSt, {
       cursor: 'pointer',
-      appearance: 'auto'
+      appearance: 'none',
+      WebkitAppearance: 'none',
+      backgroundImage: 'linear-gradient(45deg, transparent 50%, var(--accent) 50%), linear-gradient(135deg, var(--accent) 50%, transparent 50%)',
+      backgroundPosition: 'calc(100% - 18px) 55%, calc(100% - 13px) 55%',
+      backgroundSize: '5px 5px, 5px 5px',
+      backgroundRepeat: 'no-repeat',
+      paddingRight: 38
     })
   }, /*#__PURE__*/React.createElement("option", {
     value: ""
@@ -2620,16 +2626,43 @@ function OfferteModal({
       fontWeight: 400,
       fontSize: 13.5
     }
-  }, "(optioneel, max 5)")), /*#__PURE__*/React.createElement("input", {
+  }, "(optioneel, max 5)")), /*#__PURE__*/React.createElement("label", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: 12,
+      border: '1px dashed var(--line-on-light)',
+      borderRadius: 'var(--radius-md)',
+      padding: '13px 14px',
+      cursor: 'pointer',
+      background: '#fff'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 15,
+      color: 'var(--text-muted)'
+    }
+  }, "Sleep of kies foto's van de plek"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: 'var(--font-label)',
+      fontSize: 10.5,
+      fontWeight: 600,
+      letterSpacing: '0.12em',
+      textTransform: 'uppercase',
+      color: 'var(--accent)',
+      flex: '0 0 auto'
+    }
+  }, "Kies bestand ↗"), /*#__PURE__*/React.createElement("input", {
     type: "file",
     accept: "image/*",
     multiple: true,
     onChange: e => setFotos(e.target.files ? Array.prototype.slice.call(e.target.files, 0, 5) : []),
-    style: Object.assign({}, inputSt, {
-      padding: '10px 12px',
-      cursor: 'pointer'
-    })
-  }), fotos.length ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'none'
+    }
+  })), fotos.length ? /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 13,
