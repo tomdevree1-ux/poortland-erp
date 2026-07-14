@@ -1924,6 +1924,7 @@ function OfferteModal({
   const [bezig, setBezig] = React.useState(false);
   const [fout, setFout] = React.useState('');
   const [fotos, setFotos] = React.useState([]);
+  const [timingOpen, setTimingOpen] = React.useState(false);
   React.useEffect(() => {
     const on = () => {
       setStep(1);
@@ -1933,6 +1934,7 @@ function OfferteModal({
       setFout('');
       setBezig(false);
       setFotos([]);
+      setTimingOpen(false);
       setOpen(true);
     };
     window.addEventListener('pl-offerte-open', on);
@@ -1959,6 +1961,7 @@ function OfferteModal({
     setFout('');
     setBezig(false);
     setFotos([]);
+    setTimingOpen(false);
   };
   const set = (k, v) => setData(d => Object.assign({}, d, {
     [k]: v
@@ -2587,34 +2590,71 @@ function OfferteModal({
     placeholder: 'Bijvoorbeeld: Mechelen'
   })), /*#__PURE__*/React.createElement("div", {
     style: {
-      marginBottom: 20
+      marginBottom: 20,
+      position: 'relative'
     }
   }, /*#__PURE__*/React.createElement("label", {
     style: labelSt
-  }, "Gewenste timing"), /*#__PURE__*/React.createElement("select", {
-    value: data.timing || '',
-    onChange: e => set('timing', e.target.value),
+  }, "Gewenste timing"), /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    onClick: () => setTimingOpen(o => !o),
     style: Object.assign({}, inputSt, {
       cursor: 'pointer',
-      appearance: 'none',
-      WebkitAppearance: 'none',
-      backgroundImage: 'linear-gradient(45deg, transparent 50%, var(--accent) 50%), linear-gradient(135deg, var(--accent) 50%, transparent 50%)',
-      backgroundPosition: 'calc(100% - 18px) 55%, calc(100% - 13px) 55%',
-      backgroundSize: '5px 5px, 5px 5px',
-      backgroundRepeat: 'no-repeat',
-      paddingRight: 38
+      textAlign: 'left',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between'
     })
-  }, /*#__PURE__*/React.createElement("option", {
-    value: ""
-  }, "Maak een keuze"), /*#__PURE__*/React.createElement("option", {
-    value: "Zo snel mogelijk"
-  }, "Zo snel mogelijk"), /*#__PURE__*/React.createElement("option", {
-    value: "Binnen drie maanden"
-  }, "Binnen drie maanden"), /*#__PURE__*/React.createElement("option", {
-    value: "Binnen zes maanden"
-  }, "Binnen zes maanden"), /*#__PURE__*/React.createElement("option", {
-    value: "Nog in oriëntatie"
-  }, "Nog in oriëntatie"))), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: data.timing ? 'var(--text-body)' : 'var(--text-muted)'
+    }
+  }, data.timing || 'Maak een keuze'), /*#__PURE__*/React.createElement("span", {
+    "aria-hidden": "true",
+    style: {
+      color: 'var(--accent)',
+      fontSize: 12,
+      transform: timingOpen ? 'rotate(180deg)' : 'none',
+      transition: 'transform .15s'
+    }
+  }, "▾")), timingOpen ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    onClick: () => setTimingOpen(false),
+    style: {
+      position: 'fixed',
+      inset: 0,
+      zIndex: 1
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      top: '100%',
+      left: 0,
+      right: 0,
+      marginTop: 4,
+      background: '#fff',
+      border: '1px solid var(--line-on-light)',
+      borderRadius: 'var(--radius-md)',
+      boxShadow: '0 12px 30px rgba(15,22,15,0.14)',
+      zIndex: 2,
+      overflow: 'hidden'
+    }
+  }, ['Zo snel mogelijk', 'Binnen drie maanden', 'Binnen zes maanden', 'Nog in oriëntatie'].map(opt => /*#__PURE__*/React.createElement("div", {
+    key: opt,
+    onClick: () => {
+      set('timing', opt);
+      setTimingOpen(false);
+    },
+    style: {
+      padding: '11px 14px',
+      fontFamily: 'var(--font-sans)',
+      fontSize: 15.5,
+      cursor: 'pointer',
+      color: 'var(--text-body)',
+      background: data.timing === opt ? 'rgba(138,106,60,0.08)' : '#fff'
+    },
+    onMouseEnter: e => e.currentTarget.style.background = 'rgba(138,106,60,0.08)',
+    onMouseLeave: e => e.currentTarget.style.background = data.timing === opt ? 'rgba(138,106,60,0.08)' : '#fff'
+  }, opt)))) : null), /*#__PURE__*/React.createElement("div", {
     style: {
       marginBottom: 4
     }
