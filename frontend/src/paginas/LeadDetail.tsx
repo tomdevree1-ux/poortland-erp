@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useParams } from '@tanstack/react-router'
-import { clsx } from 'clsx'
 import { api } from '../lib/api'
 import { useZoekterm } from '../lib/zoek'
 import { datum, euro, leeg, persoon } from '../lib/formaat'
@@ -209,11 +208,11 @@ export default function LeadDetail() {
           {!lead.fotos?.length ? (
             <p className="text-sm text-inkt-muted">Nog geen foto's. Vanaf het webformulier komen ze hier automatisch binnen.</p>
           ) : (
-            <div className="grid grid-cols-3 gap-3">
+            <div className="flex gap-3 overflow-x-auto pb-1">
               {lead.fotos.map(f => (
-                <figure key={f.id} className="group relative overflow-hidden rounded-control border border-inkt/10 bg-vlak-sunken">
-                  <a href={f.url} target="_blank" rel="noreferrer">
-                    <img src={f.url} alt={f.bestandsnaam} className="aspect-[4/3] w-full object-cover" />
+                <figure key={f.id} className="group relative h-32 w-44 flex-none overflow-hidden rounded-control border border-inkt/10 bg-vlak-sunken">
+                  <a href={f.url} target="_blank" rel="noreferrer" className="block h-full w-full">
+                    <img src={f.url} alt={f.bestandsnaam} className="h-full w-full object-cover" />
                   </a>
                   {bewerkbaar && (
                     <button className="focusring absolute right-1 top-1 hidden rounded-chip bg-corten-600 px-1.5 text-xs text-stone2-50 group-hover:block"
@@ -226,8 +225,16 @@ export default function LeadDetail() {
         </Paneel>
 
         {wizard && (
-          <WizardPaneel stappen={wizard} magBewerken={bewerkbaar}
-            bijBewaren={stappen => wijzig.mutate({ wizardGegevens: JSON.stringify({ stappen }) })} />
+          <Paneel titel="Offerteaanvraag (wizard van de website)">
+            <dl className="space-y-1.5 text-sm">
+              {wizard.flatMap(s => s.velden).filter(v => v.waarde).map((veld, i) => (
+                <div key={i} className="flex justify-between gap-4 border-b border-inkt/[.06] py-1.5 last:border-0">
+                  <dt className="text-inkt-muted">{veld.label}</dt>
+                  <dd className="text-right font-medium">{veld.waarde}</dd>
+                </div>
+              ))}
+            </dl>
+          </Paneel>
         )}
       </div>
 
@@ -345,64 +352,3 @@ export default function LeadDetail() {
   )
 }
 
-/* De offertewizard van de website: leesmodus eerst en bewerken via het potlood
-   met Opslaan en Annuleren (platform UX regels). */
-function WizardPaneel({ stappen, magBewerken, bijBewaren }:
-  { stappen: WizardStap[]; magBewerken: boolean; bijBewaren: (stappen: WizardStap[]) => void }) {
-  const [actief, zetActief] = useState(0)
-  const [bewerkModus, zetBewerkModus] = useState(false)
-  const [lokaal, zetLokaal] = useState(stappen)
-  const stap = (bewerkModus ? lokaal : stappen)[actief]
-  if (!stap) return null
-
-  function start() { zetLokaal(stappen.map(s => ({ ...s, velden: s.velden.map(v => ({ ...v })) }))); zetBewerkModus(true) }
-  function zetVeld(index: number, waarde: string) {
-    zetLokaal(lokaal.map((s, si) => si === actief
-      ? { ...s, velden: s.velden.map((v, vi) => (vi === index ? { ...v, waarde } : v)) }
-      : s))
-  }
-
-  return (
-    <Paneel titel="Offerteaanvraag (wizard van de website)" className="col-span-2"
-      actie={bewerkModus ? (
-        <div className="flex gap-2">
-          <Knop variant="ghost" className="h-8 px-3 text-xs" onClick={() => zetBewerkModus(false)}>Annuleren</Knop>
-          <Knop variant="primair" className="h-8 px-3 text-xs"
-            onClick={() => { bijBewaren(lokaal); zetBewerkModus(false) }}>Opslaan</Knop>
-        </div>
-      ) : magBewerken && <PotloodKnop onClick={start} />}>
-      <div className="mb-5 flex items-center gap-2">
-        {(bewerkModus ? lokaal : stappen).map((s, i) => (
-          <button key={i} type="button" onClick={() => zetActief(i)}
-            className={clsx('focusring flex items-center gap-2 rounded-chip px-2.5 py-1 text-xs font-semibold',
-              i === actief ? 'bg-bronze-500/15 text-bronze-600' : 'text-inkt-muted hover:text-inkt')}>
-            <span className={clsx('flex h-5 w-5 items-center justify-center rounded-full border text-[10px]',
-              i === actief ? 'border-bronze-500 text-bronze-600' : 'border-inkt/20')}>{i + 1}</span>
-            {s.titel}
-          </button>
-        ))}
-      </div>
-      {bewerkModus ? (
-        <div className="grid grid-cols-2 gap-4">
-          {stap.velden.map((veld, i) => (
-            <Invoer key={`${actief}-${i}`} label={veld.label} value={veld.waarde}
-              onChange={e => zetVeld(i, e.target.value)} />
-          ))}
-        </div>
-      ) : (
-        <dl className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm">
-          {stap.velden.map((veld, i) => (
-            <div key={i} className="flex justify-between gap-4 border-b border-inkt/[.06] py-1.5">
-              <dt className="text-inkt-muted">{veld.label}</dt>
-              <dd className="text-right font-medium">{veld.waarde || '—'}</dd>
-            </div>
-          ))}
-        </dl>
-      )}
-      <div className="mt-5 flex justify-between">
-        <Knop variant="ghost" type="button" disabled={actief === 0} onClick={() => zetActief(actief - 1)}>Vorige</Knop>
-        <Knop variant="neutraal" type="button" disabled={actief === stappen.length - 1} onClick={() => zetActief(actief + 1)}>Volgende</Knop>
-      </div>
-    </Paneel>
-  )
-}
