@@ -139,6 +139,10 @@ export default function LeadDetail() {
     mutationFn: (herstel: boolean) => api.post(`/leads/${leadId}/${herstel ? 'herstel' : 'archiveer'}`),
     onSuccess: ververs, onError: f => zetFout((f as Error).message)
   })
+  const heractiveer = useMutation({
+    mutationFn: () => api.post<Lead>(`/leads/${leadId}/heractiveer`, {}),
+    onSuccess: ververs, onError: f => zetFout((f as Error).message)
+  })
   const verwijderen = useMutation({
     mutationFn: () => api.del(`/leads/${leadId}`),
     onSuccess: () => navigeer({ to: '/leads' }),
@@ -153,6 +157,8 @@ export default function LeadDetail() {
         actie={<div className="flex gap-2">
           {!lead.gearchiveerdOp && (lead.status === 'nieuw' || lead.status === 'gekwalificeerd') &&
             <Knop variant="primair" onClick={openOmzetten}>Omzetten naar dossier ↗</Knop>}
+          {!lead.gearchiveerdOp && lead.status === 'verloren' &&
+            <Knop variant="primair" onClick={() => heractiveer.mutate()}>Heractiveren ↺</Knop>}
           {bewerkbaar && <Knop variant="ghost" onClick={() => zetVerliesOpen(true)}>Verliezen</Knop>}
           <Knop variant="neutraal" onClick={() => archiveer.mutate(!!lead.gearchiveerdOp)}>
             {lead.gearchiveerdOp ? 'Herstellen' : 'Archiveren'}

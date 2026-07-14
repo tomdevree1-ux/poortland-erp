@@ -257,4 +257,8 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
     [VereistRol("verkoop")]
     public async Task<IActionResult> Verliezen(Guid id, VerliesInvoer invoer) =>
         Ok(await service.Verliezen(id, invoer.Reden));
+
+    [HttpPost("{id:guid}/heractiveer")]
+    [VereistRol("verkoop")]
+    public async Task<IActionResult> Heractiveer(Guid id) => Ok(await service.Heractiveer(id));
 }

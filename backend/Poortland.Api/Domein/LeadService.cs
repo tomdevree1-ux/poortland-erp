@@ -31,6 +31,19 @@ public class LeadService(PoortlandDbContext db, ClaimsContext claims)
         return lead;
     }
 
+    // Een verloren lead terug in de inbox brengen (verloren -> nieuw).
+    public async Task<Lead> Heractiveer(Guid id)
+    {
+        var lead = await db.Leads.FirstOrDefaultAsync(l => l.Id == id)
+            ?? throw new DomeinFout("Lead niet gevonden.");
+        if (lead.Status != LeadStatus.Verloren)
+            throw new DomeinFout("Enkel een verloren lead kan opnieuw geactiveerd worden.");
+        lead.Status = LeadStatus.Nieuw;
+        lead.VerliesReden = null;
+        await db.SaveChangesAsync();
+        return lead;
+    }
+
     // TS-04 sectie 4: omzetting maakt of koppelt een klant en maakt het project.
     public async Task<(Lead lead, Project project)> Omzetten(Guid id, OmzettenVerzoek verzoek)
     {
