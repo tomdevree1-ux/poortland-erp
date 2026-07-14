@@ -1,7 +1,7 @@
 import { Link, Outlet, useNavigate, useRouterState } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { clsx } from 'clsx'
-import { LayoutDashboard, FolderOpen, Users, Inbox, ListTodo, Globe, Settings, LogOut } from 'lucide-react'
+import { FolderOpen, Users, Inbox, ListTodo, Globe, Settings, LogOut } from 'lucide-react'
 import { supabase } from './lib/supabase'
 import { api } from './lib/api'
 
@@ -9,7 +9,6 @@ import { api } from './lib/api'
    sticky topbar en het werkvlak op warm perkament. */
 
 const navItems = [
-  { naar: '/', label: 'Dashboard', icoon: LayoutDashboard },
   { naar: '/leads', label: 'Leads', icoon: Inbox },
   { naar: '/dossiers', label: 'Dossiers', icoon: FolderOpen },
   { naar: '/klanten', label: 'Klanten', icoon: Users },
