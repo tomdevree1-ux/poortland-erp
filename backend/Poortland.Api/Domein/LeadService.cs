@@ -36,8 +36,9 @@ public class LeadService(PoortlandDbContext db, ClaimsContext claims)
     {
         var lead = await db.Leads.FirstOrDefaultAsync(l => l.Id == id)
             ?? throw new DomeinFout("Lead niet gevonden.");
-        if (lead.Status != LeadStatus.Gekwalificeerd)
-            throw new DomeinFout("Enkel een gekwalificeerde lead kan omgezet worden.");
+        // Direct omzetten mag ook zonder de tussenstap kwalificeren (nieuw of gekwalificeerd).
+        if (lead.Status != LeadStatus.Nieuw && lead.Status != LeadStatus.Gekwalificeerd)
+            throw new DomeinFout("Enkel een openstaande lead kan omgezet worden.");
 
         Klant klant;
         if (verzoek.KlantId is { } bestaandId)

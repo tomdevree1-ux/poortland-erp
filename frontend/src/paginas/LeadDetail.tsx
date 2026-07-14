@@ -42,10 +42,6 @@ export default function LeadDetail() {
   const ververs = () => { zetFout(undefined); qc.invalidateQueries({ queryKey: ['lead', leadId] }) }
   const bewerkbaar = (lead?.status === 'nieuw' || lead?.status === 'gekwalificeerd') && !lead?.gearchiveerdOp
 
-  const kwalificeer = useMutation({
-    mutationFn: () => api.post<Lead>(`/leads/${leadId}/kwalificeer`, { prijsindicatie: null, opvolgdatum: null }),
-    onSuccess: ververs, onError: f => zetFout((f as Error).message)
-  })
   const wijzig = useMutation({
     mutationFn: (deel: Record<string, unknown>) => api.patch<Lead>(`/leads/${leadId}`, deel),
     onSuccess: () => { ververs(); zetBewerkOpen(false) },
@@ -155,8 +151,8 @@ export default function LeadDetail() {
     <>
       <PaginaKop eyebrow="Verkoop · lead" titel={persoon(lead.voornaam, lead.naam) || leeg(lead.email)}
         actie={<div className="flex gap-2">
-          {!lead.gearchiveerdOp && lead.status === 'nieuw' && <Knop variant="primair" onClick={() => kwalificeer.mutate()}>Kwalificeren</Knop>}
-          {!lead.gearchiveerdOp && lead.status === 'gekwalificeerd' && <Knop variant="primair" onClick={openOmzetten}>Omzetten naar dossier ↗</Knop>}
+          {!lead.gearchiveerdOp && (lead.status === 'nieuw' || lead.status === 'gekwalificeerd') &&
+            <Knop variant="primair" onClick={openOmzetten}>Omzetten naar dossier ↗</Knop>}
           {bewerkbaar && <Knop variant="ghost" onClick={() => zetVerliesOpen(true)}>Verliezen</Knop>}
           <Knop variant="neutraal" onClick={() => archiveer.mutate(!!lead.gearchiveerdOp)}>
             {lead.gearchiveerdOp ? 'Herstellen' : 'Archiveren'}
