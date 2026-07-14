@@ -64,7 +64,10 @@ export default function Leads() {
           <option value="archief">Archief</option>
         </Selecteer>
         <Invoer placeholder="Zoek naam, email of vraag…" value={invoer} onChange={e => zetInvoer(e.target.value)} className="flex-1" />
-        {isFetching && term && <span className="self-center text-xs text-inkt-faint">zoeken…</span>}
+        <Knop variant="secundair" className="h-10 shrink-0 whitespace-nowrap px-4"
+          onClick={() => qc.invalidateQueries({ queryKey: ['leads'] })} disabled={isFetching}>
+          {isFetching ? 'Bezig…' : 'Vernieuwen'}
+        </Knop>
       </div>
       {(
         <table className="w-full border-separate border-spacing-0">
