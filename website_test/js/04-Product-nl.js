@@ -1,1 +1,539 @@
-!function(){const{Button:e,Tag:t,Eyebrow:a}=window.PoortlandDesignSystem_6dcc8b;window.ProductNL=function({onNav:t,productKey:r}){const{GateImage:n,Reveal:l,FAQ:i,CTASectie:o,SectieKop:c,ProjectKaart:d}=window,{PRODUCTEN:m,PRODUCT_VOLGORDE:s,PROJECTEN:p,WERKWIJZE:g}=window,y=m[r]?r:"houten",v=m[y],f=(v.materiaalFilter?p.filter(e=>e.materiaal===v.materiaalFilter):p).slice(0,3),R=f.length>=3?f:p.slice(0,3),x=g.slice(0,4);return React.createElement("div",{style:{background:"var(--surface-paper)"}},React.createElement("section",{style:{background:"var(--surface-ground)",color:"var(--text-on-dark)",padding:"48px 44px 0"}},React.createElement("div",{style:{maxWidth:1320,margin:"0 auto"}},React.createElement("div",{style:{display:"flex",gap:8,flexWrap:"wrap",marginBottom:40}},s.map(e=>{const a=e===y;return React.createElement("button",{key:e,onClick:()=>t("product",{productKey:e}),style:{fontFamily:"var(--font-label)",fontSize:11,fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase",padding:"8px 14px",borderRadius:"var(--radius-xs)",cursor:"pointer",background:a?"var(--bronze-500)":"transparent",color:a?"var(--forest-950)":"var(--text-on-dark-muted)",border:"1px solid "+(a?"var(--bronze-500)":"var(--line-on-dark-soft)"),transition:"all var(--dur) var(--ease-out)"}},m[e].naam)})),React.createElement("div",{style:{display:"grid",gridTemplateColumns:"1fr 1fr",gap:56,alignItems:"center",paddingBottom:56}},React.createElement(l,null,React.createElement(a,{dark:!0,style:{marginBottom:18}},v.kicker," · op maat"),React.createElement("h1",{style:{fontFamily:"var(--font-display)",fontWeight:500,fontSize:60,color:"var(--stone-100)",margin:0,lineHeight:1.03,letterSpacing:"-0.01em"}},v.naam),React.createElement("p",{style:{fontFamily:"var(--font-sans)",fontSize:18,lineHeight:1.6,color:"var(--stone-300)",maxWidth:"46ch",margin:"22px 0 32px"}},v.intro),React.createElement("div",{style:{display:"flex",gap:14,flexWrap:"wrap"}},React.createElement(e,{variant:"primary",arrow:!0,onClick:()=>t("contact")},"Plan een adviesgesprek"),React.createElement(e,{variant:"ghost",dark:!0,arrow:!0,onClick:()=>t("realisaties")},"Bekijk realisaties"))),React.createElement(l,{delay:90},React.createElement("div",{style:{boxShadow:"var(--shadow-lg)",borderRadius:8}},React.createElement(n,{tone:v.tone,ratio:"4 / 3",label:v.naam,radius:8,zoom:!0,slats:"hekwerk"===y?14:9})))))),React.createElement("section",{style:{padding:"88px 44px"}},React.createElement("div",{style:{maxWidth:1320,margin:"0 auto",display:"grid",gridTemplateColumns:"1.1fr 0.9fr",gap:72,alignItems:"start"}},React.createElement(l,null,React.createElement(a,{style:{marginBottom:16}},"Het materiaal"),React.createElement("p",{style:{fontFamily:"var(--font-display)",fontWeight:400,fontSize:28,lineHeight:1.35,color:"var(--text-heading)",margin:0}},v.lead)),React.createElement(l,{delay:80},React.createElement("div",{style:{background:"var(--surface-paper-2)",border:"1px solid var(--line-on-light)",borderRadius:"var(--radius-md)",padding:"30px 30px 32px"}},React.createElement(a,{style:{marginBottom:18}},"Voor wie"),React.createElement("ul",{style:{listStyle:"none",margin:0,padding:0,display:"flex",flexDirection:"column",gap:16}},v.voorWie.map((e,t)=>React.createElement("li",{key:t,style:{display:"flex",gap:14,alignItems:"baseline"}},React.createElement("span",{style:{color:"var(--accent)",fontFamily:"var(--font-display)",fontSize:16,flex:"0 0 auto"}},"—"),React.createElement("span",{style:{fontFamily:"var(--font-sans)",fontSize:15.5,lineHeight:1.55,color:"var(--text-body)"}},e)))))))),React.createElement("section",{style:{background:"var(--forest-900)",padding:"88px 44px",color:"var(--text-on-dark)"}},React.createElement("div",{style:{maxWidth:1320,margin:"0 auto"}},React.createElement(l,null,React.createElement(c,{dark:!0,eyebrow:"Belangrijkste voordelen",titel:"Waarom dit type.",max:"14ch"})),React.createElement("div",{style:{display:"grid",gridTemplateColumns:"repeat(2, 1fr)",gap:1,marginTop:44,background:"var(--line-on-dark-soft)",border:"1px solid var(--line-on-dark-soft)"}},v.voordelen.map(([e,t],a)=>React.createElement(l,{key:e,delay:a%2*80},React.createElement("div",{style:{background:"var(--forest-900)",padding:"30px 32px",height:"100%"}},React.createElement("div",{style:{fontFamily:"var(--font-display)",fontSize:26,color:"var(--stone-100)",marginBottom:8}},e),React.createElement("p",{style:{fontFamily:"var(--font-sans)",fontSize:15,lineHeight:1.65,color:"var(--text-on-dark-muted)",margin:0,maxWidth:"46ch"}},t))))))),React.createElement("section",{style:{padding:"88px 44px"}},React.createElement("div",{style:{maxWidth:1320,margin:"0 auto",display:"grid",gridTemplateColumns:"1fr 1fr",gap:56}},React.createElement(l,null,React.createElement("div",{style:{border:"1px solid var(--line-on-light)",borderRadius:"var(--radius-md)",padding:"32px 32px 36px",height:"100%"}},React.createElement(a,{style:{marginBottom:20}},"Materialen"),React.createElement("div",{style:{display:"flex",flexWrap:"wrap",gap:10}},v.materialen.map(e=>React.createElement("span",{key:e,style:{fontFamily:"var(--font-sans)",fontSize:14,color:"var(--text-heading)",padding:"9px 16px",border:"1px solid var(--line-on-light)",borderRadius:"var(--radius-pill)",background:"var(--surface-paper-2)"}},e))))),React.createElement(l,{delay:80},React.createElement("div",{style:{border:"1px solid var(--line-on-light)",borderRadius:"var(--radius-md)",padding:"32px 32px 36px",height:"100%"}},React.createElement(a,{style:{marginBottom:20}},"Afwerkingsmogelijkheden"),React.createElement("div",{style:{display:"flex",flexWrap:"wrap",gap:10}},v.afwerking.map(e=>React.createElement("span",{key:e,style:{fontFamily:"var(--font-sans)",fontSize:14,color:"var(--text-heading)",padding:"9px 16px",border:"1px solid var(--line-on-light)",borderRadius:"var(--radius-pill)",background:"var(--surface-paper-2)"}},e))))))),React.createElement("section",{style:{background:"var(--surface-paper-2)",padding:"88px 44px"}},React.createElement("div",{style:{maxWidth:1320,margin:"0 auto"}},React.createElement(l,null,React.createElement(c,{eyebrow:"Mogelijke stijlen",titel:"Eén type, vele beelden.",max:"16ch"})),React.createElement("div",{style:{display:"grid",gridTemplateColumns:"repeat(3, 1fr)",gap:24,marginTop:44}},v.stijlen.map(([e,t],a)=>React.createElement(l,{key:e,delay:80*a},React.createElement("div",null,React.createElement(n,{tone:v.tone,ratio:"4 / 3",label:e,radius:6,zoom:!0,slats:6+3*a}),React.createElement("h3",{style:{fontFamily:"var(--font-display)",fontWeight:500,fontSize:23,color:"var(--text-heading)",margin:"16px 0 6px"}},e),React.createElement("p",{style:{fontFamily:"var(--font-sans)",fontSize:14,lineHeight:1.6,color:"var(--text-muted)",margin:0,maxWidth:"40ch"}},t))))))),React.createElement("section",{style:{padding:"88px 44px"}},React.createElement("div",{style:{maxWidth:1320,margin:"0 auto"}},React.createElement(l,null,React.createElement("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:40,flexWrap:"wrap",gap:20}},React.createElement(c,{eyebrow:"Van advies tot plaatsing",titel:"Hoe uw poort tot stand komt.",max:"16ch"}),React.createElement(e,{variant:"secondary",arrow:!0,onClick:()=>t("werkwijze")},"Volledige werkwijze"))),React.createElement("div",{style:{display:"grid",gridTemplateColumns:"repeat(4, 1fr)",gap:1,background:"var(--line-on-light)",border:"1px solid var(--line-on-light)"}},x.map(([e,t,a],r)=>React.createElement(l,{key:e,delay:70*r},React.createElement("div",{style:{background:"var(--surface-paper)",padding:"28px 24px",height:"100%"}},React.createElement("div",{style:{fontFamily:"var(--font-display)",fontSize:32,color:"var(--accent)",lineHeight:.9,marginBottom:14}},e),React.createElement("h3",{style:{fontFamily:"var(--font-display)",fontWeight:500,fontSize:20,color:"var(--text-heading)",margin:"0 0 7px",lineHeight:1.15}},t),React.createElement("p",{style:{fontFamily:"var(--font-sans)",fontSize:13.5,lineHeight:1.55,color:"var(--text-muted)",margin:0}},a))))))),React.createElement("section",{style:{background:"var(--forest-900)",padding:"88px 44px",color:"var(--text-on-dark)"}},React.createElement("div",{style:{maxWidth:1320,margin:"0 auto"}},React.createElement(l,null,React.createElement("div",{style:{display:"flex",justifyContent:"space-between",alignItems:"flex-end",marginBottom:38,flexWrap:"wrap",gap:20}},React.createElement(c,{dark:!0,eyebrow:"Relevante realisaties",titel:"Dit type, gerealiseerd.",max:"16ch"}),React.createElement(e,{variant:"secondary",dark:!0,onClick:()=>t("realisaties")},"Alle realisaties"))),React.createElement("div",{style:{display:"grid",gridTemplateColumns:"repeat(3, 1fr)",gap:24}},R.map((e,a)=>React.createElement(l,{key:e.id,delay:80*a},React.createElement("button",{onClick:()=>t("project",{project:e}),style:{textAlign:"left",background:"none",border:0,padding:0,cursor:"pointer",width:"100%"}},React.createElement(n,{tone:e.tone,ratio:"4 / 3",label:e.materiaal,radius:6,zoom:!0}),React.createElement("div",{style:{fontFamily:"var(--font-display)",fontSize:21,color:"var(--stone-100)",marginTop:14}},e.naam),React.createElement("div",{style:{fontFamily:"var(--font-sans)",fontSize:13,color:"var(--text-on-dark-muted)",marginTop:4}},e.regio," · ",e.poorttype))))))),React.createElement("section",{style:{background:"var(--surface-paper-2)",padding:"88px 44px"}},React.createElement("div",{style:{maxWidth:1e3,margin:"0 auto"}},React.createElement(l,null,React.createElement(c,{align:"center",eyebrow:"Veelgestelde vragen",titel:`Over ${v.naam.toLowerCase()}.`})),React.createElement(l,{delay:80},React.createElement("div",{style:{marginTop:44}},React.createElement(i,{items:v.faq}))))),React.createElement(o,{onNav:t,dark:!0}))}}();
+(function(){
+/* Poortland — Nederlandse website. Productpagina (poorttype). */
+const {
+  Button: PrButton,
+  Tag: PrTag,
+  Eyebrow: PrEyebrow
+} = window.PoortlandDesignSystem_6dcc8b;
+function ProductNL({
+  onNav,
+  productKey
+}) {
+  const {
+    GateImage,
+    Reveal,
+    FAQ,
+    CTASectie,
+    SectieKop,
+    ProjectKaart
+  } = window;
+  const {
+    PRODUCTEN,
+    PRODUCT_VOLGORDE,
+    PROJECTEN,
+    WERKWIJZE
+  } = window;
+  const key = PRODUCTEN[productKey] ? productKey : 'houten';
+  const p = PRODUCTEN[key];
+  const relevant = (p.materiaalFilter ? PROJECTEN.filter(x => x.materiaal === p.materiaalFilter) : PROJECTEN).slice(0, 3);
+  const shownProjects = relevant.length >= 3 ? relevant : PROJECTEN.slice(0, 3);
+  const procesKort = WERKWIJZE.slice(0, 4);
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'var(--surface-paper)'
+    }
+  }, /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-ground)',
+      color: 'var(--text-on-dark)',
+      padding: '48px 44px 0'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 1320,
+      margin: '0 auto'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 8,
+      flexWrap: 'wrap',
+      marginBottom: 40
+    }
+  }, PRODUCT_VOLGORDE.map(k => {
+    const active = k === key;
+    return /*#__PURE__*/React.createElement("button", {
+      key: k,
+      onClick: () => onNav('product', {
+        productKey: k
+      }),
+      style: {
+        fontFamily: 'var(--font-label)',
+        fontSize: 11,
+        fontWeight: 600,
+        letterSpacing: '0.1em',
+        textTransform: 'uppercase',
+        padding: '8px 14px',
+        borderRadius: 'var(--radius-xs)',
+        cursor: 'pointer',
+        background: active ? 'var(--bronze-500)' : 'transparent',
+        color: active ? 'var(--forest-950)' : 'var(--text-on-dark-muted)',
+        border: `1px solid ${active ? 'var(--bronze-500)' : 'var(--line-on-dark-soft)'}`,
+        transition: 'all var(--dur) var(--ease-out)'
+      }
+    }, PRODUCTEN[k].naam);
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: 56,
+      alignItems: 'center',
+      paddingBottom: 56
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(PrEyebrow, {
+    dark: true,
+    style: {
+      marginBottom: 18
+    }
+  }, p.kicker, " · op maat"), /*#__PURE__*/React.createElement("h1", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 60,
+      color: 'var(--stone-100)',
+      margin: 0,
+      lineHeight: 1.03,
+      letterSpacing: '-0.01em'
+    }
+  }, p.naam), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 18,
+      lineHeight: 1.6,
+      color: 'var(--stone-300)',
+      maxWidth: '46ch',
+      margin: '22px 0 32px'
+    }
+  }, p.intro), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 14,
+      flexWrap: 'wrap'
+    }
+  }, /*#__PURE__*/React.createElement(PrButton, {
+    variant: "primary",
+    arrow: true,
+    onClick: () => onNav('contact')
+  }, "Plan een adviesgesprek"), /*#__PURE__*/React.createElement(PrButton, {
+    variant: "ghost",
+    dark: true,
+    arrow: true,
+    onClick: () => onNav('realisaties')
+  }, "Bekijk realisaties"))), /*#__PURE__*/React.createElement(Reveal, {
+    delay: 90
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      boxShadow: 'var(--shadow-lg)',
+      borderRadius: 8
+    }
+  }, /*#__PURE__*/React.createElement(GateImage, {
+    tone: p.tone,
+    ratio: "4 / 3",
+    label: p.naam,
+    radius: 8,
+    zoom: true,
+    slats: key === 'hekwerk' ? 14 : 9
+  })))))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      padding: '88px 44px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 1320,
+      margin: '0 auto',
+      display: 'grid',
+      gridTemplateColumns: '1.1fr 0.9fr',
+      gap: 72,
+      alignItems: 'start'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(PrEyebrow, {
+    style: {
+      marginBottom: 16
+    }
+  }, "Het materiaal"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 400,
+      fontSize: 28,
+      lineHeight: 1.35,
+      color: 'var(--text-heading)',
+      margin: 0
+    }
+  }, p.lead)), /*#__PURE__*/React.createElement(Reveal, {
+    delay: 80
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'var(--surface-paper-2)',
+      border: '1px solid var(--line-on-light)',
+      borderRadius: 'var(--radius-md)',
+      padding: '30px 30px 32px'
+    }
+  }, /*#__PURE__*/React.createElement(PrEyebrow, {
+    style: {
+      marginBottom: 18
+    }
+  }, "Voor wie"), /*#__PURE__*/React.createElement("ul", {
+    style: {
+      listStyle: 'none',
+      margin: 0,
+      padding: 0,
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 16
+    }
+  }, p.voorWie.map((v, i) => /*#__PURE__*/React.createElement("li", {
+    key: i,
+    style: {
+      display: 'flex',
+      gap: 14,
+      alignItems: 'baseline'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--accent)',
+      fontFamily: 'var(--font-display)',
+      fontSize: 16,
+      flex: '0 0 auto'
+    }
+  }, "—"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 15.5,
+      lineHeight: 1.55,
+      color: 'var(--text-body)'
+    }
+  }, v)))))))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--forest-900)',
+      padding: '88px 44px',
+      color: 'var(--text-on-dark)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 1320,
+      margin: '0 auto'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(SectieKop, {
+    dark: true,
+    eyebrow: "Belangrijkste voordelen",
+    titel: "Waarom dit type.",
+    max: "14ch"
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(2, 1fr)',
+      gap: 1,
+      marginTop: 44,
+      background: 'var(--line-on-dark-soft)',
+      border: '1px solid var(--line-on-dark-soft)'
+    }
+  }, p.voordelen.map(([t, d], i) => /*#__PURE__*/React.createElement(Reveal, {
+    key: t,
+    delay: i % 2 * 80
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'var(--forest-900)',
+      padding: '30px 32px',
+      height: '100%'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontSize: 26,
+      color: 'var(--stone-100)',
+      marginBottom: 8
+    }
+  }, t), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 15,
+      lineHeight: 1.65,
+      color: 'var(--text-on-dark-muted)',
+      margin: 0,
+      maxWidth: '46ch'
+    }
+  }, d))))))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      padding: '88px 44px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 1320,
+      margin: '0 auto',
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: 56
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      border: '1px solid var(--line-on-light)',
+      borderRadius: 'var(--radius-md)',
+      padding: '32px 32px 36px',
+      height: '100%'
+    }
+  }, /*#__PURE__*/React.createElement(PrEyebrow, {
+    style: {
+      marginBottom: 20
+    }
+  }, "Materialen"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      gap: 10
+    }
+  }, p.materialen.map(m => /*#__PURE__*/React.createElement("span", {
+    key: m,
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 14,
+      color: 'var(--text-heading)',
+      padding: '9px 16px',
+      border: '1px solid var(--line-on-light)',
+      borderRadius: 'var(--radius-pill)',
+      background: 'var(--surface-paper-2)'
+    }
+  }, m))))), /*#__PURE__*/React.createElement(Reveal, {
+    delay: 80
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      border: '1px solid var(--line-on-light)',
+      borderRadius: 'var(--radius-md)',
+      padding: '32px 32px 36px',
+      height: '100%'
+    }
+  }, /*#__PURE__*/React.createElement(PrEyebrow, {
+    style: {
+      marginBottom: 20
+    }
+  }, "Afwerkingsmogelijkheden"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      gap: 10
+    }
+  }, p.afwerking.map(m => /*#__PURE__*/React.createElement("span", {
+    key: m,
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 14,
+      color: 'var(--text-heading)',
+      padding: '9px 16px',
+      border: '1px solid var(--line-on-light)',
+      borderRadius: 'var(--radius-pill)',
+      background: 'var(--surface-paper-2)'
+    }
+  }, m))))))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-paper-2)',
+      padding: '88px 44px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 1320,
+      margin: '0 auto'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(SectieKop, {
+    eyebrow: "Mogelijke stijlen",
+    titel: "Eén type, vele beelden.",
+    max: "16ch"
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(3, 1fr)',
+      gap: 24,
+      marginTop: 44
+    }
+  }, p.stijlen.map(([t, d], i) => /*#__PURE__*/React.createElement(Reveal, {
+    key: t,
+    delay: i * 80
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(GateImage, {
+    tone: p.tone,
+    ratio: "4 / 3",
+    label: t,
+    radius: 6,
+    zoom: true,
+    slats: 6 + i * 3
+  }), /*#__PURE__*/React.createElement("h3", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 23,
+      color: 'var(--text-heading)',
+      margin: '16px 0 6px'
+    }
+  }, t), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 14,
+      lineHeight: 1.6,
+      color: 'var(--text-muted)',
+      margin: 0,
+      maxWidth: '40ch'
+    }
+  }, d))))))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      padding: '88px 44px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 1320,
+      margin: '0 auto'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'flex-end',
+      marginBottom: 40,
+      flexWrap: 'wrap',
+      gap: 20
+    }
+  }, /*#__PURE__*/React.createElement(SectieKop, {
+    eyebrow: "Van advies tot plaatsing",
+    titel: "Hoe uw poort tot stand komt.",
+    max: "16ch"
+  }), /*#__PURE__*/React.createElement(PrButton, {
+    variant: "secondary",
+    arrow: true,
+    onClick: () => onNav('werkwijze')
+  }, "Volledige werkwijze"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(4, 1fr)',
+      gap: 1,
+      background: 'var(--line-on-light)',
+      border: '1px solid var(--line-on-light)'
+    }
+  }, procesKort.map(([n, t, d], i) => /*#__PURE__*/React.createElement(Reveal, {
+    key: n,
+    delay: i * 70
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'var(--surface-paper)',
+      padding: '28px 24px',
+      height: '100%'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontSize: 32,
+      color: 'var(--accent)',
+      lineHeight: 0.9,
+      marginBottom: 14
+    }
+  }, n), /*#__PURE__*/React.createElement("h3", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 20,
+      color: 'var(--text-heading)',
+      margin: '0 0 7px',
+      lineHeight: 1.15
+    }
+  }, t), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 13.5,
+      lineHeight: 1.55,
+      color: 'var(--text-muted)',
+      margin: 0
+    }
+  }, d))))))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--forest-900)',
+      padding: '88px 44px',
+      color: 'var(--text-on-dark)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 1320,
+      margin: '0 auto'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'flex-end',
+      marginBottom: 38,
+      flexWrap: 'wrap',
+      gap: 20
+    }
+  }, /*#__PURE__*/React.createElement(SectieKop, {
+    dark: true,
+    eyebrow: "Relevante realisaties",
+    titel: "Dit type, gerealiseerd.",
+    max: "16ch"
+  }), /*#__PURE__*/React.createElement(PrButton, {
+    variant: "secondary",
+    dark: true,
+    onClick: () => onNav('realisaties')
+  }, "Alle realisaties"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(3, 1fr)',
+      gap: 24
+    }
+  }, shownProjects.map((pr, i) => /*#__PURE__*/React.createElement(Reveal, {
+    key: pr.id,
+    delay: i * 80
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: () => onNav('project', {
+      project: pr
+    }),
+    style: {
+      textAlign: 'left',
+      background: 'none',
+      border: 0,
+      padding: 0,
+      cursor: 'pointer',
+      width: '100%'
+    }
+  }, /*#__PURE__*/React.createElement(GateImage, {
+    tone: pr.tone,
+    ratio: "4 / 3",
+    label: pr.materiaal,
+    radius: 6,
+    zoom: true
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontSize: 21,
+      color: 'var(--stone-100)',
+      marginTop: 14
+    }
+  }, pr.naam), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 13,
+      color: 'var(--text-on-dark-muted)',
+      marginTop: 4
+    }
+  }, pr.regio, " · ", pr.poorttype))))))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-paper-2)',
+      padding: '88px 44px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 1000,
+      margin: '0 auto'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(SectieKop, {
+    align: "center",
+    eyebrow: "Veelgestelde vragen",
+    titel: `Over ${p.naam.toLowerCase()}.`
+  })), /*#__PURE__*/React.createElement(Reveal, {
+    delay: 80
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 44
+    }
+  }, /*#__PURE__*/React.createElement(FAQ, {
+    items: p.faq
+  }))))), /*#__PURE__*/React.createElement(CTASectie, {
+    onNav: onNav,
+    dark: true
+  }));
+}
+window.ProductNL = ProductNL;
+})();

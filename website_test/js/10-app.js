@@ -1,1 +1,147 @@
-!function(){const{Nav:e,Footer:a,TaalBanner:t}=window;function n(){const[n,o]=React.useState("home"),[c,r]=React.useState("houten"),[i,w]=React.useState(null),[l,d]=React.useState("NL"),N=React.useRef(null),s=(e,a)=>{a&&a.productKey&&r(a.productKey),a&&a.project&&w(a.project),o(e),N.current&&N.current.scrollTo({top:0,behavior:"auto"})},m="project"===n?"realisaties":n;let u;switch(n){case"product":u=React.createElement(window.ProductNL,{onNav:s,productKey:c});break;case"realisaties":u=React.createElement(window.CollectionNL,{onNav:s});break;case"project":u=React.createElement(window.ProjectDetailNL,{onNav:s,project:i});break;case"werkwijze":u=React.createElement(window.ProcessNL,{onNav:s});break;case"atelier":u=React.createElement(window.AboutNL,{onNav:s});break;case"contact":u=React.createElement(window.ContactNL,{onNav:s});break;case"poorten":u=React.createElement(window.PaginaNL,{onNav:s,content:window.PAGINAS.poorten});break;case"metalen":u=React.createElement(window.CategoriePagina,{onNav:s,data:window.CATEGORIEEN.metalen});break;case"houten":u=React.createElement(window.CategoriePagina,{onNav:s,data:window.CATEGORIEEN.houten});break;case"combinatie":u=React.createElement(window.CategoriePagina,{onNav:s,data:window.CATEGORIEEN.combinatie});break;case"overkappingen":u=React.createElement(window.PaginaNL,{onNav:s,content:window.PAGINAS.overkappingen});break;case"service":u=React.createElement(window.PaginaNL,{onNav:s,content:window.PAGINAS.service});break;case"automatisering":u=React.createElement(window.PaginaNL,{onNav:s,content:window.PAGINAS.automatisering});break;case"onderhoud":u=React.createElement(window.PaginaNL,{onNav:s,content:window.PAGINAS.onderhoud});break;case"garantie":u=React.createElement(window.PaginaNL,{onNav:s,content:window.PAGINAS.garantie});break;case"faq":u=React.createElement(window.PaginaNL,{onNav:s,content:window.PAGINAS.faq});break;default:u=React.createElement(window.HomeNL,{onNav:s})}const R=n+("product"===n?c:"")+("project"===n&&i?i.id:"");return React.createElement("div",{ref:N,style:{height:"100vh",overflowY:"auto",background:"var(--surface-ground)"}},React.createElement(t,{lang:l}),React.createElement(e,{route:m,onNav:s,lang:l,onLang:d}),React.createElement("main",{key:R,className:"pl-page"},u),React.createElement(a,{onNav:s,lang:l,onLang:d}),React.createElement(window.OfferteModal,null))}ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(n,null))}();
+(function(){
+const {
+  Nav,
+  Footer,
+  TaalBanner
+} = window;
+function App() {
+  const [route, setRoute] = React.useState('home');
+  const [productKey, setProductKey] = React.useState('houten');
+  const [project, setProject] = React.useState(null);
+  const [lang, setLang] = React.useState('NL');
+  const scrollRef = React.useRef(null);
+  const onNav = (r, payload) => {
+    if (payload && payload.productKey) setProductKey(payload.productKey);
+    if (payload && payload.project) setProject(payload.project);
+    setRoute(r);
+    if (scrollRef.current) scrollRef.current.scrollTo({
+      top: 0,
+      behavior: 'auto'
+    });
+  };
+  const navRoute = route === 'project' ? 'realisaties' : route;
+  let Screen;
+  switch (route) {
+    case 'product':
+      Screen = /*#__PURE__*/React.createElement(window.ProductNL, {
+        onNav: onNav,
+        productKey: productKey
+      });
+      break;
+    case 'realisaties':
+      Screen = /*#__PURE__*/React.createElement(window.CollectionNL, {
+        onNav: onNav
+      });
+      break;
+    case 'project':
+      Screen = /*#__PURE__*/React.createElement(window.ProjectDetailNL, {
+        onNav: onNav,
+        project: project
+      });
+      break;
+    case 'werkwijze':
+      Screen = /*#__PURE__*/React.createElement(window.ProcessNL, {
+        onNav: onNav
+      });
+      break;
+    case 'atelier':
+      Screen = /*#__PURE__*/React.createElement(window.AboutNL, {
+        onNav: onNav
+      });
+      break;
+    case 'contact':
+      Screen = /*#__PURE__*/React.createElement(window.ContactNL, {
+        onNav: onNav
+      });
+      break;
+    case 'poorten':
+      Screen = /*#__PURE__*/React.createElement(window.PaginaNL, {
+        onNav: onNav,
+        content: window.PAGINAS['poorten']
+      });
+      break;
+    case 'metalen':
+      Screen = /*#__PURE__*/React.createElement(window.CategoriePagina, {
+        onNav: onNav,
+        data: window.CATEGORIEEN['metalen']
+      });
+      break;
+    case 'houten':
+      Screen = /*#__PURE__*/React.createElement(window.CategoriePagina, {
+        onNav: onNav,
+        data: window.CATEGORIEEN['houten']
+      });
+      break;
+    case 'combinatie':
+      Screen = /*#__PURE__*/React.createElement(window.CategoriePagina, {
+        onNav: onNav,
+        data: window.CATEGORIEEN['combinatie']
+      });
+      break;
+    case 'overkappingen':
+      Screen = /*#__PURE__*/React.createElement(window.PaginaNL, {
+        onNav: onNav,
+        content: window.PAGINAS['overkappingen']
+      });
+      break;
+    case 'service':
+      Screen = /*#__PURE__*/React.createElement(window.PaginaNL, {
+        onNav: onNav,
+        content: window.PAGINAS['service']
+      });
+      break;
+    case 'automatisering':
+      Screen = /*#__PURE__*/React.createElement(window.PaginaNL, {
+        onNav: onNav,
+        content: window.PAGINAS['automatisering']
+      });
+      break;
+    case 'onderhoud':
+      Screen = /*#__PURE__*/React.createElement(window.PaginaNL, {
+        onNav: onNav,
+        content: window.PAGINAS['onderhoud']
+      });
+      break;
+    case 'garantie':
+      Screen = /*#__PURE__*/React.createElement(window.PaginaNL, {
+        onNav: onNav,
+        content: window.PAGINAS['garantie']
+      });
+      break;
+    case 'faq':
+      Screen = /*#__PURE__*/React.createElement(window.PaginaNL, {
+        onNav: onNav,
+        content: window.PAGINAS['faq']
+      });
+      break;
+    default:
+      Screen = /*#__PURE__*/React.createElement(window.HomeNL, {
+        onNav: onNav
+      });
+  }
+  const routeKey = route + (route === 'product' ? productKey : '') + (route === 'project' && project ? project.id : '');
+  return /*#__PURE__*/React.createElement("div", {
+    ref: scrollRef,
+    style: {
+      height: '100vh',
+      overflowY: 'auto',
+      background: 'var(--surface-ground)'
+    }
+  }, /*#__PURE__*/React.createElement(TaalBanner, {
+    lang: lang
+  }), /*#__PURE__*/React.createElement(Nav, {
+    route: navRoute,
+    onNav: onNav,
+    lang: lang,
+    onLang: setLang
+  }), /*#__PURE__*/React.createElement("main", {
+    key: routeKey,
+    className: "pl-page"
+  }, Screen), /*#__PURE__*/React.createElement(Footer, {
+    onNav: onNav,
+    lang: lang,
+    onLang: setLang
+  }), /*#__PURE__*/React.createElement(window.OfferteModal, null));
+}
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
+})();
