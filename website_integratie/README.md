@@ -30,6 +30,25 @@ door (cache van content.json).
 Let op per omgeving: de content URL bevat het projectref. Bij go live wijst de
 website naar het productieproject en nooit naar staging (zie de hoofdREADME).
 
+## 1b. Realisatiespagina (React SPA)
+
+De marketingsite is een React app die elke pagina in `<main class="pl-page">`
+rendert. Een galerijcontainer daarin overleeft een navigatie niet, dus voor de
+realisatiespagina is er een apart scriptje `poortland_erp_realisaties.js`. Het
+hangt onder de vaste projecten een sectie **Recent geplaatst** met een
+filtergalerij en herinjecteert vanzelf bij terugkeer naar de pagina. De sectie
+verschijnt enkel als er gepubliceerde foto's zijn (anders geen lege kop).
+
+    <script src="poortland_erp_content.js" data-content-url="…/content.json" defer></script>
+    <script src="js/11-erp-realisaties.js" defer></script>
+
+Voeg het toe na de app-scripts. Het herkent de realisatiespagina aan de
+hero-titel "Elke poort vertelt een adres." en gebruikt dezelfde content.json en
+CSS-variabelen als de site. **Neem dit bestand mee bij elke nieuwe build of
+export van de site**, samen met `poortland_erp_content.js` en
+`poortland_erp_lead.js`. Een herbouw die deze bestanden vergeet, verbreekt de
+koppeling stil (de site blijft werken, maar zonder ERP-foto's).
+
 ## 2. Contactformulier en offertewizard
 
 Voeg `poortland_erp_lead.js` toe en roep bij het versturen `poortlandVerstuurLead`
