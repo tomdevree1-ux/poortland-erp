@@ -211,6 +211,17 @@ De marketingwebsite leest uitsluitend `content.json` en publieke afbeeldingen ui
 `website_publiek`, bij voorkeur achter Cloudflare. Publiceren en depubliceren in het ERP
 herschrijft dat bestand (cache 5 minuten). De website krijgt geen sleutels en geen schrijftoegang.
 
+### Testwebsite mee op de dev server (end tot end testen)
+
+Voor end tot end testen door de klant staat een statische snapshot van de marketingsite
+in `website_test/` en serveert dezelfde Caddy die snapshot op een eigen hostname naast de
+beheerapp. Standaard is dat `www.<domein>` (de beheerapp blijft op `<domein>`). De
+formulieren op die snapshot posten same origin naar `/api`, dus geen CORS. De klant vult
+de site in, de lead verschijnt in het ERP, en een gepubliceerde foto verschijnt op de
+realisatiespagina. Ververs de snapshot met een nieuwe kopie van de marketingsite in
+`website_test/` voor je opnieuw uitrolt. De echte marketingsite blijft los van deze repo;
+`website_test/` is enkel een testkopie voor staging.
+
 ## Dev server op Hetzner (infra map)
 
 Eenmalig: Hetzner account met betaalmethode, een project en een API token

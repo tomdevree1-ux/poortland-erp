@@ -16,6 +16,7 @@ services:
         VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY}
     environment:
       DOMEIN: ${DOMEIN}
+      SITE_DOMEIN: ${SITE_DOMEIN}
     restart: unless-stopped
     ports:
       - "80:80"

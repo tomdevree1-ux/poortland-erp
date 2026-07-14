@@ -17,6 +17,7 @@ echo "1/4 Omgevingsbestand opbouwen uit je lokale instellingen"
 python3 - "$DOMEIN" <<'PY'
 import json, sys
 domein = sys.argv[1]
+site_domein = f"www.{domein}"  # marketingsite (testwebsite) naast de beheerapp
 d = json.load(open("../backend/Poortland.Api/appsettings.Development.json"))
 fe = dict(regel.strip().split("=", 1) for regel in open("../frontend/.env") if "=" in regel)
 regels = [
@@ -26,15 +27,18 @@ regels = [
     "Email__Modus=console",
     "ASPNETCORE_ENVIRONMENT=Production",
     f"Cors__Origins__0=https://{domein}",
+    f"Cors__Origins__1=https://{site_domein}",
     f"Frontend__Origin=https://{domein}",
 ]
 extra = d.get("Cors", {}).get("Origins", [])
 for i, o in enumerate(x for x in extra if not x.startswith("http://localhost")):
-    regels.append(f"Cors__Origins__{i+1}={o}")
+    regels.append(f"Cors__Origins__{i+2}={o}")
 open(".env.deploy", "w").write("\n".join(regels) + "\n")
 open(".env.build", "w").write(
-    f"DOMEIN={domein}\nVITE_SUPABASE_URL={fe['VITE_SUPABASE_URL']}\nVITE_SUPABASE_ANON_KEY={fe['VITE_SUPABASE_ANON_KEY']}\n")
-print(f"   domein: https://{domein}")
+    f"DOMEIN={domein}\nSITE_DOMEIN={site_domein}\n"
+    f"VITE_SUPABASE_URL={fe['VITE_SUPABASE_URL']}\nVITE_SUPABASE_ANON_KEY={fe['VITE_SUPABASE_ANON_KEY']}\n")
+print(f"   beheerapp: https://{domein}")
+print(f"   testsite : https://{site_domein}")
 PY
 
 echo "2/4 Wachten tot de server bereikbaar is en code overzetten"
@@ -63,8 +67,11 @@ echo "4/4 Gezondheidscheck"
 sleep 8
 if curl -skm 10 "https://$DOMEIN/gezond" | grep -q gezond; then
   echo ""
-  echo "LIVE: https://$DOMEIN"
+  echo "LIVE beheerapp: https://$DOMEIN"
+  echo "LIVE testsite : https://www.$DOMEIN   (dit adres geef je de klant)"
   echo "Leadendpoint voor de website: https://$DOMEIN/api/v1/leads/webformulier"
+  echo ""
+  echo "Let op: het TLS certificaat voor www.$DOMEIN kan de eerste keer 1 minuut duren."
   echo ""
   echo "Nog 2 dashboardstappen in Supabase (Authentication, URL Configuration):"
   echo "  Site URL: https://$DOMEIN"

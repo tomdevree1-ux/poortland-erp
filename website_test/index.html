@@ -1,0 +1,399 @@
+<!-- @dsCard group="Website" viewport="1320x860" name="Poortland — website (NL, licht)" subtitle="Lichte variant · warme greige, bosgroene inkt en brons" -->
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Poortland — Architecturale poorten en hekwerken op maat</title>
+<meta name="description" content="Poortland ontwerpt, maakt en plaatst handgemaakte poorten en hekwerken op maat. Belgisch vakmanschap, duurzame materialen en een sterke service na verkoop." />
+<link rel="icon" type="image/png" href="assets/favicon-32.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..600,0..100,0..1&display=swap" />
+<style>
+/* ---- fonts.css ---- */
+/* Poortland — Webfonts
+   Brand fonts are served from Google Fonts (free, embeddable).
+   - Cormorant: high-contrast heritage serif — display, wordmark, editorial headlines
+   - Hanken Grotesk: clean architectural grotesque — body, UI, labels
+   Linked stylesheets @import these via the closure; HTML cards also <link> them directly. */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap');
+
+/* ---- colors.css ---- */
+/* Poortland — Color tokens
+   ------------------------------------------------------------------
+   Signature ground: deep forest green-black ("estate at dusk").
+   Foreground: warm parchment. Accents: handmade metal (bronze),
+   weathered steel (corten), and earthy olive. Warm, restrained,
+   architectural. Never pure black, never pure white.
+   ------------------------------------------------------------------ */
+
+:root {
+  /* --- Forest scale (greens; dark surfaces) --- */
+  --forest-950: #0F160F; /* deepest ground, hero */
+  --forest-900: #141C15;
+  --forest-850: #1A241B;
+  --forest-800: #222E24;
+  --forest-700: #2E3B30;
+  --forest-600: #3D4C3F;
+  --forest-500: #56684F; /* mid sage, dividers on light */
+
+  /* --- Stone scale (warm neutrals; light surfaces & text) --- */
+  --stone-50:  #FAF6EE; /* paper, lightest */
+  --stone-100: #F4EEE1;
+  --stone-200: #ECE3D2; /* parchment — primary text on dark */
+  --stone-300: #DBCEB5;
+  --stone-400: #C2B393;
+  --stone-500: #9C8E72; /* warm gray, muted text */
+  --stone-600: #6E6450;
+  --stone-700: #4B4538;
+
+  /* --- Accents --- */
+  --bronze-600: #8A6A3C;
+  --bronze-500: #A6824C; /* primary metal */
+  --bronze-400: #C2A36B; /* hover / highlight */
+  --bronze-300: #D9C194; /* engraved highlight */
+
+  --corten-600: #8E4A2E;
+  --corten-500: #A85638; /* weathered steel rust */
+  --corten-400: #C27A57;
+
+  --olive-600: #5C5F37;
+  --olive-500: #717544;
+  --olive-400: #8C8F5C;
+
+  /* ============ Semantic aliases ============ */
+
+  /* Surfaces */
+  --surface-ground:    var(--forest-950); /* page / hero ground */
+  --surface-deep:      var(--forest-900);
+  --surface-raised:    var(--forest-850); /* cards on dark */
+  --surface-paper:     var(--stone-50);   /* light page */
+  --surface-paper-2:   var(--stone-100);  /* light card */
+  --surface-card:      var(--stone-50);
+
+  /* Text on dark ground */
+  --text-on-dark:        var(--stone-200);
+  --text-on-dark-muted:  var(--stone-500);
+  --text-on-dark-faint:  var(--forest-500);
+
+  /* Text on light paper */
+  --text-heading:  var(--forest-900);
+  --text-body:     var(--forest-800);
+  --text-muted:    var(--stone-600);
+  --text-faint:    var(--stone-500);
+
+  /* Accent roles */
+  --accent:           var(--bronze-500); /* primary — handmade metal */
+  --accent-hover:     var(--bronze-400);
+  --accent-strong:    var(--bronze-600);
+  --accent-rust:      var(--corten-500); /* secondary — corten */
+  --accent-olive:     var(--olive-500);  /* tertiary — earthy */
+
+  /* Lines & borders */
+  --line-on-dark:      rgba(236, 227, 210, 0.16);
+  --line-on-dark-soft: rgba(236, 227, 210, 0.09);
+  --line-on-light:     rgba(20, 28, 21, 0.14);
+  --line-on-light-soft:rgba(20, 28, 21, 0.07);
+  --hairline:          rgba(166, 130, 76, 0.45); /* bronze hairline accent */
+
+  /* Focus */
+  --focus-ring: rgba(166, 130, 76, 0.55);
+}
+
+/* ---- typography.css ---- */
+/* Poortland — Typography tokens
+   ------------------------------------------------------------------
+   Cormorant     — high-contrast heritage serif. Display, wordmark,
+                   editorial headlines. Often italic for accents.
+   Hanken Grotesk— clean architectural grotesque. Body, UI, nav,
+                   and tracked uppercase labels ("eyebrows").
+   Scale is editorial: large, airy display; quiet, legible body.
+   ------------------------------------------------------------------ */
+
+:root {
+  /* Families */
+  --font-display: 'Cormorant', 'Times New Roman', serif;
+  --font-sans: 'Hanken Grotesk', -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --font-label: 'Hanken Grotesk', -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+
+  /* Display weights (Cormorant reads best at 400–500) */
+  --weight-display: 500;
+  --weight-display-light: 400;
+
+  /* Sans weights */
+  --weight-light: 300;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Type scale — display (serif) */
+  --display-hero: 88px;   /* hero, single brand statement */
+  --display-1: 64px;
+  --display-2: 48px;
+  --display-3: 36px;
+  --display-4: 28px;
+
+  /* Type scale — text (sans) */
+  --text-xl: 22px;   /* lead paragraph */
+  --text-lg: 18px;
+  --text-base: 16px;
+  --text-sm: 14px;
+  --text-xs: 13px;
+  --text-2xs: 11px;  /* tracked labels */
+
+  /* Line heights */
+  --leading-display: 1.04;
+  --leading-tight: 1.15;
+  --leading-snug: 1.35;
+  --leading-body: 1.6;
+  --leading-relaxed: 1.75;
+
+  /* Letter spacing */
+  --tracking-display: -0.01em;  /* serif display, gently tightened */
+  --tracking-tight: -0.01em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.04em;
+  --tracking-label: 0.22em;     /* uppercase eyebrows / labels */
+  --tracking-label-tight: 0.14em;
+
+  /* Semantic */
+  --leading-heading: var(--leading-display);
+}
+
+/* ---- spacing.css ---- */
+/* Poortland — Spacing, radii, shadows, motion
+   ------------------------------------------------------------------
+   Architectural rhythm on an 8px base. Restrained radii (metal
+   fabrication is square-edged; softness is reserved). Shadows are
+   low, warm, and diffuse — never harsh. Motion is calm and precise.
+   ------------------------------------------------------------------ */
+
+:root {
+  /* Spacing — 8px base */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --space-10: 128px;
+  --space-11: 192px;
+
+  /* Section rhythm */
+  --gutter: 32px;
+  --measure: 64ch;       /* readable text column */
+  --content-max: 1280px;
+
+  /* Radii — square-leaning; metal is fabricated, not moulded */
+  --radius-none: 0px;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-pill: 999px;
+
+  /* Borders */
+  --border-width: 1px;
+  --border-width-strong: 1.5px;
+
+  /* Shadows — warm, low, diffuse */
+  --shadow-xs: 0 1px 2px rgba(15, 22, 15, 0.10);
+  --shadow-sm: 0 2px 8px rgba(15, 22, 15, 0.10);
+  --shadow-md: 0 10px 28px rgba(15, 22, 15, 0.14);
+  --shadow-lg: 0 26px 60px rgba(15, 22, 15, 0.22);
+  --shadow-inset-line: inset 0 0 0 1px rgba(236, 227, 210, 0.10);
+
+  /* Motion — calm, precise easing */
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1); /* @kind other */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1); /* @kind other */
+  --dur-fast: 140ms; /* @kind other */
+  --dur: 240ms; /* @kind other */
+  --dur-slow: 420ms; /* @kind other */
+}
+
+/* ---- base.css ---- */
+/* Poortland — Base element styles & a few utility helpers.
+   Light helpers only; components carry their own styling. */
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  color: var(--text-body);
+  font-weight: var(--weight-regular);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Display / serif headings */
+.pl-display {
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+}
+
+/* Uppercase tracked label / eyebrow */
+.pl-eyebrow {
+  font-family: var(--font-label);
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--accent);
+}
+
+/* Inline diagonal arrow used on links (↗) */
+.pl-arrow::after {
+  content: '↗';
+  display: inline-block;
+  margin-left: 0.3em;
+  font-weight: var(--weight-regular);
+}
+
+/* Bronze hairline rule */
+.pl-rule {
+  border: 0;
+  border-top: 1px solid var(--line-on-light);
+}
+
+::selection {
+  background: var(--bronze-300);
+  color: var(--forest-950);
+}
+
+</style>
+<style>
+  :root { --font-hero: 'Fraunces', 'Cormorant', Georgia, 'Times New Roman', serif; }
+  /* Karaktervolle display-serif voor de grote titels, naar referentie. */
+  #root h1 {
+    font-family: var(--font-hero) !important;
+    font-optical-sizing: auto;
+    font-variation-settings: 'opsz' 144, 'SOFT' 50, 'WONK' 1;
+    font-weight: 440 !important;
+    letter-spacing: -0.018em;
+    color: #2C4533 !important;
+  }
+</style>
+<style id="theme-licht">
+  /* ====================================================================
+     LICHTE VARIANT — warme greige gronden, bosgroene inkt, brons accent.
+     De donkere tokens worden hier omgezet naar een licht thema, zodat
+     elke sectie en elke dark-variant component automatisch meeschakelt.
+     --forest-950 blijft donker: dient als tekst op brons (knoppen, vinkje).
+     ==================================================================== */
+  :root {
+    /* Lichte gronden (waren donkere secties) */
+    --surface-ground: #E9E2D2;   /* hero en grote gronden */
+    --surface-deep:   #E3DBC9;
+    --surface-raised: #F4EFE5;   /* kaarten op licht */
+    --forest-900: #E4DCCB;       /* secties die rauw forest-900 gebruiken */
+    --forest-850: #F4EFE5;       /* raised vlakken */
+    --forest-800: #DCD3C0;       /* nav hover */
+
+    /* Papier — vastgezet op letterlijke waarden zodat stone-overrides niet lekken */
+    --surface-paper:   #FBF8F1;
+    --surface-paper-2: #F2ECDF;
+    --surface-card:    #FCFAF4;
+
+    /* Inkt — was tekst op donker, nu donker op licht */
+    --stone-100: #18211A;
+    --stone-200: #232D24;
+    --stone-300: #454E40;
+    --text-on-dark:       #232D24;
+    --text-on-dark-muted: #6E6450;
+    --text-on-dark-faint: #9C8E72;
+    --line-on-dark:       rgba(24,33,26,0.16);
+    --line-on-dark-soft:  rgba(24,33,26,0.09);
+
+    /* Licht-thema semantiek opnieuw verankeren (aliassen wezen naar nu-lichte basis) */
+    --text-heading: #141C15;
+    --text-body:    #2A332A;
+
+    /* Accent iets dieper voor leesbaarheid op licht */
+    --accent: var(--bronze-600);
+  }
+</style>
+<style>
+  html, body { margin: 0; background: var(--surface-ground); }
+  #root { min-height: 100vh; }
+  button { font-family: inherit; }
+  /* Lichte hover zoom op beelden */
+  .pl-zoom-wrap:hover .pl-zoom-img { transform: scale(1.045); }
+  @media (prefers-reduced-motion: reduce) {
+    .pl-zoom-wrap:hover .pl-zoom-img { transform: none; }
+    * { scroll-behavior: auto !important; }
+  }
+  /* Zachte paginaovergang */
+  .pl-page { animation: pl-fade 460ms var(--ease-out) both; }
+  @keyframes pl-fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  /* Doorlopende fotobanner */
+  .pl-marquee { -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+  .pl-marquee-track { animation: pl-marquee 48s linear infinite; }
+  .pl-marquee:hover .pl-marquee-track { animation-play-state: paused; }
+  @keyframes pl-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .pl-marquee-track { animation: none; } }
+  ::-webkit-scrollbar { width: 11px; }
+  ::-webkit-scrollbar-track { background: var(--surface-paper-2); }
+  ::-webkit-scrollbar-thumb { background: var(--stone-400); border-radius: 6px; border: 3px solid var(--surface-paper-2); }
+</style>
+<style>
+.pl-prod-card img{ transition: transform .6s var(--ease-out); }
+.pl-prod-card:hover img{ transform: scale(1.05); }
+.pl-mobcta{ display: none; }
+.pl-hscroll{ scrollbar-width: thin; scrollbar-color: var(--line-on-dark) transparent; -webkit-overflow-scrolling: touch; scroll-padding-left: 44px; }
+.pl-hscroll::-webkit-scrollbar{ height: 8px; }
+.pl-hscroll::-webkit-scrollbar-thumb{ background: var(--line-on-dark); border-radius: 999px; }
+.pl-hscroll::-webkit-scrollbar-track{ background: transparent; }
+.pl-galpijl:hover{ border-color: var(--accent) !important; }
+@media (max-width: 900px){
+  #root section{ padding-left: 20px !important; padding-right: 20px !important; }
+  .pl-split{ grid-template-columns: 1fr !important; gap: 10px !important; min-height: 0 !important; }
+  .pl-split > div{ padding-left: 0 !important; padding-right: 0 !important; }
+  .pl-atelierbeeld{ aspect-ratio: 3 / 2 !important; min-height: 0 !important; margin: 0 0 32px !important; }
+  .pl-cards{ grid-template-columns: 1fr !important; }
+  .pl-cards4{ grid-template-columns: 1fr 1fr !important; }
+  .pl-comp{ grid-template-columns: 1fr !important; }
+  .pl-kwal{ grid-template-columns: 1fr !important; }
+  .pl-proces{ grid-template-columns: 1fr !important; gap: 4px !important; }
+  .pl-proces-lijn{ display: none !important; }
+  .pl-mobcta{ display: flex !important; }
+  .pl-galpijl{ display: none !important; }
+  #root h1{ font-size: 40px !important; }
+}
+@media (prefers-reduced-motion: reduce){
+  .pl-prod-card:hover img{ transform: none !important; }
+}
+</style>
+<script>window.POORTLAND_ERP = { leadEndpoint: "/api/v1/leads/webformulier", contentUrl: "https://rbttjhjrdnndamagqmui.supabase.co/storage/v1/object/public/website_publiek/content.json" };</script>
+<script src="poortland_erp_lead.js" defer></script>
+<script src="poortland_erp_content.js" data-content-url="https://rbttjhjrdnndamagqmui.supabase.co/storage/v1/object/public/website_publiek/content.json" defer></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="vendor/react.production.min.js"></script>
+  <script src="vendor/react-dom.production.min.js"></script>
+  <script src="_ds_bundle.js"></script>
+  <script src="js/01-data-nl.js"></script>
+  <script src="js/02-shared-nl.js"></script>
+  <script src="js/03-Home-nl.js"></script>
+  <script src="js/04-Product-nl.js"></script>
+  <script src="js/05-Collection-nl.js"></script>
+  <script src="js/06-ProjectDetail-nl.js"></script>
+  <script src="js/07-Process-nl.js"></script>
+  <script src="js/08-About-nl.js"></script>
+  <script src="js/09-Contact-nl.js"></script>
+  <script src="js/10-app.js"></script>
+  <script src="js/11-erp-realisaties.js" defer></script>
+</body>
+</html>

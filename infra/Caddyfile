@@ -12,3 +12,17 @@
 		file_server
 	}
 }
+
+# Marketingsite (testwebsite) op een eigen hostname. Het formulier post same origin
+# naar /api, dus geen CORS nodig; de rest is de statische React site.
+{$SITE_DOMEIN} {
+	encode gzip
+	handle /api/* {
+		reverse_proxy api:5000
+	}
+	handle {
+		root * /srv-site
+		try_files {path} /index.html
+		file_server
+	}
+}

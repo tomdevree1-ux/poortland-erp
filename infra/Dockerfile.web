@@ -12,3 +12,5 @@ RUN npm run build
 FROM caddy:2
 COPY infra/Caddyfile /etc/caddy/Caddyfile
 COPY --from=bouw /bron/dist /srv
+# Statische marketingsite (testwebsite) voor end tot end testen op een eigen hostname.
+COPY website_test /srv-site
