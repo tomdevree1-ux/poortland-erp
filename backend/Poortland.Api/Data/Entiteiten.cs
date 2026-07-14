@@ -83,6 +83,7 @@ public class Lead : BasisEntiteit
     public string? VerliesReden { get; set; }
     public Guid? OmgezetProjectId { get; set; }
     public string? TypeAanvraag { get; set; }
+    public string? Straat { get; set; }
     public string? Gemeente { get; set; }
     public string? GewensteTiming { get; set; }
     public bool PrivacyAkkoord { get; set; }

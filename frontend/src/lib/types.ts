@@ -14,7 +14,7 @@ export interface Lead {
   naam?: string; voornaam?: string; email?: string; telefoon?: string; eersteVraag?: string
   prijsindicatie?: number; opvolgdatum?: string; verliesReden?: string
   omgezetProjectId?: string; aangemaaktOp: string
-  typeAanvraag?: string; gemeente?: string; gewensteTiming?: string
+  typeAanvraag?: string; straat?: string; gemeente?: string; gewensteTiming?: string
   privacyAkkoord?: boolean; privacyAkkoordOp?: string; wizardGegevens?: string
   gearchiveerdOp?: string
   fotos?: LeadFoto[]

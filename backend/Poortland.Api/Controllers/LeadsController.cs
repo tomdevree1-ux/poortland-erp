@@ -12,7 +12,7 @@ public record LeadInvoer(LeadKanaal Kanaal, string? Naam, string? Voornaam, stri
     string? EersteVraag, Guid? EigenaarId, DateOnly? Opvolgdatum,
     string? TypeAanvraag, string? Gemeente, string? GewensteTiming);
 public record LeadWijziging(string? Naam, string? Voornaam, string? Email, string? Telefoon, string? EersteVraag,
-    string? TypeAanvraag, string? Gemeente, string? GewensteTiming, DateOnly? Opvolgdatum,
+    string? TypeAanvraag, string? Straat, string? Gemeente, string? GewensteTiming, DateOnly? Opvolgdatum,
     string? WizardGegevens);
 public record KwalificatieInvoer(decimal? Prijsindicatie, DateOnly? Opvolgdatum);
 public record VerliesInvoer(string Reden);
@@ -62,7 +62,7 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
         {
             lead.Id, lead.KlantId, lead.Kanaal, lead.Status, lead.EigenaarId, lead.Opvolgdatum,
             lead.Naam, lead.Voornaam, lead.Email, lead.Telefoon, lead.EersteVraag, lead.Prijsindicatie,
-            lead.VerliesReden, lead.OmgezetProjectId, lead.TypeAanvraag, lead.Gemeente,
+            lead.VerliesReden, lead.OmgezetProjectId, lead.TypeAanvraag, lead.Straat, lead.Gemeente,
             lead.GewensteTiming, lead.PrivacyAkkoord, lead.PrivacyAkkoordOp, lead.WizardGegevens,
             lead.GearchiveerdOp, lead.AangemaaktOp, fotos
         });
@@ -99,6 +99,7 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
         if (invoer.Telefoon is not null) lead.Telefoon = invoer.Telefoon;
         if (invoer.EersteVraag is not null) lead.EersteVraag = invoer.EersteVraag;
         if (invoer.TypeAanvraag is not null) lead.TypeAanvraag = invoer.TypeAanvraag;
+        if (invoer.Straat is not null) lead.Straat = invoer.Straat;
         if (invoer.Gemeente is not null) lead.Gemeente = invoer.Gemeente;
         if (invoer.GewensteTiming is not null) lead.GewensteTiming = invoer.GewensteTiming;
         if (invoer.Opvolgdatum is { } datum) lead.Opvolgdatum = datum;
@@ -137,7 +138,7 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
         {
             Kanaal = invoer.Soort == "offerteaanvraag" ? LeadKanaal.OfferteaanvraagWebsite : LeadKanaal.ContactWebsite,
             Naam = invoer.Naam, Voornaam = invoer.Voornaam, Email = invoer.Email, Telefoon = invoer.Telefoon,
-            Gemeente = invoer.Gemeente, EersteVraag = invoer.Vraag,
+            Straat = invoer.Straat, Gemeente = invoer.Gemeente, EersteVraag = invoer.Vraag,
             TypeAanvraag = invoer.TypeAanvraag, GewensteTiming = invoer.GewensteTiming,
             PrivacyAkkoord = true, PrivacyAkkoordOp = DateTimeOffset.UtcNow,
             WizardGegevens = string.IsNullOrWhiteSpace(invoer.WizardGegevens) ? null : invoer.WizardGegevens,
@@ -161,7 +162,7 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
     }
 
     public record WebformulierInvoer(string? Soort, string Naam, string? Voornaam, string Email, string? Telefoon,
-        string? Gemeente, string? TypeAanvraag, string? GewensteTiming, string? Vraag,
+        string? Straat, string? Gemeente, string? TypeAanvraag, string? GewensteTiming, string? Vraag,
         bool PrivacyAkkoord, string? WizardGegevens, string? TurnstileToken, IFormFileCollection? Fotos);
 
     async Task BewaarFoto(Guid leadId, IFormFile foto)

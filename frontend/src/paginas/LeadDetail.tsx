@@ -48,13 +48,13 @@ export default function LeadDetail() {
     onError: f => zetFout((f as Error).message)
   })
 
-  const [vorm, zetVorm] = useState<{ naam: string; voornaam: string; email: string; telefoon: string; gemeente: string
-    typeAanvraag: string; gewensteTiming: string; eersteVraag: string } | null>(null)
+  const [vorm, zetVorm] = useState<{ naam: string; voornaam: string; email: string; telefoon: string
+    straat: string; gemeente: string; typeAanvraag: string; gewensteTiming: string; eersteVraag: string } | null>(null)
   function openBewerk() {
     if (!lead) return
     zetVorm({
       naam: lead.naam ?? '', voornaam: lead.voornaam ?? '', email: lead.email ?? '', telefoon: lead.telefoon ?? '',
-      gemeente: lead.gemeente ?? '', typeAanvraag: lead.typeAanvraag ?? '',
+      straat: lead.straat ?? '', gemeente: lead.gemeente ?? '', typeAanvraag: lead.typeAanvraag ?? '',
       gewensteTiming: lead.gewensteTiming ?? '', eersteVraag: lead.eersteVraag ?? ''
     })
     zetBewerkOpen(true)
@@ -99,7 +99,7 @@ export default function LeadDetail() {
     zetKlantKeuze(''); klantZoek.zetInvoer(''); zetWerfadres('')
     zetNieuweKlant({
       ...leegKlant,
-      naam: lead.naam ?? '', voornaam: lead.voornaam ?? '', gemeente: lead.gemeente ?? '',
+      naam: lead.naam ?? '', voornaam: lead.voornaam ?? '', straat: lead.straat ?? '', gemeente: lead.gemeente ?? '',
       email: lead.email ?? '', telefoon: lead.telefoon ?? ''
     })
     zetOmzetOpen(true)
@@ -169,14 +169,17 @@ export default function LeadDetail() {
           <dl className="space-y-2 text-sm">
             <div className="flex justify-between"><dt className="text-inkt-muted">Status</dt><dd><Badge status={lead.status} /></dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Type aanvraag</dt>
-              <dd>{leeg(lead.typeAanvraag ? typeTekst[lead.typeAanvraag] ?? lead.typeAanvraag : null)}</dd></div>
+              <dd>{leeg(lead.typeAanvraag
+                ? lead.typeAanvraag.split(',').map(x => typeTekst[x.trim()] ?? x.trim()).join(', ')
+                : null)}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Gewenste timing</dt>
               <dd>{leeg(lead.gewensteTiming ? timingTekst[lead.gewensteTiming] ?? lead.gewensteTiming : null)}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Naam</dt><dd>{leeg(persoon(lead.voornaam, lead.naam))}</dd></div>
+            <div className="flex justify-between"><dt className="text-inkt-muted">Straat en nummer</dt><dd>{leeg(lead.straat)}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Gemeente</dt><dd>{leeg(lead.gemeente)}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Email</dt><dd>{leeg(lead.email)}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Telefoon</dt><dd>{leeg(lead.telefoon)}</dd></div>
-            <div className="flex justify-between"><dt className="text-inkt-muted">Opvolgdatum</dt><dd>{datum(lead.opvolgdatum)}</dd></div>
+            <div className="flex justify-between"><dt className="text-inkt-muted">Opvolgdatum (ten laatste)</dt><dd>{datum(lead.opvolgdatum)}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Prijsindicatie</dt><dd className="cijfers">{euro(lead.prijsindicatie)}</dd></div>
             {lead.privacyAkkoord && (
               <div className="flex justify-between"><dt className="text-inkt-muted">Privacy akkoord</dt>
@@ -228,7 +231,7 @@ export default function LeadDetail() {
             e.preventDefault()
             wijzig.mutate({
               naam: vorm.naam, voornaam: vorm.voornaam || null, email: vorm.email || null, telefoon: vorm.telefoon || null,
-              gemeente: vorm.gemeente || null, typeAanvraag: vorm.typeAanvraag || null,
+              straat: vorm.straat || null, gemeente: vorm.gemeente || null, typeAanvraag: vorm.typeAanvraag || null,
               gewensteTiming: vorm.gewensteTiming || null, eersteVraag: vorm.eersteVraag || null
             })
           }}>
@@ -250,7 +253,10 @@ export default function LeadDetail() {
                 {timingOpties.map(([w, tekst]) => <option key={w} value={w}>{tekst}</option>)}
               </Selecteer>
             </div>
-            <Invoer label="Gemeente" optioneel value={vorm.gemeente} onChange={e => zetVorm({ ...vorm, gemeente: e.target.value })} />
+            <div className="grid grid-cols-2 gap-4">
+              <Invoer label="Straat en huisnummer" optioneel value={vorm.straat} onChange={e => zetVorm({ ...vorm, straat: e.target.value })} />
+              <Invoer label="Gemeente" optioneel value={vorm.gemeente} onChange={e => zetVorm({ ...vorm, gemeente: e.target.value })} />
+            </div>
             <TekstVak label="Omschrijving van het project" optioneel value={vorm.eersteVraag}
               onChange={e => zetVorm({ ...vorm, eersteVraag: e.target.value })} />
             <div className="flex justify-end gap-2">

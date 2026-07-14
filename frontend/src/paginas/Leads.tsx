@@ -11,9 +11,10 @@ const kanaalTekst: Record<string, string> = {
   telefoon: 'Telefoon', email: 'Email', webformulier: 'Webformulier', socialeMedia: 'Sociale media',
   contactWebsite: 'Contact (website)', offerteaanvraagWebsite: 'Offerteaanvraag (website)'
 }
+// Gelijk aan de keuzes op het contactformulier van de website (1 op 1 mapping).
 export const typeAanvraagOpties = [
-  ['nieuwe-poort', 'Nieuwe poort'], ['hekwerk', 'Hekwerk'], ['automatisatie', 'Automatisatie'],
-  ['onderhoud', 'Onderhoud of service'], ['showroom', 'Showroombezoek'], ['andere', 'Andere vraag']
+  ['poorten', 'Poorten'], ['overkappingen', 'Overkappingen'], ['automatisatie', 'Automatisatie'],
+  ['onderhoud', 'Onderhoud'], ['andere', 'Andere vraag']
 ] as const
 export const timingOpties = [
   ['zo-snel', 'Zo snel mogelijk'], ['3-maand', 'Binnen drie maanden'],
