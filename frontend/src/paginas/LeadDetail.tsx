@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useParams } from '@tanstack/react-router'
+import { clsx } from 'clsx'
 import { api } from '../lib/api'
 import { useZoekterm } from '../lib/zoek'
 import { datum, euro, leeg, persoon } from '../lib/formaat'
@@ -80,25 +81,29 @@ export default function LeadDetail() {
     queryFn: () => api.get<Klant[]>(`/klanten?${new URLSearchParams(klantZoek.term ? { zoek: klantZoek.term } : {})}`),
     enabled: omzetOpen
   })
-  const leegKlant = { type: 'particulier', naam: '', voornaam: '', btwNummer: '', straat: '', postcode: '', gemeente: '', email: '', telefoon: '' }
+  const leegKlant = { type: 'particulier', naam: '', voornaam: '', bedrijfsnaam: '', btwNummer: '', straat: '', postcode: '', gemeente: '', email: '', telefoon: '' }
   const [nieuweKlant, zetNieuweKlant] = useState(leegKlant)
+  const [omzetModus, zetOmzetModus] = useState<'nieuw' | 'bestaand'>('nieuw')
   const [werfadres, zetWerfadres] = useState('')
 
   // Isolatieregel: bij het wisselen van lead wordt alle formulierstaat gewist
   // zodat gegevens van record A nooit zichtbaar zijn bij record B.
   useEffect(() => {
     zetOmzetOpen(false); zetVerliesOpen(false); zetVerwijderOpen(false); zetBewerkOpen(false)
-    zetKlantKeuze(''); klantZoek.zetInvoer(''); zetNieuweKlant(leegKlant); zetWerfadres('')
+    zetKlantKeuze(''); klantZoek.zetInvoer(''); zetNieuweKlant(leegKlant); zetWerfadres(''); zetOmzetModus('nieuw')
     zetReden(''); zetVorm(null); zetFout(undefined)
   }, [leadId])
 
   // SSOT: het omzetvenster opent altijd vers en vooraf ingevuld vanuit de lead.
   function openOmzetten() {
     if (!lead) return
-    zetKlantKeuze(''); klantZoek.zetInvoer(''); zetWerfadres('')
+    zetKlantKeuze(''); klantZoek.zetInvoer(''); zetWerfadres(''); zetOmzetModus('nieuw')
     zetNieuweKlant({
       ...leegKlant,
-      naam: lead.naam ?? '', voornaam: lead.voornaam ?? '', straat: lead.straat ?? '', gemeente: lead.gemeente ?? '',
+      type: lead.klantType === 'bedrijf' ? 'bedrijf' : 'particulier',
+      naam: lead.naam ?? '', voornaam: lead.voornaam ?? '',
+      bedrijfsnaam: lead.bedrijfsnaam ?? '', btwNummer: lead.btwNummer ?? '',
+      straat: lead.straat ?? '', postcode: lead.postcode ?? '', gemeente: lead.gemeente ?? '',
       email: lead.email ?? '', telefoon: lead.telefoon ?? ''
     })
     zetOmzetOpen(true)
@@ -113,13 +118,14 @@ export default function LeadDetail() {
   }
   const omzetten = useMutation({
     mutationFn: () => api.post<{ projectId: string }>(`/leads/${leadId}/omzetten`, {
-      klantId: klantKeuze || null,
-      nieuweKlant: klantKeuze ? null : {
+      klantId: omzetModus === 'bestaand' ? (klantKeuze || null) : null,
+      nieuweKlant: omzetModus === 'bestaand' ? null : {
         ...nieuweKlant,
         naam: nieuweKlant.naam || lead?.naam || '',
         voornaam: nieuweKlant.voornaam || lead?.voornaam || null,
+        bedrijfsnaam: nieuweKlant.type === 'bedrijf' ? (nieuweKlant.bedrijfsnaam || null) : null,
+        btwNummer: nieuweKlant.type === 'bedrijf' ? (nieuweKlant.btwNummer || null) : null,
         gemeente: nieuweKlant.gemeente || lead?.gemeente || null,
-        btwNummer: nieuweKlant.btwNummer || null,
         email: nieuweKlant.email || lead?.email || null,
         telefoon: nieuweKlant.telefoon || lead?.telefoon || null
       },
@@ -179,8 +185,11 @@ export default function LeadDetail() {
                 : null)}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Gewenste timing</dt>
               <dd>{leeg(lead.gewensteTiming ? timingTekst[lead.gewensteTiming] ?? lead.gewensteTiming : null)}</dd></div>
+            {lead.bedrijfsnaam && <div className="flex justify-between"><dt className="text-inkt-muted">Bedrijfsnaam</dt><dd>{lead.bedrijfsnaam}</dd></div>}
+            {lead.btwNummer && <div className="flex justify-between"><dt className="text-inkt-muted">Btw nummer</dt><dd>{lead.btwNummer}</dd></div>}
             <div className="flex justify-between"><dt className="text-inkt-muted">Naam</dt><dd>{leeg(persoon(lead.voornaam, lead.naam))}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Straat en nummer</dt><dd>{leeg(lead.straat)}</dd></div>
+            <div className="flex justify-between"><dt className="text-inkt-muted">Postcode</dt><dd>{leeg(lead.postcode)}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Gemeente</dt><dd>{leeg(lead.gemeente)}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Email</dt><dd>{leeg(lead.email)}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Telefoon</dt><dd>{leeg(lead.telefoon)}</dd></div>
@@ -293,30 +302,55 @@ export default function LeadDetail() {
 
       <Modaal open={omzetOpen} titel="Omzetten naar klant en dossier" onSluit={() => zetOmzetOpen(false)}>
         <form className="space-y-4" onSubmit={e => { e.preventDefault(); omzetten.mutate() }}>
-          <Invoer label="Zoek bestaande klant" optioneel placeholder="Naam of gemeente…"
-            value={klantZoek.invoer} onChange={e => klantZoek.zetInvoer(e.target.value)} />
-          <Selecteer label="Bestaande klant" optioneel value={klantKeuze} onChange={e => zetKlantKeuze(e.target.value)}>
-            <option value="">Nieuwe klant aanmaken</option>
-            {klanten?.map(k => <option key={k.id} value={k.id}>{k.naam} · {k.gemeente ?? ''}</option>)}
-          </Selecteer>
-          {!klantKeuze && (
+          <div className="grid grid-cols-2 gap-3">
+            <button type="button" onClick={() => { zetOmzetModus('bestaand'); zetKlantKeuze('') }}
+              className={clsx('rounded-control border p-4 text-left transition',
+                omzetModus === 'bestaand' ? 'border-bronze-500 bg-bronze-500/10' : 'border-inkt/15 hover:border-bronze-500/50')}>
+              <div className="text-sm font-semibold text-inkt">Toevoegen aan bestaande klant</div>
+              <div className="mt-1 text-xs text-inkt-muted">Zoek en koppel een klant die al bestaat.</div>
+            </button>
+            <button type="button" onClick={() => { zetOmzetModus('nieuw'); zetKlantKeuze('') }}
+              className={clsx('rounded-control border p-4 text-left transition',
+                omzetModus === 'nieuw' ? 'border-bronze-500 bg-bronze-500/10' : 'border-inkt/15 hover:border-bronze-500/50')}>
+              <div className="text-sm font-semibold text-inkt">Nieuwe klant aanmaken</div>
+              <div className="mt-1 text-xs text-inkt-muted">De gegevens uit de lead staan al ingevuld.</div>
+            </button>
+          </div>
+
+          {omzetModus === 'bestaand' ? (
+            <>
+              <Invoer label="Zoek bestaande klant" placeholder="Naam of gemeente…"
+                value={klantZoek.invoer} onChange={e => klantZoek.zetInvoer(e.target.value)} />
+              <Selecteer label="Bestaande klant" value={klantKeuze} onChange={e => zetKlantKeuze(e.target.value)}>
+                <option value="">Kies een klant…</option>
+                {klanten?.map(k => <option key={k.id} value={k.id}>{(k.bedrijfsnaam || k.naam)} · {k.gemeente ?? ''}</option>)}
+              </Selecteer>
+            </>
+          ) : (
             <div className="space-y-4 rounded-control bg-vlak-raised p-4">
-              <div className="grid grid-cols-2 gap-4">
-                <Selecteer label="Type" value={nieuweKlant.type} onChange={e => zetNieuweKlant({ ...nieuweKlant, type: e.target.value })}>
-                  <option value="particulier">Particulier</option>
-                  <option value="bedrijf">Bedrijf</option>
-                </Selecteer>
-                <Invoer label="Naam" value={nieuweKlant.naam} onChange={e => zetNieuweKlant({ ...nieuweKlant, naam: e.target.value })} required={!klantKeuze} />
+              <div className="flex gap-1 rounded-control border border-inkt/10 p-1">
+                {(['particulier', 'bedrijf'] as const).map(t => (
+                  <button key={t} type="button" onClick={() => zetNieuweKlant({ ...nieuweKlant, type: t })}
+                    className={clsx('flex-1 rounded-[6px] px-3 py-1.5 text-sm font-semibold transition',
+                      nieuweKlant.type === t ? 'bg-bronze-500 text-forest-950' : 'text-inkt-muted hover:text-inkt')}>
+                    {t === 'particulier' ? 'Particulier' : 'Bedrijf'}
+                  </button>
+                ))}
               </div>
+              {nieuweKlant.type === 'bedrijf' && (
+                <div className="grid grid-cols-2 gap-4">
+                  <Invoer label="Bedrijfsnaam" value={nieuweKlant.bedrijfsnaam} onChange={e => zetNieuweKlant({ ...nieuweKlant, bedrijfsnaam: e.target.value })} required />
+                  <Invoer label="Btw nummer" value={nieuweKlant.btwNummer} onChange={e => zetNieuweKlant({ ...nieuweKlant, btwNummer: e.target.value })} required />
+                </div>
+              )}
               <div className="grid grid-cols-2 gap-4">
+                <Invoer label="Naam" value={nieuweKlant.naam} onChange={e => zetNieuweKlant({ ...nieuweKlant, naam: e.target.value })} required />
                 <Invoer label="Voornaam" optioneel value={nieuweKlant.voornaam} onChange={e => zetNieuweKlant({ ...nieuweKlant, voornaam: e.target.value })} />
               </div>
-              {nieuweKlant.type === 'bedrijf' &&
-                <Invoer label="Btw nummer" value={nieuweKlant.btwNummer} onChange={e => zetNieuweKlant({ ...nieuweKlant, btwNummer: e.target.value })} required />}
-              <div className="grid grid-cols-3 gap-4">
-                <Invoer label="Straat" optioneel value={nieuweKlant.straat} onChange={e => zetNieuweKlant({ ...nieuweKlant, straat: e.target.value })} />
+              <Invoer label="Straat en huisnummer" optioneel value={nieuweKlant.straat} onChange={e => zetNieuweKlant({ ...nieuweKlant, straat: e.target.value })} />
+              <div className="grid grid-cols-2 gap-4">
                 <Invoer label="Postcode" optioneel value={nieuweKlant.postcode} onChange={e => zetNieuweKlant({ ...nieuweKlant, postcode: e.target.value })} />
-                <Invoer label="Gemeente" optioneel value={nieuweKlant.gemeente} onChange={e => zetNieuweKlant({ ...nieuweKlant, gemeente: e.target.value })} />
+                <Invoer label="Stad of gemeente" optioneel value={nieuweKlant.gemeente} onChange={e => zetNieuweKlant({ ...nieuweKlant, gemeente: e.target.value })} />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <Invoer label="Email" optioneel type="email" value={nieuweKlant.email} onChange={e => zetNieuweKlant({ ...nieuweKlant, email: e.target.value })} />

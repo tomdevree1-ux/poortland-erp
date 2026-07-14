@@ -15,7 +15,7 @@ window.poortlandVerstuurLead = async function (opties) {
   var form = new FormData();
   form.append('soort', opties.soort === 'offerteaanvraag' ? 'offerteaanvraag' : 'contact');
   var velden = opties.velden || {};
-  ['naam', 'voornaam', 'email', 'telefoon', 'straat', 'gemeente', 'typeAanvraag', 'gewensteTiming', 'vraag'].forEach(function (sleutel) {
+  ['naam', 'voornaam', 'email', 'telefoon', 'klantType', 'bedrijfsnaam', 'btwNummer', 'straat', 'postcode', 'gemeente', 'typeAanvraag', 'gewensteTiming', 'vraag'].forEach(function (sleutel) {
     if (velden[sleutel]) form.append(sleutel, velden[sleutel]);
   });
   form.append('privacyAkkoord', 'true'); // enkel versturen na het aangevinkte akkoord

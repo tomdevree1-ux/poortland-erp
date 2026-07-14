@@ -35,6 +35,7 @@ public class Klant : BasisEntiteit
     public KlantType Type { get; set; }
     public string Naam { get; set; } = "";
     public string? Voornaam { get; set; }
+    public string? Bedrijfsnaam { get; set; }
     public string? BtwNummer { get; set; }
     public string? Straat { get; set; }
     public string? Postcode { get; set; }
@@ -83,7 +84,11 @@ public class Lead : BasisEntiteit
     public string? VerliesReden { get; set; }
     public Guid? OmgezetProjectId { get; set; }
     public string? TypeAanvraag { get; set; }
+    public string? KlantType { get; set; }
+    public string? Bedrijfsnaam { get; set; }
+    public string? BtwNummer { get; set; }
     public string? Straat { get; set; }
+    public string? Postcode { get; set; }
     public string? Gemeente { get; set; }
     public string? GewensteTiming { get; set; }
     public bool PrivacyAkkoord { get; set; }
