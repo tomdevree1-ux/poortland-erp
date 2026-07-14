@@ -69,7 +69,7 @@ export default function Leads() {
       {(
         <table className="w-full border-separate border-spacing-0">
           <thead><tr>
-            <Th>Naam</Th><Th>Kanaal</Th><Th>Eerste vraag</Th><Th>Status</Th><Th>Opvolgen</Th>
+            <Th>Naam</Th><Th>Kanaal</Th><Th>Eerste vraag</Th><Th>Status</Th><Th>Datum</Th>
           </tr></thead>
           <tbody>
             {leads?.map(lead => (
