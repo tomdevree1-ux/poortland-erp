@@ -84,20 +84,20 @@ export default function LeadDetail() {
   const leegKlant = { type: 'particulier', naam: '', voornaam: '', bedrijfsnaam: '', btwNummer: '', straat: '', postcode: '', gemeente: '', email: '', telefoon: '' }
   const [nieuweKlant, zetNieuweKlant] = useState(leegKlant)
   const [omzetModus, zetOmzetModus] = useState<'nieuw' | 'bestaand'>('nieuw')
-  const [werfadres, zetWerfadres] = useState('')
+  const [werf, zetWerf] = useState({ straat: '', postcode: '', gemeente: '' })
 
   // Isolatieregel: bij het wisselen van lead wordt alle formulierstaat gewist
   // zodat gegevens van record A nooit zichtbaar zijn bij record B.
   useEffect(() => {
     zetOmzetOpen(false); zetVerliesOpen(false); zetVerwijderOpen(false); zetBewerkOpen(false)
-    zetKlantKeuze(''); klantZoek.zetInvoer(''); zetNieuweKlant(leegKlant); zetWerfadres(''); zetOmzetModus('nieuw')
+    zetKlantKeuze(''); klantZoek.zetInvoer(''); zetNieuweKlant(leegKlant); zetWerf({ straat: '', postcode: '', gemeente: '' }); zetOmzetModus('nieuw')
     zetReden(''); zetVorm(null); zetFout(undefined)
   }, [leadId])
 
   // SSOT: het omzetvenster opent altijd vers en vooraf ingevuld vanuit de lead.
   function openOmzetten() {
     if (!lead) return
-    zetKlantKeuze(''); klantZoek.zetInvoer(''); zetWerfadres(''); zetOmzetModus('nieuw')
+    zetKlantKeuze(''); klantZoek.zetInvoer(''); zetWerf({ straat: '', postcode: '', gemeente: '' }); zetOmzetModus('nieuw')
     zetNieuweKlant({
       ...leegKlant,
       type: lead.klantType === 'bedrijf' ? 'bedrijf' : 'particulier',
@@ -112,9 +112,7 @@ export default function LeadDetail() {
   function neemKlantadresOver() {
     const bestaand = klantKeuze ? klanten?.find(k => k.id === klantKeuze) : null
     const bron = bestaand ?? nieuweKlant
-    const adres = [bron.straat, [bron.postcode, bron.gemeente].filter(Boolean).join(' ')]
-      .filter(x => x && String(x).trim()).join(', ')
-    if (adres) zetWerfadres(adres)
+    zetWerf({ straat: bron.straat ?? '', postcode: bron.postcode ?? '', gemeente: bron.gemeente ?? '' })
   }
   const omzetten = useMutation({
     mutationFn: () => api.post<{ projectId: string }>(`/leads/${leadId}/omzetten`, {
@@ -129,7 +127,8 @@ export default function LeadDetail() {
         email: nieuweKlant.email || lead?.email || null,
         telefoon: nieuweKlant.telefoon || lead?.telefoon || null
       },
-      werfadres, omschrijving: lead?.eersteVraag
+      werfadres: [werf.straat, [werf.postcode, werf.gemeente].filter(Boolean).join(' ')].filter(x => x && x.trim()).join(', '),
+      omschrijving: lead?.eersteVraag
     }),
     onSuccess: r => navigeer({ to: '/dossiers/$projectId', params: { projectId: r.projectId } }),
     onError: f => zetFout((f as Error).message)
@@ -303,17 +302,17 @@ export default function LeadDetail() {
       <Modaal open={omzetOpen} titel="Omzetten naar klant en dossier" onSluit={() => zetOmzetOpen(false)}>
         <form className="space-y-4" onSubmit={e => { e.preventDefault(); omzetten.mutate() }}>
           <div className="grid grid-cols-2 gap-3">
-            <button type="button" onClick={() => { zetOmzetModus('bestaand'); zetKlantKeuze('') }}
-              className={clsx('rounded-control border p-4 text-left transition',
-                omzetModus === 'bestaand' ? 'border-bronze-500 bg-bronze-500/10' : 'border-inkt/15 hover:border-bronze-500/50')}>
-              <div className="text-sm font-semibold text-inkt">Toevoegen aan bestaande klant</div>
-              <div className="mt-1 text-xs text-inkt-muted">Zoek en koppel een klant die al bestaat.</div>
-            </button>
             <button type="button" onClick={() => { zetOmzetModus('nieuw'); zetKlantKeuze('') }}
               className={clsx('rounded-control border p-4 text-left transition',
                 omzetModus === 'nieuw' ? 'border-bronze-500 bg-bronze-500/10' : 'border-inkt/15 hover:border-bronze-500/50')}>
               <div className="text-sm font-semibold text-inkt">Nieuwe klant aanmaken</div>
               <div className="mt-1 text-xs text-inkt-muted">De gegevens uit de lead staan al ingevuld.</div>
+            </button>
+            <button type="button" onClick={() => { zetOmzetModus('bestaand'); zetKlantKeuze('') }}
+              className={clsx('rounded-control border p-4 text-left transition',
+                omzetModus === 'bestaand' ? 'border-bronze-500 bg-bronze-500/10' : 'border-inkt/15 hover:border-bronze-500/50')}>
+              <div className="text-sm font-semibold text-inkt">Toevoegen aan bestaande klant</div>
+              <div className="mt-1 text-xs text-inkt-muted">Zoek en koppel een klant die al bestaat.</div>
             </button>
           </div>
 
@@ -358,12 +357,17 @@ export default function LeadDetail() {
               </div>
             </div>
           )}
-          <div>
-            <div className="flex items-end justify-between gap-4">
-              <Invoer label="Werfadres" value={werfadres} onChange={e => zetWerfadres(e.target.value)} required className="flex-1" />
-              <Knop type="button" variant="ghost" className="h-10 whitespace-nowrap px-3 text-xs" onClick={neemKlantadresOver}>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="text-[11px] font-bold uppercase tracking-[0.14em] text-inkt-muted">Werfadres</div>
+              <Knop type="button" variant="ghost" className="h-8 whitespace-nowrap px-3 text-xs" onClick={neemKlantadresOver}>
                 Neem klantadres over
               </Knop>
+            </div>
+            <Invoer label="Straat en huisnummer" value={werf.straat} onChange={e => zetWerf({ ...werf, straat: e.target.value })} required />
+            <div className="grid grid-cols-2 gap-4">
+              <Invoer label="Postcode" optioneel value={werf.postcode} onChange={e => zetWerf({ ...werf, postcode: e.target.value })} />
+              <Invoer label="Stad of gemeente" optioneel value={werf.gemeente} onChange={e => zetWerf({ ...werf, gemeente: e.target.value })} />
             </div>
           </div>
           <div className="flex justify-end gap-2">
