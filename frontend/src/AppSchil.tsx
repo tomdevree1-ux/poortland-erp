@@ -1,7 +1,7 @@
-import { Link, Outlet, useNavigate, useRouterState } from '@tanstack/react-router'
+import { Link, Outlet, useNavigate, useRouter, useRouterState } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { clsx } from 'clsx'
-import { FolderOpen, Users, Inbox, ListTodo, Globe, Settings, LogOut } from 'lucide-react'
+import { ArrowLeft, FolderOpen, Users, Inbox, ListTodo, Globe, Settings, LogOut } from 'lucide-react'
 import { supabase } from './lib/supabase'
 import { api } from './lib/api'
 import { persoon } from './lib/formaat'
@@ -20,6 +20,7 @@ const navItems = [
 
 export default function AppSchil() {
   const navigeer = useNavigate()
+  const router = useRouter()
   const pad = useRouterState({ select: s => s.location.pathname })
   const { data: mij } = useQuery({
     queryKey: ['mij'],
@@ -72,7 +73,13 @@ export default function AppSchil() {
       </aside>
       <div className="ml-[236px] flex-1">
         <header className="sticky top-0 z-40 flex h-[56px] items-center justify-between border-b border-inkt/[.07] bg-vlak-canvas/90 px-8 backdrop-blur">
-          <div className="text-2xs font-bold uppercase tracking-[0.26em] text-bronze-600">Operations · overzicht</div>
+          <div className="flex items-center gap-4">
+            <button type="button" onClick={() => router.history.back()}
+              className="focusring flex items-center gap-1.5 rounded-control px-2 py-1 text-xs font-semibold text-inkt-muted transition hover:text-inkt">
+              <ArrowLeft size={15} strokeWidth={2} /> Terug
+            </button>
+            <div className="text-2xs font-bold uppercase tracking-[0.26em] text-bronze-600">Operations · overzicht</div>
+          </div>
           <div className="cijfers text-xs text-inkt-muted">
             KW {Math.ceil((new Date().getMonth() + 1) / 3)} · {new Date().getFullYear()}
           </div>
