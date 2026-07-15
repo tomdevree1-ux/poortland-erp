@@ -22,7 +22,8 @@ var config = builder.Configuration;
 var connectionString = config.GetConnectionString("Poortland")
     ?? throw new InvalidOperationException("ConnectionStrings:Poortland ontbreekt");
 var dataSource = PoortlandDbContext.MaakDataSource(connectionString);
-builder.Services.AddScoped<ClaimsInterceptor>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<ClaimsInterceptor>();
 builder.Services.AddDbContext<PoortlandDbContext>((sp, o) =>
     o.UseNpgsql(dataSource).UseSnakeCaseNamingConvention()
      .AddInterceptors(sp.GetRequiredService<ClaimsInterceptor>()));

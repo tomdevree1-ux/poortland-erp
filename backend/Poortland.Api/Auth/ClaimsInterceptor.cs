@@ -4,10 +4,11 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 namespace Poortland.Api.Auth;
 
 // Zet de identiteit (request.jwt.claims) op ELKE databankverbinding die de context
-// opent. Zonder dit kunnen lezen en schrijven op verschillende verbindingen belanden
-// waardoor de schrijfverbinding geen rollen draagt en RLS, mag() en de triggers de
-// gebruiker niet als beheerder zien (TS-02, verdediging in de diepte).
-public class ClaimsInterceptor(ClaimsContext claims) : DbConnectionInterceptor
+// opent, gelezen uit het LOPENDE verzoek via de HttpContext. Zo dragen lezen en
+// schrijven altijd dezelfde rollen, ook als ze op verschillende verbindingen
+// belanden. Zonder dit zag de schrijfverbinding geen beheerder en weigerde RLS
+// (TS-02, verdediging in de diepte).
+public class ClaimsInterceptor(IHttpContextAccessor httpAccessor) : DbConnectionInterceptor
 {
     public override async Task ConnectionOpenedAsync(DbConnection connection,
         ConnectionEndEventData eventData, CancellationToken cancellationToken = default)
@@ -18,8 +19,10 @@ public class ClaimsInterceptor(ClaimsContext claims) : DbConnectionInterceptor
 
     async Task ZetClaims(DbConnection connection, CancellationToken ct)
     {
-        // Enkel wanneer er een identiteit is (ingelogd of als systeem gezet). Anonieme
-        // paden zonder identiteit laten we ongemoeid.
+        // De identiteit van het huidige verzoek (nooit een vastgezette oude waarde).
+        var claims = httpAccessor.HttpContext?.RequestServices.GetService<ClaimsContext>();
+        if (claims is null) return;
+        // Anonieme paden zonder identiteit laten we ongemoeid.
         if (claims.AuthUserId is null && claims.MedewerkerId is null && claims.Rollen.Count == 0) return;
         using var cmd = connection.CreateCommand();
         cmd.CommandText = "select set_config('request.jwt.claims', @claims, false)";
