@@ -35,13 +35,17 @@ export default function Leads() {
       ...(weergave === 'archief' ? { archief: 'true' } : {}) })}`),
     placeholderData: keepPreviousData
   })
-  const leegVorm = { kanaal: 'telefoon', naam: '', voornaam: '', email: '', telefoon: '', eersteVraag: '', typeAanvraag: '', gemeente: '', gewensteTiming: '' }
+  const leegVorm = { kanaal: 'telefoon', naam: '', voornaam: '', email: '', telefoon: '', eersteVraag: '', typeAanvraag: '',
+    klantType: 'particulier', bedrijfsnaam: '', btwNummer: '', straat: '', postcode: '', gemeente: '', gewensteTiming: '' }
   const [vorm, zetVorm] = useState(leegVorm)
   function openNieuw() { zetVorm(leegVorm); zetNieuwOpen(true) }
   const maak = useMutation({
     mutationFn: () => api.post<Lead>('/leads', {
       ...vorm,
       typeAanvraag: vorm.typeAanvraag || undefined, gewensteTiming: vorm.gewensteTiming || undefined,
+      bedrijfsnaam: vorm.klantType === 'bedrijf' ? (vorm.bedrijfsnaam || undefined) : undefined,
+      btwNummer: vorm.klantType === 'bedrijf' ? (vorm.btwNummer || undefined) : undefined,
+      straat: vorm.straat || undefined, postcode: vorm.postcode || undefined,
       gemeente: vorm.gemeente || undefined
     }),
     onSuccess: () => { qc.invalidateQueries({ queryKey: ['leads'] }); zetNieuwOpen(false) }
@@ -101,6 +105,18 @@ export default function Leads() {
             <option value="offerteaanvraagWebsite">Offerteaanvraag (website)</option>
           </Selecteer>
           <div className="grid grid-cols-2 gap-4">
+            <Selecteer label="Type klant" value={vorm.klantType} onChange={e => zetVorm({ ...vorm, klantType: e.target.value })}>
+              <option value="particulier">Particulier</option>
+              <option value="bedrijf">Bedrijf</option>
+            </Selecteer>
+            {vorm.klantType === 'bedrijf' && (
+              <Invoer label="Bedrijfsnaam" value={vorm.bedrijfsnaam} onChange={e => zetVorm({ ...vorm, bedrijfsnaam: e.target.value })} required />
+            )}
+          </div>
+          {vorm.klantType === 'bedrijf' && (
+            <Invoer label="Btw nummer" optioneel value={vorm.btwNummer} onChange={e => zetVorm({ ...vorm, btwNummer: e.target.value })} />
+          )}
+          <div className="grid grid-cols-2 gap-4">
             <Invoer label="Voornaam" optioneel value={vorm.voornaam} onChange={e => zetVorm({ ...vorm, voornaam: e.target.value })} />
             <Invoer label="Naam" value={vorm.naam} onChange={e => zetVorm({ ...vorm, naam: e.target.value })} required />
           </div>
@@ -118,7 +134,11 @@ export default function Leads() {
               {timingOpties.map(([w, tekst]) => <option key={w} value={w}>{tekst}</option>)}
             </Selecteer>
           </div>
-          <Invoer label="Gemeente" optioneel value={vorm.gemeente} onChange={e => zetVorm({ ...vorm, gemeente: e.target.value })} />
+          <Invoer label="Straat en huisnummer" optioneel value={vorm.straat} onChange={e => zetVorm({ ...vorm, straat: e.target.value })} />
+          <div className="grid grid-cols-2 gap-4">
+            <Invoer label="Postcode" optioneel value={vorm.postcode} onChange={e => zetVorm({ ...vorm, postcode: e.target.value })} />
+            <Invoer label="Stad of gemeente" optioneel value={vorm.gemeente} onChange={e => zetVorm({ ...vorm, gemeente: e.target.value })} />
+          </div>
           <TekstVak label="Omschrijving van het project" optioneel value={vorm.eersteVraag} onChange={e => zetVorm({ ...vorm, eersteVraag: e.target.value })} />
           <div className="flex justify-end gap-2">
             <Knop type="button" variant="ghost" onClick={() => zetNieuwOpen(false)}>Annuleren</Knop>

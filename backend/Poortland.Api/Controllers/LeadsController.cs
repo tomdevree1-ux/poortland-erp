@@ -10,7 +10,8 @@ namespace Poortland.Api.Controllers;
 
 public record LeadInvoer(LeadKanaal Kanaal, string? Naam, string? Voornaam, string? Email, string? Telefoon,
     string? EersteVraag, Guid? EigenaarId, DateOnly? Opvolgdatum,
-    string? TypeAanvraag, string? Gemeente, string? GewensteTiming);
+    string? TypeAanvraag, string? Gemeente, string? GewensteTiming,
+    string? KlantType, string? Bedrijfsnaam, string? BtwNummer, string? Straat, string? Postcode);
 public record LeadWijziging(string? Naam, string? Voornaam, string? Email, string? Telefoon, string? EersteVraag,
     string? TypeAanvraag, string? KlantType, string? Bedrijfsnaam, string? BtwNummer,
     string? Straat, string? Postcode, string? Gemeente, string? GewensteTiming, DateOnly? Opvolgdatum,
@@ -80,6 +81,10 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
             EersteVraag = invoer.EersteVraag, Opvolgdatum = invoer.Opvolgdatum,
             TypeAanvraag = invoer.TypeAanvraag, Gemeente = invoer.Gemeente,
             GewensteTiming = invoer.GewensteTiming,
+            KlantType = invoer.KlantType,
+            Bedrijfsnaam = invoer.KlantType == "bedrijf" ? invoer.Bedrijfsnaam : null,
+            BtwNummer = invoer.KlantType == "bedrijf" ? invoer.BtwNummer : null,
+            Straat = invoer.Straat, Postcode = invoer.Postcode,
             EigenaarId = invoer.EigenaarId ?? claims.MedewerkerId!.Value,
             AangemaaktDoor = claims.MedewerkerId
         };
