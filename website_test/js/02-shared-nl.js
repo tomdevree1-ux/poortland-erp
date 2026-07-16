@@ -2,6 +2,38 @@
 /* Poortland — Nederlandse website. Gedeelde bouwstenen.
    Nav met productmenu en taalwisselaar, footer, beeldplaceholder, reveal animatie. */
 
+/* Veldvalidatie in huisstijl: geen browserballonnen. Schuift het eerste foute
+   veld in beeld met een subtiele schud-animatie (buzzer). */
+function plSchud(el) {
+  if (!el) return;
+  try { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (f) { }
+  if (el.animate) el.animate(
+    [{ transform: 'translateX(0)' }, { transform: 'translateX(-7px)' }, { transform: 'translateX(7px)' },
+     { transform: 'translateX(-5px)' }, { transform: 'translateX(5px)' }, { transform: 'translateX(-2px)' }, { transform: 'translateX(0)' }],
+    { duration: 420, easing: 'ease-in-out' });
+}
+window.plSchudVeld = function (naam) { plSchud(document.querySelector('[data-veld="' + naam + '"]')); };
+window.plToonVeldfouten = function (form) {
+  Array.prototype.forEach.call(form.querySelectorAll('.pl-veldfout'), function (n) { n.remove(); });
+  var ongeldig = Array.prototype.filter.call(form.querySelectorAll('input, textarea, select'),
+    function (el) { return el.willValidate && !el.checkValidity(); });
+  ongeldig.forEach(function (el) {
+    var m = document.createElement('div');
+    m.className = 'pl-veldfout';
+    m.textContent = el.validity.valueMissing ? 'Vul dit veld in.'
+      : (el.type === 'email' ? 'Vul een geldig emailadres in.' : 'Controleer dit veld.');
+    m.style.cssText = 'font-family:var(--font-sans);font-size:13px;color:#C27A57;margin-top:6px';
+    (el.parentElement || el).appendChild(m);
+  });
+  if (ongeldig.length) {
+    var eerste = ongeldig[0];
+    plSchud(eerste.parentElement || eerste);
+    try { eerste.focus({ preventScroll: true }); } catch (f) { eerste.focus(); }
+    return false;
+  }
+  return true;
+};
+
 const {
   Button: SButton,
   Tag: STag,
@@ -2030,6 +2062,7 @@ function OfferteModal({
   };
   const Field = p => /*#__PURE__*/React.createElement("div", {
     key: p.name,
+    "data-veld": p.name,
     style: {
       marginBottom: 20
     }
@@ -2071,6 +2104,7 @@ function OfferteModal({
   }));
   const Keuze = p => /*#__PURE__*/React.createElement("div", {
     key: p.name,
+    "data-veld": p.name,
     style: {
       marginBottom: 22
     }
@@ -2127,13 +2161,21 @@ function OfferteModal({
       stad: 'Gelieve uw stad of gemeente in te vullen.',
       postcode: 'Gelieve uw postcode in te vullen.'
     };
+    if (data.klantType === 'bedrijf') {
+      req.bedrijfsnaam = 'Gelieve de bedrijfsnaam in te vullen.';
+      req.btw = 'Gelieve het btw nummer in te vullen.';
+    }
     const e = {};
     Object.keys(req).forEach(k => {
       if (!data[k] || !String(data[k]).trim()) e[k] = req[k];
     });
     if (data.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.email)) e.email = 'Gelieve een geldig emailadres in te vullen.';
     setErrors(e);
-    if (Object.keys(e).length > 0) return;
+    if (Object.keys(e).length > 0) {
+      const eerste = Object.keys(req).find(k => e[k]);
+      if (window.plSchudVeld && eerste) window.plSchudVeld(eerste);
+      return;
+    }
     const contactKeys = ['voornaam', 'naam', 'email', 'telefoon', 'adres', 'stad', 'postcode'];
     const specifiek = {};
     Object.keys(data).forEach(k => {

@@ -262,9 +262,11 @@ function ContactNL({
       setFout('');
     }
   }, "Nieuwe aanvraag"))) : /*#__PURE__*/React.createElement("form", {
+    noValidate: true,
     onSubmit: e => {
       e.preventDefault();
       if (!akkoord || bezig) return;
+      if (window.plToonVeldfouten ? !window.plToonVeldfouten(e.currentTarget) : !e.currentTarget.reportValidity()) return;
       var fd = new FormData(e.currentTarget);
       var eind = (window.POORTLAND_ERP || {}).leadEndpoint;
       var vraag = fd.get('vraag') || '';

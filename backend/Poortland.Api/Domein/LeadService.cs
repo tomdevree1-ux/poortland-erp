@@ -83,10 +83,17 @@ public class LeadService(PoortlandDbContext db, ClaimsContext claims)
         };
         db.Projecten.Add(project);
 
+        // OmgezetProjectId is een los veld zonder navigatie, dus EF kent de volgorde niet:
+        // eerst de klant en het project wegschrijven, daarna pas de lead ernaar laten wijzen.
+        // Anders kan de lead-update vóór de project-insert lopen (foreign key fout).
+        await using var transactie = await db.Database.BeginTransactionAsync();
+        await db.SaveChangesAsync();
+
         lead.Status = LeadStatus.Omgezet;
         lead.OmgezetProjectId = project.Id;
         lead.KlantId = klant.Id;
         await db.SaveChangesAsync();
+        await transactie.CommitAsync();
         return (lead, project);
     }
 }
