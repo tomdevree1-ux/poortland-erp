@@ -95,7 +95,9 @@ export default function KlantDetail() {
         <Paneel titel="Gegevens" actie={<PotloodKnop onClick={openKlantBewerk} />}>
           <dl className="space-y-2 text-sm">
             <div className="flex justify-between"><dt className="text-inkt-muted">Type</dt><dd>{klant.type === 'bedrijf' ? 'Bedrijf' : 'Particulier'}</dd></div>
-            {klant.bedrijfsnaam && <div className="flex justify-between"><dt className="text-inkt-muted">Contactpersoon</dt><dd>{leeg(volledigeNaam(klant.voornaam, klant.naam))}</dd></div>}
+            {klant.bedrijfsnaam && <div className="flex justify-between"><dt className="text-inkt-muted">Bedrijfsnaam</dt><dd className="font-semibold">{klant.bedrijfsnaam}</dd></div>}
+            <div className="flex justify-between"><dt className="text-inkt-muted">Voornaam</dt><dd>{leeg(klant.voornaam)}</dd></div>
+            <div className="flex justify-between"><dt className="text-inkt-muted">Naam</dt><dd className="font-semibold">{leeg(klant.naam)}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Adres</dt><dd>{leeg([klant.straat, klant.postcode, klant.gemeente].filter(Boolean).join(', '))}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Email</dt><dd>{leeg(klant.email)}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Telefoon</dt><dd>{leeg(klant.telefoon)}</dd></div>

@@ -3,9 +3,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useParams } from '@tanstack/react-router'
 import { clsx } from 'clsx'
 import { api } from '../lib/api'
-import { datum, euro, leeg, persoon, weergaveNaam } from '../lib/formaat'
+import { datum, euro, leeg, weergaveNaam } from '../lib/formaat'
 import type { Klant, Offerte } from '../lib/types'
-import { Badge, Knop, PaginaKop, Paneel, Th, Td, rijKlik } from '../ui'
+import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Paneel, PotloodKnop, Selecteer, Th, Td, rijKlik } from '../ui'
 
 interface Dossier {
   project: { id: string; nummer?: number; werfadres: string; omschrijving?: string; status: string; garantieMaanden: number; klant: Klant }
@@ -24,6 +24,36 @@ export default function DossierDetail() {
   const maakOfferte = useMutation({
     mutationFn: () => api.post<Offerte>(`/projecten/${projectId}/offertes`, { taal: null }),
     onSuccess: o => { qc.invalidateQueries({ queryKey: ['dossier', projectId] }); navigeer({ to: '/offertes/$offerteId', params: { offerteId: o.id } }) }
+  })
+
+  // SSOT: de klant is 1 record; hier bewerken werkt overal door (klantenlijst, fiche, offerte).
+  const [klantFout, zetKlantFout] = useState<string>()
+  const [klantOpen, zetKlantOpen] = useState(false)
+  const [klantVorm, zetKlantVorm] = useState<{ type: string; voornaam: string; naam: string; bedrijfsnaam: string; btwNummer: string
+    straat: string; postcode: string; gemeente: string; email: string; telefoon: string } | null>(null)
+  function openKlantBewerk() {
+    const k = data!.project.klant
+    zetKlantVorm({
+      type: k.type, voornaam: k.voornaam ?? '', naam: k.naam, bedrijfsnaam: k.bedrijfsnaam ?? '', btwNummer: k.btwNummer ?? '',
+      straat: k.straat ?? '', postcode: k.postcode ?? '', gemeente: k.gemeente ?? '', email: k.email ?? '', telefoon: k.telefoon ?? ''
+    })
+    zetKlantFout(undefined); zetKlantOpen(true)
+  }
+  const bewaarKlant = useMutation({
+    mutationFn: () => api.patch(`/klanten/${data!.project.klant.id}`, {
+      ...klantVorm, voornaam: klantVorm!.voornaam || null,
+      bedrijfsnaam: klantVorm!.type === 'bedrijf' ? (klantVorm!.bedrijfsnaam || null) : null,
+      btwNummer: klantVorm!.type === 'bedrijf' ? (klantVorm!.btwNummer || null) : null,
+      straat: klantVorm!.straat || null, postcode: klantVorm!.postcode || null, gemeente: klantVorm!.gemeente || null,
+      email: klantVorm!.email || null, telefoon: klantVorm!.telefoon || null,
+      communicatietaal: data!.project.klant.communicatietaal, communicatievoorkeur: null
+    }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['dossier', projectId] })
+      qc.invalidateQueries({ queryKey: ['klanten'] })
+      zetKlantOpen(false)
+    },
+    onError: f => zetKlantFout((f as Error).message)
   })
   if (!data) return null
   const { project, offertes, order, communicatie, contactmomenten } = data
@@ -49,10 +79,12 @@ export default function DossierDetail() {
 
       {tab === 'overzicht' && (
         <div className="grid grid-cols-2 gap-6">
-          <Paneel titel="Klantgegevens">
+          <Paneel titel="Klantgegevens" actie={<PotloodKnop onClick={openKlantBewerk} />}>
             <dl className="space-y-2 text-sm">
-              <div className="flex justify-between"><dt className="text-inkt-muted">Naam</dt><dd className="font-semibold">{weergaveNaam(project.klant)}</dd></div>
-              {project.klant.bedrijfsnaam && <div className="flex justify-between"><dt className="text-inkt-muted">Contactpersoon</dt><dd>{leeg(persoon(project.klant.voornaam, project.klant.naam))}</dd></div>}
+              <div className="flex justify-between"><dt className="text-inkt-muted">Type</dt><dd>{project.klant.type === 'bedrijf' ? 'Bedrijf' : 'Particulier'}</dd></div>
+              {project.klant.bedrijfsnaam && <div className="flex justify-between"><dt className="text-inkt-muted">Bedrijfsnaam</dt><dd className="font-semibold">{project.klant.bedrijfsnaam}</dd></div>}
+              <div className="flex justify-between"><dt className="text-inkt-muted">Voornaam</dt><dd>{leeg(project.klant.voornaam)}</dd></div>
+              <div className="flex justify-between"><dt className="text-inkt-muted">Naam</dt><dd className="font-semibold">{leeg(project.klant.naam)}</dd></div>
               <div className="flex justify-between"><dt className="text-inkt-muted">Adres</dt><dd>{leeg([project.klant.straat, project.klant.postcode, project.klant.gemeente].filter(Boolean).join(', '))}</dd></div>
               <div className="flex justify-between"><dt className="text-inkt-muted">Email</dt><dd>{leeg(project.klant.email)}</dd></div>
               <div className="flex justify-between"><dt className="text-inkt-muted">Telefoon</dt><dd>{leeg(project.klant.telefoon)}</dd></div>
@@ -124,6 +156,42 @@ export default function DossierDetail() {
           )}
         </Paneel>
       )}
+
+      <Modaal open={klantOpen} titel="Klantgegevens bewerken" onSluit={() => zetKlantOpen(false)}>
+        {klantVorm && (
+          <form className="space-y-4" onSubmit={e => { e.preventDefault(); bewaarKlant.mutate() }}>
+            {klantFout && <Melding soort="fout">{klantFout}</Melding>}
+            <Selecteer label="Type" value={klantVorm.type} onChange={e => zetKlantVorm({ ...klantVorm, type: e.target.value })}>
+              <option value="particulier">Particulier</option>
+              <option value="bedrijf">Bedrijf</option>
+            </Selecteer>
+            {klantVorm.type === 'bedrijf' && (
+              <div className="grid grid-cols-2 gap-4">
+                <Invoer label="Bedrijfsnaam" value={klantVorm.bedrijfsnaam} onChange={e => zetKlantVorm({ ...klantVorm, bedrijfsnaam: e.target.value })} required />
+                <Invoer label="Btw nummer" value={klantVorm.btwNummer} onChange={e => zetKlantVorm({ ...klantVorm, btwNummer: e.target.value })} required />
+              </div>
+            )}
+            <div className="grid grid-cols-2 gap-4">
+              <Invoer label="Voornaam" optioneel value={klantVorm.voornaam} onChange={e => zetKlantVorm({ ...klantVorm, voornaam: e.target.value })} />
+              <Invoer label="Naam" value={klantVorm.naam} onChange={e => zetKlantVorm({ ...klantVorm, naam: e.target.value })} required />
+            </div>
+            <Invoer label="Straat en huisnummer" optioneel value={klantVorm.straat} onChange={e => zetKlantVorm({ ...klantVorm, straat: e.target.value })} />
+            <div className="grid grid-cols-2 gap-4">
+              <Invoer label="Postcode" optioneel value={klantVorm.postcode} onChange={e => zetKlantVorm({ ...klantVorm, postcode: e.target.value })} />
+              <Invoer label="Stad of gemeente" optioneel value={klantVorm.gemeente} onChange={e => zetKlantVorm({ ...klantVorm, gemeente: e.target.value })} />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <Invoer label="Email" optioneel type="email" value={klantVorm.email} onChange={e => zetKlantVorm({ ...klantVorm, email: e.target.value })} />
+              <Invoer label="Telefoon" optioneel value={klantVorm.telefoon} onChange={e => zetKlantVorm({ ...klantVorm, telefoon: e.target.value })} />
+            </div>
+            <div className="flex justify-end gap-2">
+              <Knop type="button" variant="ghost" onClick={() => zetKlantOpen(false)}>Annuleren</Knop>
+              <Knop variant="primair" disabled={bewaarKlant.isPending || !klantVorm.naam.trim()}>
+                {bewaarKlant.isPending ? 'Bezig…' : 'Opslaan'}</Knop>
+            </div>
+          </form>
+        )}
+      </Modaal>
     </>
   )
 }

@@ -59,7 +59,6 @@ export default function Leads() {
         <Selecteer value={status} onChange={e => zetStatus(e.target.value)} className="w-48">
           <option value="">Alle statussen</option>
           <option value="nieuw">Nieuw</option>
-          <option value="gekwalificeerd">Gekwalificeerd</option>
           <option value="omgezet">Omgezet</option>
           <option value="verloren">Verloren</option>
         </Selecteer>

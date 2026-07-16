@@ -43,9 +43,14 @@ Controleer bij elk nieuw of gewijzigd scherm automatisch of ze kloppen.
   contactpersonen, medewerkers en in elk formulier of contract dat personen bevat
   (ook het websiteformulier). Nooit samenvoegen bij het opslaan of doorsturen.
 - Weergave in lijsten en titels gebeurt samengesteld via `persoon()` uit
-  lib/formaat.ts (voornaam gevolgd door naam). Op detailfiches staan voornaam en
-  naam als twee aparte regels, zodat een verkeerde splitsing meteen opvalt en met
-  het potlood te corrigeren is.
+  lib/formaat.ts (voornaam gevolgd door naam). Op detailfiches en in ELK
+  gegevenspaneel (lead, klantfiche, klantgegevens op het dossier) staan voornaam
+  en naam als twee aparte regels, zodat een verkeerde splitsing meteen opvalt en
+  met het potlood te corrigeren is. Nooit `x.naam` los renderen: altijd
+  `persoon()`, `weergaveNaam()` of de twee aparte regels.
+- SSOT voor de klant: de klant is 1 record. Bewerken kan vanaf de klantfiche én
+  vanaf de klantgegevens op het dossier (potlood met type particulier of
+  bedrijf); beide schrijven naar dezelfde PATCH en elke weergave leest mee.
 - Bedrijven (sinds migratie 0025): `bedrijfsnaam` is een eigen veld en naam en
   voornaam blijven de contactpersoon. De weergavenaam overal (klantenlijst,
   klantfiche, dossiers, offerte PDF) komt uit `weergaveNaam()` in lib/formaat.ts:

@@ -4,7 +4,7 @@ import { useNavigate, useParams } from '@tanstack/react-router'
 import { clsx } from 'clsx'
 import { api } from '../lib/api'
 import { useZoekterm } from '../lib/zoek'
-import { datum, euro, leeg, persoon } from '../lib/formaat'
+import { datum, euro, leeg, persoon, weergaveNaam } from '../lib/formaat'
 import type { Klant, Lead } from '../lib/types'
 import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Paneel, PotloodKnop, Selecteer, TekstVak } from '../ui'
 import { timingOpties, typeAanvraagOpties } from './Leads'
@@ -353,7 +353,7 @@ export default function LeadDetail() {
                 value={klantZoek.invoer} onChange={e => klantZoek.zetInvoer(e.target.value)} />
               <Selecteer label="Bestaande klant" value={klantKeuze} onChange={e => zetKlantKeuze(e.target.value)}>
                 <option value="">Kies een klant…</option>
-                {klanten?.map(k => <option key={k.id} value={k.id}>{(k.bedrijfsnaam || k.naam)} · {k.gemeente ?? ''}</option>)}
+                {klanten?.map(k => <option key={k.id} value={k.id}>{weergaveNaam(k)} · {k.gemeente ?? ''}</option>)}
               </Selecteer>
             </>
           ) : (
