@@ -188,7 +188,8 @@ export default function LeadDetail() {
               <dd>{leeg(lead.gewensteTiming ? timingTekst[lead.gewensteTiming] ?? lead.gewensteTiming : null)}</dd></div>
             {lead.bedrijfsnaam && <div className="flex justify-between"><dt className="text-inkt-muted">Bedrijfsnaam</dt><dd>{lead.bedrijfsnaam}</dd></div>}
             {lead.btwNummer && <div className="flex justify-between"><dt className="text-inkt-muted">Btw nummer</dt><dd>{lead.btwNummer}</dd></div>}
-            <div className="flex justify-between"><dt className="text-inkt-muted">Naam</dt><dd>{leeg(persoon(lead.voornaam, lead.naam))}</dd></div>
+            <div className="flex justify-between"><dt className="text-inkt-muted">Voornaam</dt><dd>{leeg(lead.voornaam)}</dd></div>
+            <div className="flex justify-between"><dt className="text-inkt-muted">Naam</dt><dd>{leeg(lead.naam)}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Straat en nummer</dt><dd>{leeg(lead.straat)}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Postcode</dt><dd>{leeg(lead.postcode)}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Gemeente</dt><dd>{leeg(lead.gemeente)}</dd></div>

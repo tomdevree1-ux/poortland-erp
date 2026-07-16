@@ -37,13 +37,28 @@ Controleer bij elk nieuw of gewijzigd scherm automatisch of ze kloppen.
 - Domeinacties (kwalificeren, verzenden, publiceren, archiveren en dergelijke)
   zijn geen bewerkingen en blijven gewone actieknoppen.
 
-**3. Gegevensregel naam en voornaam**
+**3. Gegevensregel naam, voornaam en bedrijfsnaam**
 
 - Naam en voornaam zijn altijd en overal twee aparte velden: bij leads, klanten,
   contactpersonen, medewerkers en in elk formulier of contract dat personen bevat
-  (ook het websiteformulier). Weergave gebeurt samengesteld via de helper
-  `persoon()` uit lib/formaat.ts als voornaam gevolgd door naam.
-- Bij bedrijven blijft naam de bedrijfsnaam en blijft voornaam leeg.
+  (ook het websiteformulier). Nooit samenvoegen bij het opslaan of doorsturen.
+- Weergave in lijsten en titels gebeurt samengesteld via `persoon()` uit
+  lib/formaat.ts (voornaam gevolgd door naam). Op detailfiches staan voornaam en
+  naam als twee aparte regels, zodat een verkeerde splitsing meteen opvalt en met
+  het potlood te corrigeren is.
+- Bedrijven (sinds migratie 0025): `bedrijfsnaam` is een eigen veld en naam en
+  voornaam blijven de contactpersoon. De weergavenaam overal (klantenlijst,
+  klantfiche, dossiers, offerte PDF) komt uit `weergaveNaam()` in lib/formaat.ts:
+  de bedrijfsnaam indien gekend, anders voornaam plus naam. Op de offerte PDF
+  verschijnt de contactpersoon als "T.a.v." onder de bedrijfsnaam.
+- **Les uit de veldenaudit (2026-07-16):** wanneer een gegevenscontract wijzigt
+  (zoals het splitsen van een naamveld), hoort daar altijd een datafix voor de
+  bestaande records bij. Records van vóór de wijziging blijven anders de oude
+  vorm tonen in elk scherm dat erop bouwt (zo toonde het omzetvenster "Tom de
+  Vree" volledig in het naamveld: die leads waren aangemaakt vóór de splitsing).
+  Controleer bij zulke wijzigingen dus code én bestaande data. De volledige
+  veldenmatrix van website tot offerte staat in
+  `../Poortland_ERP_Veldenaudit.md` in de projectmap.
 
 **4. Eén bron van waarheid en gegevensisolatie (SSOT)**
 
