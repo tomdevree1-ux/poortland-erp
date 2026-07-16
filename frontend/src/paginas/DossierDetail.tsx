@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useParams } from '@tanstack/react-router'
 import { clsx } from 'clsx'
 import { api } from '../lib/api'
-import { datum, euro, leeg, persoon } from '../lib/formaat'
+import { datum, euro, leeg, persoon, weergaveNaam } from '../lib/formaat'
 import type { Klant, Offerte } from '../lib/types'
 import { Badge, Knop, PaginaKop, Paneel, Th, Td, rijKlik } from '../ui'
 
@@ -34,7 +34,7 @@ export default function DossierDetail() {
   return (
     <>
       <PaginaKop eyebrow={project.nummer ? `Dossier ${project.nummer}` : 'Dossier'}
-        titel={persoon(project.klant.voornaam, project.klant.naam)}
+        titel={weergaveNaam(project.klant)}
         actie={<Knop variant="primair" onClick={() => maakOfferte.mutate()} disabled={maakOfferte.isPending}>
           {offertes.length ? 'Nieuwe offerteversie ↗' : 'Offerte maken ↗'}</Knop>} />
       <div className="mb-5 rounded-card border border-inkt/[.07] bg-vlak-surface px-5 py-4">

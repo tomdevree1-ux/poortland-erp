@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link, useParams } from '@tanstack/react-router'
 import { api } from '../lib/api'
-import { datum, leeg, persoon as volledigeNaam } from '../lib/formaat'
+import { datum, leeg, persoon as volledigeNaam, weergaveNaam } from '../lib/formaat'
 import type { Klant } from '../lib/types'
 import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Paneel, PotloodKnop, Selecteer } from '../ui'
 
@@ -61,12 +61,12 @@ export default function KlantDetail() {
   })
 
   const [klantOpen, zetKlantOpen] = useState(false)
-  const [klantVorm, zetKlantVorm] = useState<{ type: string; naam: string; voornaam: string; btwNummer: string; straat: string
+  const [klantVorm, zetKlantVorm] = useState<{ type: string; naam: string; voornaam: string; bedrijfsnaam: string; btwNummer: string; straat: string
     postcode: string; gemeente: string; email: string; telefoon: string; communicatietaal: string } | null>(null)
   function openKlantBewerk() {
     const k = data!.klant
     zetKlantVorm({
-      type: k.type, naam: k.naam, voornaam: k.voornaam ?? '', btwNummer: k.btwNummer ?? '', straat: k.straat ?? '',
+      type: k.type, naam: k.naam, voornaam: k.voornaam ?? '', bedrijfsnaam: k.bedrijfsnaam ?? '', btwNummer: k.btwNummer ?? '', straat: k.straat ?? '',
       postcode: k.postcode ?? '', gemeente: k.gemeente ?? '', email: k.email ?? '',
       telefoon: k.telefoon ?? '', communicatietaal: k.communicatietaal
     })
@@ -74,7 +74,9 @@ export default function KlantDetail() {
   }
   const bewaarKlant = useMutation({
     mutationFn: () => api.patch(`/klanten/${klantId}`, {
-      ...klantVorm, voornaam: klantVorm!.voornaam || null, btwNummer: klantVorm!.btwNummer || null,
+      ...klantVorm, voornaam: klantVorm!.voornaam || null,
+      bedrijfsnaam: klantVorm!.type === 'bedrijf' ? (klantVorm!.bedrijfsnaam || null) : null,
+      btwNummer: klantVorm!.btwNummer || null,
       straat: klantVorm!.straat || null, postcode: klantVorm!.postcode || null,
       gemeente: klantVorm!.gemeente || null, email: klantVorm!.email || null,
       telefoon: klantVorm!.telefoon || null, communicatievoorkeur: null
@@ -87,12 +89,13 @@ export default function KlantDetail() {
   const { klant, projecten, contactmomenten } = data
   return (
     <>
-      <PaginaKop eyebrow="Klantfiche" titel={volledigeNaam(klant.voornaam, klant.naam)} />
+      <PaginaKop eyebrow="Klantfiche" titel={weergaveNaam(klant)} />
       {fout && <div className="mb-4"><Melding soort="fout">{fout}</Melding></div>}
       <div className="grid grid-cols-2 gap-6">
         <Paneel titel="Gegevens" actie={<PotloodKnop onClick={openKlantBewerk} />}>
           <dl className="space-y-2 text-sm">
             <div className="flex justify-between"><dt className="text-inkt-muted">Type</dt><dd>{klant.type === 'bedrijf' ? 'Bedrijf' : 'Particulier'}</dd></div>
+            {klant.bedrijfsnaam && <div className="flex justify-between"><dt className="text-inkt-muted">Contactpersoon</dt><dd>{leeg(volledigeNaam(klant.voornaam, klant.naam))}</dd></div>}
             <div className="flex justify-between"><dt className="text-inkt-muted">Adres</dt><dd>{leeg([klant.straat, klant.postcode, klant.gemeente].filter(Boolean).join(', '))}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Email</dt><dd>{leeg(klant.email)}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Telefoon</dt><dd>{leeg(klant.telefoon)}</dd></div>
@@ -169,10 +172,13 @@ export default function KlantDetail() {
               </Selecteer>
               <Invoer label="Naam" value={klantVorm.naam} onChange={e => zetKlantVorm({ ...klantVorm, naam: e.target.value })} required />
             </div>
-            {klantVorm.type === 'particulier' &&
-              <Invoer label="Voornaam" optioneel value={klantVorm.voornaam} onChange={e => zetKlantVorm({ ...klantVorm, voornaam: e.target.value })} />}
-            {klantVorm.type === 'bedrijf' &&
-              <Invoer label="Btw nummer" value={klantVorm.btwNummer} onChange={e => zetKlantVorm({ ...klantVorm, btwNummer: e.target.value })} required />}
+            <Invoer label="Voornaam" optioneel value={klantVorm.voornaam} onChange={e => zetKlantVorm({ ...klantVorm, voornaam: e.target.value })} />
+            {klantVorm.type === 'bedrijf' && (
+              <div className="grid grid-cols-2 gap-4">
+                <Invoer label="Bedrijfsnaam" value={klantVorm.bedrijfsnaam} onChange={e => zetKlantVorm({ ...klantVorm, bedrijfsnaam: e.target.value })} required />
+                <Invoer label="Btw nummer" value={klantVorm.btwNummer} onChange={e => zetKlantVorm({ ...klantVorm, btwNummer: e.target.value })} required />
+              </div>
+            )}
             <div className="grid grid-cols-3 gap-4">
               <Invoer label="Straat" optioneel value={klantVorm.straat} onChange={e => zetKlantVorm({ ...klantVorm, straat: e.target.value })} />
               <Invoer label="Postcode" optioneel value={klantVorm.postcode} onChange={e => zetKlantVorm({ ...klantVorm, postcode: e.target.value })} />

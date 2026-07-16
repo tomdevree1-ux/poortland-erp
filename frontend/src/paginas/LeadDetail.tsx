@@ -49,12 +49,14 @@ export default function LeadDetail() {
   })
 
   const [vorm, zetVorm] = useState<{ naam: string; voornaam: string; email: string; telefoon: string
-    straat: string; gemeente: string; typeAanvraag: string; gewensteTiming: string; eersteVraag: string } | null>(null)
+    klantType: string; bedrijfsnaam: string; btwNummer: string
+    straat: string; postcode: string; gemeente: string; typeAanvraag: string; gewensteTiming: string; eersteVraag: string } | null>(null)
   function openBewerk() {
     if (!lead) return
     zetVorm({
       naam: lead.naam ?? '', voornaam: lead.voornaam ?? '', email: lead.email ?? '', telefoon: lead.telefoon ?? '',
-      straat: lead.straat ?? '', gemeente: lead.gemeente ?? '', typeAanvraag: lead.typeAanvraag ?? '',
+      klantType: lead.klantType ?? 'particulier', bedrijfsnaam: lead.bedrijfsnaam ?? '', btwNummer: lead.btwNummer ?? '',
+      straat: lead.straat ?? '', postcode: lead.postcode ?? '', gemeente: lead.gemeente ?? '', typeAanvraag: lead.typeAanvraag ?? '',
       gewensteTiming: lead.gewensteTiming ?? '', eersteVraag: lead.eersteVraag ?? ''
     })
     zetBewerkOpen(true)
@@ -252,7 +254,10 @@ export default function LeadDetail() {
             e.preventDefault()
             wijzig.mutate({
               naam: vorm.naam, voornaam: vorm.voornaam || null, email: vorm.email || null, telefoon: vorm.telefoon || null,
-              straat: vorm.straat || null, gemeente: vorm.gemeente || null, typeAanvraag: vorm.typeAanvraag || null,
+              klantType: vorm.klantType, bedrijfsnaam: vorm.klantType === 'bedrijf' ? (vorm.bedrijfsnaam || '') : '',
+              btwNummer: vorm.klantType === 'bedrijf' ? (vorm.btwNummer || '') : '',
+              straat: vorm.straat || null, postcode: vorm.postcode || null, gemeente: vorm.gemeente || null,
+              typeAanvraag: vorm.typeAanvraag || null,
               gewensteTiming: vorm.gewensteTiming || null, eersteVraag: vorm.eersteVraag || null
             })
           }}>
@@ -275,7 +280,20 @@ export default function LeadDetail() {
               </Selecteer>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <Invoer label="Straat en huisnummer" optioneel value={vorm.straat} onChange={e => zetVorm({ ...vorm, straat: e.target.value })} />
+              <Selecteer label="Type klant" value={vorm.klantType} onChange={e => zetVorm({ ...vorm, klantType: e.target.value })}>
+                <option value="particulier">Particulier</option>
+                <option value="bedrijf">Bedrijf</option>
+              </Selecteer>
+              {vorm.klantType === 'bedrijf' && (
+                <Invoer label="Bedrijfsnaam" value={vorm.bedrijfsnaam} onChange={e => zetVorm({ ...vorm, bedrijfsnaam: e.target.value })} />
+              )}
+            </div>
+            {vorm.klantType === 'bedrijf' && (
+              <Invoer label="Btw nummer" optioneel value={vorm.btwNummer} onChange={e => zetVorm({ ...vorm, btwNummer: e.target.value })} />
+            )}
+            <Invoer label="Straat en huisnummer" optioneel value={vorm.straat} onChange={e => zetVorm({ ...vorm, straat: e.target.value })} />
+            <div className="grid grid-cols-2 gap-4">
+              <Invoer label="Postcode" optioneel value={vorm.postcode} onChange={e => zetVorm({ ...vorm, postcode: e.target.value })} />
               <Invoer label="Gemeente" optioneel value={vorm.gemeente} onChange={e => zetVorm({ ...vorm, gemeente: e.target.value })} />
             </div>
             <TekstVak label="Omschrijving van het project" optioneel value={vorm.eersteVraag}

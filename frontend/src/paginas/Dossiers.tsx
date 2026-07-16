@@ -3,7 +3,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { api } from '../lib/api'
 import { useZoekterm } from '../lib/zoek'
-import { euro, leeg, persoon } from '../lib/formaat'
+import { euro, leeg, weergaveNaam } from '../lib/formaat'
 import type { ProjectRij } from '../lib/types'
 import { Badge, Invoer, LegeStaat, PaginaKop, Th, Td, rijKlik } from '../ui'
 
@@ -36,7 +36,7 @@ export default function Dossiers() {
               <tr key={p.id} className={rijKlik}
                 onClick={() => navigeer({ to: '/dossiers/$projectId', params: { projectId: p.id } })}>
                 <Td className="cijfers font-semibold text-bronze-600">{p.nummer ?? '—'}</Td>
-                <Td><span className="font-semibold">{persoon(p.klant.voornaam, p.klant.naam)}</span>
+                <Td><span className="font-semibold">{weergaveNaam(p.klant)}</span>
                   <span className="ml-2 text-inkt-muted">{p.werfadres}</span></Td>
                 <Td className="max-w-64 truncate text-inkt-muted">{leeg(p.omschrijving)}</Td>
                 <Td><Badge status={p.status} /></Td>

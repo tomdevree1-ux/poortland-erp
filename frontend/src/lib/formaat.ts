@@ -13,3 +13,7 @@ export const leeg = (waarde?: string | null) => (waarde && waarde.trim() !== '' 
 // en samen tonen als voornaam plus naam.
 export const persoon = (voornaam?: string | null, naam?: string | null) =>
   [voornaam, naam].filter(Boolean).join(' ')
+
+// Weergavenaam van een klant of lead: het bedrijf indien gekend, anders de persoon.
+export const weergaveNaam = (k?: { bedrijfsnaam?: string | null; voornaam?: string | null; naam?: string | null } | null) =>
+  k ? (k.bedrijfsnaam && k.bedrijfsnaam.trim() ? k.bedrijfsnaam : persoon(k.voornaam, k.naam)) : ''

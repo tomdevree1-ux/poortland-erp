@@ -28,7 +28,12 @@ public class OffertePdfService
     public byte[] Genereer(Offerte offerte, Bedrijfsgegevens bedrijf, string voorwaarden, int voorschotPct)
     {
         var klant = offerte.Project?.Klant;
-        var klantNaam = klant is null ? "—" : ($"{klant.Voornaam} {klant.Naam}").Trim();
+        // Bedrijfsklant: de bedrijfsnaam voorop met de contactpersoon als t.a.v.-regel.
+        var klantPersoon = klant is null ? "" : ($"{klant.Voornaam} {klant.Naam}").Trim();
+        var klantNaam = klant is null ? "—"
+            : (!string.IsNullOrWhiteSpace(klant.Bedrijfsnaam) ? klant.Bedrijfsnaam : klantPersoon);
+        var klantTav = klant is not null && !string.IsNullOrWhiteSpace(klant.Bedrijfsnaam) && klantPersoon.Length > 0
+            ? $"T.a.v. {klantPersoon}" : "";
         var regels = offerte.Regels.Where(r => r.VerwijderdOp == null).OrderBy(r => r.Volgnummer).ToList();
         var producten = regels.Where(r => r.Soort == "product" || r.Soort == "vrij").ToList();
         var opties = regels.Where(r => r.Soort == "optie" || r.Soort == "accessoire").ToList();
@@ -120,6 +125,7 @@ public class OffertePdfService
                     Partij(partijen.RelativeItem(), "KLANT", new[]
                     {
                         klantNaam,
+                        klantTav,
                         klant?.Straat ?? "",
                         $"{klant?.Postcode} {klant?.Gemeente}".Trim(),
                         klant?.Telefoon ?? "",

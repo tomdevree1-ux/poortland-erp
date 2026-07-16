@@ -3,7 +3,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { api } from '../lib/api'
 import { useZoekterm } from '../lib/zoek'
-import { leeg, persoon } from '../lib/formaat'
+import { leeg, persoon, weergaveNaam } from '../lib/formaat'
 import type { Klant } from '../lib/types'
 import { Invoer, LegeStaat, PaginaKop, Th, Td, rijKlik } from '../ui'
 
@@ -33,7 +33,8 @@ export default function Klanten() {
             {klanten?.map(k => (
               <tr key={k.id} className={rijKlik}
                 onClick={() => navigeer({ to: '/klanten/$klantId', params: { klantId: k.id } })}>
-                <Td className="font-semibold">{persoon(k.voornaam, k.naam)}</Td>
+                <Td className="font-semibold">{weergaveNaam(k)}
+                  {k.bedrijfsnaam && <span className="ml-2 font-normal text-inkt-muted">{persoon(k.voornaam, k.naam)}</span>}</Td>
                 <Td>{k.type === 'bedrijf' ? 'Bedrijf' : 'Particulier'}</Td>
                 <Td>{leeg(k.gemeente)}</Td>
                 <Td>{leeg(k.email)}</Td>
