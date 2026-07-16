@@ -37,26 +37,6 @@ export default function DossierDetail() {
         titel={weergaveNaam(project.klant)}
         actie={<Knop variant="primair" onClick={() => maakOfferte.mutate()} disabled={maakOfferte.isPending}>
           {offertes.length ? 'Nieuwe offerteversie ↗' : 'Offerte maken ↗'}</Knop>} />
-      <div className="mb-5 rounded-card border border-inkt/[.07] bg-vlak-surface px-5 py-4">
-        <div className="flex items-center justify-between gap-6">
-          <div className="flex items-center gap-5">
-            <span className="cijfers font-display text-3xl font-semibold text-bronze-600">{project.nummer ?? '—'}</span>
-            <div className="text-sm">
-              <div className="font-semibold">{project.werfadres}</div>
-              <div className="text-inkt-muted">
-                {[project.klant.telefoon, project.klant.email].filter(Boolean).join(' · ') || '—'}
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center gap-4 text-sm">
-            <Badge status={project.status} />
-            <span className="text-inkt-muted">Garantie {project.garantieMaanden} maanden</span>
-          </div>
-        </div>
-        {project.omschrijving && (
-          <div className="mt-3 border-t border-inkt/[.06] pt-2.5 text-sm text-inkt-body">{project.omschrijving}</div>
-        )}
-      </div>
       <div className="mb-5 flex gap-1 border-b border-inkt/10">
         {tabs.map(([sleutel, tekst]) => (
           <button key={sleutel} onClick={() => zetTab(sleutel)}
@@ -71,7 +51,8 @@ export default function DossierDetail() {
         <div className="grid grid-cols-2 gap-6">
           <Paneel titel="Klantgegevens">
             <dl className="space-y-2 text-sm">
-              <div className="flex justify-between"><dt className="text-inkt-muted">Naam</dt><dd className="font-semibold">{project.klant.naam}</dd></div>
+              <div className="flex justify-between"><dt className="text-inkt-muted">Naam</dt><dd className="font-semibold">{weergaveNaam(project.klant)}</dd></div>
+              {project.klant.bedrijfsnaam && <div className="flex justify-between"><dt className="text-inkt-muted">Contactpersoon</dt><dd>{leeg(persoon(project.klant.voornaam, project.klant.naam))}</dd></div>}
               <div className="flex justify-between"><dt className="text-inkt-muted">Adres</dt><dd>{leeg([project.klant.straat, project.klant.postcode, project.klant.gemeente].filter(Boolean).join(', '))}</dd></div>
               <div className="flex justify-between"><dt className="text-inkt-muted">Email</dt><dd>{leeg(project.klant.email)}</dd></div>
               <div className="flex justify-between"><dt className="text-inkt-muted">Telefoon</dt><dd>{leeg(project.klant.telefoon)}</dd></div>
@@ -90,8 +71,16 @@ export default function DossierDetail() {
               </ul>
             )}
           </Paneel>
-          <Paneel titel="Omschrijving" className="col-span-2">
-            <p className="text-sm text-inkt-body">{leeg(project.omschrijving)}</p>
+          <Paneel titel="Dossier" className="col-span-2">
+            <dl className="mb-3 grid grid-cols-3 gap-x-8 gap-y-2 text-sm">
+              <div className="flex justify-between"><dt className="text-inkt-muted">Werfadres</dt><dd className="font-semibold">{leeg(project.werfadres)}</dd></div>
+              <div className="flex justify-between"><dt className="text-inkt-muted">Status</dt><dd><Badge status={project.status} /></dd></div>
+              <div className="flex justify-between"><dt className="text-inkt-muted">Garantie</dt><dd>{project.garantieMaanden} maanden</dd></div>
+            </dl>
+            <div className="border-t border-inkt/[.06] pt-2.5">
+              <div className="mb-1 text-[11px] font-bold uppercase tracking-[0.14em] text-inkt-muted">Omschrijving</div>
+              <p className="text-sm text-inkt-body">{leeg(project.omschrijving)}</p>
+            </div>
           </Paneel>
         </div>
       )}
