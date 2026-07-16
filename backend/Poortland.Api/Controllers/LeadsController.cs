@@ -14,7 +14,7 @@ public record LeadInvoer(LeadKanaal Kanaal, string? Naam, string? Voornaam, stri
 public record LeadWijziging(string? Naam, string? Voornaam, string? Email, string? Telefoon, string? EersteVraag,
     string? TypeAanvraag, string? KlantType, string? Bedrijfsnaam, string? BtwNummer,
     string? Straat, string? Postcode, string? Gemeente, string? GewensteTiming, DateOnly? Opvolgdatum,
-    string? WizardGegevens);
+    decimal? Prijsindicatie, string? WizardGegevens);
 public record KwalificatieInvoer(decimal? Prijsindicatie, DateOnly? Opvolgdatum);
 public record VerliesInvoer(string Reden);
 
@@ -109,6 +109,7 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
         if (invoer.Gemeente is not null) lead.Gemeente = invoer.Gemeente;
         if (invoer.GewensteTiming is not null) lead.GewensteTiming = invoer.GewensteTiming;
         if (invoer.Opvolgdatum is { } datum) lead.Opvolgdatum = datum;
+        if (invoer.Prijsindicatie is { } prijs) lead.Prijsindicatie = prijs;
         if (invoer.WizardGegevens is not null) lead.WizardGegevens = invoer.WizardGegevens;
         await db.SaveChangesAsync();
         return Ok(lead);

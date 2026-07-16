@@ -50,14 +50,17 @@ export default function LeadDetail() {
 
   const [vorm, zetVorm] = useState<{ naam: string; voornaam: string; email: string; telefoon: string
     klantType: string; bedrijfsnaam: string; btwNummer: string
-    straat: string; postcode: string; gemeente: string; typeAanvraag: string; gewensteTiming: string; eersteVraag: string } | null>(null)
+    straat: string; postcode: string; gemeente: string; typeAanvraag: string; gewensteTiming: string
+    prijsindicatie: string; opvolgdatum: string; eersteVraag: string } | null>(null)
   function openBewerk() {
     if (!lead) return
     zetVorm({
       naam: lead.naam ?? '', voornaam: lead.voornaam ?? '', email: lead.email ?? '', telefoon: lead.telefoon ?? '',
       klantType: lead.klantType ?? 'particulier', bedrijfsnaam: lead.bedrijfsnaam ?? '', btwNummer: lead.btwNummer ?? '',
       straat: lead.straat ?? '', postcode: lead.postcode ?? '', gemeente: lead.gemeente ?? '', typeAanvraag: lead.typeAanvraag ?? '',
-      gewensteTiming: lead.gewensteTiming ?? '', eersteVraag: lead.eersteVraag ?? ''
+      gewensteTiming: lead.gewensteTiming ?? '',
+      prijsindicatie: lead.prijsindicatie != null ? String(lead.prijsindicatie) : '', opvolgdatum: lead.opvolgdatum ?? '',
+      eersteVraag: lead.eersteVraag ?? ''
     })
     zetBewerkOpen(true)
   }
@@ -259,7 +262,10 @@ export default function LeadDetail() {
               btwNummer: vorm.klantType === 'bedrijf' ? (vorm.btwNummer || '') : '',
               straat: vorm.straat || null, postcode: vorm.postcode || null, gemeente: vorm.gemeente || null,
               typeAanvraag: vorm.typeAanvraag || null,
-              gewensteTiming: vorm.gewensteTiming || null, eersteVraag: vorm.eersteVraag || null
+              gewensteTiming: vorm.gewensteTiming || null,
+              prijsindicatie: vorm.prijsindicatie !== '' ? Number(vorm.prijsindicatie) : null,
+              opvolgdatum: vorm.opvolgdatum || null,
+              eersteVraag: vorm.eersteVraag || null
             })
           }}>
             <div className="grid grid-cols-2 gap-4">
@@ -296,6 +302,12 @@ export default function LeadDetail() {
             <div className="grid grid-cols-2 gap-4">
               <Invoer label="Postcode" optioneel value={vorm.postcode} onChange={e => zetVorm({ ...vorm, postcode: e.target.value })} />
               <Invoer label="Gemeente" optioneel value={vorm.gemeente} onChange={e => zetVorm({ ...vorm, gemeente: e.target.value })} />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <Invoer label="Prijsindicatie (euro)" optioneel type="number" min="0" step="0.01" value={vorm.prijsindicatie}
+                onChange={e => zetVorm({ ...vorm, prijsindicatie: e.target.value })} />
+              <Invoer label="Opvolgdatum (ten laatste)" optioneel type="date" value={vorm.opvolgdatum}
+                onChange={e => zetVorm({ ...vorm, opvolgdatum: e.target.value })} />
             </div>
             <TekstVak label="Omschrijving van het project" optioneel value={vorm.eersteVraag}
               onChange={e => zetVorm({ ...vorm, eersteVraag: e.target.value })} />
