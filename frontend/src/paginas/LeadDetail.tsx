@@ -87,6 +87,26 @@ export default function LeadDetail() {
     enabled: omzetOpen
   })
   const leegKlant = { type: 'particulier', naam: '', voornaam: '', bedrijfsnaam: '', btwNummer: '', straat: '', postcode: '', gemeente: '', email: '', telefoon: '' }
+
+  // Dubbelcheck: bestaat er al een klant met dit emailadres of deze naam, waarschuw
+  // dan voor het aanmaken van een dubbel en bied de bestaande klant meteen aan.
+  const { data: dubbelKandidaten } = useQuery({
+    queryKey: ['klant-dubbels', lead?.email ?? '', lead?.naam ?? ''],
+    queryFn: async () => {
+      const zoek = (z: string) => api.get<Klant[]>(`/klanten?${new URLSearchParams({ zoek: z })}`)
+      const lijsten = await Promise.all([
+        lead?.email ? zoek(lead.email) : Promise.resolve([] as Klant[]),
+        lead?.naam ? zoek(lead.naam) : Promise.resolve([] as Klant[])
+      ])
+      const uniek = new Map<string, Klant>()
+      lijsten.flat().forEach(k => uniek.set(k.id, k))
+      return [...uniek.values()]
+    },
+    enabled: omzetOpen && !!lead && !!(lead.email || lead.naam)
+  })
+  const dubbels = (dubbelKandidaten ?? []).filter(k =>
+    (lead?.email && k.email && k.email.toLowerCase() === lead.email.toLowerCase()) ||
+    (lead?.naam && k.naam.toLowerCase() === lead.naam.toLowerCase() && (k.voornaam ?? '') === (lead.voornaam ?? '')))
   const [nieuweKlant, zetNieuweKlant] = useState(leegKlant)
   const [omzetModus, zetOmzetModus] = useState<'nieuw' | 'bestaand'>('nieuw')
   const [werf, zetWerf] = useState({ straat: '', postcode: '', gemeente: '' })
@@ -347,6 +367,18 @@ export default function LeadDetail() {
             </button>
           </div>
 
+          {omzetModus === 'nieuw' && dubbels.length > 0 && (
+            <Melding soort="info">
+              <div className="flex items-center justify-between gap-3">
+                <span>Er bestaat al een klant met deze gegevens: <strong>{weergaveNaam(dubbels[0])}</strong>
+                  {dubbels[0].gemeente ? ` · ${dubbels[0].gemeente}` : ''}. Vermijd een dubbel.</span>
+                <Knop type="button" variant="secundair" className="h-8 shrink-0 whitespace-nowrap px-3 text-xs"
+                  onClick={() => { zetOmzetModus('bestaand'); zetKlantKeuze(dubbels[0].id) }}>
+                  Gebruik deze klant
+                </Knop>
+              </div>
+            </Melding>
+          )}
           {omzetModus === 'bestaand' ? (
             <>
               <Invoer label="Zoek bestaande klant" placeholder="Naam of gemeente…"

@@ -23,6 +23,10 @@ window.poortlandVerstuurLead = async function (opties) {
   if (opties.turnstileToken) form.append('turnstileToken', opties.turnstileToken);
   if (opties.fotos) {
     var lijst = Array.prototype.slice.call(opties.fotos, 0, 5);
+    for (var fi = 0; fi < lijst.length; fi++) {
+      if (lijst[fi] && lijst[fi].size > 10 * 1024 * 1024)
+        throw new Error("De foto '" + (lijst[fi].name || 'nummer ' + (fi + 1)) + "' is groter dan 10 MB. Verklein de foto en probeer opnieuw.");
+    }
     lijst.forEach(function (foto) { form.append('fotos', foto); });
   }
   var antwoord = await fetch(opties.endpoint, { method: 'POST', body: form });
