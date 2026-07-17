@@ -72,6 +72,16 @@ export default function KlantDetail() {
     })
     zetKlantOpen(true)
   }
+  const [momentOpen, zetMomentOpen] = useState(false)
+  const [momentVorm, zetMomentVorm] = useState({ type: 'telefoon', notitie: '' })
+  const logMoment = useMutation({
+    mutationFn: () => api.post(`/klanten/${klantId}/contactmomenten`, {
+      projectId: null, type: momentVorm.type, notitie: momentVorm.notitie || null
+    }),
+    onSuccess: () => { ververs(); zetMomentOpen(false) },
+    onError: f => zetFout((f as Error).message)
+  })
+
   const bewaarKlant = useMutation({
     mutationFn: () => api.patch(`/klanten/${klantId}`, {
       ...klantVorm, voornaam: klantVorm!.voornaam || null,
@@ -148,7 +158,11 @@ export default function KlantDetail() {
               )}
             </div>
             <div>
-              <h3 className="mb-2 text-2xs font-bold uppercase tracking-[0.16em] text-inkt-muted">Contactmomenten</h3>
+              <div className="mb-2 flex items-center justify-between">
+                <h3 className="text-2xs font-bold uppercase tracking-[0.16em] text-inkt-muted">Contactmomenten</h3>
+                <Knop variant="secundair" className="h-7 px-2.5 text-xs"
+                  onClick={() => { zetMomentVorm({ type: 'telefoon', notitie: '' }); zetMomentOpen(true) }}>Loggen</Knop>
+              </div>
               {contactmomenten.length === 0 ? <p className="text-sm text-inkt-muted">Nog geen contactmomenten.</p> : (
                 <ul className="space-y-1 text-sm">
                   {contactmomenten.map(c => (
@@ -228,6 +242,24 @@ export default function KlantDetail() {
           <div className="flex justify-end gap-2">
             <Knop type="button" variant="ghost" onClick={() => zetPersoonOpen(false)}>Annuleren</Knop>
             <Knop variant="primair" disabled={bewaarPersoon.isPending}>{bewaarPersoon.isPending ? 'Bezig…' : 'Bewaren'}</Knop>
+          </div>
+        </form>
+      </Modaal>
+
+      <Modaal open={momentOpen} titel="Contactmoment loggen" onSluit={() => zetMomentOpen(false)}>
+        <form className="space-y-4" onSubmit={e => { e.preventDefault(); logMoment.mutate() }}>
+          <Selecteer label="Type" value={momentVorm.type} onChange={e => zetMomentVorm({ ...momentVorm, type: e.target.value })}>
+            <option value="telefoon">Telefoon</option>
+            <option value="email">Email</option>
+            <option value="bezoek">Bezoek</option>
+            <option value="showroom">Showroom</option>
+            <option value="andere">Andere</option>
+          </Selecteer>
+          <Invoer label="Notitie" optioneel placeholder="Kort verslag van het contact"
+            value={momentVorm.notitie} onChange={e => zetMomentVorm({ ...momentVorm, notitie: e.target.value })} />
+          <div className="flex justify-end gap-2">
+            <Knop type="button" variant="ghost" onClick={() => zetMomentOpen(false)}>Annuleren</Knop>
+            <Knop variant="primair" disabled={logMoment.isPending}>{logMoment.isPending ? 'Bezig…' : 'Loggen'}</Knop>
           </div>
         </form>
       </Modaal>

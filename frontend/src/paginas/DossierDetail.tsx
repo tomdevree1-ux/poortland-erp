@@ -26,6 +26,16 @@ export default function DossierDetail() {
     onSuccess: o => { qc.invalidateQueries({ queryKey: ['dossier', projectId] }); navigeer({ to: '/offertes/$offerteId', params: { offerteId: o.id } }) }
   })
 
+  // Contactmoment rechtstreeks vanaf het dossier loggen (zelfde record als op de klantfiche).
+  const [momentOpen, zetMomentOpen] = useState(false)
+  const [momentVorm, zetMomentVorm] = useState({ type: 'telefoon', notitie: '' })
+  const logMoment = useMutation({
+    mutationFn: () => api.post(`/klanten/${data!.project.klant.id}/contactmomenten`, {
+      projectId, type: momentVorm.type, notitie: momentVorm.notitie || null
+    }),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['dossier', projectId] }); zetMomentOpen(false) }
+  })
+
   // SSOT: de klant is 1 record; hier bewerken werkt overal door (klantenlijst, fiche, offerte).
   const [klantFout, zetKlantFout] = useState<string>()
   const [klantOpen, zetKlantOpen] = useState(false)
@@ -92,7 +102,9 @@ export default function DossierDetail() {
               {project.klant.btwNummer && <div className="flex justify-between"><dt className="text-inkt-muted">Btw</dt><dd>{project.klant.btwNummer}</dd></div>}
             </dl>
           </Paneel>
-          <Paneel titel="Contactmomenten">
+          <Paneel titel="Contactmomenten" actie={
+            <Knop variant="secundair" className="h-8 px-3 text-xs"
+              onClick={() => { zetMomentVorm({ type: 'telefoon', notitie: '' }); zetMomentOpen(true) }}>Loggen</Knop>}>
             {contactmomenten.length === 0 ? <p className="text-sm text-inkt-muted">Nog geen contactmomenten.</p> : (
               <ul className="space-y-2 text-sm">
                 {contactmomenten.map(c => (
@@ -159,6 +171,24 @@ export default function DossierDetail() {
           )}
         </Paneel>
       )}
+
+      <Modaal open={momentOpen} titel="Contactmoment loggen" onSluit={() => zetMomentOpen(false)}>
+        <form className="space-y-4" onSubmit={e => { e.preventDefault(); logMoment.mutate() }}>
+          <Selecteer label="Type" value={momentVorm.type} onChange={e => zetMomentVorm({ ...momentVorm, type: e.target.value })}>
+            <option value="telefoon">Telefoon</option>
+            <option value="email">Email</option>
+            <option value="bezoek">Bezoek</option>
+            <option value="showroom">Showroom</option>
+            <option value="andere">Andere</option>
+          </Selecteer>
+          <Invoer label="Notitie" optioneel placeholder="Kort verslag van het contact"
+            value={momentVorm.notitie} onChange={e => zetMomentVorm({ ...momentVorm, notitie: e.target.value })} />
+          <div className="flex justify-end gap-2">
+            <Knop type="button" variant="ghost" onClick={() => zetMomentOpen(false)}>Annuleren</Knop>
+            <Knop variant="primair" disabled={logMoment.isPending}>{logMoment.isPending ? 'Bezig…' : 'Loggen'}</Knop>
+          </div>
+        </form>
+      </Modaal>
 
       <Modaal open={klantOpen} titel="Klantgegevens bewerken" onSluit={() => zetKlantOpen(false)}>
         {klantVorm && (
