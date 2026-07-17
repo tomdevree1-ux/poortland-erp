@@ -68,3 +68,23 @@ export interface MedewerkerKeuze { id: string; naam: string }
 export interface MedewerkerRij {
   id: string; naam: string; voornaam?: string; email: string; telefoon?: string; isActief: boolean; rollen: Rol[]
 }
+
+// TS-07 productie en stuklijst
+export type OnderdeelStatus = 'besteld' | 'inProductie' | 'voorbehandeling' | 'lakwerk' | 'klaarVoorMontage' | 'gemonteerd'
+export interface Leverancier { id: string; naam: string; type: 'voorbehandeling' | 'lakwerk' | 'product'; email?: string; telefoon?: string }
+export interface Onderdeel {
+  id: string; stuklijstId: string; productcode: string; omschrijving?: string; afmetingen?: string; materiaal?: string
+  status: OnderdeelStatus
+  voorbehandelingVanToepassing: boolean; lakwerkVanToepassing: boolean
+  leverancierVoorbehandelingId?: string; leverancierLakwerkId?: string
+  lakwerkRal?: string; etaVoorbehandeling?: string; etaLakwerk?: string
+}
+export interface TekeningRij { id: string; tekeningVersie: number; datum: string; bestandsnaam: string; auteur?: string; url?: string }
+export interface ProductieData {
+  stuklijst?: { id: string; versieStuklijst: number; datumOpmaak: string } | null
+  onderdelen: Onderdeel[]
+  productieStatus: 'inVoorbereiding' | 'inUitvoering' | 'externInBehandeling' | 'klaarVoorMontage' | 'afgerond'
+  vorigeVersies: { id: string; versieStuklijst: number; datumOpmaak: string }[]
+  tekeningen: TekeningRij[]
+  leveranciers: Leverancier[]
+}

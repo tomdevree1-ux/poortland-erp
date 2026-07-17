@@ -9,6 +9,8 @@ public enum LeadStatus { Nieuw, Gekwalificeerd, Omgezet, Verloren }
 public enum OfferteStatus { Nieuw, Verzonden, Goedgekeurd, Geweigerd, Verlopen }
 public enum OrderStatus { Aangemaakt, InProductie, ExterneBehandeling, KlaarVoorMontage, Gemonteerd, Afgesloten, Geannuleerd }
 public enum BtwTarief { P0, P6, P21 }
+public enum OnderdeelStatus { Besteld, InProductie, Voorbehandeling, Lakwerk, KlaarVoorMontage, Gemonteerd }
+public enum LeverancierType { Voorbehandeling, Lakwerk, Product }
 public enum OpvolgtaakStatus { Open, Uitgevoerd, Vervallen }
 public enum OpvolgtaakType { NaOpmeting, NaOfferte, LeadOpvolging }
 public enum WebsiteContentStatus { Concept, Gepubliceerd, Gearchiveerd }

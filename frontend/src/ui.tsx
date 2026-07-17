@@ -142,7 +142,9 @@ export const statusToon: Record<string, string> = {
   aangemaakt: 'neutraal', inProductie: 'brons', externeBehandeling: 'brons',
   klaarVoorMontage: 'brons', gemonteerd: 'olijf', afgesloten: 'olijf', geannuleerd: 'kritiek',
   concept: 'neutraal', gepubliceerd: 'olijf', gearchiveerd: 'neutraal',
-  open: 'brons', uitgevoerd: 'olijf', vervallen: 'neutraal'
+  open: 'brons', uitgevoerd: 'olijf', vervallen: 'neutraal',
+  besteld: 'neutraal', voorbehandeling: 'brons', lakwerk: 'brons',
+  inVoorbereiding: 'neutraal', inUitvoering: 'brons', externInBehandeling: 'brons', afgerond: 'olijf'
 }
 export const statusTekst: Record<string, string> = {
   nieuw: 'Nieuw', gekwalificeerd: 'Gekwalificeerd', omgezet: 'Omgezet', verloren: 'Verloren',
@@ -150,7 +152,10 @@ export const statusTekst: Record<string, string> = {
   aangemaakt: 'Aangemaakt', inProductie: 'In productie', externeBehandeling: 'Externe behandeling',
   klaarVoorMontage: 'Klaar voor montage', gemonteerd: 'Gemonteerd', afgesloten: 'Afgesloten',
   geannuleerd: 'Geannuleerd', concept: 'Concept', gepubliceerd: 'Gepubliceerd', gearchiveerd: 'Gearchiveerd',
-  open: 'Open', uitgevoerd: 'Uitgevoerd', vervallen: 'Vervallen'
+  open: 'Open', uitgevoerd: 'Uitgevoerd', vervallen: 'Vervallen',
+  besteld: 'Besteld', voorbehandeling: 'Voorbehandeling', lakwerk: 'Lakwerk',
+  inVoorbereiding: 'In voorbereiding', inUitvoering: 'In uitvoering',
+  externInBehandeling: 'Extern in behandeling', afgerond: 'Afgerond'
 }
 export function Badge({ status }: { status: string }) {
   return (
