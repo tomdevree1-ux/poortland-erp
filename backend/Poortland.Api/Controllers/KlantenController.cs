@@ -22,11 +22,12 @@ public class KlantenController(PoortlandDbContext db, ClaimsContext claims) : Co
         var query = db.Klanten.AsNoTracking().Where(k => k.VerwijderdOp == null);
         if (!string.IsNullOrWhiteSpace(zoek))
         {
-            var patroon = $"%{zoek}%";
-            query = query.Where(k => EF.Functions.ILike(k.Naam, patroon)
-                || EF.Functions.ILike(k.Voornaam ?? "", patroon)
-                || EF.Functions.ILike(k.Gemeente ?? "", patroon)
-                || EF.Functions.ILike(k.Email ?? "", patroon));
+            // Serverzijdig zoeken met relevantie en fouttolerantie (0027, zoekregels README).
+            var ids = await db.Database
+                .SqlQuery<Guid>($@"select id as ""Value"" from zoek_klanten({zoek})")
+                .ToListAsync();
+            var treffers = await query.Where(k => ids.Contains(k.Id)).ToListAsync();
+            return Ok(ids.Select(i => treffers.FirstOrDefault(k => k.Id == i)).Where(k => k is not null).ToList());
         }
         return Ok(await query.OrderBy(k => k.Naam).Take(200).ToListAsync());
     }

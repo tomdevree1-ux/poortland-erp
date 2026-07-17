@@ -18,26 +18,29 @@ public class ProjectenController(PoortlandDbContext db) : ControllerBase
             .Include(p => p.Klant)
             .Where(p => p.VerwijderdOp == null);
         if (status is { } s) query = query.Where(p => p.Status == s);
+        List<Guid>? zoekIds = null;
         if (!string.IsNullOrWhiteSpace(zoek))
         {
-            var patroon = $"%{zoek}%";
-            query = query.Where(p => EF.Functions.ILike(p.Werfadres, patroon)
-                || EF.Functions.ILike(p.Omschrijving ?? "", patroon)
-                || EF.Functions.ILike(p.Klant!.Naam, patroon)
-                || EF.Functions.ILike(p.Klant!.Voornaam ?? "", patroon)
-                || p.Nummer.ToString() == zoek.Trim());
+            // Serverzijdig zoeken met relevantie en fouttolerantie (0027, zoekregels README).
+            zoekIds = await db.Database
+                .SqlQuery<Guid>($@"select id as ""Value"" from zoek_projecten({zoek})")
+                .ToListAsync();
+            query = query.Where(p => zoekIds.Contains(p.Id));
         }
         var projecten = await query.OrderByDescending(p => p.AangemaaktOp).Take(200)
             .Select(p => new
             {
                 p.Id, p.Nummer, p.Werfadres, p.Omschrijving, p.Status, p.GarantieMaanden, p.VerwachteOpleverdatum,
                 p.AangemaaktOp,
-                Klant = new { p.Klant!.Id, p.Klant.Naam, p.Klant.Voornaam, p.Klant.Gemeente },
+                Klant = new { p.Klant!.Id, p.Klant.Naam, p.Klant.Voornaam, p.Klant.Bedrijfsnaam, p.Klant.Gemeente },
                 OfferteWaarde = p.Offertes.Where(o => o.VerwijderdOp == null)
                     .OrderByDescending(o => o.VersieOfferte)
                     .Select(o => (decimal?)o.TotaalExclBtw).FirstOrDefault()
             })
             .ToListAsync();
+        if (zoekIds is not null)
+            projecten = zoekIds.Select(i => projecten.FirstOrDefault(p => p.Id == i))
+                .Where(p => p is not null).ToList()!;
         return Ok(projecten);
     }
 

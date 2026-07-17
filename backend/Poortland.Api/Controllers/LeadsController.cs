@@ -39,12 +39,12 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
         if (eigenaar is { } e) query = query.Where(l => l.EigenaarId == e);
         if (!string.IsNullOrWhiteSpace(zoek))
         {
-            var patroon = $"%{zoek}%";
-            query = query.Where(l => EF.Functions.ILike(l.Naam ?? "", patroon)
-                || EF.Functions.ILike(l.Voornaam ?? "", patroon)
-                || EF.Functions.ILike(l.Email ?? "", patroon)
-                || EF.Functions.ILike(l.Gemeente ?? "", patroon)
-                || EF.Functions.ILike(l.EersteVraag ?? "", patroon));
+            // Serverzijdig zoeken met relevantie en fouttolerantie (0027, zoekregels README).
+            var ids = await db.Database
+                .SqlQuery<Guid>($@"select id as ""Value"" from zoek_leads({zoek}, {archief})")
+                .ToListAsync();
+            var treffers = await query.Where(l => ids.Contains(l.Id)).ToListAsync();
+            return Ok(ids.Select(i => treffers.FirstOrDefault(l => l.Id == i)).Where(l => l is not null).ToList());
         }
         var leads = await query.OrderByDescending(l => l.AangemaaktOp).Take(200).ToListAsync();
         return Ok(leads);
