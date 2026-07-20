@@ -33,6 +33,7 @@ public class PoortlandDbContext(DbContextOptions<PoortlandDbContext> opties) : D
     public DbSet<Werkbon> Werkbonnen => Set<Werkbon>();
     public DbSet<Werkbonregel> Werkbonregels => Set<Werkbonregel>();
     public DbSet<Werkbonfoto> Werkbonfotos => Set<Werkbonfoto>();
+    public DbSet<Servicedossier> Servicedossiers => Set<Servicedossier>();
 
     public static NpgsqlDataSource MaakDataSource(string connectionString)
     {
@@ -55,6 +56,7 @@ public class PoortlandDbContext(DbContextOptions<PoortlandDbContext> opties) : D
         b.MapEnum<Projectfase>("projectfase");
         b.MapEnum<WerkbonStatus>("werkbon_status");
         b.MapEnum<WerkbonType>("werkbon_type");
+        b.MapEnum<ServicedossierStatus>("servicedossier_status");
         return b.Build();
     }
 
@@ -78,6 +80,7 @@ public class PoortlandDbContext(DbContextOptions<PoortlandDbContext> opties) : D
         model.HasPostgresEnum<Projectfase>("projectfase");
         model.HasPostgresEnum<WerkbonStatus>("werkbon_status");
         model.HasPostgresEnum<WerkbonType>("werkbon_type");
+        model.HasPostgresEnum<ServicedossierStatus>("servicedossier_status");
 
         model.Entity<Medewerker>().ToTable("medewerker");
         model.Entity<Medewerker>().HasMany(m => m.Rollen).WithOne().HasForeignKey(r => r.MedewerkerId);
@@ -124,6 +127,9 @@ public class PoortlandDbContext(DbContextOptions<PoortlandDbContext> opties) : D
         model.Entity<Werkbon>().HasMany(w => w.Fotos).WithOne().HasForeignKey(f => f.WerkbonId);
         model.Entity<Werkbonregel>().ToTable("werkbonregel");
         model.Entity<Werkbonfoto>().ToTable("werkbonfoto");
+        model.Entity<Servicedossier>().ToTable("servicedossier");
+        model.Entity<Servicedossier>().HasOne(s => s.Klant).WithMany().HasForeignKey(s => s.KlantId);
+        model.Entity<Servicedossier>().HasOne(s => s.Project).WithMany().HasForeignKey(s => s.ProjectId);
 
         // Kolommen die de databank beheert.
         foreach (var e in model.Model.GetEntityTypes())

@@ -360,6 +360,21 @@ public class Werkbonfoto : BasisEntiteit
     public decimal? GpsLon { get; set; }
 }
 
+// TS-11 service en nazorg
+public class Servicedossier : BasisEntiteit
+{
+    public Guid KlantId { get; set; }
+    public Guid? ProjectId { get; set; }
+    public ServicedossierStatus Status { get; set; } = ServicedossierStatus.Gemeld;
+    public Guid? TechniekerId { get; set; }
+    public bool GarantieIndicatie { get; set; }
+    public string? Klacht { get; set; }
+    public DateTimeOffset GemeldOp { get; set; }
+    public DateOnly? GeplandOp { get; set; }
+    public Klant? Klant { get; set; }
+    public Project? Project { get; set; }
+}
+
 public class Instelling
 {
     public string Sleutel { get; set; } = "";

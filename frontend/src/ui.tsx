@@ -146,7 +146,8 @@ export const statusToon: Record<string, string> = {
   besteld: 'neutraal', voorbehandeling: 'brons', lakwerk: 'brons',
   inVoorbereiding: 'neutraal', inUitvoering: 'brons', externInBehandeling: 'brons', afgerond: 'olijf',
   gepland: 'neutraal', bevestigd: 'brons',
-  klantGetekend: 'olijf', verwerktInFacturatie: 'olijf'
+  klantGetekend: 'olijf', verwerktInFacturatie: 'olijf',
+  gemeld: 'corten', ingepland: 'brons'
 }
 export const statusTekst: Record<string, string> = {
   nieuw: 'Nieuw', gekwalificeerd: 'Gekwalificeerd', omgezet: 'Omgezet', verloren: 'Verloren',
@@ -159,7 +160,8 @@ export const statusTekst: Record<string, string> = {
   inVoorbereiding: 'In voorbereiding', inUitvoering: 'In uitvoering',
   externInBehandeling: 'Extern in behandeling', afgerond: 'Afgerond',
   gepland: 'Gepland', bevestigd: 'Bevestigd',
-  klantGetekend: 'Klant getekend', verwerktInFacturatie: 'Verwerkt in facturatie'
+  klantGetekend: 'Klant getekend', verwerktInFacturatie: 'Verwerkt in facturatie',
+  gemeld: 'Gemeld', ingepland: 'Ingepland'
 }
 export function Badge({ status }: { status: string }) {
   return (

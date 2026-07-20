@@ -18,6 +18,7 @@ import OfferteEditor from './paginas/OfferteEditor'
 import Werkschema from './paginas/Werkschema'
 import Planning from './paginas/Planning'
 import Veld from './paginas/Veld'
+import Service from './paginas/Service'
 import Website from './paginas/Website'
 import Beheer from './paginas/Beheer'
 import './stijl.css'
@@ -48,6 +49,7 @@ const offerteRoute = createRoute({ getParentRoute: () => appRoute, path: '/offer
 const werkschemaRoute = createRoute({ getParentRoute: () => appRoute, path: '/werkschema', component: Werkschema })
 const planningRoute = createRoute({ getParentRoute: () => appRoute, path: '/planning', component: Planning })
 const veldRoute = createRoute({ getParentRoute: () => appRoute, path: '/veld', component: Veld })
+const serviceRoute = createRoute({ getParentRoute: () => appRoute, path: '/service', component: Service })
 const websiteRoute = createRoute({ getParentRoute: () => appRoute, path: '/website', component: Website })
 const beheerRoute = createRoute({ getParentRoute: () => appRoute, path: '/beheer', component: Beheer })
 
@@ -55,7 +57,7 @@ const routeBoom = rootRoute.addChildren([
   aanmeldRoute,
   appRoute.addChildren([
     dashboardRoute, leadsRoute, leadDetailRoute, klantenRoute, klantDetailRoute,
-    dossiersRoute, dossierDetailRoute, offerteRoute, werkschemaRoute, planningRoute, veldRoute, websiteRoute, beheerRoute
+    dossiersRoute, dossierDetailRoute, offerteRoute, werkschemaRoute, planningRoute, veldRoute, serviceRoute, websiteRoute, beheerRoute
   ])
 ])
 

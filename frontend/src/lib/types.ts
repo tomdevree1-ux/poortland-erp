@@ -104,6 +104,24 @@ export interface NotificatieRij {
   entiteitType?: string; entiteitId?: string; gelezenOp?: string; aangemaaktOp: string
 }
 
+// TS-11 service en nazorg
+export type ServiceStatus = 'gemeld' | 'ingepland' | 'uitgevoerd' | 'afgesloten'
+export interface ServiceRij {
+  id: string; status: ServiceStatus; garantieIndicatie: boolean; klacht?: string
+  gemeldOp: string; geplandOp?: string; techniekerId?: string; technieker?: string
+  klant: { id: string; naam: string; voornaam?: string; bedrijfsnaam?: string; telefoon?: string; gemeente?: string }
+  project?: { id: string; nummer?: number; werfadres: string; garantieMaanden: number } | null
+}
+
+// TS-12 rapportering
+export interface RapportOverzicht {
+  maanden: { maand: string; omzet: number; leads: number; omgezet: number }[]
+  leadconversie: number; totaalLeads: number; totaalOmgezet: number
+  gemiddeldeDoorlooptijd?: number | null
+  orderStatussen: { status: OrderStatus; aantal: number }[]
+  serviceOpen: number; werkbonnenOpen: number
+}
+
 // TS-07 productie en stuklijst
 export type OnderdeelStatus = 'besteld' | 'inProductie' | 'voorbehandeling' | 'lakwerk' | 'klaarVoorMontage' | 'gemonteerd'
 export interface Leverancier { id: string; naam: string; type: 'voorbehandeling' | 'lakwerk' | 'product'; email?: string; telefoon?: string }

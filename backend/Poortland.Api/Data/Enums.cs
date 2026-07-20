@@ -19,6 +19,7 @@ public enum Projectfase
     Automatisering
 }
 public enum WerkbonStatus { Open, Uitgevoerd, KlantGetekend, VerwerktInFacturatie }
+public enum ServicedossierStatus { Gemeld, Ingepland, Uitgevoerd, Afgesloten }
 public enum WerkbonType
 {
     [NpgsqlTypes.PgName("plaatsing_1")] Plaatsing1,
