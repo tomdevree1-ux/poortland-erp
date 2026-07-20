@@ -40,11 +40,15 @@ export default function Planning() {
   const [maand, zetMaand] = useState(() => { const d = new Date(); d.setDate(1); d.setHours(0, 0, 0, 0); return d })
   const dagen = [...Array(7)].map((_, i) => plusDagen(start, i))
 
-  // De periode volgt de weergave; alles leest dezelfde planningsdata.
+  // De periode volgt de weergave; alles leest dezelfde planningsdata. Het
+  // maandraster dekt ook de randdagen van de buurmaanden (zoals in een agenda-app).
   const vandaag = new Date(); vandaag.setHours(0, 0, 0, 0)
+  const maandEerste = new Date(maand.getFullYear(), maand.getMonth(), 1)
   const maandEinde = new Date(maand.getFullYear(), maand.getMonth() + 1, 0)
+  const rasterStart = maandagVan(maandEerste)
+  const wekenNodig = Math.ceil((((maandEerste.getDay() + 6) % 7) + maandEinde.getDate()) / 7)
   const [van, tot] = weergave === 'maand'
-    ? [iso(new Date(maand.getFullYear(), maand.getMonth(), 1)), iso(maandEinde)]
+    ? [iso(rasterStart), iso(plusDagen(rasterStart, wekenNodig * 7 - 1))]
     : weergave === 'dag'
       ? [iso(vandaag), iso(plusDagen(vandaag, 1))]
       : [iso(dagen[0]), iso(dagen[6])]
@@ -256,34 +260,61 @@ export default function Planning() {
       )}
 
       {weergave === 'maand' && (() => {
-        const eerste = new Date(maand.getFullYear(), maand.getMonth(), 1)
-        const rasterStart = maandagVan(eerste)
-        const cellen = [...Array(42)].map((_, i) => plusDagen(rasterStart, i))
+        // Naar het patroon van een agenda-app: elke dag toont de afspraken als
+        // compacte balkjes in statuskleur, met een "+N meer" bij overloop.
+        const cellen = [...Array(wekenNodig * 7)].map((_, i) => plusDagen(rasterStart, i))
+        const maxPerDag = 3
+        const statusBalk: Record<string, string> = {
+          gepland: 'border-inkt/10 bg-inkt/[.05] text-inkt-body',
+          bevestigd: 'border-bronze-500/30 bg-bronze-500/15 text-bronze-600',
+          uitgevoerd: 'border-olive-500/30 bg-olive-500/15 text-olive-600'
+        }
         return (
-          <div className="grid grid-cols-7 gap-1.5">
-            {['ma', 'di', 'wo', 'do', 'vr', 'za', 'zo'].map(d => (
-              <div key={d} className="px-2 pb-1 text-xs font-bold uppercase tracking-[0.1em] text-inkt-muted">{d}</div>
-            ))}
-            {cellen.map(dag => {
-              const sleutel = iso(dag)
-              const inMaand = dag.getMonth() === maand.getMonth()
-              const isVandaag = sleutel === iso(new Date())
-              const aantal = (items ?? []).filter(i => i.geplandeDatum === sleutel).length
-              return (
-                <button key={sleutel} type="button"
-                  onClick={() => { zetStart(maandagVan(dag)); zetWeergave('week') }}
-                  className={clsx('focusring flex h-20 flex-col items-start justify-between rounded-control border p-2 text-left transition hover:border-bronze-500',
-                    isVandaag ? 'border-bronze-500/60 bg-bronze-500/[.06]' : 'border-inkt/10',
-                    inMaand ? 'bg-vlak-surface/60' : 'bg-transparent opacity-40')}>
-                  <span className="cijfers text-sm font-semibold">{dag.getDate()}</span>
-                  {aantal > 0 && (
-                    <span className="rounded-chip bg-bronze-500/15 px-1.5 py-0.5 text-xs font-semibold text-bronze-600">
-                      {aantal} {aantal === 1 ? 'afspraak' : 'afspraken'}
-                    </span>
-                  )}
-                </button>
-              )
-            })}
+          <div className="overflow-hidden rounded-card border border-inkt/10 bg-vlak-surface/40">
+            <div className="grid grid-cols-7 border-b border-inkt/10 bg-vlak-surface/80">
+              {['maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag', 'zondag'].map(d => (
+                <div key={d} className="px-2 py-2 text-xs font-bold uppercase tracking-[0.1em] text-inkt-muted">{d}</div>
+              ))}
+            </div>
+            <div className="grid grid-cols-7">
+              {cellen.map((dag, i) => {
+                const sleutel = iso(dag)
+                const inMaand = dag.getMonth() === maand.getMonth()
+                const isVandaag = sleutel === iso(new Date())
+                const dagItems = (items ?? []).filter(it => it.geplandeDatum === sleutel)
+                const zichtbaar = dagItems.slice(0, maxPerDag)
+                const rest = dagItems.length - zichtbaar.length
+                return (
+                  <div key={sleutel}
+                    className={clsx('min-h-28 border-b border-inkt/[.07] p-1.5',
+                      i % 7 !== 0 && 'border-l',
+                      !inMaand && 'bg-vlak-sunken/30')}>
+                    <button type="button" onClick={() => openNieuw(sleutel)} aria-label={`Inplannen op ${sleutel}`}
+                      className={clsx('focusring cijfers mb-1 flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold transition',
+                        isVandaag ? 'bg-bronze-500 text-forest-950'
+                          : inMaand ? 'text-inkt hover:bg-bronze-500/15' : 'text-inkt-faint hover:bg-bronze-500/10')}>
+                      {dag.getDate()}
+                    </button>
+                    <div className="space-y-1">
+                      {zichtbaar.map(item => (
+                        <button key={item.id} type="button" onClick={() => openBewerk(item)}
+                          title={`${item.project.nummer ? `${item.project.nummer} · ` : ''}${weergaveNaam(item.project.klant)} · ${faseTekst[item.fase]} · ${item.toegewezene}${item.project.werfadres ? ` · ${item.project.werfadres}` : ''}`}
+                          className={clsx('focusring block w-full truncate rounded-[4px] border px-1.5 py-0.5 text-left text-[11px] font-medium transition hover:border-bronze-500',
+                            statusBalk[item.status], !inMaand && 'opacity-60')}>
+                          {item.project.nummer ? `${item.project.nummer} · ` : ''}{weergaveNaam(item.project.klant)} · {faseTekst[item.fase]}
+                        </button>
+                      ))}
+                      {rest > 0 && (
+                        <button type="button" onClick={() => { zetStart(maandagVan(dag)); zetWeergave('week') }}
+                          className="focusring block w-full rounded-[4px] px-1.5 py-0.5 text-left text-[11px] font-semibold text-bronze-600 transition hover:bg-bronze-500/10">
+                          +{rest} meer
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
           </div>
         )
       })()}
