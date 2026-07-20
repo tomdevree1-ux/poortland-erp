@@ -30,6 +30,9 @@ public class PoortlandDbContext(DbContextOptions<PoortlandDbContext> opties) : D
     public DbSet<Ploeg> Ploegen => Set<Ploeg>();
     public DbSet<PloegLid> PloegLeden => Set<PloegLid>();
     public DbSet<Planningsitem> Planningsitems => Set<Planningsitem>();
+    public DbSet<Werkbon> Werkbonnen => Set<Werkbon>();
+    public DbSet<Werkbonregel> Werkbonregels => Set<Werkbonregel>();
+    public DbSet<Werkbonfoto> Werkbonfotos => Set<Werkbonfoto>();
 
     public static NpgsqlDataSource MaakDataSource(string connectionString)
     {
@@ -50,6 +53,8 @@ public class PoortlandDbContext(DbContextOptions<PoortlandDbContext> opties) : D
         b.MapEnum<OnderdeelStatus>("onderdeel_status");
         b.MapEnum<LeverancierType>("leverancier_type");
         b.MapEnum<Projectfase>("projectfase");
+        b.MapEnum<WerkbonStatus>("werkbon_status");
+        b.MapEnum<WerkbonType>("werkbon_type");
         return b.Build();
     }
 
@@ -71,6 +76,8 @@ public class PoortlandDbContext(DbContextOptions<PoortlandDbContext> opties) : D
         model.HasPostgresEnum<OnderdeelStatus>("onderdeel_status");
         model.HasPostgresEnum<LeverancierType>("leverancier_type");
         model.HasPostgresEnum<Projectfase>("projectfase");
+        model.HasPostgresEnum<WerkbonStatus>("werkbon_status");
+        model.HasPostgresEnum<WerkbonType>("werkbon_type");
 
         model.Entity<Medewerker>().ToTable("medewerker");
         model.Entity<Medewerker>().HasMany(m => m.Rollen).WithOne().HasForeignKey(r => r.MedewerkerId);
@@ -111,6 +118,12 @@ public class PoortlandDbContext(DbContextOptions<PoortlandDbContext> opties) : D
         model.Entity<PloegLid>().ToTable("ploeg_lid").HasKey(l => new { l.PloegId, l.MedewerkerId });
         model.Entity<Planningsitem>().ToTable("planningsitem");
         model.Entity<Planningsitem>().HasOne(p => p.Project).WithMany().HasForeignKey(p => p.ProjectId);
+        model.Entity<Werkbon>().ToTable("werkbon");
+        model.Entity<Werkbon>().HasOne(w => w.Project).WithMany().HasForeignKey(w => w.ProjectId);
+        model.Entity<Werkbon>().HasMany(w => w.Regels).WithOne().HasForeignKey(r => r.WerkbonId);
+        model.Entity<Werkbon>().HasMany(w => w.Fotos).WithOne().HasForeignKey(f => f.WerkbonId);
+        model.Entity<Werkbonregel>().ToTable("werkbonregel");
+        model.Entity<Werkbonfoto>().ToTable("werkbonfoto");
 
         // Kolommen die de databank beheert.
         foreach (var e in model.Model.GetEntityTypes())

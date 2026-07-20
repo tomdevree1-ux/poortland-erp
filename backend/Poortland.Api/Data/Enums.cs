@@ -18,6 +18,13 @@ public enum Projectfase
     [NpgsqlTypes.PgName("plaatsing_2")] Plaatsing2,
     Automatisering
 }
+public enum WerkbonStatus { Open, Uitgevoerd, KlantGetekend, VerwerktInFacturatie }
+public enum WerkbonType
+{
+    [NpgsqlTypes.PgName("plaatsing_1")] Plaatsing1,
+    [NpgsqlTypes.PgName("plaatsing_2")] Plaatsing2,
+    Interventie
+}
 public enum OpvolgtaakStatus { Open, Uitgevoerd, Vervallen }
 public enum OpvolgtaakType { NaOpmeting, NaOfferte, LeadOpvolging }
 public enum WebsiteContentStatus { Concept, Gepubliceerd, Gearchiveerd }

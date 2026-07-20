@@ -69,6 +69,26 @@ export interface MedewerkerRij {
   id: string; naam: string; voornaam?: string; email: string; telefoon?: string; isActief: boolean; rollen: Rol[]
 }
 
+// TS-09 veld en werkbon
+export interface WerkbonRegelRij {
+  id: string; soort: 'uitgevoerd_werk' | 'materiaal' | 'meerwerk'
+  omschrijving: string; aantal?: number; eenheid?: string; afwijkingVanStuklijst: boolean
+}
+export interface WerkbonFotoRij {
+  id: string; moment: 'voor' | 'na'; bestandsnaam: string; gpsLat?: number; gpsLon?: number
+  aangemaaktOp: string; url?: string
+}
+export interface WerkbonRij {
+  id: string; projectId: string; plaatserId: string
+  type: 'plaatsing1' | 'plaatsing2' | 'interventie'
+  status: 'open' | 'uitgevoerd' | 'klantGetekend' | 'verwerktInFacturatie'
+  uitvoeringsdatum?: string; urenBegin?: string; urenEinde?: string; opmerkingen?: string
+  getekendOp?: string; handtekeningUrl?: string; plaatser: string
+  project?: { id: string; nummer?: number; werfadres: string; klant: { naam: string; voornaam?: string; bedrijfsnaam?: string } }
+  regels: WerkbonRegelRij[]
+  fotos: WerkbonFotoRij[]
+}
+
 // TS-08 planning
 export type Projectfase = 'voorbereiding' | 'draadafsluiting' | 'plaatsing1' | 'plaatsing2' | 'automatisering'
 export interface PlanningsItemRij {

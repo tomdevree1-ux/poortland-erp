@@ -4,8 +4,9 @@ import { Link, useNavigate, useParams } from '@tanstack/react-router'
 import { clsx } from 'clsx'
 import { api } from '../lib/api'
 import { datum, euro, leeg, weergaveNaam } from '../lib/formaat'
-import type { Klant, Offerte, Onderdeel, OnderdeelStatus, PlanningsItemRij, ProductieData } from '../lib/types'
+import type { Klant, MedewerkerKeuze, Offerte, Onderdeel, OnderdeelStatus, PlanningsItemRij, ProductieData, WerkbonRij } from '../lib/types'
 import { faseTekst } from './Planning'
+import { werkbonTypeTekst } from './Veld'
 import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Paneel, PotloodKnop, Selecteer, Selectievak, Th, Td, VuilbakKnop, rijKlik, statusTekst } from '../ui'
 
 interface Dossier {
@@ -25,6 +26,24 @@ export default function DossierDetail() {
   const { data: planning } = useQuery({
     queryKey: ['dossier-planning', projectId],
     queryFn: () => api.get<PlanningsItemRij[]>(`/projecten/${projectId}/planning`)
+  })
+  const { data: werkbonnen } = useQuery({
+    queryKey: ['dossier-werkbonnen', projectId],
+    queryFn: () => api.get<WerkbonRij[]>(`/projecten/${projectId}/werkbonnen`)
+  })
+  const { data: medewerkerKeuzes } = useQuery({
+    queryKey: ['medewerker-overzicht'],
+    queryFn: () => api.get<MedewerkerKeuze[]>('/medewerkers/overzicht'), staleTime: 5 * 60 * 1000
+  })
+  const [bonOpen, zetBonOpen] = useState(false)
+  const [bonVorm, zetBonVorm] = useState({ type: 'plaatsing1', plaatserId: '', uitvoeringsdatum: '' })
+  const maakBon = useMutation({
+    mutationFn: () => api.post('/werkbonnen', {
+      projectId, type: bonVorm.type,
+      plaatserId: bonVorm.plaatserId || null,
+      uitvoeringsdatum: bonVorm.uitvoeringsdatum || null
+    }),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['dossier-werkbonnen', projectId] }); zetBonOpen(false) }
   })
   const maakOfferte = useMutation({
     mutationFn: () => api.post<Offerte>(`/projecten/${projectId}/offertes`, { taal: null }),
@@ -133,6 +152,27 @@ export default function DossierDetail() {
             </div>
           </Paneel>
 
+          <Paneel titel="Werkbonnen" className="col-span-2"
+            actie={<Knop variant="secundair" className="h-8 px-3 text-xs"
+              onClick={() => { zetBonVorm({ type: 'plaatsing1', plaatserId: '', uitvoeringsdatum: '' }); zetBonOpen(true) }}>
+              Werkbon aanmaken</Knop>}>
+            {(werkbonnen ?? []).length === 0 ? (
+              <p className="text-sm text-inkt-muted">Nog geen werkbonnen. De planner maakt ze hier aan; de plaatser vult ze in op de pagina Veld.</p>
+            ) : (
+              <ul className="space-y-2 text-sm">
+                {werkbonnen!.map(b => (
+                  <li key={b.id} className="flex items-center justify-between gap-4">
+                    <span className="font-medium">{werkbonTypeTekst[b.type] ?? b.type} · {b.plaatser}</span>
+                    <span className="flex items-center gap-3">
+                      <Badge status={b.status} />
+                      <span className="whitespace-nowrap text-inkt-muted">{datum(b.uitvoeringsdatum)}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Paneel>
+
           <Paneel titel="Planning" className="col-span-2"
             actie={<Link to="/planning" className="focusring text-xs font-semibold text-bronze-600 hover:underline">Open planning</Link>}>
             {(planning ?? []).length === 0 ? (
@@ -195,6 +235,29 @@ export default function DossierDetail() {
           )}
         </Paneel>
       )}
+
+      <Modaal open={bonOpen} titel="Werkbon aanmaken" onSluit={() => zetBonOpen(false)}>
+        <form className="space-y-4" onSubmit={e => { e.preventDefault(); maakBon.mutate() }}>
+          <div className="grid grid-cols-2 gap-4">
+            <Selecteer label="Type" value={bonVorm.type} onChange={e => zetBonVorm({ ...bonVorm, type: e.target.value })}>
+              <option value="plaatsing1">Plaatsing 1</option>
+              <option value="plaatsing2">Plaatsing 2</option>
+              <option value="interventie">Interventie</option>
+            </Selecteer>
+            <Invoer label="Uitvoeringsdatum" optioneel type="date" value={bonVorm.uitvoeringsdatum}
+              onChange={e => zetBonVorm({ ...bonVorm, uitvoeringsdatum: e.target.value })} />
+          </div>
+          <Selecteer label="Plaatser" value={bonVorm.plaatserId} onChange={e => zetBonVorm({ ...bonVorm, plaatserId: e.target.value })} required>
+            <option value="">Kies een plaatser…</option>
+            {medewerkerKeuzes?.map(m => <option key={m.id} value={m.id}>{m.naam}</option>)}
+          </Selecteer>
+          <div className="flex justify-end gap-2">
+            <Knop type="button" variant="ghost" onClick={() => zetBonOpen(false)}>Annuleren</Knop>
+            <Knop variant="primair" disabled={maakBon.isPending || !bonVorm.plaatserId}>
+              {maakBon.isPending ? 'Bezig…' : 'Aanmaken'}</Knop>
+          </div>
+        </form>
+      </Modaal>
 
       <Modaal open={momentOpen} titel="Contactmoment loggen" onSluit={() => zetMomentOpen(false)}>
         <form className="space-y-4" onSubmit={e => { e.preventDefault(); logMoment.mutate() }}>

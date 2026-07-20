@@ -1,0 +1,245 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Poortland.Api.Adapters;
+using Poortland.Api.Auth;
+using Poortland.Api.Data;
+
+namespace Poortland.Api.Controllers;
+
+// TS-09 Veld en werkbon, eerste online versie. De werkbon vervangt de
+// doorslagbon: werken, materialen met afwijking, meerwerk, foto's voor en na
+// (FR-009) en de klanthandtekening op het scherm (FR-013). Offline met
+// PowerSync volgt in een latere fase.
+[ApiController]
+[Route("api/v1")]
+[Authorize]
+public class WerkbonnenController(PoortlandDbContext db, ClaimsContext claims, SupabaseOpslag opslag) : ControllerBase
+{
+    const string Bucket = "werkbon";
+    static readonly string[] FotoTypes = ["image/jpeg", "image/png", "image/webp", "image/heic"];
+
+    public record WerkbonInvoer(Guid ProjectId, WerkbonType Type, Guid? PlaatserId, Guid? PlanningsitemId, DateOnly? Uitvoeringsdatum);
+    public record WerkbonWijziging(DateOnly? Uitvoeringsdatum, TimeOnly? UrenBegin, TimeOnly? UrenEinde, string? Opmerkingen);
+    public record RegelInvoer(string Soort, string Omschrijving, decimal? Aantal, string? Eenheid, bool? AfwijkingVanStuklijst);
+    public record TekenInvoer(string HandtekeningPng, decimal? GpsLat, decimal? GpsLon);
+
+    async Task<object> Projectie(Werkbon w)
+    {
+        var plaatsers = await db.Medewerkers.AsNoTracking()
+            .Where(m => m.Id == w.PlaatserId)
+            .Select(m => ($"{m.Voornaam} {m.Naam}").Trim())
+            .ToListAsync();
+        var fotos = new List<object>();
+        foreach (var f in w.Fotos.Where(f => f.VerwijderdOp == null))
+        {
+            string? url = null;
+            try { url = await opslag.SignedUrl(Bucket, f.BestandPad, 600); } catch { }
+            fotos.Add(new { f.Id, f.Moment, f.Bestandsnaam, f.GpsLat, f.GpsLon, f.AangemaaktOp, url });
+        }
+        string? handtekeningUrl = null;
+        if (w.KlanthandtekeningPad is not null)
+            try { handtekeningUrl = await opslag.SignedUrl(Bucket, w.KlanthandtekeningPad, 600); } catch { }
+        return new
+        {
+            w.Id, w.ProjectId, w.PlaatserId, w.Type, w.Status, w.Uitvoeringsdatum, w.UrenBegin, w.UrenEinde,
+            w.Opmerkingen, w.GetekendOp, handtekeningUrl,
+            plaatser = plaatsers.FirstOrDefault() ?? "—",
+            project = w.Project is null ? null : new
+            {
+                w.Project.Id, w.Project.Nummer, w.Project.Werfadres,
+                klant = new { w.Project.Klant!.Naam, w.Project.Klant.Voornaam, w.Project.Klant.Bedrijfsnaam }
+            },
+            regels = w.Regels.Where(r => r.VerwijderdOp == null).OrderBy(r => r.AangemaaktOp)
+                .Select(r => new { r.Id, r.Soort, r.Omschrijving, r.Aantal, r.Eenheid, r.AfwijkingVanStuklijst }),
+            fotos
+        };
+    }
+
+    [HttpGet("projecten/{projectId:guid}/werkbonnen")]
+    public async Task<IActionResult> VanProject(Guid projectId)
+    {
+        var bonnen = await db.Werkbonnen.AsNoTracking()
+            .Include(w => w.Project!).ThenInclude(p => p.Klant)
+            .Include(w => w.Regels).Include(w => w.Fotos)
+            .Where(w => w.ProjectId == projectId && w.VerwijderdOp == null)
+            .OrderByDescending(w => w.AangemaaktOp)
+            .ToListAsync();
+        var lijst = new List<object>();
+        foreach (var w in bonnen) lijst.Add(await Projectie(w));
+        return Ok(lijst);
+    }
+
+    // FR-012: de eigen bonnen van de plaatser, open eerst.
+    [HttpGet("werkbonnen/mijn")]
+    public async Task<IActionResult> Mijn()
+    {
+        var mijnId = claims.MedewerkerId!.Value;
+        var bonnen = await db.Werkbonnen.AsNoTracking()
+            .Include(w => w.Project!).ThenInclude(p => p.Klant)
+            .Include(w => w.Regels).Include(w => w.Fotos)
+            .Where(w => w.PlaatserId == mijnId && w.VerwijderdOp == null
+                && w.Status != WerkbonStatus.VerwerktInFacturatie)
+            .OrderBy(w => w.Status).ThenBy(w => w.Uitvoeringsdatum)
+            .Take(50)
+            .ToListAsync();
+        var lijst = new List<object>();
+        foreach (var w in bonnen) lijst.Add(await Projectie(w));
+        return Ok(lijst);
+    }
+
+    [HttpGet("werkbonnen/{id:guid}")]
+    public async Task<IActionResult> Detail(Guid id)
+    {
+        var bon = await db.Werkbonnen.AsNoTracking()
+            .Include(w => w.Project!).ThenInclude(p => p.Klant)
+            .Include(w => w.Regels).Include(w => w.Fotos)
+            .FirstOrDefaultAsync(w => w.Id == id && w.VerwijderdOp == null);
+        if (bon is null) return NotFound();
+        return Ok(await Projectie(bon));
+    }
+
+    // De planner (of montage zelf) maakt de werkbon aan (TS-09 sectie 4 en 7).
+    [HttpPost("werkbonnen")]
+    [VereistRol("planning", "montage")]
+    public async Task<IActionResult> Maak(WerkbonInvoer invoer)
+    {
+        var bon = new Werkbon
+        {
+            ProjectId = invoer.ProjectId, Type = invoer.Type,
+            PlaatserId = invoer.PlaatserId ?? claims.MedewerkerId!.Value,
+            PlanningsitemId = invoer.PlanningsitemId,
+            Uitvoeringsdatum = invoer.Uitvoeringsdatum ?? DateOnly.FromDateTime(DateTime.Today),
+            AangemaaktDoor = claims.MedewerkerId
+        };
+        db.Werkbonnen.Add(bon);
+        await db.SaveChangesAsync();
+        return Ok(new { bon.Id });
+    }
+
+    [HttpPatch("werkbonnen/{id:guid}")]
+    [VereistRol("montage", "planning")]
+    public async Task<IActionResult> Wijzig(Guid id, WerkbonWijziging invoer)
+    {
+        var bon = await db.Werkbonnen.FirstOrDefaultAsync(w => w.Id == id && w.VerwijderdOp == null);
+        if (bon is null) return NotFound();
+        if (bon.Status is WerkbonStatus.KlantGetekend or WerkbonStatus.VerwerktInFacturatie)
+            return BadRequest(new { fout = "Een getekende werkbon wijzigt niet meer." });
+        if (invoer.Uitvoeringsdatum is { } d) bon.Uitvoeringsdatum = d;
+        bon.UrenBegin = invoer.UrenBegin;
+        bon.UrenEinde = invoer.UrenEinde;
+        if (invoer.Opmerkingen is not null) bon.Opmerkingen = invoer.Opmerkingen;
+        await db.SaveChangesAsync();
+        return Ok(new { bon.Id });
+    }
+
+    [HttpPost("werkbonnen/{id:guid}/regels")]
+    [VereistRol("montage", "planning")]
+    public async Task<IActionResult> MaakRegel(Guid id, RegelInvoer invoer)
+    {
+        var bon = await db.Werkbonnen.FirstOrDefaultAsync(w => w.Id == id && w.VerwijderdOp == null);
+        if (bon is null) return NotFound();
+        if (bon.Status is WerkbonStatus.KlantGetekend or WerkbonStatus.VerwerktInFacturatie)
+            return BadRequest(new { fout = "Een getekende werkbon wijzigt niet meer." });
+        var regel = new Werkbonregel
+        {
+            WerkbonId = id, Soort = invoer.Soort, Omschrijving = invoer.Omschrijving,
+            Aantal = invoer.Aantal, Eenheid = invoer.Eenheid,
+            AfwijkingVanStuklijst = invoer.AfwijkingVanStuklijst ?? false,
+            AangemaaktDoor = claims.MedewerkerId
+        };
+        db.Werkbonregels.Add(regel);
+        await db.SaveChangesAsync();
+        return Ok(regel);
+    }
+
+    [HttpDelete("werkbonregels/{id:guid}")]
+    [VereistRol("montage", "planning")]
+    public async Task<IActionResult> VerwijderRegel(Guid id)
+    {
+        var regel = await db.Werkbonregels.FirstOrDefaultAsync(r => r.Id == id && r.VerwijderdOp == null);
+        if (regel is null) return NotFound();
+        regel.VerwijderdOp = DateTimeOffset.UtcNow;
+        await db.SaveChangesAsync();
+        return Ok(new { regel.Id, verwijderd = true });
+    }
+
+    // FR-009: foto's voor en na met tijdstempel en eventueel gps.
+    [HttpPost("werkbonnen/{id:guid}/fotos")]
+    [VereistRol("montage", "planning")]
+    [RequestSizeLimit(20 * 1024 * 1024)]
+    public async Task<IActionResult> UploadFoto(Guid id, [FromForm] IFormFile bestand, [FromForm] string moment,
+        [FromForm] decimal? gpsLat, [FromForm] decimal? gpsLon)
+    {
+        if (moment is not ("voor" or "na")) return BadRequest(new { fout = "Moment is voor of na." });
+        if (!FotoTypes.Contains(bestand.ContentType)) return BadRequest(new { fout = "Toegelaten: jpeg, png, webp of heic." });
+        if (bestand.Length == 0 || bestand.Length > 10 * 1024 * 1024) return BadRequest(new { fout = "Maximaal 10 MB per foto." });
+
+        var foto = new Werkbonfoto
+        {
+            Id = Guid.NewGuid(), WerkbonId = id, Moment = moment,
+            Bestandsnaam = bestand.FileName, GpsLat = gpsLat, GpsLon = gpsLon,
+            AangemaaktDoor = claims.MedewerkerId
+        };
+        var extensie = Path.GetExtension(bestand.FileName);
+        if (string.IsNullOrWhiteSpace(extensie)) extensie = ".jpg";
+        foto.BestandPad = $"{id}/{foto.Id}{extensie}";
+
+        using var geheugen = new MemoryStream();
+        await bestand.CopyToAsync(geheugen);
+        await opslag.Upload(Bucket, foto.BestandPad, geheugen.ToArray(), bestand.ContentType);
+
+        db.Werkbonfotos.Add(foto);
+        await db.SaveChangesAsync();
+        return Ok(new { foto.Id, foto.Moment });
+    }
+
+    [HttpPost("werkbonnen/{id:guid}/afronden")]
+    [VereistRol("montage")]
+    public async Task<IActionResult> Afronden(Guid id)
+    {
+        var bon = await db.Werkbonnen.FirstOrDefaultAsync(w => w.Id == id && w.VerwijderdOp == null);
+        if (bon is null) return NotFound();
+        bon.Status = WerkbonStatus.Uitgevoerd;
+        await db.SaveChangesAsync();
+        return Ok(new { bon.Id, bon.Status });
+    }
+
+    // FR-013: de klant tekent op het scherm; de bon bevriest en is meteen
+    // beschikbaar voor kantoor, planning en facturatie.
+    [HttpPost("werkbonnen/{id:guid}/tekenen")]
+    [VereistRol("montage")]
+    public async Task<IActionResult> Tekenen(Guid id, TekenInvoer invoer)
+    {
+        var bon = await db.Werkbonnen.FirstOrDefaultAsync(w => w.Id == id && w.VerwijderdOp == null);
+        if (bon is null) return NotFound();
+        var basis64 = invoer.HandtekeningPng;
+        var komma = basis64.IndexOf(',');
+        if (komma >= 0) basis64 = basis64[(komma + 1)..];
+        byte[] bytes;
+        try { bytes = Convert.FromBase64String(basis64); }
+        catch { return BadRequest(new { fout = "De handtekening is geen geldig beeld." }); }
+        if (bytes.Length is 0 or > 2 * 1024 * 1024)
+            return BadRequest(new { fout = "De handtekening is leeg of te groot." });
+
+        bon.KlanthandtekeningPad = $"{id}/handtekening.png";
+        await opslag.Upload(Bucket, bon.KlanthandtekeningPad, bytes, "image/png");
+        bon.HandtekeningMethode = "online";
+        bon.GpsLat = invoer.GpsLat;
+        bon.GpsLon = invoer.GpsLon;
+        bon.Status = WerkbonStatus.KlantGetekend;
+        await db.SaveChangesAsync();
+        return Ok(new { bon.Id, bon.Status, bon.GetekendOp });
+    }
+
+    [HttpPost("werkbonnen/{id:guid}/naar-facturatie")]
+    [VereistRol("boekhouding")]
+    public async Task<IActionResult> NaarFacturatie(Guid id)
+    {
+        var bon = await db.Werkbonnen.FirstOrDefaultAsync(w => w.Id == id && w.VerwijderdOp == null);
+        if (bon is null) return NotFound();
+        bon.Status = WerkbonStatus.VerwerktInFacturatie;
+        await db.SaveChangesAsync();
+        return Ok(new { bon.Id, bon.Status });
+    }
+}

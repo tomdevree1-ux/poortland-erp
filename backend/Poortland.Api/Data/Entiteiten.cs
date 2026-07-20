@@ -316,6 +316,50 @@ public class Planningsitem : BasisEntiteit
     public Project? Project { get; set; }
 }
 
+// TS-09 veld en werkbon
+public class Werkbon : BasisEntiteit
+{
+    public Guid ProjectId { get; set; }
+    public Guid PlaatserId { get; set; }
+    public Guid? PlanningsitemId { get; set; }
+    public WerkbonType Type { get; set; }
+    public WerkbonStatus Status { get; set; } = WerkbonStatus.Open;
+    public DateOnly? Uitvoeringsdatum { get; set; }
+    public TimeOnly? UrenBegin { get; set; }
+    public TimeOnly? UrenEinde { get; set; }
+    public string? Opmerkingen { get; set; }
+    public string? KlanthandtekeningPad { get; set; }
+    public DateTimeOffset? GetekendOp { get; set; }
+    public string? HandtekeningMethode { get; set; }
+    public decimal? GpsLat { get; set; }
+    public decimal? GpsLon { get; set; }
+    public Guid? ClientId { get; set; }
+    public DateTimeOffset? GesynchroniseerdOp { get; set; }
+    public Project? Project { get; set; }
+    public List<Werkbonregel> Regels { get; set; } = [];
+    public List<Werkbonfoto> Fotos { get; set; } = [];
+}
+
+public class Werkbonregel : BasisEntiteit
+{
+    public Guid WerkbonId { get; set; }
+    public string Soort { get; set; } = "uitgevoerd_werk";
+    public string Omschrijving { get; set; } = "";
+    public decimal? Aantal { get; set; }
+    public string? Eenheid { get; set; }
+    public bool AfwijkingVanStuklijst { get; set; }
+}
+
+public class Werkbonfoto : BasisEntiteit
+{
+    public Guid WerkbonId { get; set; }
+    public string Moment { get; set; } = "voor";
+    public string Bestandsnaam { get; set; } = "";
+    public string BestandPad { get; set; } = "";
+    public decimal? GpsLat { get; set; }
+    public decimal? GpsLon { get; set; }
+}
+
 public class Instelling
 {
     public string Sleutel { get; set; } = "";
