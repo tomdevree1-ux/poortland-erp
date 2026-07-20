@@ -26,14 +26,28 @@ function maandagVan(d: Date) {
   kopie.setHours(0, 0, 0, 0)
   return kopie
 }
-const iso = (d: Date) => d.toISOString().slice(0, 10)
+// Lokale datum als iso, nooit via UTC (anders verschuift de dag in de zomertijd).
+const iso = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+const plusDagen = (d: Date, n: number) => { const k = new Date(d); k.setDate(k.getDate() + n); return k }
+
+type Weergave = 'week' | 'bord' | 'maand' | 'dag'
 
 export default function Planning() {
   const qc = useQueryClient()
   const [fout, zetFout] = useState<string>()
+  const [weergave, zetWeergave] = useState<Weergave>('week')
   const [start, zetStart] = useState(() => maandagVan(new Date()))
-  const dagen = [...Array(7)].map((_, i) => { const d = new Date(start); d.setDate(d.getDate() + i); return d })
-  const van = iso(dagen[0]); const tot = iso(dagen[6])
+  const [maand, zetMaand] = useState(() => { const d = new Date(); d.setDate(1); d.setHours(0, 0, 0, 0); return d })
+  const dagen = [...Array(7)].map((_, i) => plusDagen(start, i))
+
+  // De periode volgt de weergave; alles leest dezelfde planningsdata.
+  const vandaag = new Date(); vandaag.setHours(0, 0, 0, 0)
+  const maandEinde = new Date(maand.getFullYear(), maand.getMonth() + 1, 0)
+  const [van, tot] = weergave === 'maand'
+    ? [iso(new Date(maand.getFullYear(), maand.getMonth(), 1)), iso(maandEinde)]
+    : weergave === 'dag'
+      ? [iso(vandaag), iso(plusDagen(vandaag, 1))]
+      : [iso(dagen[0]), iso(dagen[6])]
 
   const { data: items } = useQuery({
     queryKey: ['planning', van, tot],
@@ -56,7 +70,11 @@ export default function Planning() {
   const [open, zetOpen] = useState(false)
   const [bewerkId, zetBewerkId] = useState<string | null>(null)
   const [vorm, zetVorm] = useState(leegVorm)
-  function openNieuw(dag?: string) { zetBewerkId(null); zetVorm({ ...leegVorm, geplandeDatum: dag ?? van }); zetOpen(true) }
+  function openNieuw(dag?: string, toewijzing?: string) {
+    zetBewerkId(null)
+    zetVorm({ ...leegVorm, geplandeDatum: dag ?? van, toewijzing: toewijzing ?? '' })
+    zetOpen(true)
+  }
   function openBewerk(item: PlanningsItemRij) {
     zetBewerkId(item.id)
     zetVorm({
@@ -104,6 +122,40 @@ export default function Planning() {
   })
 
   const weekTekst = `${datum(van)} tot ${datum(tot)}`
+  const maandTekst = new Intl.DateTimeFormat('nl-BE', { month: 'long', year: 'numeric' }).format(maand)
+
+  function ItemKaart({ item, groot }: { item: PlanningsItemRij; groot?: boolean }) {
+    return (
+      <button type="button" onClick={() => openBewerk(item)}
+        className={clsx('focusring block w-full rounded-control border text-left transition hover:border-bronze-500',
+          statusKleur[item.status], groot ? 'px-4 py-3 text-sm' : 'px-2 py-1.5 text-xs')}>
+        <div className="font-semibold">{item.project.nummer ? `${item.project.nummer} · ` : ''}{weergaveNaam(item.project.klant)}</div>
+        <div className="text-inkt-muted">{faseTekst[item.fase]} · {item.toegewezene}</div>
+        {groot && (
+          <div className="mt-1.5 space-y-0.5 text-xs text-inkt-muted">
+            <div>{item.project.werfadres}</div>
+            {item.benodigdeMaterialen && <div>Materialen: {item.benodigdeMaterialen}</div>}
+            {item.klantafspraken && <div>Afspraken: {item.klantafspraken}</div>}
+          </div>
+        )}
+      </button>
+    )
+  }
+
+  // Planbordrijen: eerst de actieve ploegen, dan de medewerkers. Een medewerker
+  // telt ook mee wanneer zijn ploeg is ingepland, zodat dubbelboeking opvalt.
+  const bordRijen = [
+    ...(ploegen ?? []).filter(p => p.isActief).map(p => ({
+      sleutel: `ploeg:${p.id}`, naam: `Ploeg · ${p.naam}`,
+      vanItem: (i: PlanningsItemRij) => i.ploegId === p.id
+    })),
+    ...(medewerkers ?? []).map(m => ({
+      sleutel: `medewerker:${m.id}`, naam: m.naam,
+      vanItem: (i: PlanningsItemRij) => i.medewerkerId === m.id
+        || (i.ploegId != null && (ploegen ?? []).some(p => p.id === i.ploegId && p.leden.includes(m.id)))
+    }))
+  ]
+
   return (
     <>
       <PaginaKop eyebrow="Planning · centraal" titel="Planning"
@@ -113,37 +165,151 @@ export default function Planning() {
         </div>} />
       {fout && <div className="mb-4"><Melding soort="fout">{fout}</Melding></div>}
 
-      <div className="mb-4 flex items-center justify-between">
-        <Knop variant="ghost" onClick={() => zetStart(s => { const d = new Date(s); d.setDate(d.getDate() - 7); return d })}>← Vorige week</Knop>
-        <div className="text-sm font-semibold text-inkt">{weekTekst}</div>
-        <Knop variant="ghost" onClick={() => zetStart(s => { const d = new Date(s); d.setDate(d.getDate() + 7); return d })}>Volgende week →</Knop>
+      <div className="mb-4 flex items-center justify-between gap-4">
+        <div className="flex gap-1 rounded-control border border-inkt/10 p-1">
+          {([['week', 'Week'], ['bord', 'Planbord'], ['maand', 'Maand'], ['dag', 'Vandaag']] as [Weergave, string][]).map(([w, t]) => (
+            <button key={w} type="button" onClick={() => zetWeergave(w)}
+              className={clsx('focusring rounded-[6px] px-3 py-1.5 text-sm font-semibold transition',
+                weergave === w ? 'bg-bronze-500 text-forest-950' : 'text-inkt-muted hover:text-inkt')}>
+              {t}
+            </button>
+          ))}
+        </div>
+        {weergave === 'maand' ? (
+          <div className="flex items-center gap-2">
+            <Knop variant="ghost" onClick={() => zetMaand(m => new Date(m.getFullYear(), m.getMonth() - 1, 1))}>←</Knop>
+            <div className="w-44 text-center text-sm font-semibold capitalize text-inkt">{maandTekst}</div>
+            <Knop variant="ghost" onClick={() => zetMaand(m => new Date(m.getFullYear(), m.getMonth() + 1, 1))}>→</Knop>
+          </div>
+        ) : weergave !== 'dag' ? (
+          <div className="flex items-center gap-2">
+            <Knop variant="ghost" onClick={() => zetStart(s => plusDagen(s, -7))}>← Vorige</Knop>
+            <div className="text-sm font-semibold text-inkt">{weekTekst}</div>
+            <Knop variant="ghost" onClick={() => zetStart(s => plusDagen(s, 7))}>Volgende →</Knop>
+          </div>
+        ) : <div className="text-sm font-semibold text-inkt">Vandaag en morgen</div>}
       </div>
 
-      <div className="grid grid-cols-7 gap-2">
-        {dagen.map(dag => {
-          const sleutel = iso(dag)
-          const vandaag = sleutel === iso(new Date())
-          const dagItems = (items ?? []).filter(i => i.geplandeDatum === sleutel)
-          return (
-            <div key={sleutel} className={clsx('min-h-[180px] rounded-control border p-2',
-              vandaag ? 'border-bronze-500/60 bg-bronze-500/[.06]' : 'border-inkt/10 bg-vlak-surface/60')}>
-              <button type="button" onClick={() => openNieuw(sleutel)}
-                className="focusring mb-2 w-full rounded-control px-1 py-0.5 text-left text-xs font-bold uppercase tracking-[0.1em] text-inkt-muted hover:text-inkt">
-                {new Intl.DateTimeFormat('nl-BE', { weekday: 'short', day: '2-digit', month: 'short' }).format(dag)}
-              </button>
-              <div className="space-y-1.5">
-                {dagItems.map(item => (
-                  <button key={item.id} type="button" onClick={() => openBewerk(item)}
-                    className={clsx('focusring block w-full rounded-control border px-2 py-1.5 text-left text-xs transition hover:border-bronze-500', statusKleur[item.status])}>
-                    <div className="font-semibold">{item.project.nummer ? `${item.project.nummer} · ` : ''}{weergaveNaam(item.project.klant)}</div>
-                    <div className="text-inkt-muted">{faseTekst[item.fase]} · {item.toegewezene}</div>
-                  </button>
-                ))}
+      {weergave === 'week' && (
+        <div className="grid grid-cols-7 gap-2">
+          {dagen.map(dag => {
+            const sleutel = iso(dag)
+            const isVandaag = sleutel === iso(new Date())
+            const dagItems = (items ?? []).filter(i => i.geplandeDatum === sleutel)
+            return (
+              <div key={sleutel} className={clsx('min-h-[180px] rounded-control border p-2',
+                isVandaag ? 'border-bronze-500/60 bg-bronze-500/[.06]' : 'border-inkt/10 bg-vlak-surface/60')}>
+                <button type="button" onClick={() => openNieuw(sleutel)}
+                  className="focusring mb-2 w-full rounded-control px-1 py-0.5 text-left text-xs font-bold uppercase tracking-[0.1em] text-inkt-muted hover:text-inkt">
+                  {new Intl.DateTimeFormat('nl-BE', { weekday: 'short', day: '2-digit', month: 'short' }).format(dag)}
+                </button>
+                <div className="space-y-1.5">
+                  {dagItems.map(item => <ItemKaart key={item.id} item={item} />)}
+                </div>
               </div>
-            </div>
-          )
-        })}
-      </div>
+            )
+          })}
+        </div>
+      )}
+
+      {weergave === 'bord' && (
+        <div className="overflow-x-auto rounded-control border border-inkt/10">
+          <table className="w-full border-separate border-spacing-0 text-sm">
+            <thead>
+              <tr>
+                <th className="sticky left-0 bg-vlak-canvas px-3 py-2 text-left text-xs font-bold uppercase tracking-[0.1em] text-inkt-muted">Wie</th>
+                {dagen.map(dag => (
+                  <th key={iso(dag)} className={clsx('px-2 py-2 text-left text-xs font-bold uppercase tracking-[0.1em]',
+                    iso(dag) === iso(new Date()) ? 'text-bronze-600' : 'text-inkt-muted')}>
+                    {new Intl.DateTimeFormat('nl-BE', { weekday: 'short', day: '2-digit' }).format(dag)}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {bordRijen.map(rij => (
+                <tr key={rij.sleutel} className="border-t border-inkt/[.06]">
+                  <td className="sticky left-0 whitespace-nowrap border-t border-inkt/[.06] bg-vlak-canvas px-3 py-2 font-semibold">{rij.naam}</td>
+                  {dagen.map(dag => {
+                    const sleutel = iso(dag)
+                    const celItems = (items ?? []).filter(i => i.geplandeDatum === sleutel && rij.vanItem(i))
+                    const dubbel = celItems.length > 1
+                    return (
+                      <td key={sleutel} className="min-w-32 border-t border-inkt/[.06] p-1 align-top">
+                        <div className={clsx('min-h-12 space-y-1 rounded-control p-1',
+                          dubbel && 'border border-corten-500/60 bg-corten-500/[.07]')}
+                          title={dubbel ? 'Dubbel geboekt op deze dag' : undefined}>
+                          {celItems.map(item => <ItemKaart key={item.id} item={item} />)}
+                          {celItems.length === 0 && (
+                            <button type="button" onClick={() => openNieuw(sleutel, rij.sleutel)} aria-label="Inplannen"
+                              className="focusring h-11 w-full rounded-control text-inkt-faint transition hover:bg-bronze-500/[.08] hover:text-bronze-600">+</button>
+                          )}
+                        </div>
+                      </td>
+                    )
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {weergave === 'maand' && (() => {
+        const eerste = new Date(maand.getFullYear(), maand.getMonth(), 1)
+        const rasterStart = maandagVan(eerste)
+        const cellen = [...Array(42)].map((_, i) => plusDagen(rasterStart, i))
+        return (
+          <div className="grid grid-cols-7 gap-1.5">
+            {['ma', 'di', 'wo', 'do', 'vr', 'za', 'zo'].map(d => (
+              <div key={d} className="px-2 pb-1 text-xs font-bold uppercase tracking-[0.1em] text-inkt-muted">{d}</div>
+            ))}
+            {cellen.map(dag => {
+              const sleutel = iso(dag)
+              const inMaand = dag.getMonth() === maand.getMonth()
+              const isVandaag = sleutel === iso(new Date())
+              const aantal = (items ?? []).filter(i => i.geplandeDatum === sleutel).length
+              return (
+                <button key={sleutel} type="button"
+                  onClick={() => { zetStart(maandagVan(dag)); zetWeergave('week') }}
+                  className={clsx('focusring flex h-20 flex-col items-start justify-between rounded-control border p-2 text-left transition hover:border-bronze-500',
+                    isVandaag ? 'border-bronze-500/60 bg-bronze-500/[.06]' : 'border-inkt/10',
+                    inMaand ? 'bg-vlak-surface/60' : 'bg-transparent opacity-40')}>
+                  <span className="cijfers text-sm font-semibold">{dag.getDate()}</span>
+                  {aantal > 0 && (
+                    <span className="rounded-chip bg-bronze-500/15 px-1.5 py-0.5 text-xs font-semibold text-bronze-600">
+                      {aantal} {aantal === 1 ? 'afspraak' : 'afspraken'}
+                    </span>
+                  )}
+                </button>
+              )
+            })}
+          </div>
+        )
+      })()}
+
+      {weergave === 'dag' && (
+        <div className="grid grid-cols-2 gap-6">
+          {[vandaag, plusDagen(vandaag, 1)].map((dag, i) => {
+            const sleutel = iso(dag)
+            const dagItems = (items ?? []).filter(it => it.geplandeDatum === sleutel)
+            return (
+              <div key={sleutel}>
+                <h2 className="mb-3 text-sm font-bold uppercase tracking-[0.14em] text-inkt-muted">
+                  {i === 0 ? 'Vandaag' : 'Morgen'} · {new Intl.DateTimeFormat('nl-BE', { weekday: 'long', day: '2-digit', month: 'long' }).format(dag)}
+                </h2>
+                {dagItems.length === 0 ? (
+                  <p className="text-sm text-inkt-muted">Niets ingepland.</p>
+                ) : (
+                  <div className="space-y-2">
+                    {dagItems.map(item => <ItemKaart key={item.id} item={item} groot />)}
+                  </div>
+                )}
+              </div>
+            )
+          })}
+        </div>
+      )}
 
       <Modaal open={open} titel={bewerkId ? 'Planningsitem bewerken' : 'Inplannen'} onSluit={() => zetOpen(false)}>
         <form className="space-y-4" onSubmit={e => { e.preventDefault(); bewaar.mutate() }}>
