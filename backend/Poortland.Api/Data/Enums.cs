@@ -11,6 +11,13 @@ public enum OrderStatus { Aangemaakt, InProductie, ExterneBehandeling, KlaarVoor
 public enum BtwTarief { P0, P6, P21 }
 public enum OnderdeelStatus { Besteld, InProductie, Voorbehandeling, Lakwerk, KlaarVoorMontage, Gemonteerd }
 public enum LeverancierType { Voorbehandeling, Lakwerk, Product }
+public enum Projectfase
+{
+    Voorbereiding, Draadafsluiting,
+    [NpgsqlTypes.PgName("plaatsing_1")] Plaatsing1,
+    [NpgsqlTypes.PgName("plaatsing_2")] Plaatsing2,
+    Automatisering
+}
 public enum OpvolgtaakStatus { Open, Uitgevoerd, Vervallen }
 public enum OpvolgtaakType { NaOpmeting, NaOfferte, LeadOpvolging }
 public enum WebsiteContentStatus { Concept, Gepubliceerd, Gearchiveerd }

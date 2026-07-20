@@ -73,9 +73,48 @@ public class DagelijkseTaken(IServiceScopeFactory scopes, ILogger<DagelijkseTake
             });
         }
 
+        // FR-011: afspraakbevestiging 48 uur vooraf en reminder 24 uur vooraf per
+        // gepland planningsitem, gelogd in communicatie zodat niets dubbel vertrekt.
+        var email = scope.ServiceProvider.GetRequiredService<Adapters.IEmailVerzender>();
+        var afspraken = await db.Planningsitems
+            .Include(p => p.Project!).ThenInclude(pr => pr.Klant)
+            .Where(p => p.VerwijderdOp == null && p.Status != "uitgevoerd"
+                && (p.GeplandeDatum == vandaag.AddDays(2) || p.GeplandeDatum == vandaag.AddDays(1)))
+            .ToListAsync(stop);
+        var verzonden = 0;
+        foreach (var afspraak in afspraken)
+        {
+            var klant = afspraak.Project?.Klant;
+            if (klant?.Email is not { Length: > 0 } naar) continue;
+            var soort = afspraak.GeplandeDatum == vandaag.AddDays(2) ? "afspraakbevestiging" : "afspraakreminder";
+            var alVerstuurd = await db.Communicaties.AnyAsync(c =>
+                c.ProjectId == afspraak.ProjectId && c.Onderwerp.StartsWith(soort + ":" + afspraak.Id), stop);
+            if (alVerstuurd) continue;
+            var wanneer = afspraak.GeplandeDatum.ToString("dd-MM-yyyy");
+            var titel = soort == "afspraakbevestiging"
+                ? $"Bevestiging van uw afspraak op {wanneer}"
+                : $"Herinnering: onze afspraak op {wanneer}";
+            var tekst = $"Beste {($"{klant.Voornaam} {klant.Naam}").Trim()},\n\n" +
+                $"{(soort == "afspraakbevestiging" ? "Wij bevestigen" : "Een herinnering aan")} onze afspraak op {wanneer} " +
+                $"voor de fase {afspraak.Fase} op {afspraak.Project!.Werfadres}.\n\n" +
+                "Komt dit toch niet uit, laat het ons gerust weten via +32 (0)15 432 111.\n\nMet vriendelijke groeten\nPoortland";
+            try
+            {
+                await email.Verzend(naar, titel, tekst);
+                db.Communicaties.Add(new Communicatie
+                {
+                    KlantId = klant.Id, ProjectId = afspraak.ProjectId,
+                    Onderwerp = $"{soort}:{afspraak.Id} {titel}", Inhoud = tekst,
+                    VerzondenOp = DateTimeOffset.UtcNow, Status = CommunicatieStatus.Verzonden
+                });
+                verzonden++;
+            }
+            catch (Exception fout) { log.LogError(fout, "Afspraakmail naar {Naar} mislukt", naar); }
+        }
+
         var wijzigingen = await db.SaveChangesAsync(stop);
         if (wijzigingen > 0)
-            log.LogInformation("Dagelijkse taken: {Verlopen} verlopen offertes en {Taken} nieuwe opvolgtaken",
-                teVerlopen.Count, zonderReactie.Count + leads.Count);
+            log.LogInformation("Dagelijkse taken: {Verlopen} verlopen offertes, {Taken} nieuwe opvolgtaken en {Mails} afspraakmails",
+                teVerlopen.Count, zonderReactie.Count + leads.Count, verzonden);
     }
 }

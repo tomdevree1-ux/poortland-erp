@@ -69,6 +69,21 @@ export interface MedewerkerRij {
   id: string; naam: string; voornaam?: string; email: string; telefoon?: string; isActief: boolean; rollen: Rol[]
 }
 
+// TS-08 planning
+export type Projectfase = 'voorbereiding' | 'draadafsluiting' | 'plaatsing1' | 'plaatsing2' | 'automatisering'
+export interface PlanningsItemRij {
+  id: string; projectId: string; fase: Projectfase; geplandeDatum: string
+  status: 'gepland' | 'bevestigd' | 'uitgevoerd'
+  benodigdeMaterialen?: string; klantafspraken?: string
+  medewerkerId?: string; ploegId?: string; toegewezene: string
+  project: { id: string; nummer?: number; werfadres: string; klant: { naam: string; voornaam?: string; bedrijfsnaam?: string } }
+}
+export interface PloegRij { id: string; naam: string; isActief: boolean; leden: string[] }
+export interface NotificatieRij {
+  id: string; type: string; titel: string; boodschap?: string
+  entiteitType?: string; entiteitId?: string; gelezenOp?: string; aangemaaktOp: string
+}
+
 // TS-07 productie en stuklijst
 export type OnderdeelStatus = 'besteld' | 'inProductie' | 'voorbehandeling' | 'lakwerk' | 'klaarVoorMontage' | 'gemonteerd'
 export interface Leverancier { id: string; naam: string; type: 'voorbehandeling' | 'lakwerk' | 'product'; email?: string; telefoon?: string }

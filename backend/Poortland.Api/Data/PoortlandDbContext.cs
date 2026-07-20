@@ -27,6 +27,9 @@ public class PoortlandDbContext(DbContextOptions<PoortlandDbContext> opties) : D
     public DbSet<Stuklijst> Stuklijsten => Set<Stuklijst>();
     public DbSet<Productieonderdeel> Productieonderdelen => Set<Productieonderdeel>();
     public DbSet<Tekening> Tekeningen => Set<Tekening>();
+    public DbSet<Ploeg> Ploegen => Set<Ploeg>();
+    public DbSet<PloegLid> PloegLeden => Set<PloegLid>();
+    public DbSet<Planningsitem> Planningsitems => Set<Planningsitem>();
 
     public static NpgsqlDataSource MaakDataSource(string connectionString)
     {
@@ -46,6 +49,7 @@ public class PoortlandDbContext(DbContextOptions<PoortlandDbContext> opties) : D
         b.MapEnum<CommunicatieStatus>("communicatie_status");
         b.MapEnum<OnderdeelStatus>("onderdeel_status");
         b.MapEnum<LeverancierType>("leverancier_type");
+        b.MapEnum<Projectfase>("projectfase");
         return b.Build();
     }
 
@@ -66,6 +70,7 @@ public class PoortlandDbContext(DbContextOptions<PoortlandDbContext> opties) : D
         model.HasPostgresEnum<CommunicatieStatus>("communicatie_status");
         model.HasPostgresEnum<OnderdeelStatus>("onderdeel_status");
         model.HasPostgresEnum<LeverancierType>("leverancier_type");
+        model.HasPostgresEnum<Projectfase>("projectfase");
 
         model.Entity<Medewerker>().ToTable("medewerker");
         model.Entity<Medewerker>().HasMany(m => m.Rollen).WithOne().HasForeignKey(r => r.MedewerkerId);
@@ -101,6 +106,11 @@ public class PoortlandDbContext(DbContextOptions<PoortlandDbContext> opties) : D
         model.Entity<Productieonderdeel>().ToTable("productieonderdeel");
         model.Entity<Tekening>().ToTable("tekening");
         model.Entity<Tekening>().Property(t => t.Metadata).HasColumnType("jsonb");
+        model.Entity<Ploeg>().ToTable("ploeg");
+        model.Entity<Ploeg>().HasMany(p => p.Leden).WithOne().HasForeignKey(l => l.PloegId);
+        model.Entity<PloegLid>().ToTable("ploeg_lid").HasKey(l => new { l.PloegId, l.MedewerkerId });
+        model.Entity<Planningsitem>().ToTable("planningsitem");
+        model.Entity<Planningsitem>().HasOne(p => p.Project).WithMany().HasForeignKey(p => p.ProjectId);
 
         // Kolommen die de databank beheert.
         foreach (var e in model.Model.GetEntityTypes())

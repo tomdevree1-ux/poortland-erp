@@ -1,10 +1,11 @@
 import { useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useNavigate, useParams } from '@tanstack/react-router'
+import { Link, useNavigate, useParams } from '@tanstack/react-router'
 import { clsx } from 'clsx'
 import { api } from '../lib/api'
 import { datum, euro, leeg, weergaveNaam } from '../lib/formaat'
-import type { Klant, Offerte, Onderdeel, OnderdeelStatus, ProductieData } from '../lib/types'
+import type { Klant, Offerte, Onderdeel, OnderdeelStatus, PlanningsItemRij, ProductieData } from '../lib/types'
+import { faseTekst } from './Planning'
 import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Paneel, PotloodKnop, Selecteer, Selectievak, Th, Td, VuilbakKnop, rijKlik, statusTekst } from '../ui'
 
 interface Dossier {
@@ -21,6 +22,10 @@ export default function DossierDetail() {
   const qc = useQueryClient()
   const [tab, zetTab] = useState<'overzicht' | 'productie' | 'offertes' | 'communicatie'>('overzicht')
   const { data } = useQuery({ queryKey: ['dossier', projectId], queryFn: () => api.get<Dossier>(`/projecten/${projectId}`) })
+  const { data: planning } = useQuery({
+    queryKey: ['dossier-planning', projectId],
+    queryFn: () => api.get<PlanningsItemRij[]>(`/projecten/${projectId}/planning`)
+  })
   const maakOfferte = useMutation({
     mutationFn: () => api.post<Offerte>(`/projecten/${projectId}/offertes`, { taal: null }),
     onSuccess: o => { qc.invalidateQueries({ queryKey: ['dossier', projectId] }); navigeer({ to: '/offertes/$offerteId', params: { offerteId: o.id } }) }
@@ -126,6 +131,25 @@ export default function DossierDetail() {
               <div className="mb-1 text-[11px] font-bold uppercase tracking-[0.14em] text-inkt-muted">Omschrijving</div>
               <p className="text-sm text-inkt-body">{leeg(project.omschrijving)}</p>
             </div>
+          </Paneel>
+
+          <Paneel titel="Planning" className="col-span-2"
+            actie={<Link to="/planning" className="focusring text-xs font-semibold text-bronze-600 hover:underline">Open planning</Link>}>
+            {(planning ?? []).length === 0 ? (
+              <p className="text-sm text-inkt-muted">Nog geen fases ingepland. De planner plant in via de pagina Planning.</p>
+            ) : (
+              <ul className="space-y-2 text-sm">
+                {planning!.map(item => (
+                  <li key={item.id} className="flex items-center justify-between gap-4">
+                    <span className="font-medium">{faseTekst[item.fase]} · {item.toegewezene}</span>
+                    <span className="flex items-center gap-3">
+                      <Badge status={item.status} />
+                      <span className="whitespace-nowrap text-inkt-muted">{datum(item.geplandeDatum)}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
           </Paneel>
         </div>
       )}

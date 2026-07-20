@@ -242,6 +242,20 @@ realisatiespagina. Ververs de snapshot met een nieuwe kopie van de marketingsite
 `website_test/` voor je opnieuw uitrolt. De echte marketingsite blijft los van deze repo;
 `website_test/` is enkel een testkopie voor staging.
 
+## Repo naar GitHub met CI (kwaliteitsronde)
+
+De workflow `.github/workflows/ci.yml` draait bij elke push: backend build met
+unit tests, frontend typecheck met build en een secretscan. Koppelen is twee
+stappen: maak op github.com een lege private repo (bv. `poortland-erp`) en draai
+daarna vanuit de map `erp`:
+
+    git remote add origin git@github.com:JOUWACCOUNT/poortland-erp.git
+    git push -u origin master
+
+De e2e-suite draait bewust niet in CI (heeft een draaiende omgeving en een
+testlogin nodig); draai die lokaal vanuit `e2e/` met E2E_EMAIL, E2E_WACHTWOORD
+en optioneel E2E_API_URL.
+
 ## Dev server op Hetzner (infra map)
 
 Eenmalig: Hetzner account met betaalmethode, een project en een API token
