@@ -161,6 +161,17 @@ conform het voorbeeldscherm van de huisstijlgids (blad 08): de sidebar op net ie
 dieper papier met een bronzen accentrand. Bosgroen blijft beschikbaar voor tekst
 en accenten maar nooit als achtergrondvlak.
 
+## Migratiewachtrij (actie nodig)
+
+De migraties tot en met 0028 staan op het dev project. **0029 (werkbon), 0030
+(servicedossier) en 0031 (facturatie) staan klaar in `supabase/migrations` maar
+zijn nog niet toegepast** omdat de Supabase koppeling van de werkomgeving aan
+het verkeerde account hangt. Toepassen kan op twee manieren: de Supabase
+connector opnieuw verbinden met de Poortland organisatie of de drie bestanden
+in volgorde in de SQL editor van het dashboard plakken. Tot dan werken de
+pagina's Veld, Service en Facturatie niet op dev; het dashboard en de rest
+vangen dat netjes op.
+
 ## Lokaal draaien
 
 1. **Databank.** De migraties staan al op het dev project (of speel ze af met de Supabase CLI:

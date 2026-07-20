@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, Outlet, useNavigate, useRouter, useRouterState } from '@tanstack/react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { clsx } from 'clsx'
-import { ArrowLeft, Bell, CalendarDays, FolderOpen, HardHat, Users, Inbox, ListTodo, Globe, Settings, LogOut, Wrench } from 'lucide-react'
+import { ArrowLeft, Bell, CalendarDays, FolderOpen, HardHat, Users, Inbox, ListTodo, Globe, Receipt, Settings, LogOut, Wrench } from 'lucide-react'
 import type { NotificatieRij } from './lib/types'
 import { supabase } from './lib/supabase'
 import { api } from './lib/api'
@@ -19,6 +19,7 @@ const navItems = [
   { naar: '/planning', label: 'Planning', icoon: CalendarDays },
   { naar: '/veld', label: 'Veld', icoon: HardHat },
   { naar: '/service', label: 'Service', icoon: Wrench },
+  { naar: '/facturatie', label: 'Facturatie', icoon: Receipt, rollen: ['boekhouding', 'verkoop', 'beheerder'] },
   { naar: '/website', label: 'Website', icoon: Globe, rollen: ['verkoop', 'beheerder'] },
   { naar: '/beheer', label: 'Beheer', icoon: Settings, rollen: ['beheerder'] }
 ]

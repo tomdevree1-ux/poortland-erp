@@ -1,4 +1,4 @@
-import { Children, isValidElement, useEffect, useRef, useState } from 'react'
+import { Children, isValidElement, useEffect, useId, useRef, useState } from 'react'
 import { Pencil, Plus, Trash2 } from 'lucide-react'
 import { clsx } from 'clsx'
 import type { ReactNode, ButtonHTMLAttributes, InputHTMLAttributes, SelectHTMLAttributes, TextareaHTMLAttributes } from 'react'
@@ -26,20 +26,24 @@ export function Knop({ variant = 'secundair', className, ...rest }:
   )
 }
 
-export function VeldLabel({ children, optioneel }: { children: ReactNode; optioneel?: boolean }) {
+export function VeldLabel({ children, optioneel, htmlFor }: { children: ReactNode; optioneel?: boolean; htmlFor?: string }) {
   return (
-    <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.14em] text-inkt-muted">
+    <label htmlFor={htmlFor} className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.14em] text-inkt-muted">
       {children}{optioneel && <span className="ml-1 font-normal normal-case tracking-normal text-inkt-faint">(optioneel)</span>}
     </label>
   )
 }
 
-export function Invoer({ label, optioneel, fout, className, ...rest }:
+export function Invoer({ label, optioneel, fout, className, id, ...rest }:
   InputHTMLAttributes<HTMLInputElement> & { label?: string; optioneel?: boolean; fout?: string }) {
+  // Label en veld gekoppeld: nodig voor schermlezers en de e2e-suite.
+  const autoId = useId()
+  const veldId = id ?? autoId
   return (
     <div className={className}>
-      {label && <VeldLabel optioneel={optioneel}>{label}</VeldLabel>}
+      {label && <VeldLabel optioneel={optioneel} htmlFor={veldId}>{label}</VeldLabel>}
       <input
+        id={veldId}
         className="focusring h-10 w-full rounded-control border border-inkt/15 bg-vlak-surface px-3 text-[15px] text-inkt placeholder:text-inkt-faint"
         {...rest}
       />
@@ -48,12 +52,15 @@ export function Invoer({ label, optioneel, fout, className, ...rest }:
   )
 }
 
-export function TekstVak({ label, optioneel, className, ...rest }:
+export function TekstVak({ label, optioneel, className, id, ...rest }:
   TextareaHTMLAttributes<HTMLTextAreaElement> & { label?: string; optioneel?: boolean }) {
+  const autoId = useId()
+  const veldId = id ?? autoId
   return (
     <div className={className}>
-      {label && <VeldLabel optioneel={optioneel}>{label}</VeldLabel>}
+      {label && <VeldLabel optioneel={optioneel} htmlFor={veldId}>{label}</VeldLabel>}
       <textarea
+        id={veldId}
         className="focusring min-h-24 w-full rounded-control border border-inkt/15 bg-vlak-surface px-3 py-2 text-[15px] text-inkt placeholder:text-inkt-faint"
         {...rest}
       />
@@ -147,7 +154,8 @@ export const statusToon: Record<string, string> = {
   inVoorbereiding: 'neutraal', inUitvoering: 'brons', externInBehandeling: 'brons', afgerond: 'olijf',
   gepland: 'neutraal', bevestigd: 'brons',
   klantGetekend: 'olijf', verwerktInFacturatie: 'olijf',
-  gemeld: 'corten', ingepland: 'brons'
+  gemeld: 'corten', ingepland: 'brons',
+  gefactureerd: 'olijf'
 }
 export const statusTekst: Record<string, string> = {
   nieuw: 'Nieuw', gekwalificeerd: 'Gekwalificeerd', omgezet: 'Omgezet', verloren: 'Verloren',
@@ -161,7 +169,8 @@ export const statusTekst: Record<string, string> = {
   externInBehandeling: 'Extern in behandeling', afgerond: 'Afgerond',
   gepland: 'Gepland', bevestigd: 'Bevestigd',
   klantGetekend: 'Klant getekend', verwerktInFacturatie: 'Verwerkt in facturatie',
-  gemeld: 'Gemeld', ingepland: 'Ingepland'
+  gemeld: 'Gemeld', ingepland: 'Ingepland',
+  gefactureerd: 'Gefactureerd'
 }
 export function Badge({ status }: { status: string }) {
   return (

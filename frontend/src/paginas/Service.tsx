@@ -165,8 +165,8 @@ function NieuweMelding({ medewerkers, fout, zetFout, onSluit, onKlaar }: {
             {medewerkers.map(m => <option key={m.id} value={m.id}>{m.naam}</option>)}
           </Selecteer>
           <div>
-            <VeldLabel optioneel>Gewenste datum</VeldLabel>
-            <input type="date" value={geplandOp} onChange={e => zetGeplandOp(e.target.value)}
+            <VeldLabel optioneel htmlFor="service-gewenste-datum">Gewenste datum</VeldLabel>
+            <input id="service-gewenste-datum" type="date" value={geplandOp} onChange={e => zetGeplandOp(e.target.value)}
               className="w-full rounded-control border border-stone2-300 bg-vlak-surface px-3 py-2 text-sm outline-none focus:border-bronze-500" />
           </div>
         </div>
@@ -242,8 +242,8 @@ function MeldingDetail({ dossier, medewerkers, fout, zetFout, onSluit, onWijzig 
               {medewerkers.map(m => <option key={m.id} value={m.id}>{m.naam}</option>)}
             </Selecteer>
             <div>
-              <VeldLabel optioneel>Geplande datum</VeldLabel>
-              <input type="date" value={geplandOp} onChange={e => zetGeplandOp(e.target.value)}
+              <VeldLabel optioneel htmlFor="service-geplande-datum">Geplande datum</VeldLabel>
+              <input id="service-geplande-datum" type="date" value={geplandOp} onChange={e => zetGeplandOp(e.target.value)}
                 className="w-full rounded-control border border-stone2-300 bg-vlak-surface px-3 py-2 text-sm outline-none focus:border-bronze-500" />
             </div>
           </div>

@@ -122,6 +122,36 @@ export interface RapportOverzicht {
   serviceOpen: number; werkbonnenOpen: number
 }
 
+// TS-10 facturatievoorbereiding
+export type FactuurStatus = 'concept' | 'goedgekeurd' | 'gefactureerd'
+export type FactuurSoort = 'voorschot' | 'eind'
+export interface FactuurKlaarRij {
+  id: string; nummer?: number; werfadres: string; status: OrderStatus
+  klant: { naam: string; voornaam?: string; bedrijfsnaam?: string }
+  offerteTotaal: number; werkbonGetekend: boolean; meerwerkRegels: number
+  voorstellen: { id: string; soort: FactuurSoort; status: FactuurStatus; totaalInclBtw: number; exactNummer?: string }[]
+}
+export interface FactuurRegelRij {
+  id: string; volgnummer: number; bron: 'offerte' | 'meerwerk' | 'handmatig'
+  omschrijving: string; aantal: number; eenheid?: string; eenheidsprijs: number; btw: BtwTarief; totaal: number
+}
+export interface FactuurVoorstelRij {
+  id: string; soort: FactuurSoort; status: FactuurStatus
+  totaalExclBtw: number; totaalInclBtw: number; exactNummer?: string
+  goedgekeurdOp?: string; gefactureerdOp?: string; aangemaaktOp: string
+  project: { id: string; nummer?: number; werfadres: string }
+  klant: { naam: string; voornaam?: string; bedrijfsnaam?: string }
+}
+export interface FactuurVoorstelDetail {
+  id: string; soort: FactuurSoort; status: FactuurStatus; afwijkingBevestigd: boolean
+  totaalExclBtw: number; totaalBtw: number; totaalInclBtw: number
+  exactNummer?: string; goedgekeurdOp?: string; gefactureerdOp?: string
+  offerteTotaal?: number | null; afwijkingVanOfferte: boolean
+  project: { id: string; nummer?: number; werfadres: string }
+  klant: { naam: string; voornaam?: string; bedrijfsnaam?: string; btwNummer?: string }
+  regels: FactuurRegelRij[]
+}
+
 // TS-07 productie en stuklijst
 export type OnderdeelStatus = 'besteld' | 'inProductie' | 'voorbehandeling' | 'lakwerk' | 'klaarVoorMontage' | 'gemonteerd'
 export interface Leverancier { id: string; naam: string; type: 'voorbehandeling' | 'lakwerk' | 'product'; email?: string; telefoon?: string }

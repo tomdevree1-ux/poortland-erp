@@ -34,6 +34,8 @@ public class PoortlandDbContext(DbContextOptions<PoortlandDbContext> opties) : D
     public DbSet<Werkbonregel> Werkbonregels => Set<Werkbonregel>();
     public DbSet<Werkbonfoto> Werkbonfotos => Set<Werkbonfoto>();
     public DbSet<Servicedossier> Servicedossiers => Set<Servicedossier>();
+    public DbSet<Factuurvoorstel> Factuurvoorstellen => Set<Factuurvoorstel>();
+    public DbSet<Factuurvoorstelregel> Factuurvoorstelregels => Set<Factuurvoorstelregel>();
 
     public static NpgsqlDataSource MaakDataSource(string connectionString)
     {
@@ -57,6 +59,9 @@ public class PoortlandDbContext(DbContextOptions<PoortlandDbContext> opties) : D
         b.MapEnum<WerkbonStatus>("werkbon_status");
         b.MapEnum<WerkbonType>("werkbon_type");
         b.MapEnum<ServicedossierStatus>("servicedossier_status");
+        b.MapEnum<FactuurStatus>("factuur_status");
+        b.MapEnum<FactuurSoort>("factuur_soort");
+        b.MapEnum<FactuurregelBron>("factuurregel_bron");
         return b.Build();
     }
 
@@ -81,6 +86,9 @@ public class PoortlandDbContext(DbContextOptions<PoortlandDbContext> opties) : D
         model.HasPostgresEnum<WerkbonStatus>("werkbon_status");
         model.HasPostgresEnum<WerkbonType>("werkbon_type");
         model.HasPostgresEnum<ServicedossierStatus>("servicedossier_status");
+        model.HasPostgresEnum<FactuurStatus>("factuur_status");
+        model.HasPostgresEnum<FactuurSoort>("factuur_soort");
+        model.HasPostgresEnum<FactuurregelBron>("factuurregel_bron");
 
         model.Entity<Medewerker>().ToTable("medewerker");
         model.Entity<Medewerker>().HasMany(m => m.Rollen).WithOne().HasForeignKey(r => r.MedewerkerId);
@@ -130,6 +138,10 @@ public class PoortlandDbContext(DbContextOptions<PoortlandDbContext> opties) : D
         model.Entity<Servicedossier>().ToTable("servicedossier");
         model.Entity<Servicedossier>().HasOne(s => s.Klant).WithMany().HasForeignKey(s => s.KlantId);
         model.Entity<Servicedossier>().HasOne(s => s.Project).WithMany().HasForeignKey(s => s.ProjectId);
+        model.Entity<Factuurvoorstel>().ToTable("factuurvoorstel");
+        model.Entity<Factuurvoorstel>().HasOne(f => f.Project).WithMany().HasForeignKey(f => f.ProjectId);
+        model.Entity<Factuurvoorstel>().HasMany(f => f.Regels).WithOne().HasForeignKey(r => r.FactuurvoorstelId);
+        model.Entity<Factuurvoorstelregel>().ToTable("factuurvoorstelregel");
 
         // Kolommen die de databank beheert.
         foreach (var e in model.Model.GetEntityTypes())

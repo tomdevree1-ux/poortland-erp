@@ -26,6 +26,9 @@ public enum WerkbonType
     [NpgsqlTypes.PgName("plaatsing_2")] Plaatsing2,
     Interventie
 }
+public enum FactuurStatus { Concept, Goedgekeurd, Gefactureerd }
+public enum FactuurSoort { Voorschot, Eind }
+public enum FactuurregelBron { Offerte, Meerwerk, Handmatig }
 public enum OpvolgtaakStatus { Open, Uitgevoerd, Vervallen }
 public enum OpvolgtaakType { NaOpmeting, NaOfferte, LeadOpvolging }
 public enum WebsiteContentStatus { Concept, Gepubliceerd, Gearchiveerd }
