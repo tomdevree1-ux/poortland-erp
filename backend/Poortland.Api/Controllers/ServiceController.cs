@@ -152,10 +152,17 @@ public class RapportenController(PoortlandDbContext db) : ControllerBase
             .GroupBy(o => o.Status)
             .Select(g => new { status = g.Key, aantal = g.Count() })
             .ToListAsync();
-        var serviceOpen = await db.Servicedossiers.CountAsync(s =>
-            s.VerwijderdOp == null && s.Status != ServicedossierStatus.Afgesloten);
-        var werkbonnenOpen = await db.Werkbonnen.CountAsync(w =>
-            w.VerwijderdOp == null && (w.Status == WerkbonStatus.Open || w.Status == WerkbonStatus.Uitgevoerd));
+        // Defensief: zolang migratie 0029 en 0030 niet toegepast zijn bestaan deze
+        // tabellen nog niet; het dashboard mag daar niet op omvallen.
+        int serviceOpen = 0, werkbonnenOpen = 0;
+        try
+        {
+            serviceOpen = await db.Servicedossiers.CountAsync(s =>
+                s.VerwijderdOp == null && s.Status != ServicedossierStatus.Afgesloten);
+            werkbonnenOpen = await db.Werkbonnen.CountAsync(w =>
+                w.VerwijderdOp == null && (w.Status == WerkbonStatus.Open || w.Status == WerkbonStatus.Uitgevoerd));
+        }
+        catch (Npgsql.PostgresException) { }
 
         return Ok(new
         {
