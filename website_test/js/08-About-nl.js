@@ -59,7 +59,7 @@ function AboutNL({
       maxWidth: '52ch',
       marginTop: 24
     }
-  }, "Sinds 1999 ontwerpt, maakt en plaatst Poortland handgemaakte toegangspoorten en hekwerken op maat. Voor woningen waar uitstraling, veiligheid en afwerking samenkomen, en voor mensen die kwaliteit boven snelheid verkiezen."))), /*#__PURE__*/React.createElement("div", {
+  }, "Sinds 1999 ontwerpt, maakt en plaatst Poortland handgemaakte toegangspoorten en overkappingen op maat. Voor woningen waar uitstraling, veiligheid en afwerking samenkomen, en voor mensen die kwaliteit boven snelheid verkiezen."))), /*#__PURE__*/React.createElement("div", {
     style: {
       marginTop: 56,
       paddingBottom: 0

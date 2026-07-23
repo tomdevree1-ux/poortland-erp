@@ -282,9 +282,9 @@ function ContactNL({
         velden: {
           klantType: klantType,
           bedrijfsnaam: klantType === 'bedrijf' ? fd.get('bedrijfsnaam') || '' : '',
-          btwNummer: klantType === 'bedrijf' ? fd.get('btw') || '' : '',
-          voornaam: fd.get('voornaam') || '',
+          btwNummer: klantType === 'bedrijf' ? fd.get('btwNummer') || '' : '',
           naam: fd.get('naam') || '',
+          voornaam: fd.get('voornaam') || '',
           email: fd.get('email') || '',
           telefoon: fd.get('telefoon') || '',
           straat: fd.get('straat') || '',
@@ -339,11 +339,10 @@ function ContactNL({
       "aria-pressed": aan,
       style: {
         fontFamily: 'var(--font-sans)',
-        fontSize: 12.5,
+        fontSize: 14.5,
         cursor: 'pointer',
-        padding: '8px 12px',
+        padding: '11px 18px',
         borderRadius: 999,
-        whiteSpace: 'nowrap',
         transition: 'all var(--dur) var(--ease-out)',
         background: aan ? 'var(--accent)' : 'transparent',
         color: aan ? '#fff' : 'var(--stone-200)',
@@ -364,11 +363,10 @@ function ContactNL({
   }, "Type klant"), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
-      gap: 6,
-      border: '1px solid var(--line-on-dark)',
-      borderRadius: 'var(--radius-sm)',
+      gap: 4,
       padding: 4,
-      maxWidth: 320
+      borderRadius: 'var(--radius-sm)',
+      border: '1px solid var(--line-on-dark)'
     }
   }, ['particulier', 'bedrijf'].map(t => /*#__PURE__*/React.createElement("button", {
     type: "button",
@@ -376,16 +374,16 @@ function ContactNL({
     onClick: () => setKlantType(t),
     style: {
       flex: 1,
-      cursor: 'pointer',
-      padding: '9px 12px',
-      borderRadius: 5,
+      padding: '10px 12px',
+      borderRadius: 4,
       border: 0,
+      cursor: 'pointer',
       fontFamily: 'var(--font-sans)',
-      fontSize: 14,
+      fontSize: 15,
       fontWeight: 600,
-      background: klantType === t ? 'var(--bronze-500)' : 'transparent',
-      color: klantType === t ? 'var(--forest-950)' : 'var(--stone-200)',
-      transition: 'all var(--dur) var(--ease-out)'
+      transition: 'all var(--dur) var(--ease-out)',
+      background: klantType === t ? 'var(--accent)' : 'transparent',
+      color: klantType === t ? '#fff' : 'var(--stone-200)'
     }
   }, t === 'particulier' ? 'Particulier' : 'Bedrijf')))), klantType === 'bedrijf' ? /*#__PURE__*/React.createElement("div", {
     style: {
@@ -401,9 +399,9 @@ function ContactNL({
     required: true
   }), /*#__PURE__*/React.createElement(CoInput, {
     label: "Btw nummer",
-    name: "btw",
+    name: "btwNummer",
     dark: true,
-    placeholder: "BE0123456789",
+    placeholder: "BE 0123 456 789",
     required: true
   })) : null, /*#__PURE__*/React.createElement("div", {
     style: {

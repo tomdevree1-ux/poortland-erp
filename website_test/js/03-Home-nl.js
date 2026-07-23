@@ -59,7 +59,7 @@ function HomeNL({
       color: 'var(--stone-100)',
       margin: 0
     }
-  }, "Handgemaakte poorten en hekwerken op maat.")), /*#__PURE__*/React.createElement(Reveal, {
+  }, "Handgemaakte poorten en overkappingen op maat.")), /*#__PURE__*/React.createElement(Reveal, {
     delay: 120
   }, /*#__PURE__*/React.createElement("p", {
     style: {
@@ -70,7 +70,7 @@ function HomeNL({
       maxWidth: '48ch',
       margin: '26px 0 34px'
     }
-  }, "Poortland ontwerpt, maakt en plaatst architecturale poorten en hekwerken voor woningen waar uitstraling, veiligheid en afwerking samenkomen."), /*#__PURE__*/React.createElement("div", {
+  }, "Poortland ontwerpt, maakt en plaatst architecturale poorten en overkappingen voor woningen waar uitstraling, veiligheid en afwerking samenkomen."), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 16,
@@ -174,7 +174,7 @@ function HomeNL({
       margin: 0,
       letterSpacing: '-0.005em'
     }
-  }, "Poortland maakt toegangspoorten en hekwerken op maat voor woningen waar afwerking, veiligheid en uitstraling ", /*#__PURE__*/React.createElement("span", {
+  }, "Poortland maakt toegangspoorten en overkappingen op maat voor woningen waar afwerking, veiligheid en uitstraling ", /*#__PURE__*/React.createElement("span", {
     style: {
       fontStyle: 'italic',
       color: 'var(--accent)'

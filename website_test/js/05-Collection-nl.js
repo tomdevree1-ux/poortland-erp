@@ -100,7 +100,7 @@ function CollectionNL({
       letterSpacing: '-0.01em',
       lineHeight: 1.02
     }
-  }, "Elke poort vertelt een adres."), /*#__PURE__*/React.createElement("p", {
+  }, "Elke poort vertelt een verhaal."), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 17,

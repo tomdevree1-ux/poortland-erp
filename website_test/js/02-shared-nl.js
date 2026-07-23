@@ -2,43 +2,75 @@
 /* Poortland — Nederlandse website. Gedeelde bouwstenen.
    Nav met productmenu en taalwisselaar, footer, beeldplaceholder, reveal animatie. */
 
-/* Veldvalidatie in huisstijl: geen browserballonnen. Schuift het eerste foute
-   veld in beeld met een subtiele schud-animatie (buzzer). */
+const {
+  Button: SButton,
+  Tag: STag,
+  Eyebrow: SEyebrow
+} = window.PoortlandDesignSystem_6dcc8b;
+
+/* ---- Veldvalidatie in huisstijl: geen browserballonnen ----
+   plToonVeldfouten(form): toont foutregels in de huisstijl onder de velden,
+   schuift het eerste foute veld in beeld en geeft het een subtiele
+   schud-animatie (buzzer). plSchudVeld(naam) doet hetzelfde voor een veld
+   met data-veld (gebruikt door de offertewizard met eigen validatie). ---- */
 function plSchud(el) {
   if (!el) return;
-  try { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (f) { }
-  if (el.animate) el.animate(
-    [{ transform: 'translateX(0)' }, { transform: 'translateX(-7px)' }, { transform: 'translateX(7px)' },
-     { transform: 'translateX(-5px)' }, { transform: 'translateX(5px)' }, { transform: 'translateX(-2px)' }, { transform: 'translateX(0)' }],
-    { duration: 420, easing: 'ease-in-out' });
+  try {
+    el.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center'
+    });
+  } catch (f) {}
+  if (el.animate) el.animate([{
+    transform: 'translateX(0)'
+  }, {
+    transform: 'translateX(-7px)'
+  }, {
+    transform: 'translateX(7px)'
+  }, {
+    transform: 'translateX(-5px)'
+  }, {
+    transform: 'translateX(5px)'
+  }, {
+    transform: 'translateX(-2px)'
+  }, {
+    transform: 'translateX(0)'
+  }], {
+    duration: 420,
+    easing: 'ease-in-out'
+  });
 }
-window.plSchudVeld = function (naam) { plSchud(document.querySelector('[data-veld="' + naam + '"]')); };
+window.plSchudVeld = function (naam) {
+  plSchud(document.querySelector('[data-veld="' + naam + '"]'));
+};
 window.plToonVeldfouten = function (form) {
-  Array.prototype.forEach.call(form.querySelectorAll('.pl-veldfout'), function (n) { n.remove(); });
-  var ongeldig = Array.prototype.filter.call(form.querySelectorAll('input, textarea, select'),
-    function (el) { return el.willValidate && !el.checkValidity(); });
+  Array.prototype.forEach.call(form.querySelectorAll('.pl-veldfout'), function (n) {
+    n.remove();
+  });
+  var ongeldig = Array.prototype.filter.call(form.querySelectorAll('input, textarea, select'), function (el) {
+    return el.willValidate && !el.checkValidity();
+  });
   ongeldig.forEach(function (el) {
     var m = document.createElement('div');
     m.className = 'pl-veldfout';
-    m.textContent = el.validity.valueMissing ? 'Vul dit veld in.'
-      : (el.type === 'email' ? 'Vul een geldig emailadres in.' : 'Controleer dit veld.');
+    m.textContent = el.validity.valueMissing ? 'Vul dit veld in.' : el.type === 'email' ? 'Vul een geldig emailadres in.' : 'Controleer dit veld.';
     m.style.cssText = 'font-family:var(--font-sans);font-size:13px;color:#C27A57;margin-top:6px';
     (el.parentElement || el).appendChild(m);
   });
   if (ongeldig.length) {
     var eerste = ongeldig[0];
     plSchud(eerste.parentElement || eerste);
-    try { eerste.focus({ preventScroll: true }); } catch (f) { eerste.focus(); }
+    try {
+      eerste.focus({
+        preventScroll: true
+      });
+    } catch (f) {
+      eerste.focus();
+    }
     return false;
   }
   return true;
 };
-
-const {
-  Button: SButton,
-  Tag: STag,
-  Eyebrow: SEyebrow
-} = window.PoortlandDesignSystem_6dcc8b;
 
 /* ---- Reveal: zachte fade en lichte verschuiving bij het in beeld komen ---- */
 function Reveal({
@@ -1251,7 +1283,7 @@ function Footer({
       lineHeight: 1.7,
       margin: '0 0 20px'
     }
-  }, "Handgemaakte toegangspoorten, hekwerken en automatisatie op maat. Ontworpen, gemaakt en geplaatst in België."), /*#__PURE__*/React.createElement(TaalWisselaar, {
+  }, "Handgemaakte toegangspoorten, overkappingen en automatisatie op maat. Ontworpen, gemaakt en geplaatst in België."), /*#__PURE__*/React.createElement(TaalWisselaar, {
     lang: lang,
     onLang: onLang,
     dark: true
@@ -1956,7 +1988,6 @@ function OfferteModal({
   const [bezig, setBezig] = React.useState(false);
   const [fout, setFout] = React.useState('');
   const [fotos, setFotos] = React.useState([]);
-  const [timingOpen, setTimingOpen] = React.useState(false);
   React.useEffect(() => {
     const on = () => {
       setStep(1);
@@ -1966,7 +1997,6 @@ function OfferteModal({
       setFout('');
       setBezig(false);
       setFotos([]);
-      setTimingOpen(false);
       setOpen(true);
     };
     window.addEventListener('pl-offerte-open', on);
@@ -1993,7 +2023,6 @@ function OfferteModal({
     setFout('');
     setBezig(false);
     setFotos([]);
-    setTimingOpen(false);
   };
   const set = (k, v) => setData(d => Object.assign({}, d, {
     [k]: v
@@ -2163,7 +2192,7 @@ function OfferteModal({
     };
     if (data.klantType === 'bedrijf') {
       req.bedrijfsnaam = 'Gelieve de bedrijfsnaam in te vullen.';
-      req.btw = 'Gelieve het btw nummer in te vullen.';
+      req.btwNummer = 'Gelieve het btw nummer in te vullen.';
     }
     const e = {};
     Object.keys(req).forEach(k => {
@@ -2179,7 +2208,7 @@ function OfferteModal({
     const contactKeys = ['voornaam', 'naam', 'email', 'telefoon', 'adres', 'stad', 'postcode'];
     const specifiek = {};
     Object.keys(data).forEach(k => {
-      if (contactKeys.indexOf(k) < 0 && k !== 'opmerkingen' && k !== 'timing' && k !== 'klantType' && k !== 'bedrijfsnaam' && k !== 'btw') specifiek[k] = data[k];
+      if (contactKeys.indexOf(k) < 0 && k !== 'opmerkingen' && k !== 'timing' && k !== 'klantType' && k !== 'bedrijfsnaam' && k !== 'btwNummer') specifiek[k] = data[k];
     });
     const aanvraag = {
       dienst: service,
@@ -2219,19 +2248,19 @@ function OfferteModal({
       'Nog in oriëntatie': 'orientatie'
     };
     const velden = {
-      voornaam: data.voornaam || '',
-      naam: data.naam || '',
-      email: data.email || '',
-      telefoon: data.telefoon || '',
       klantType: data.klantType || 'particulier',
       bedrijfsnaam: data.klantType === 'bedrijf' ? data.bedrijfsnaam || '' : '',
-      btwNummer: data.klantType === 'bedrijf' ? data.btw || '' : '',
+      btwNummer: data.klantType === 'bedrijf' ? data.btwNummer || '' : '',
+      naam: data.naam || '',
+      voornaam: data.voornaam || '',
+      email: data.email || '',
+      telefoon: data.telefoon || '',
       straat: data.adres || '',
       postcode: data.postcode || '',
       gemeente: data.stad || '',
       typeAanvraag: service === 'automatisering' ? 'automatisatie' : service || '',
       gewensteTiming: timingCodes[data.timing] || '',
-      vraag: aanvraag.opmerkingen || ''
+      vraag: ['Adres: ' + [data.adres, data.postcode, data.stad].filter(Boolean).join(' '), aanvraag.opmerkingen || ''].filter(Boolean).join('\n')
     };
     const eind = (window.POORTLAND_ERP || {}).leadEndpoint;
     if (!eind || !window.poortlandVerstuurLead) {
@@ -2335,10 +2364,9 @@ function OfferteModal({
     style: {
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-      gridAutoRows: '1fr',
       gap: 14
     }
-  }, [['poorten', 'Poorten', 'Nieuwe poort op maat'], ['overkappingen', 'Overkappingen', 'Terras, carport of pergola', true], ['automatisering', 'Automatisering', 'Bestaande poort automatiseren'], ['onderhoud', 'Onderhoud', 'Nazorg en herstelling']].map(([k, t, d, uit]) => uit ? /*#__PURE__*/React.createElement("div", {
+  }, [['poorten', 'Poorten', 'Nieuwe poort op maat'], ['overkappingen', 'Overkapping', 'Terras, carport of pergola', true], ['automatisering', 'Automatisering', 'Bestaande poort automatiseren'], ['onderhoud', 'Onderhoud', 'Nazorg en herstelling']].map(([k, t, d, uit]) => uit ? /*#__PURE__*/React.createElement("div", {
     key: k,
     "aria-disabled": "true",
     style: {
@@ -2546,28 +2574,28 @@ function OfferteModal({
     style: {
       display: 'flex',
       gap: 6,
-      border: '1px solid var(--line-on-light)',
-      borderRadius: 'var(--radius-md)',
       padding: 4,
-      maxWidth: 340
+      borderRadius: 'var(--radius-md)',
+      border: '1px solid var(--line-on-light)',
+      background: '#fff'
     }
-  }, ['particulier', 'bedrijf'].map(t => /*#__PURE__*/React.createElement("button", {
+  }, ['particulier', 'bedrijf'].map(tk => /*#__PURE__*/React.createElement("button", {
     type: "button",
-    key: t,
-    onClick: () => set('klantType', t),
+    key: tk,
+    onClick: () => set('klantType', tk),
     style: {
       flex: 1,
-      cursor: 'pointer',
       padding: '10px 12px',
-      borderRadius: 6,
+      borderRadius: 'var(--radius-sm)',
       border: 0,
+      cursor: 'pointer',
       fontFamily: 'var(--font-sans)',
       fontSize: 15,
       fontWeight: 600,
-      background: (data.klantType || 'particulier') === t ? 'var(--accent)' : 'transparent',
-      color: (data.klantType || 'particulier') === t ? '#fff' : 'var(--text-body)'
+      background: (data.klantType || 'particulier') === tk ? 'var(--accent)' : 'transparent',
+      color: (data.klantType || 'particulier') === tk ? '#fff' : 'var(--text-body)'
     }
-  }, t === 'particulier' ? 'Particulier' : 'Bedrijf')))), data.klantType === 'bedrijf' ? /*#__PURE__*/React.createElement("div", {
+  }, tk === 'particulier' ? 'Particulier' : 'Bedrijf')))), data.klantType === 'bedrijf' ? /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
       gridTemplateColumns: '1fr 1fr',
@@ -2579,9 +2607,9 @@ function OfferteModal({
     required: true
   }), Field({
     label: 'Btw nummer',
-    name: 'btw',
+    name: 'btwNummer',
     required: true,
-    placeholder: 'BE0123456789'
+    placeholder: 'BE 0123 456 789'
   })) : null, /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
@@ -2632,71 +2660,38 @@ function OfferteModal({
     placeholder: 'Bijvoorbeeld: Mechelen'
   })), /*#__PURE__*/React.createElement("div", {
     style: {
-      marginBottom: 20,
-      position: 'relative'
+      marginBottom: 20
     }
   }, /*#__PURE__*/React.createElement("label", {
     style: labelSt
-  }, "Gewenste timing"), /*#__PURE__*/React.createElement("button", {
-    type: "button",
-    onClick: () => setTimingOpen(o => !o),
+  }, "Gewenste timing"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'relative'
+    }
+  }, /*#__PURE__*/React.createElement("select", {
+    value: data.timing || '',
+    onChange: e => set('timing', e.target.value),
     style: Object.assign({}, inputSt, {
       cursor: 'pointer',
-      textAlign: 'left',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between'
+      appearance: 'none',
+      WebkitAppearance: 'none',
+      backgroundImage: 'linear-gradient(45deg, transparent 50%, var(--accent) 50%), linear-gradient(135deg, var(--accent) 50%, transparent 50%)',
+      backgroundPosition: 'calc(100% - 18px) 55%, calc(100% - 13px) 55%',
+      backgroundSize: '5px 5px, 5px 5px',
+      backgroundRepeat: 'no-repeat',
+      paddingRight: 38
     })
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      color: data.timing ? 'var(--text-body)' : 'var(--text-muted)'
-    }
-  }, data.timing || 'Maak een keuze'), /*#__PURE__*/React.createElement("span", {
-    "aria-hidden": "true",
-    style: {
-      color: 'var(--accent)',
-      fontSize: 12,
-      transform: timingOpen ? 'rotate(180deg)' : 'none',
-      transition: 'transform .15s'
-    }
-  }, "▾")), timingOpen ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
-    onClick: () => setTimingOpen(false),
-    style: {
-      position: 'fixed',
-      inset: 0,
-      zIndex: 1
-    }
-  }), /*#__PURE__*/React.createElement("div", {
-    style: {
-      position: 'absolute',
-      top: '100%',
-      left: 0,
-      right: 0,
-      marginTop: 4,
-      background: '#fff',
-      border: '1px solid var(--line-on-light)',
-      borderRadius: 'var(--radius-md)',
-      boxShadow: '0 12px 30px rgba(15,22,15,0.14)',
-      zIndex: 2,
-      overflow: 'hidden'
-    }
-  }, ['Zo snel mogelijk', 'Binnen drie maanden', 'Binnen zes maanden', 'Nog in oriëntatie'].map(opt => /*#__PURE__*/React.createElement("div", {
-    key: opt,
-    onClick: () => {
-      set('timing', opt);
-      setTimingOpen(false);
-    },
-    style: {
-      padding: '11px 14px',
-      fontFamily: 'var(--font-sans)',
-      fontSize: 15.5,
-      cursor: 'pointer',
-      color: 'var(--text-body)',
-      background: data.timing === opt ? 'rgba(138,106,60,0.08)' : '#fff'
-    },
-    onMouseEnter: e => e.currentTarget.style.background = 'rgba(138,106,60,0.08)',
-    onMouseLeave: e => e.currentTarget.style.background = data.timing === opt ? 'rgba(138,106,60,0.08)' : '#fff'
-  }, opt)))) : null), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("option", {
+    value: ""
+  }, "Maak een keuze"), /*#__PURE__*/React.createElement("option", {
+    value: "Zo snel mogelijk"
+  }, "Zo snel mogelijk"), /*#__PURE__*/React.createElement("option", {
+    value: "Binnen drie maanden"
+  }, "Binnen drie maanden"), /*#__PURE__*/React.createElement("option", {
+    value: "Binnen zes maanden"
+  }, "Binnen zes maanden"), /*#__PURE__*/React.createElement("option", {
+    value: "Nog in oriëntatie"
+  }, "Nog in oriëntatie")))), /*#__PURE__*/React.createElement("div", {
     style: {
       marginBottom: 4
     }
@@ -2724,9 +2719,9 @@ function OfferteModal({
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 15,
-      color: 'var(--text-muted)'
+      color: fotos.length ? 'var(--text-body)' : 'var(--text-muted)'
     }
-  }, "Sleep of kies foto's van de plek"), /*#__PURE__*/React.createElement("span", {
+  }, fotos.length ? fotos.length + " bestand(en) geselecteerd" : "Sleep of kies foto's van de plek"), /*#__PURE__*/React.createElement("span", {
     style: {
       fontFamily: 'var(--font-label)',
       fontSize: 10.5,
@@ -2744,14 +2739,7 @@ function OfferteModal({
     style: {
       display: 'none'
     }
-  })), fotos.length ? /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontFamily: 'var(--font-sans)',
-      fontSize: 13,
-      color: 'var(--text-muted)',
-      marginTop: 6
-    }
-  }, fotos.length + " bestand(en) geselecteerd") : null)) : null, step === 4 ? /*#__PURE__*/React.createElement("div", {
+  })))) : null, step === 4 ? /*#__PURE__*/React.createElement("div", {
     style: {
       textAlign: 'center',
       padding: '20px 0 12px'
@@ -4161,12 +4149,731 @@ var CATEGORIEEN = {
     }]
   }
 };
+
+/* ---- Over ons pagina ---- */
+function Teller({
+  eind,
+  suffix
+}) {
+  const [w, setW] = React.useState(0);
+  const ref = React.useRef(null);
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || typeof IntersectionObserver === 'undefined') {
+      setW(eind);
+      return;
+    }
+    var gedaan = false;
+    const io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting && !gedaan) {
+          gedaan = true;
+          var start = null;
+          var stap = function (nu) {
+            if (start === null) start = nu;
+            var t = Math.min(1, (nu - start) / 1500);
+            setW(Math.round(eind * (1 - Math.pow(1 - t, 3))));
+            if (t < 1) requestAnimationFrame(stap);
+          };
+          requestAnimationFrame(stap);
+        }
+      });
+    }, {
+      threshold: 0.4
+    });
+    io.observe(el);
+    return function () {
+      io.disconnect();
+    };
+  }, [eind]);
+  return /*#__PURE__*/React.createElement("span", {
+    ref: ref
+  }, w.toLocaleString('nl-BE') + (suffix || ''));
+}
+function OverOnsNL({
+  onNav
+}) {
+  const {
+    Reveal,
+    SectieKop,
+    CTASectie
+  } = window;
+  const [tl, setTl] = React.useState(0);
+  const offerte = () => window.dispatchEvent(new CustomEvent('pl-offerte-open'));
+  React.useEffect(() => {
+    document.title = 'Over Poortland | vakmanschap in eigen beheer sinds 1999';
+    if (window.scrollTo) window.scrollTo(0, 0);
+  }, []);
+  const bc = {
+    background: 'none',
+    border: 0,
+    padding: 0,
+    cursor: 'pointer',
+    fontFamily: 'var(--font-sans)',
+    fontSize: 13,
+    color: 'var(--text-muted)'
+  };
+  const stats = [{
+    getal: '1999',
+    label: 'Opgericht'
+  }, {
+    teller: 3000,
+    suffix: '+',
+    label: 'Poorten en hekwerken geplaatst'
+  }, {
+    getal: 'Mechelen',
+    label: 'Eigen atelier'
+  }, {
+    getal: '6/7',
+    label: 'Dagen bereikbaar'
+  }, {
+    getal: '100%',
+    label: 'In eigen beheer'
+  }];
+  const mijlpalen = [['1999', 'Oprichting van Poortland NV', 'Poortland NV wordt opgericht met een duidelijke ambitie: poorten en overkappingen op maat maken en plaatsen.'], ['Vanaf het begin', 'Ervaren vakmensen', 'Poortland trekt medewerkers aan met jarenlange ervaring in de productie en de plaatsing van poorten.'], ['Doorheen de jaren', 'Eigen atelier in Mechelen', 'Het eigen atelier in Mechelen wordt verder uitgebouwd zodat alles onder een dak gemaakt wordt.'], ['Doorheen de jaren', 'Eigen plaatsingsdienst', 'Een eigen plaatsingsteam met professioneel materieel zorgt voor een verzorgde en veilige plaatsing.'], ['Doorheen de jaren', 'Eigen technische dienst', 'Een eigen technische dienst staat in voor automatisatie, onderhoud en naverkoop.'], ['Vandaag', 'Meer dan 3.000 realisaties', 'Poortland realiseerde ondertussen meer dan 3.000 poorten en hekwerken.']];
+  const beheer = [['Eigen productie', 'Poortland beschikt over een eigen atelier in Mechelen. Alle poorten en hekwerken worden er door ervaren vakmensen gemaakt, met voortdurende aandacht voor kwaliteit en afwerking.'], ['Eigen plaatsingsdienst', 'Poortland heeft een eigen plaatsingsteam en professioneel transport en plaatsingsmaterieel. Zo zetten wij onder meer een telescopische kraan in die tot 1.500 kilogram heft op 10 meter afstand. Elke poort wordt veilig en duurzaam geplaatst.'], ['Eigen techniekers', 'Onze eigen techniekers verzorgen de automatisatie van de poorten. Zij staan ook in voor technische ondersteuning, onderhoud en naverkoop.'], ['Afwerking van de werf', 'Na de plaatsing werken wij de werf netjes af. Waar nodig herstellen wij de bestrating en ruimen wij de volledige werkzone op.']];
+  const proces = ['Ontwerp en advies', 'Productie', 'Plaatsing', 'Automatisatie', 'Afwerking', 'Naverkoop'];
+  const kwaliteit = [['Sterke constructie', 'Poortland verwerkt staal, aluminium en inox. Voor stalen constructies gebruiken wij dikwandig staal, afhankelijk van de toepassing en de constructie van 2 tot 5 millimeter.'], ['Roestvrije bevestiging', 'Bouten, schroeven en scharnieren voert Poortland uit in roestvrij staal, zodat de bevestiging betrouwbaar blijft.'], ['Kwaliteitsgerichte leveranciers', 'Poortland kiest leveranciers op de verhouding tussen kwaliteit en prijs, niet enkel op de laagste aankoopprijs.']];
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("nav", {
+    "aria-label": "Kruimelpad",
+    style: {
+      background: 'var(--surface-paper)',
+      borderBottom: '1px solid var(--line-on-light-soft)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 1320,
+      margin: '0 auto',
+      padding: '15px 44px',
+      fontFamily: 'var(--font-sans)',
+      fontSize: 13,
+      color: 'var(--text-muted)'
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: () => onNav('home'),
+    style: bc
+  }, "Home"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      margin: '0 9px',
+      color: 'var(--line-on-light)'
+    }
+  }, "/"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--text-heading)'
+    }
+  }, "Over ons"))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-ground)',
+      color: 'var(--text-on-dark)',
+      padding: '74px 44px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pl-split",
+    style: {
+      maxWidth: 1320,
+      margin: '0 auto',
+      display: 'grid',
+      gridTemplateColumns: '1.02fr 0.98fr',
+      gap: 60,
+      alignItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(SEyebrow, {
+    dark: true,
+    style: {
+      marginBottom: 20
+    }
+  }, "Over Poortland NV"), /*#__PURE__*/React.createElement("h1", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 60,
+      lineHeight: 1.04,
+      letterSpacing: '-0.01em',
+      color: 'var(--stone-100)',
+      margin: 0
+    }
+  }, "Vakmanschap in eigen beheer, sinds 1999"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 18,
+      lineHeight: 1.65,
+      color: 'var(--stone-300)',
+      maxWidth: '48ch',
+      margin: '24px 0 30px'
+    }
+  }, "Poortland NV werd opgericht in 1999. Van bij de start werkt het bedrijf met mensen die jarenlange ervaring hebben in het maken en plaatsen van poorten. Ondertussen realiseerde Poortland meer dan 3.000 poorten en hekwerken. U rekent daardoor op ruime ervaring, bewezen vakmanschap en een professionele dienstverlening."), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 16,
+      flexWrap: 'wrap'
+    }
+  }, /*#__PURE__*/React.createElement(SButton, {
+    variant: "primary",
+    arrow: true,
+    as: "button",
+    onClick: offerte
+  }, "Vraag een vrijblijvende offerte aan"), /*#__PURE__*/React.createElement(SButton, {
+    variant: "ghost",
+    dark: true,
+    arrow: true,
+    onClick: () => onNav('realisaties')
+  }, "Bekijk realisaties"))), /*#__PURE__*/React.createElement(Reveal, {
+    delay: 80
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      borderRadius: 10,
+      overflow: 'hidden',
+      aspectRatio: '3 / 2',
+      boxShadow: 'var(--shadow-lg)'
+    }
+  }, /*#__PURE__*/React.createElement("img", {
+    src: "media/hero.png",
+    alt: "Poort van Poortland, gemaakt in eigen atelier",
+    style: {
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+      display: 'block'
+    }
+  }))))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-paper)',
+      padding: '60px 44px',
+      borderBottom: '1px solid var(--line-on-light-soft)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pl-stats",
+    style: {
+      maxWidth: 1320,
+      margin: '0 auto',
+      display: 'grid',
+      gridTemplateColumns: 'repeat(5, 1fr)',
+      gap: 20
+    }
+  }, stats.map((s, i) => /*#__PURE__*/React.createElement(Reveal, {
+    key: i,
+    delay: i % 5 * 60
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      borderLeft: '2px solid var(--accent)',
+      paddingLeft: 16
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontSize: 38,
+      color: 'var(--text-heading)',
+      lineHeight: 1
+    }
+  }, s.teller ? /*#__PURE__*/React.createElement(Teller, {
+    eind: s.teller,
+    suffix: s.suffix
+  }) : s.getal), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 13.5,
+      lineHeight: 1.4,
+      color: 'var(--text-muted)',
+      marginTop: 8
+    }
+  }, s.label)))))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-ground)',
+      color: 'var(--text-on-dark)',
+      padding: '90px 44px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 1100,
+      margin: '0 auto'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(SectieKop, {
+    dark: true,
+    align: "center",
+    eyebrow: "Onze weg",
+    titel: "Van oprichting tot vandaag",
+    intro: "Klik door de mijlpalen die Poortland maakten tot wat het vandaag is."
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 44
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pl-tl-track"
+  }, mijlpalen.map((m, i) => /*#__PURE__*/React.createElement("button", {
+    key: i,
+    onClick: () => setTl(i),
+    className: "pl-tl-punt",
+    "aria-pressed": tl === i
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "pl-tl-dot",
+    style: {
+      background: tl === i ? 'var(--accent)' : 'var(--surface-ground)',
+      borderColor: tl === i ? 'var(--accent)' : 'var(--line-on-dark)'
+    }
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: 'var(--font-label)',
+      fontSize: 10.5,
+      fontWeight: 600,
+      letterSpacing: '0.08em',
+      textTransform: 'uppercase',
+      color: tl === i ? 'var(--stone-100)' : 'var(--text-on-dark-muted)',
+      whiteSpace: 'nowrap'
+    }
+  }, m[0])))), /*#__PURE__*/React.createElement("div", {
+    className: "pl-tl-panel",
+    style: {
+      marginTop: 30,
+      width: '100%',
+      background: 'var(--forest-850)',
+      border: '1px solid var(--line-on-dark-soft)',
+      borderRadius: 'var(--radius-md)',
+      padding: '30px 32px',
+      ['--tlx']: 'clamp(0px, calc(' + ((tl + 0.5) / mijlpalen.length * 100).toFixed(2) + '% - 220px), calc(100% - 440px))'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-label)',
+      fontSize: 11,
+      fontWeight: 600,
+      letterSpacing: '0.16em',
+      textTransform: 'uppercase',
+      color: 'var(--accent)'
+    }
+  }, mijlpalen[tl][0]), /*#__PURE__*/React.createElement("h3", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 26,
+      color: 'var(--stone-100)',
+      margin: '8px 0 10px',
+      lineHeight: 1.15
+    }
+  }, mijlpalen[tl][1]), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 16,
+      lineHeight: 1.7,
+      color: 'var(--stone-300)',
+      margin: 0
+    }
+  }, mijlpalen[tl][2]))))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-paper)',
+      padding: '90px 44px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 1320,
+      margin: '0 auto'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(SectieKop, {
+    align: "center",
+    eyebrow: "Alles onder een dak",
+    titel: "Alles in eigen beheer",
+    intro: "Van het eerste ontwerp tot de naverkoop houdt Poortland alles in eigen handen."
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "pl-cards4",
+    style: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(4, 1fr)',
+      gap: 18,
+      marginTop: 46
+    }
+  }, beheer.map((b, i) => /*#__PURE__*/React.createElement(Reveal, {
+    key: b[0],
+    delay: i % 4 * 70
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'var(--surface-card)',
+      border: '1px solid var(--line-on-light-soft)',
+      borderRadius: 'var(--radius-md)',
+      padding: '26px 22px',
+      height: '100%'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontSize: 20,
+      color: 'var(--text-heading)',
+      marginBottom: 8
+    }
+  }, b[0]), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 14.5,
+      lineHeight: 1.6,
+      color: 'var(--text-muted)'
+    }
+  }, b[1]))))), /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 40,
+      display: 'flex',
+      justifyContent: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pl-flow"
+  }, proces.map((s, i) => /*#__PURE__*/React.createElement(React.Fragment, {
+    key: s
+  }, i > 0 ? /*#__PURE__*/React.createElement("span", {
+    className: "pl-flow-pijl",
+    "aria-hidden": "true"
+  }, "→") : null, /*#__PURE__*/React.createElement("span", {
+    className: "pl-flow-stap"
+  }, s)))))))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-ground)',
+      color: 'var(--text-on-dark)',
+      padding: '84px 44px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pl-split",
+    style: {
+      maxWidth: 1200,
+      margin: '0 auto',
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: 56,
+      alignItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(SEyebrow, {
+    dark: true,
+    style: {
+      marginBottom: 16
+    }
+  }, "Bereikbaarheid en naverkoop"), /*#__PURE__*/React.createElement("h2", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 38,
+      color: 'var(--stone-100)',
+      margin: 0,
+      lineHeight: 1.1,
+      letterSpacing: '-0.01em'
+    }
+  }, "Zes dagen per week bereikbaar"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 16.5,
+      lineHeight: 1.7,
+      color: 'var(--stone-300)',
+      maxWidth: '48ch',
+      margin: '18px 0 24px'
+    }
+  }, "Poortland is zes dagen per week open en bereikbaar. Ook tijdens vakantieperiodes blijft het bedrijf operationeel. Zo rekent u steeds op een snelle en betrouwbare naverkoopdienst."), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 8,
+      flexWrap: 'wrap'
+    }
+  }, ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za', 'Zo'].map((d, i) => /*#__PURE__*/React.createElement("span", {
+    key: d,
+    style: {
+      width: 42,
+      height: 42,
+      borderRadius: '50%',
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontFamily: 'var(--font-label)',
+      fontSize: 12,
+      fontWeight: 600,
+      letterSpacing: '0.04em',
+      background: i < 6 ? 'var(--accent)' : 'transparent',
+      color: i < 6 ? '#fff' : 'var(--text-on-dark-muted)',
+      border: '1px solid ' + (i < 6 ? 'var(--accent)' : 'var(--line-on-dark)')
+    }
+  }, d)))), /*#__PURE__*/React.createElement(Reveal, {
+    delay: 80
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      borderRadius: 10,
+      overflow: 'hidden',
+      aspectRatio: '4 / 3',
+      boxShadow: 'var(--shadow-lg)'
+    }
+  }, /*#__PURE__*/React.createElement("img", {
+    src: "media/staal-hout.png",
+    loading: "lazy",
+    alt: "Detail van een poort van Poortland",
+    style: {
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+      display: 'block'
+    }
+  }))))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-paper)',
+      padding: '90px 44px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 940,
+      margin: '0 auto',
+      textAlign: 'center'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(SEyebrow, {
+    style: {
+      marginBottom: 16
+    }
+  }, "Duidelijk en transparant"), /*#__PURE__*/React.createElement("h2", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 46,
+      color: 'var(--text-heading)',
+      margin: '0 auto',
+      maxWidth: '18ch',
+      lineHeight: 1.08,
+      letterSpacing: '-0.01em'
+    }
+  }, "Een vaste prijs, zonder verrassingen"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 17,
+      lineHeight: 1.7,
+      color: 'var(--text-body)',
+      maxWidth: '58ch',
+      margin: '20px auto 8px'
+    }
+  }, "Poortland vermeldt in elke offerte een duidelijke totaalprijs waarin alles is inbegrepen. U wordt achteraf niet verrast door onverwachte kosten."), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 17,
+      lineHeight: 1.7,
+      color: 'var(--text-body)',
+      maxWidth: '58ch',
+      margin: '0 auto 30px'
+    }
+  }, "Wilt u eerst zien wat wij maken? Vraag gerust referentieadressen op en bekijk reeds geplaatste poorten om de kwaliteit zelf te beoordelen."), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 14,
+      justifyContent: 'center',
+      flexWrap: 'wrap'
+    }
+  }, /*#__PURE__*/React.createElement(SButton, {
+    variant: "primary",
+    size: "lg",
+    arrow: true,
+    as: "button",
+    onClick: offerte
+  }, "Vraag een vrijblijvende offerte aan"), /*#__PURE__*/React.createElement(SButton, {
+    variant: "secondary",
+    size: "lg",
+    arrow: true,
+    onClick: () => onNav('realisaties')
+  }, "Ontdek onze realisaties"))))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-ground)',
+      color: 'var(--text-on-dark)',
+      padding: '90px 44px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 1320,
+      margin: '0 auto'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(SectieKop, {
+    dark: true,
+    align: "center",
+    eyebrow: "Materialen en kwaliteit",
+    titel: "Gemaakt om jaren mee te gaan"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "pl-split",
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: 18,
+      marginTop: 46,
+      alignItems: 'start'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'var(--forest-850)',
+      border: '1px solid var(--line-on-dark-soft)',
+      borderRadius: 'var(--radius-md)',
+      padding: '28px 26px',
+      height: '100%'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontSize: 21,
+      color: 'var(--stone-100)',
+      marginBottom: 8
+    }
+  }, "Duurzame poederlak"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 14.5,
+      lineHeight: 1.65,
+      color: 'var(--stone-300)',
+      marginBottom: 18
+    }
+  }, "Elke poort krijgt twee lagen poederlak. Een grondlaag in epoxy voor een sterke hechting en een afwerklaag in polyester die UV bestendig is en zorgt voor een duurzame afwerking."), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      gap: 18
+    }
+  }, /*#__PURE__*/React.createElement("svg", {
+    viewBox: "0 0 200 200",
+    width: "184",
+    height: "184",
+    fill: "none",
+    "aria-hidden": "true",
+    style: {
+      maxWidth: '100%'
+    }
+  }, /*#__PURE__*/React.createElement("rect", {
+    x: "26",
+    y: "26",
+    width: "148",
+    height: "148",
+    rx: "13",
+    fill: "#B3A791"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "34",
+    y: "34",
+    width: "132",
+    height: "132",
+    rx: "10",
+    fill: "#8C806A"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "42",
+    y: "42",
+    width: "116",
+    height: "116",
+    rx: "7",
+    fill: "#3B3F3C"
+  }), /*#__PURE__*/React.createElement("g", {
+    stroke: "#2C302D",
+    strokeWidth: 2.5
+  }, /*#__PURE__*/React.createElement("line", {
+    x1: "72",
+    y1: "52",
+    x2: "72",
+    y2: "148"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "100",
+    y1: "52",
+    x2: "100",
+    y2: "148"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "128",
+    y1: "52",
+    x2: "128",
+    y2: "148"
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 9,
+      width: '100%'
+    }
+  }, [['#B3A791', 'Afwerklaag polyester', 'UV bestendig'], ['#8C806A', 'Grondlaag epoxy', 'Sterke hechting'], ['#3B3F3C', 'Kern in staal of aluminium', 'Antraciet']].map(r => /*#__PURE__*/React.createElement("div", {
+    key: r[1],
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 10
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      width: 13,
+      height: 13,
+      borderRadius: 3,
+      background: r[0],
+      flex: '0 0 auto',
+      border: '1px solid rgba(20,28,21,0.15)'
+    }
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 13.5,
+      fontWeight: 600,
+      color: 'var(--stone-100)'
+    }
+  }, r[1]), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 12,
+      color: 'var(--text-on-dark-muted)',
+      marginLeft: 'auto'
+    }
+  }, r[2]))))))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 18
+    }
+  }, kwaliteit.map((k, i) => /*#__PURE__*/React.createElement(Reveal, {
+    key: k[0],
+    delay: i % 3 * 70
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'var(--forest-850)',
+      border: '1px solid var(--line-on-dark-soft)',
+      borderRadius: 'var(--radius-md)',
+      padding: '28px 26px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontSize: 21,
+      color: 'var(--stone-100)',
+      marginBottom: 8
+    }
+  }, k[0]), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 14.5,
+      lineHeight: 1.65,
+      color: 'var(--stone-300)'
+    }
+  }, k[1])))))))), /*#__PURE__*/React.createElement(CTASectie, {
+    onNav: onNav,
+    dark: true
+  }), /*#__PURE__*/React.createElement("button", {
+    className: "pl-mobcta",
+    onClick: offerte,
+    style: {
+      position: 'fixed',
+      left: 16,
+      right: 16,
+      bottom: 16,
+      zIndex: 60,
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 8,
+      padding: '15px 20px',
+      borderRadius: 'var(--radius-md)',
+      border: 0,
+      cursor: 'pointer',
+      background: 'var(--accent)',
+      color: '#fff',
+      fontFamily: 'var(--font-label)',
+      fontSize: 13,
+      fontWeight: 600,
+      letterSpacing: '0.1em',
+      textTransform: 'uppercase',
+      boxShadow: '0 6px 20px rgba(20,28,21,0.28)'
+    }
+  }, "Vraag een offerte aan"));
+}
 Object.assign(window, {
   OfferteModal,
   PaginaNL,
   PAGINAS,
   CategoriePagina,
   CATEGORIEEN,
+  OverOnsNL,
+  Teller,
   MobileNav,
   MENU,
   DesktopNav,

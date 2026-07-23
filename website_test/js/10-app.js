@@ -45,7 +45,7 @@ function App() {
       });
       break;
     case 'atelier':
-      Screen = /*#__PURE__*/React.createElement(window.AboutNL, {
+      Screen = /*#__PURE__*/React.createElement(window.OverOnsNL, {
         onNav: onNav
       });
       break;
@@ -136,7 +136,8 @@ function App() {
     onLang: setLang
   }), /*#__PURE__*/React.createElement("main", {
     key: routeKey,
-    className: "pl-page"
+    className: "pl-page",
+    "data-route": route
   }, Screen), /*#__PURE__*/React.createElement(Footer, {
     onNav: onNav,
     lang: lang,
