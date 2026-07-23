@@ -24,7 +24,7 @@ function HomeNL({
     ADVIES
   } = window;
   const uitgelicht = PROJECTEN.filter(p => p.uitgelicht).slice(0, 3);
-  const routes = [['houten', 'Houten poorten', 'Warm en tijdloos', 'media/houten-poort.png'], ['aluminium', 'Aluminium poorten', 'Strak en onderhoudsarm', 'media/aluminium-poort.png'], ['staalhout', 'Combinatie staal en hout', 'Kracht en warmte', 'media/staal-hout.png']];
+  const routes = [['houten', 'Houten poorten', 'Warm en tijdloos', 'media/houten-poort.jpg'], ['aluminium', 'Aluminium poorten', 'Strak en onderhoudsarm', 'media/aluminium-poort.jpg'], ['staalhout', 'Combinatie staal en hout', 'Kracht en warmte', 'media/staal-hout.jpg']];
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-ground)',
@@ -125,7 +125,7 @@ function HomeNL({
       boxShadow: 'var(--shadow-lg)'
     }
   }, /*#__PURE__*/React.createElement("img", {
-    src: "media/hero.png",
+    src: "media/hero.jpg",
     alt: "Handgemaakte poort van Poortland in hout en staal",
     style: {
       width: '100%',
@@ -452,7 +452,7 @@ function HomeNL({
     }
   }, /*#__PURE__*/React.createElement("img", {
     className: "pl-zoom-img",
-    src: "media/staal-hout.png",
+    src: "media/staal-hout.jpg",
     alt: "Afgewerkte poort op maat van Poortland",
     style: {
       display: 'block',

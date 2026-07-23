@@ -659,7 +659,7 @@ function DesktopNav({
   }, []);
   const fg = 'var(--stone-200)';
   const faint = 'var(--text-on-dark-muted)';
-  const POORTEN = [['metalen', 'Metalen poorten', 'Sterk en strak', 'media/stalen-poort.png', '(staal, metaal en aluminium)'], ['houten', 'Houten poorten', 'Warm en tijdloos', 'media/houten-poort.png'], ['combinatie', 'Combinatie hout en metaal', 'Stevig en warm', 'media/staal-hout.png']];
+  const POORTEN = [['metalen', 'Metalen poorten', 'Sterk en strak', 'media/stalen-poort.jpg', '(staal, metaal en aluminium)'], ['houten', 'Houten poorten', 'Warm en tijdloos', 'media/houten-poort.jpg'], ['combinatie', 'Combinatie hout en metaal', 'Stevig en warm', 'media/staal-hout.jpg']];
   const actPoort = POORTEN.find(p => p[0] === activePoort) || POORTEN[0];
   const SERVICE = [['automatisering', 'Automatisering', 'Automatische poorten'], ['onderhoud', 'Onderhoud', 'Nazorg en herstellingen']];
   const OVER = [['atelier', 'Over ons', 'Ons atelier in Mechelen'], ['garantie', 'Garantie', 'Onze waarborgen'], ['faq', 'FAQ', 'Veelgestelde vragen']];
@@ -1711,7 +1711,7 @@ var PAGINAS = {
     title: 'Poorten op maat in Mechelen | Poortland',
     eyebrow: 'Poorten',
     h1: 'Poorten op maat in Mechelen',
-    beeld: 'media/hero.png',
+    beeld: 'media/hero.jpg',
     intro: 'Poortland ontwerpt, maakt en plaatst tuinpoorten volledig op maat. Alles gebeurt in eigen atelier in Mechelen, van het eerste ontwerp tot de plaatsing.',
     cta: {
       label: 'Vraag een offerte aan',
@@ -1730,17 +1730,17 @@ var PAGINAS = {
         titel: 'Metalen poorten',
         tekst: 'Sterk en onderhoudsarm',
         route: 'metalen',
-        beeld: 'media/stalen-poort.png'
+        beeld: 'media/stalen-poort.jpg'
       }, {
         titel: 'Houten poorten',
         tekst: 'Warm en natuurlijk',
         route: 'houten',
-        beeld: 'media/houten-poort.png'
+        beeld: 'media/houten-poort.jpg'
       }, {
         titel: 'Combinatie hout en metaal',
         tekst: 'Stevig en warm',
         route: 'combinatie',
-        beeld: 'media/staal-hout.png'
+        beeld: 'media/staal-hout.jpg'
       }]
     }, {
       h2: 'Van ontwerp tot plaatsing',
@@ -1754,7 +1754,7 @@ var PAGINAS = {
     title: 'Metalen poorten op maat | Poortland Mechelen',
     eyebrow: 'Metalen poorten',
     h1: 'Metalen poorten op maat',
-    beeld: 'media/stalen-poort.png',
+    beeld: 'media/stalen-poort.jpg',
     intro: 'Poortland maakt metalen poorten volledig op maat, in staal van hoge kwaliteit. Sterk, strak en jarenlang betrouwbaar.',
     cta: {
       label: 'Vraag een offerte aan',
@@ -1782,7 +1782,7 @@ var PAGINAS = {
     title: 'Houten poorten op maat | Poortland Mechelen',
     eyebrow: 'Houten poorten',
     h1: 'Houten poorten op maat',
-    beeld: 'media/houten-poort.png',
+    beeld: 'media/houten-poort.jpg',
     intro: 'Een houten poort geeft uw woning een warme, natuurlijke uitstraling. Poortland maakt houten poorten volledig op maat.',
     cta: {
       label: 'Vraag een offerte aan',
@@ -1810,7 +1810,7 @@ var PAGINAS = {
     title: 'Poorten in hout en metaal op maat | Poortland',
     eyebrow: 'Combinatie hout en metaal',
     h1: 'Poorten in hout en metaal',
-    beeld: 'media/staal-hout.png',
+    beeld: 'media/staal-hout.jpg',
     intro: 'Een combinatiepoort verenigt een stevige metalen structuur met een warme houten invulling.',
     cta: {
       label: 'Vraag een offerte aan',
@@ -1838,7 +1838,7 @@ var PAGINAS = {
     title: 'Overkappingen op maat | Poortland Mechelen',
     eyebrow: 'Overkappingen',
     h1: 'Overkappingen op maat',
-    beeld: 'media/hero.png',
+    beeld: 'media/hero.jpg',
     intro: 'Een overkapping beschermt uw buitenruimte tegen regen, zon en wind. Poortland denkt met u mee voor een oplossing op maat.',
     cta: {
       label: 'Vraag advies',
@@ -2924,7 +2924,7 @@ var CAT_AUTO = {
   titel: 'Comfortabel en veilig automatisch openen',
   tekst: 'Bedien uw poort met een afstandsbediening, een codeklavier, de parlofoon of uw smartphone. Poortland automatiseert nieuwe en bestaande poorten met betrouwbare FAAC aandrijvingen.',
   voordelen: ['Veilige toegang tot uw oprit', 'Eenvoudige bediening voor iedereen', 'Integratie met video parlofoon', 'Onderhoud en service door een eigen team'],
-  beeld: 'media/aluminium-poort.png'
+  beeld: 'media/aluminium-poort.jpg'
 };
 var CAT_PROCES = [{
   n: '01',
@@ -3948,37 +3948,37 @@ var CATEGORIEEN = {
     eyebrow: 'Metalen poorten',
     h1: 'Metalen poorten op maat',
     introKort: 'Strak, sterk en jarenlang betrouwbaar. Poortland ontwerpt en maakt metalen poorten in staal en aluminium, volledig op maat van uw woning.',
-    heroBeeld: 'media/stalen-poort.png',
+    heroBeeld: 'media/stalen-poort.jpg',
     heroLabel: 'Volledig op maat',
-    materiaalFotos: ['media/stalen-poort.png', 'media/realisatie-metaal-1.jpeg', 'media/aluminium-poort.png', 'media/realisatie-metaal-2.jpeg', 'media/realisatie-alu-1.jpeg'],
+    materiaalFotos: ['media/stalen-poort.jpg', 'media/realisatie-metaal-1.jpeg', 'media/aluminium-poort.jpg', 'media/realisatie-metaal-2.jpeg', 'media/realisatie-alu-1.jpeg'],
     productenTitel: 'Modellen in metaal',
     productenIntro: 'Hieronder ziet u onze verschillende soorten metalen poorten, ingedeeld per stijl. Kies een stijl om de bijhorende types te zien.',
     productenGroepen: [{
       tab: "Klassiek zonder sierpunten",
       types: [{
         naam: "Mississipi",
-        foto: "media/metaal/Klassiek%20zonder%20punten/Mississipi.png"
+        foto: "media/metaal/Klassiek%20zonder%20punten/Mississipi.jpg"
       }, {
         naam: "Siret",
-        foto: "media/metaal/Klassiek%20zonder%20punten/Siret.png"
+        foto: "media/metaal/Klassiek%20zonder%20punten/Siret.jpg"
       }, {
         naam: "Taag",
-        foto: "media/metaal/Klassiek%20zonder%20punten/Taag.png"
+        foto: "media/metaal/Klassiek%20zonder%20punten/Taag.jpg"
       }, {
         naam: "Taag met plaat",
-        foto: "media/metaal/Klassiek%20zonder%20punten/Taag%20met%20plaat.png"
+        foto: "media/metaal/Klassiek%20zonder%20punten/Taag%20met%20plaat.jpg"
       }, {
         naam: "Veluwe",
-        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe.png"
+        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe.jpg"
       }, {
         naam: "Veluwe dubbele cirkel",
-        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe%20dubbele%20cirkel.png"
+        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe%20dubbele%20cirkel.jpg"
       }, {
         naam: "Veluwe recht met plaat",
-        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe%20recht%20met%20plaat.png"
+        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe%20recht%20met%20plaat.jpg"
       }, {
         naam: "Veluwe ronde boog met plaat",
-        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe%20ronde%20boog%20met%20plaat.png"
+        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe%20ronde%20boog%20met%20plaat.jpg"
       }]
     }, {
       tab: "Klassiek met sierpunten",
@@ -4083,7 +4083,7 @@ var CATEGORIEEN = {
     producten: [{
       titel: 'Strak en modern',
       tekst: 'Gesloten of halfopen poorten met rustige, horizontale lijnen.',
-      beeld: 'media/aluminium-poort.png'
+      beeld: 'media/aluminium-poort.jpg'
     }, {
       titel: 'Klassiek sierwerk',
       tekst: 'Verticale spijlen en verfijnde details voor een tijdloze look.',
@@ -4091,7 +4091,7 @@ var CATEGORIEEN = {
     }, {
       titel: 'Volledig gepersonaliseerd',
       tekst: 'Een uniek ontwerp, van patroon tot afwerking, helemaal naar uw wens.',
-      beeld: 'media/stalen-poort.png'
+      beeld: 'media/stalen-poort.jpg'
     }],
     realisaties: {
       filters: ['Alle', 'Modern', 'Klassiek', 'Metaal'],
@@ -4108,13 +4108,13 @@ var CATEGORIEEN = {
         tags: ['Klassiek', 'Metaal'],
         ratio: '3 / 4'
       }, {
-        beeld: 'media/aluminium-poort.png',
+        beeld: 'media/aluminium-poort.jpg',
         type: 'Aluminium latwerk',
         plaats: 'Kontich',
         tags: ['Modern', 'Metaal'],
         ratio: '1 / 1'
       }, {
-        beeld: 'media/stalen-poort.png',
+        beeld: 'media/stalen-poort.jpg',
         type: 'Strakke staalpoort',
         plaats: 'Duffel',
         tags: ['Modern', 'Metaal'],
@@ -4135,7 +4135,7 @@ var CATEGORIEEN = {
     },
     kwaliteit: {
       titel: 'Beschermd tegen roest en weer',
-      beeld: 'media/stalen-poort.png',
+      beeld: 'media/stalen-poort.jpg',
       intro: 'Elke metalen poort krijgt een meerlaagse bescherming, zodat ze jarenlang mooi en sterk blijft, ook in weer en wind.',
       kenmerken: [{
         titel: 'Warm verzinkt',
@@ -4183,18 +4183,18 @@ var CATEGORIEEN = {
     eyebrow: 'Houten poorten',
     h1: 'Houten poorten op maat',
     introKort: 'Warm, natuurlijk en vol karakter. Poortland maakt houten poorten in duurzame hardhoutsoorten, volledig op maat en met oog voor detail.',
-    heroBeeld: 'media/hero.png',
+    heroBeeld: 'media/hero.jpg',
     heroLabel: 'Natuurlijk maatwerk',
-    materiaalFotos: ['media/houten-poort.png', 'media/realisatie-hout-1.jpeg', 'media/staal-hout.png', 'media/realisatie-hout-2.jpeg', 'media/hero.png'],
+    materiaalFotos: ['media/houten-poort.jpg', 'media/realisatie-hout-1.jpeg', 'media/staal-hout.jpg', 'media/realisatie-hout-2.jpeg', 'media/hero.jpg'],
     productenTitel: 'Modellen in hout',
     producten: [{
       titel: 'Tijdloos massief hout',
       tekst: 'Volle houten panelen met een warme, natuurlijke uitstraling.',
-      beeld: 'media/houten-poort.png'
+      beeld: 'media/houten-poort.jpg'
     }, {
       titel: 'Modern horizontaal latwerk',
       tekst: 'Strakke, horizontale latten voor een eigentijdse look.',
-      beeld: 'media/staal-hout.png'
+      beeld: 'media/staal-hout.jpg'
     }, {
       titel: 'Landelijk en klassiek',
       tekst: 'Klassieke modellen die passen bij een landelijke woning.',
@@ -4203,7 +4203,7 @@ var CATEGORIEEN = {
     realisaties: {
       filters: ['Alle', 'Modern', 'Klassiek', 'Hout'],
       items: [{
-        beeld: 'media/hero.png',
+        beeld: 'media/hero.jpg',
         type: 'Houten draaipoort',
         plaats: 'Bonheiden',
         tags: ['Klassiek', 'Hout'],
@@ -4215,13 +4215,13 @@ var CATEGORIEEN = {
         tags: ['Modern', 'Hout'],
         ratio: '3 / 4'
       }, {
-        beeld: 'media/houten-poort.png',
+        beeld: 'media/houten-poort.jpg',
         type: 'Massief houten poort',
         plaats: 'Keerbergen',
         tags: ['Klassiek', 'Hout'],
         ratio: '1 / 1'
       }, {
-        beeld: 'media/staal-hout.png',
+        beeld: 'media/staal-hout.jpg',
         type: 'Horizontaal latwerk',
         plaats: 'Duffel',
         tags: ['Modern', 'Hout'],
@@ -4242,7 +4242,7 @@ var CATEGORIEEN = {
     },
     kwaliteit: {
       titel: 'Hout dat mooi veroudert',
-      beeld: 'media/staal-hout.png',
+      beeld: 'media/staal-hout.jpg',
       intro: 'Wij werken met zorgvuldig geselecteerde hardhoutsoorten die gemaakt zijn voor buitengebruik en jarenlang meegaan.',
       kenmerken: [{
         titel: 'Duurzame houtsoorten',
@@ -4290,33 +4290,33 @@ var CATEGORIEEN = {
     eyebrow: 'Combinatie hout en metaal',
     h1: 'Poorten in hout en metaal',
     introKort: 'De sterkte van metaal met de warmte van hout. Poortland maakt exclusieve combinatiepoorten waarin beide materialen perfect samenkomen.',
-    heroBeeld: 'media/staal-hout.png',
+    heroBeeld: 'media/staal-hout.jpg',
     heroLabel: 'Hout en metaal op maat',
-    materiaalFotos: ['media/staal-hout.png', 'media/hero.png', 'media/realisatie-hout-1.jpeg', 'media/stalen-poort.png', 'media/realisatie-metaal-1.jpeg'],
+    materiaalFotos: ['media/staal-hout.jpg', 'media/hero.jpg', 'media/realisatie-hout-1.jpeg', 'media/stalen-poort.jpg', 'media/realisatie-metaal-1.jpeg'],
     productenTitel: 'Combinaties in hout en metaal',
     producten: [{
       titel: 'Warmte van hout',
       tekst: 'Houten panelen die het geheel een natuurlijke uitstraling geven.',
-      beeld: 'media/staal-hout.png'
+      beeld: 'media/staal-hout.jpg'
     }, {
       titel: 'Sterkte van metaal',
       tekst: 'Een stevige metalen structuur als betrouwbare basis.',
-      beeld: 'media/stalen-poort.png'
+      beeld: 'media/stalen-poort.jpg'
     }, {
       titel: 'Unieke combinaties',
       tekst: 'Hout ingewerkt in een metalen kader, volledig op maat.',
-      beeld: 'media/hero.png'
+      beeld: 'media/hero.jpg'
     }],
     realisaties: {
       filters: ['Alle', 'Modern', 'Hout', 'Metaal'],
       items: [{
-        beeld: 'media/staal-hout.png',
+        beeld: 'media/staal-hout.jpg',
         type: 'Hout in metalen kader',
         plaats: 'Mechelen',
         tags: ['Modern', 'Hout', 'Metaal'],
         ratio: '4 / 3'
       }, {
-        beeld: 'media/hero.png',
+        beeld: 'media/hero.jpg',
         type: 'Combinatiepoort',
         plaats: 'Bonheiden',
         tags: ['Modern', 'Hout'],
@@ -4334,7 +4334,7 @@ var CATEGORIEEN = {
         tags: ['Modern', 'Metaal'],
         ratio: '4 / 3'
       }, {
-        beeld: 'media/stalen-poort.png',
+        beeld: 'media/stalen-poort.jpg',
         type: 'Strak met houtaccent',
         plaats: 'Kontich',
         tags: ['Modern', 'Metaal'],
@@ -4349,7 +4349,7 @@ var CATEGORIEEN = {
     },
     kwaliteit: {
       titel: 'Twee materialen, een geheel',
-      beeld: 'media/staal-hout.png',
+      beeld: 'media/staal-hout.jpg',
       intro: 'Een combinatiepoort verenigt het beste van twee werelden. Wij stemmen structuur, hout en afwerking zorgvuldig op elkaar af.',
       kenmerken: [{
         titel: 'Stabiele draagstructuur',
@@ -5619,7 +5619,7 @@ function OverOnsNL({
       boxShadow: 'var(--shadow-lg)'
     }
   }, /*#__PURE__*/React.createElement("img", {
-    src: "media/hero.png",
+    src: "media/hero.jpg",
     alt: "Poort van Poortland, gemaakt in eigen atelier",
     style: {
       width: '100%',
@@ -5844,7 +5844,7 @@ function OverOnsNL({
       boxShadow: 'var(--shadow-lg)'
     }
   }, /*#__PURE__*/React.createElement("img", {
-    src: "media/staal-hout.png",
+    src: "media/staal-hout.jpg",
     loading: "lazy",
     alt: "Detail van een poort van Poortland",
     style: {

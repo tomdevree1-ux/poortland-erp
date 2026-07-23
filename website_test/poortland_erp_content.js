@@ -216,7 +216,7 @@
       '<div style="font-size:10.5px;font-weight:700;letter-spacing:.26em;text-transform:uppercase;color:#8A6A3C">Poortland</div>' +
       '<div style="font-size:24px;font-weight:600;margin-top:6px">' + ontsmet(popup.titel) + '</div>' +
       '<p style="font-size:14px;line-height:1.65;color:#6E6450;margin:10px 0 18px;white-space:pre-line">' + ontsmet(popup.body) + '</p>' +
-      '<div style="text-align:right"><button type="button" style="background:#A6824C;color:#FAF6EE;border:0;border-radius:5px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer">Sluiten</button></div>';
+      '<div style="text-align:right"><button type="button" style="background:#A6824C;color:#FAF6EE;border:0;border-radius:5px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;outline:none">Sluiten</button></div>';
     sluier.appendChild(kaart);
     document.body.appendChild(sluier);
     var knop = kaart.querySelector('button');
