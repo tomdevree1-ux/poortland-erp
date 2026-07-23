@@ -2002,9 +2002,10 @@ function OfferteModal({
   const [fout, setFout] = React.useState('');
   const [fotos, setFotos] = React.useState([]);
   React.useEffect(() => {
-    const on = () => {
-      setStep(1);
-      setService(null);
+    const on = e => {
+      const svc = e && e.detail && e.detail.service;
+      setStep(svc ? 2 : 1);
+      setService(svc || null);
       setData({});
       setErrors({});
       setFout('');
@@ -2537,7 +2538,7 @@ function OfferteModal({
   }), Keuze({
     label: 'Type poort indien gekend',
     name: 'typePoort',
-    options: ['Schuifpoort', 'Draaipoort', 'Sectionale poort', 'Andere', 'Ik weet het niet']
+    options: ['Schuifpoort', 'Draaipoort', 'Sectionale poort']
   }), Area({
     label: 'Heeft u nog extra informatie of wensen?',
     name: 'opmerkingen',
@@ -5975,7 +5976,11 @@ function CookieNL({
 function AutomatiseringNL({
   onNav
 }) {
-  const offerte = () => window.dispatchEvent(new CustomEvent('pl-offerte-open'));
+  const offerte = () => window.dispatchEvent(new CustomEvent('pl-offerte-open', {
+    detail: {
+      service: 'automatisering'
+    }
+  }));
   React.useEffect(() => {
     document.title = 'Automatisering van poorten | Poortland Mechelen';
     if (window.scrollTo) window.scrollTo(0, 0);
