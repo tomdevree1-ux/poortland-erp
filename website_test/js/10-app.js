@@ -108,9 +108,8 @@ function App() {
       });
       break;
     case 'automatisering':
-      Screen = /*#__PURE__*/React.createElement(window.PaginaNL, {
-        onNav: onNav,
-        content: window.PAGINAS['automatisering']
+      Screen = /*#__PURE__*/React.createElement(window.AutomatiseringNL, {
+        onNav: onNav
       });
       break;
     case 'onderhoud':

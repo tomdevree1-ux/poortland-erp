@@ -5970,6 +5970,197 @@ function CookieNL({
     onNav: onNav
   });
 }
+
+/* ---- Automatisering: techniekers, fabrikanten en foto's in de huisstijl ---- */
+function AutomatiseringNL({
+  onNav
+}) {
+  const offerte = () => window.dispatchEvent(new CustomEvent('pl-offerte-open'));
+  React.useEffect(() => {
+    document.title = 'Automatisering van poorten | Poortland Mechelen';
+    if (window.scrollTo) window.scrollTo(0, 0);
+  }, []);
+  const groepenA = [['Aandrijvingen draai en schuifmotoren', ['Faac', 'Gibidi']], ['Elektronische sturingskasten', ['Faac', 'V2', 'Gibidi']], ['Garagepoortmotoren', ['Faac', 'Seip']]];
+  const groepenB = [['Zenders en ontvangers', ['Faac', 'MAC', 'V2', 'Gibidi', 'Seip', 'Cardin', 'Hormann', 'Sommer', 'Nice', 'Came', 'Marantec', 'Novoferm']], ['Parlofonie en videofonie', ['Fasttel', 'Siedle', 'Aiphone', 'Bitron']]];
+  const Groep = ({
+    titel,
+    merken
+  }) => /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 26
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-label)',
+      fontSize: 11,
+      fontWeight: 600,
+      letterSpacing: '0.16em',
+      textTransform: 'uppercase',
+      color: 'var(--accent)',
+      marginBottom: 12
+    }
+  }, titel), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      gap: 8
+    }
+  }, merken.map(m => /*#__PURE__*/React.createElement("span", {
+    key: m,
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 14,
+      color: 'var(--text-body)',
+      background: 'var(--surface-card)',
+      border: '1px solid var(--line-on-light-soft)',
+      borderRadius: 999,
+      padding: '6px 14px'
+    }
+  }, m))));
+  const Foto = ({
+    src,
+    alt
+  }) => /*#__PURE__*/React.createElement("div", {
+    style: {
+      borderRadius: 'var(--radius-md)',
+      overflow: 'hidden',
+      border: '1px solid var(--line-on-light-soft)',
+      boxShadow: 'var(--shadow-lg)',
+      aspectRatio: '4 / 3'
+    }
+  }, /*#__PURE__*/React.createElement("img", {
+    src: src,
+    alt: alt,
+    loading: "lazy",
+    style: {
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+      display: 'block'
+    }
+  }));
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-ground)',
+      color: 'var(--text-on-dark)',
+      padding: '84px 44px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 1320,
+      margin: '0 auto'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(SEyebrow, {
+    dark: true,
+    style: {
+      marginBottom: 20
+    }
+  }, "Automatisering"), /*#__PURE__*/React.createElement("h1", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 58,
+      lineHeight: 1.04,
+      letterSpacing: '-0.01em',
+      color: 'var(--stone-100)',
+      margin: 0
+    }
+  }, "Automatisering van poorten"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 18,
+      lineHeight: 1.6,
+      color: 'var(--stone-300)',
+      maxWidth: '48ch',
+      margin: '24px 0 32px'
+    }
+  }, "Open en sluit uw poort comfortabel met een druk op de knop of op afstand. Poortland automatiseert nieuwe en bestaande poorten."), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 16,
+      flexWrap: 'wrap'
+    }
+  }, /*#__PURE__*/React.createElement(SButton, {
+    variant: "primary",
+    arrow: true,
+    as: "button",
+    onClick: offerte
+  }, "Vraag een offerte aan"), /*#__PURE__*/React.createElement(SButton, {
+    variant: "ghost",
+    dark: true,
+    arrow: true,
+    onClick: () => onNav('onderhoud')
+  }, "Plan onderhoud"))))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-paper)',
+      padding: '64px 44px 20px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 900,
+      margin: '0 auto'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 17,
+      lineHeight: 1.75,
+      color: 'var(--text-body)',
+      margin: 0
+    }
+  }, "Poortland beschikt over twee vakkundige techniekers niveau A2 elektromechanica die uw poorten voorzien van automatische opening en sluiting op afstand, voor draaipoorten, schuifpoorten en garagepoorten. Zij installeren ook hoogwaardige installaties voor parlofonie en videofonie. Poortland werkt uitsluitend met kwalitatieve materialen die een lange levensduur garanderen, omdat een geautomatiseerde poort uw comfort hoort te verhogen. Ook het automatiseren van garagepoorten behoort tot het werkterrein van onze techniekers. Hieronder een overzicht van onze samenwerking met verschillende fabrikanten.")))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-paper)',
+      padding: '40px 44px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pl-split",
+    style: {
+      maxWidth: 1200,
+      margin: '0 auto',
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: 56,
+      alignItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(Foto, {
+    src: "media/automatisering-1.jpg",
+    alt: "Geautomatiseerde schuifpoort van Poortland"
+  })), /*#__PURE__*/React.createElement(Reveal, {
+    delay: 80
+  }, /*#__PURE__*/React.createElement("div", null, groepenA.map(([t, m]) => /*#__PURE__*/React.createElement(Groep, {
+    key: t,
+    titel: t,
+    merken: m
+  })))))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-paper)',
+      padding: '20px 44px 84px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pl-split",
+    style: {
+      maxWidth: 1200,
+      margin: '0 auto',
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: 56,
+      alignItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("div", null, groepenB.map(([t, m]) => /*#__PURE__*/React.createElement(Groep, {
+    key: t,
+    titel: t,
+    merken: m
+  })))), /*#__PURE__*/React.createElement(Reveal, {
+    delay: 80
+  }, /*#__PURE__*/React.createElement(Foto, {
+    src: "media/automatisering-2.jpg",
+    alt: "Automatische sierpoort in smeedijzer van Poortland"
+  })))), /*#__PURE__*/React.createElement(CTASectie, {
+    onNav: onNav,
+    dark: true
+  }));
+}
 Object.assign(window, {
   OfferteModal,
   PaginaNL,
@@ -5979,6 +6170,7 @@ Object.assign(window, {
   OverkappingenNL,
   VoorwaardenNL,
   GarantieNL,
+  AutomatiseringNL,
   PrivacyNL,
   CookieNL,
   OverOnsNL,
