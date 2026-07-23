@@ -3331,7 +3331,9 @@ function CategoriePagina({
     "aria-label": d.productenTitel,
     style: {
       display: 'flex',
+      flexWrap: 'wrap',
       gap: 4,
+      rowGap: 4,
       justifyContent: 'center'
     }
   }, d.productenGroepen.map((g, i) => /*#__PURE__*/React.createElement("button", {
@@ -3950,7 +3952,7 @@ var CATEGORIEEN = {
     heroLabel: 'Volledig op maat',
     materiaalFotos: ['media/stalen-poort.png', 'media/realisatie-metaal-1.jpeg', 'media/aluminium-poort.png', 'media/realisatie-metaal-2.jpeg', 'media/realisatie-alu-1.jpeg'],
     productenTitel: 'Modellen in metaal',
-    productenIntro: 'Hieronder ziet u onze verschillende soorten metalen poorten ingedeeld in Klassiek zonder sierpunten en Klassiek met sierpunten. Daaronder tonen we de bijhorende types.',
+    productenIntro: 'Hieronder ziet u onze verschillende soorten metalen poorten, ingedeeld per stijl. Kies een stijl om de bijhorende types te zien.',
     productenGroepen: [{
       tab: 'Klassiek zonder sierpunten',
       types: [{
@@ -3965,6 +3967,54 @@ var CATEGORIEEN = {
       }]
     }, {
       tab: 'Klassiek met sierpunten',
+      types: [{
+        naam: '',
+        foto: ''
+      }, {
+        naam: '',
+        foto: ''
+      }, {
+        naam: '',
+        foto: ''
+      }]
+    }, {
+      tab: 'Art Deco',
+      types: [{
+        naam: '',
+        foto: ''
+      }, {
+        naam: '',
+        foto: ''
+      }, {
+        naam: '',
+        foto: ''
+      }]
+    }, {
+      tab: 'Cottage',
+      types: [{
+        naam: '',
+        foto: ''
+      }, {
+        naam: '',
+        foto: ''
+      }, {
+        naam: '',
+        foto: ''
+      }]
+    }, {
+      tab: 'Modern',
+      types: [{
+        naam: '',
+        foto: ''
+      }, {
+        naam: '',
+        foto: ''
+      }, {
+        naam: '',
+        foto: ''
+      }]
+    }, {
+      tab: 'Unieke poorten',
       types: [{
         naam: '',
         foto: ''
