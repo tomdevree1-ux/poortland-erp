@@ -3954,74 +3954,128 @@ var CATEGORIEEN = {
     productenTitel: 'Modellen in metaal',
     productenIntro: 'Hieronder ziet u onze verschillende soorten metalen poorten, ingedeeld per stijl. Kies een stijl om de bijhorende types te zien.',
     productenGroepen: [{
-      tab: 'Klassiek zonder sierpunten',
+      tab: "Klassiek zonder sierpunten",
       types: [{
-        naam: '',
-        foto: ''
+        naam: "Mississipi",
+        foto: "media/metaal/Klassiek%20zonder%20punten/Mississipi.jpeg"
       }, {
-        naam: '',
-        foto: ''
+        naam: "Siret",
+        foto: "media/metaal/Klassiek%20zonder%20punten/Siret.jpeg"
       }, {
+        naam: "Taag",
+        foto: "media/metaal/Klassiek%20zonder%20punten/Taag.jpeg"
+      }, {
+        naam: "Taag met plaat",
+        foto: "media/metaal/Klassiek%20zonder%20punten/Taag%20met%20plaat.jpeg"
+      }, {
+        naam: "Veluwe",
+        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe.jpeg"
+      }, {
+        naam: "Veluwe dubbele cirkel",
+        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe%20dubbele%20cirkel.jpeg"
+      }, {
+        naam: "Veluwe recht met plaat",
+        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe%20recht%20met%20plaat.jpeg"
+      }, {
+        naam: "Veluwe ronde boog met plaat",
+        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe%20ronde%20boog%20met%20plaat.jpeg"
+      }]
+    }, {
+      tab: "Klassiek met sierpunten",
+      types: [{
+        naam: "Amstel",
+        foto: "media/metaal/Klassiek%20met%20punten/Amstel.jpeg"
+      }, {
+        naam: "Argesj",
+        foto: "media/metaal/Klassiek%20met%20punten/Argesj.jpeg"
+      }, {
+        naam: "Aveyron",
+        foto: "media/metaal/Klassiek%20met%20punten/Aveyron.jpeg"
+      }, {
+        naam: "Beekvliet",
+        foto: "media/metaal/Klassiek%20met%20punten/Beekvliet.jpeg"
+      }, {
+        naam: "Beekvliet met plaat",
+        foto: "media/metaal/Klassiek%20met%20punten/Beekvliet%20met%20plaat.jpeg"
+      }, {
+        naam: "Brenta",
+        foto: "media/metaal/Klassiek%20met%20punten/Brenta.jpeg"
+      }, {
+        naam: "Brenta met plaat",
+        foto: "media/metaal/Klassiek%20met%20punten/Brenta%20met%20plaat.jpeg"
+      }, {
+        naam: "Cumberland",
+        foto: "media/metaal/Klassiek%20met%20punten/Cumberland.jpeg"
+      }, {
+        naam: "Cumberland met plaat",
+        foto: "media/metaal/Klassiek%20met%20punten/Cumberland%20met%20plaat.jpeg"
+      }, {
+        naam: "Esla",
+        foto: "media/metaal/Klassiek%20met%20punten/Esla.jpeg"
+      }, {
+        naam: "Esla met plaat",
+        foto: "media/metaal/Klassiek%20met%20punten/Esla%20met%20plaat.jpeg"
+      }, {
+        naam: "Esla special",
+        foto: "media/metaal/Klassiek%20met%20punten/Esla%20special.jpeg"
+      }, {
+        naam: "Lake ontario",
+        foto: "media/metaal/Klassiek%20met%20punten/Lake%20ontario.jpeg"
+      }, {
+        naam: "Manitoba",
+        foto: "media/metaal/Klassiek%20met%20punten/Manitoba.jpeg"
+      }, {
+        naam: "Oosterschelde",
+        foto: "media/metaal/Klassiek%20met%20punten/Oosterschelde.jpeg"
+      }, {
+        naam: "Oosterschelde met plaat",
+        foto: "media/metaal/Klassiek%20met%20punten/Oosterschelde%20met%20plaat.jpeg"
+      }, {
+        naam: "Rhone",
+        foto: "media/metaal/Klassiek%20met%20punten/Rhone.jpeg"
+      }, {
+        naam: "Roer",
+        foto: "media/metaal/Klassiek%20met%20punten/Roer.jpeg"
+      }, {
+        naam: "Sado",
+        foto: "media/metaal/Klassiek%20met%20punten/Sado.jpeg"
+      }, {
+        naam: "Siret",
+        foto: "media/metaal/Klassiek%20met%20punten/Siret.jpeg"
+      }, {
+        naam: "Vienne",
+        foto: "media/metaal/Klassiek%20met%20punten/Vienne.jpeg"
+      }, {
+        naam: "Westerschelde",
+        foto: "media/metaal/Klassiek%20met%20punten/Westerschelde.jpeg"
+      }, {
+        naam: "Yellowstone",
+        foto: "media/metaal/Klassiek%20met%20punten/Yellowstone.jpeg"
+      }, {
+        naam: "Yukon",
+        foto: "media/metaal/Klassiek%20met%20punten/Yukon.jpeg"
+      }]
+    }, {
+      tab: "Art Deco",
+      types: [{
         naam: '',
         foto: ''
       }]
     }, {
-      tab: 'Klassiek met sierpunten',
+      tab: "Cottage",
       types: [{
-        naam: '',
-        foto: ''
-      }, {
-        naam: '',
-        foto: ''
-      }, {
         naam: '',
         foto: ''
       }]
     }, {
-      tab: 'Art Deco',
+      tab: "Modern",
       types: [{
-        naam: '',
-        foto: ''
-      }, {
-        naam: '',
-        foto: ''
-      }, {
         naam: '',
         foto: ''
       }]
     }, {
-      tab: 'Cottage',
+      tab: "Unieke poorten",
       types: [{
-        naam: '',
-        foto: ''
-      }, {
-        naam: '',
-        foto: ''
-      }, {
-        naam: '',
-        foto: ''
-      }]
-    }, {
-      tab: 'Modern',
-      types: [{
-        naam: '',
-        foto: ''
-      }, {
-        naam: '',
-        foto: ''
-      }, {
-        naam: '',
-        foto: ''
-      }]
-    }, {
-      tab: 'Unieke poorten',
-      types: [{
-        naam: '',
-        foto: ''
-      }, {
-        naam: '',
-        foto: ''
-      }, {
         naam: '',
         foto: ''
       }]
