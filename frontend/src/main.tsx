@@ -44,7 +44,12 @@ const appRoute = createRoute({
 
 const dashboardRoute = createRoute({ getParentRoute: () => appRoute, path: '/', component: Dashboard })
 const leadsRoute = createRoute({ getParentRoute: () => appRoute, path: '/leads', component: Leads })
-const leadDetailRoute = createRoute({ getParentRoute: () => appRoute, path: '/leads/$leadId', component: LeadDetail })
+const leadDetailRoute = createRoute({
+  getParentRoute: () => appRoute, path: '/leads/$leadId', component: LeadDetail,
+  // Intentie vanuit de leadlijst: welke actie meteen starten op de fiche.
+  validateSearch: (s: Record<string, unknown>): { actie?: string } =>
+    ({ actie: typeof s.actie === 'string' ? s.actie : undefined })
+})
 const klantenRoute = createRoute({ getParentRoute: () => appRoute, path: '/klanten', component: Klanten })
 const klantDetailRoute = createRoute({ getParentRoute: () => appRoute, path: '/klanten/$klantId', component: KlantDetail })
 const dossiersRoute = createRoute({ getParentRoute: () => appRoute, path: '/dossiers', component: Dossiers })

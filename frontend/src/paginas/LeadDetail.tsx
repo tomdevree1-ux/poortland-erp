@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useNavigate, useParams } from '@tanstack/react-router'
+import { useNavigate, useParams, useSearch } from '@tanstack/react-router'
 import { clsx } from 'clsx'
 import { api } from '../lib/api'
 import { useZoekterm } from '../lib/zoek'
@@ -25,6 +25,7 @@ function parseWizard(json?: string): WizardStap[] | null {
 
 export default function LeadDetail() {
   const { leadId } = useParams({ from: '/app/leads/$leadId' })
+  const zoek = useSearch({ strict: false }) as { actie?: string }
   const navigeer = useNavigate()
   const qc = useQueryClient()
   const { data: lead } = useQuery({ queryKey: ['lead', leadId], queryFn: () => api.get<Lead>(`/leads/${leadId}`) })
@@ -177,6 +178,21 @@ export default function LeadDetail() {
     onSuccess: () => navigeer({ to: '/leads' }),
     onError: f => zetFout((f as Error).message)
   })
+
+  // Actie-intentie vanuit de leadlijst: eenmalig exact dezelfde flow starten als
+  // de knoppen, en de parameter meteen opruimen zodat een refresh niets herhaalt.
+  const actieGedaan = useRef(false)
+  useEffect(() => {
+    if (!lead || actieGedaan.current || !zoek.actie) return
+    actieGedaan.current = true
+    const a = zoek.actie
+    navigeer({ to: '/leads/$leadId', params: { leadId }, search: {}, replace: true })
+    if (a === 'omzetten') openOmzetten()
+    else if (a === 'verliezen') zetVerliesOpen(true)
+    else if (a === 'archiveren') archiveer.mutate(false)
+    else if (a === 'herstellen') archiveer.mutate(true)
+    else if (a === 'verwijderen') zetVerwijderOpen(true)
+  }, [lead, zoek.actie])
 
   if (!lead) return null
   const wizard = parseWizard(lead.wizardGegevens)

@@ -1,11 +1,15 @@
 import { useState } from 'react'
 import { keepPreviousData, useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
+import { FolderPlus, TrendingDown, Archive, Trash2, RotateCcw } from 'lucide-react'
 import { api } from '../lib/api'
 import { useZoekterm } from '../lib/zoek'
 import { datum, leeg, weergaveNaam } from '../lib/formaat'
 import type { Lead } from '../lib/types'
 import { Badge, Invoer, Knop, Modaal, PaginaKop, Selecteer, TekstVak, Th, Td, rijKlik } from '../ui'
+
+// Snelknop in de leadtabel: rustig gedempt, kleurt op bij hover, met tooltip.
+const actieBtn = 'inline-flex h-8 w-8 items-center justify-center rounded-control text-inkt-faint transition'
 
 const kanaalTekst: Record<string, string> = {
   telefoon: 'Telefoon', email: 'Email', webformulier: 'Webformulier', socialeMedia: 'Sociale media',
@@ -24,6 +28,12 @@ export const timingOpties = [
 export default function Leads() {
   const qc = useQueryClient()
   const navigeer = useNavigate()
+  const { data: mij } = useQuery({
+    queryKey: ['mij'], queryFn: () => api.get<{ rollen: string[] }>('/medewerkers/mij'), staleTime: 5 * 60 * 1000
+  })
+  const isBeheerder = mij?.rollen.includes('beheerder') ?? false
+  // De icoonknop opent de fiche en start daar exact dezelfde actie als de knoppen.
+  const ga = (id: string, actie: string) => navigeer({ to: '/leads/$leadId', params: { leadId: id }, search: { actie } })
   const [status, zetStatus] = useState('')
   const { invoer, zetInvoer, term } = useZoekterm()
   const [weergave, zetWeergave] = useState('actief')
@@ -75,7 +85,7 @@ export default function Leads() {
       {(
         <table className="w-full border-separate border-spacing-0">
           <thead><tr>
-            <Th>Naam</Th><Th>Kanaal</Th><Th>Eerste vraag</Th><Th>Status</Th><Th>Datum</Th>
+            <Th>Naam</Th><Th>Kanaal</Th><Th>Eerste vraag</Th><Th>Status</Th><Th>Datum</Th><Th rechts>Acties</Th>
           </tr></thead>
           <tbody>
             {leads?.map(lead => (
@@ -86,6 +96,32 @@ export default function Leads() {
                 <Td className="max-w-72 truncate text-inkt-muted">{leeg(lead.eersteVraag)}</Td>
                 <Td><Badge status={lead.status} /></Td>
                 <Td>{datum(lead.opvolgdatum)}</Td>
+                <Td>
+                  <div className="flex items-center justify-end gap-0.5" onClick={e => e.stopPropagation()}>
+                    {(lead.status === 'nieuw' || lead.status === 'gekwalificeerd') && !lead.gearchiveerdOp && (
+                      <>
+                        <button type="button" title="Omzetten naar dossier" aria-label="Omzetten naar dossier"
+                          onClick={() => ga(lead.id, 'omzetten')}
+                          className={`${actieBtn} hover:bg-bronze-500/10 hover:text-bronze-600`}><FolderPlus size={17} /></button>
+                        <button type="button" title="Verliezen" aria-label="Verliezen"
+                          onClick={() => ga(lead.id, 'verliezen')}
+                          className={`${actieBtn} hover:bg-inkt/[.06] hover:text-inkt`}><TrendingDown size={17} /></button>
+                      </>
+                    )}
+                    {lead.gearchiveerdOp
+                      ? <button type="button" title="Herstellen" aria-label="Herstellen"
+                          onClick={() => ga(lead.id, 'herstellen')}
+                          className={`${actieBtn} hover:bg-inkt/[.06] hover:text-inkt-body`}><RotateCcw size={17} /></button>
+                      : <button type="button" title="Archiveren" aria-label="Archiveren"
+                          onClick={() => ga(lead.id, 'archiveren')}
+                          className={`${actieBtn} hover:bg-inkt/[.06] hover:text-inkt-body`}><Archive size={17} /></button>}
+                    {isBeheerder && (
+                      <button type="button" title="Verwijderen" aria-label="Verwijderen"
+                        onClick={() => ga(lead.id, 'verwijderen')}
+                        className={`${actieBtn} hover:bg-corten-500/10 hover:text-corten-600`}><Trash2 size={17} /></button>
+                    )}
+                  </div>
+                </Td>
               </tr>
             ))}
           </tbody>
