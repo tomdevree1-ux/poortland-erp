@@ -4,7 +4,7 @@
    poortlandVerstuurLead({
      endpoint: 'https://ERP_BACKEND_DOMEIN/api/v1/leads/webformulier',
      soort: 'contact', // of 'offerteaanvraag'
-     velden: { naam, voornaam, email, telefoon, gemeente, typeAanvraag, gewensteTiming, vraag },
+     velden: { naam, voornaam, email, telefoon, klantType, bedrijfsnaam, btwNummer, straat, postcode, gemeente, typeAanvraag, gewensteTiming, vraag },
      wizardGegevens: { stappen: [...] }, // enkel bij offerteaanvraag
      fotos: bestandInput.files,          // optioneel, maximaal 5
      turnstileToken: token               // verplicht in productie

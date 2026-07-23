@@ -3,7 +3,7 @@ import { keepPreviousData, useQuery, useMutation, useQueryClient } from '@tansta
 import { useNavigate } from '@tanstack/react-router'
 import { api } from '../lib/api'
 import { useZoekterm } from '../lib/zoek'
-import { datum, leeg, persoon } from '../lib/formaat'
+import { datum, leeg, weergaveNaam } from '../lib/formaat'
 import type { Lead } from '../lib/types'
 import { Badge, Invoer, Knop, Modaal, PaginaKop, Selecteer, TekstVak, Th, Td, rijKlik } from '../ui'
 
@@ -81,7 +81,7 @@ export default function Leads() {
             {leads?.map(lead => (
               <tr key={lead.id} className={rijKlik}
                 onClick={() => navigeer({ to: '/leads/$leadId', params: { leadId: lead.id } })}>
-                <Td className="font-semibold">{persoon(lead.voornaam, lead.naam) || leeg(lead.email)}</Td>
+                <Td className="font-semibold">{weergaveNaam(lead) || leeg(lead.email)}</Td>
                 <Td>{kanaalTekst[lead.kanaal] ?? lead.kanaal}</Td>
                 <Td className="max-w-72 truncate text-inkt-muted">{leeg(lead.eersteVraag)}</Td>
                 <Td><Badge status={lead.status} /></Td>

@@ -4,7 +4,7 @@ import { Link } from '@tanstack/react-router'
 import { Download } from 'lucide-react'
 import { api, ApiFout } from '../lib/api'
 import { supabase } from '../lib/supabase'
-import { datum, euro, weergaveNaam } from '../lib/formaat'
+import { datum, euro, persoon, weergaveNaam } from '../lib/formaat'
 import type { BtwTarief, FactuurKlaarRij, FactuurRegelRij, FactuurVoorstelDetail, FactuurVoorstelRij } from '../lib/types'
 import { Badge, Invoer, Knop, LegeStaat, Melding, Modaal, PaginaKop, Paneel, PlusKnop, PotloodKnop, Selecteer, Selectievak, Td, Th, VuilbakKnop, rijKlik } from '../ui'
 
@@ -39,6 +39,13 @@ export default function Facturatie() {
   const { data: voorstellen } = useQuery({
     queryKey: ['factuurvoorstellen'], queryFn: () => api.get<FactuurVoorstelRij[]>('/facturatie/voorstellen')
   })
+  // Verkoop leest mee; alleen boekhouding en beheerder muteren (TS-10 sectie 7).
+  const { data: mij } = useQuery({
+    queryKey: ['mij'],
+    queryFn: () => api.get<{ medewerker: { naam: string; voornaam?: string }; rollen: string[] }>('/medewerkers/mij'),
+    staleTime: 5 * 60 * 1000
+  })
+  const magBoekhouden = (mij?.rollen ?? []).some(r => r === 'boekhouding' || r === 'beheerder')
 
   const ververs = () => {
     qc.invalidateQueries({ queryKey: ['factuurklaar'] })
@@ -96,10 +103,12 @@ export default function Facturatie() {
                         ))}
                     </Td>
                     <Td rechts>
-                      <div className="flex justify-end gap-1.5">
-                        <Knop disabled={maak.isPending} onClick={() => maak.mutate({ projectId: p.id, soort: 'voorschot' })}>Voorschot</Knop>
-                        <Knop variant="primair" disabled={maak.isPending} onClick={() => maak.mutate({ projectId: p.id, soort: 'eind' })}>Eindfactuur</Knop>
-                      </div>
+                      {magBoekhouden && (
+                        <div className="flex justify-end gap-1.5">
+                          <Knop disabled={maak.isPending} onClick={() => maak.mutate({ projectId: p.id, soort: 'voorschot' })}>Voorschot</Knop>
+                          <Knop variant="primair" disabled={maak.isPending} onClick={() => maak.mutate({ projectId: p.id, soort: 'eind' })}>Eindfactuur</Knop>
+                        </div>
+                      )}
                     </Td>
                   </tr>
                 ))}
@@ -137,14 +146,16 @@ export default function Facturatie() {
         )}
       </Paneel>
 
-      {actiefId && <VoorstelDetail id={actiefId} onSluit={() => zetActiefId(null)} onWijzig={ververs} />}
+      {actiefId && <VoorstelDetail id={actiefId} magBoekhouden={magBoekhouden} onSluit={() => zetActiefId(null)} onWijzig={ververs} />}
     </>
   )
 }
 
 const legeRegel = { omschrijving: '', aantal: '1', eenheid: '', eenheidsprijs: '0', btw: 'p21' as BtwTarief }
 
-function VoorstelDetail({ id, onSluit, onWijzig }: { id: string; onSluit: () => void; onWijzig: () => void }) {
+function VoorstelDetail({ id, magBoekhouden, onSluit, onWijzig }: {
+  id: string; magBoekhouden: boolean; onSluit: () => void; onWijzig: () => void
+}) {
   const qc = useQueryClient()
   const [fout, zetFout] = useState('')
   const [bevestigAfwijking, zetBevestigAfwijking] = useState(false)
@@ -199,7 +210,7 @@ function VoorstelDetail({ id, onSluit, onWijzig }: { id: string; onSluit: () => 
   })
 
   if (!v) return null
-  const concept = v.status === 'concept'
+  const concept = v.status === 'concept' && magBoekhouden
   const heeftMeerwerk = v.regels.some(r => r.bron === 'meerwerk')
   const afwijking = v.afwijkingVanOfferte || heeftMeerwerk
 
@@ -217,6 +228,9 @@ function VoorstelDetail({ id, onSluit, onWijzig }: { id: string; onSluit: () => 
         <div className="flex items-start justify-between gap-2">
           <div>
             <p className="font-semibold text-inkt">{weergaveNaam(v.klant)}</p>
+            {v.klant.bedrijfsnaam && (v.klant.voornaam || v.klant.naam) && (
+              <p className="text-xs text-inkt-muted">t.a.v. {persoon(v.klant.voornaam, v.klant.naam)}</p>
+            )}
             <p className="text-xs text-inkt-muted">{v.project.werfadres}</p>
             {v.klant.btwNummer && <p className="text-xs text-inkt-faint">Btw {v.klant.btwNummer}</p>}
           </div>
@@ -299,7 +313,7 @@ function VoorstelDetail({ id, onSluit, onWijzig }: { id: string; onSluit: () => 
           </div>
         )}
 
-        {v.status === 'goedgekeurd' && (
+        {v.status === 'goedgekeurd' && magBoekhouden && (
           <div className="flex items-end gap-3">
             <Invoer label="Factuurnummer uit Exact Online" optioneel className="flex-1"
               value={exactNummer} onChange={e => zetExactNummer(e.target.value)} placeholder="bv. 2026-0042" />
@@ -314,7 +328,7 @@ function VoorstelDetail({ id, onSluit, onWijzig }: { id: string; onSluit: () => 
         {fout && <Melding soort="fout">{fout}</Melding>}
 
         <div className="flex flex-wrap justify-end gap-2">
-          {v.status !== 'concept' && (
+          {v.status !== 'concept' && magBoekhouden && (
             <Knop onClick={() => downloadExport(v.id)}>
               <span className="inline-flex items-center gap-1.5"><Download size={14} /> Export voor Exact</span>
             </Knop>
@@ -323,7 +337,7 @@ function VoorstelDetail({ id, onSluit, onWijzig }: { id: string; onSluit: () => 
             <Knop variant="primair" disabled={goedkeuren.isPending || (afwijking && !bevestigAfwijking)}
               onClick={() => goedkeuren.mutate()}>Goedkeuren</Knop>
           )}
-          {v.status === 'goedgekeurd' && (
+          {v.status === 'goedgekeurd' && magBoekhouden && (
             <>
               <Knop disabled={heropen.isPending} onClick={() => heropen.mutate()}>Terug naar concept</Knop>
               <Knop variant="primair" disabled={gefactureerd.isPending} onClick={() => gefactureerd.mutate()}>

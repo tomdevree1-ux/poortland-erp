@@ -338,6 +338,16 @@ function ProductieTab({ projectId }: { projectId: string }) {
     queryKey: ['productie', projectId],
     queryFn: () => api.get<ProductieData>(`/projecten/${projectId}/productie`)
   })
+  // Knoppen volgen de rechtenmatrix: productie bewerkt, montage zet enkel de
+  // volgende stap in de keten en de rest leest mee.
+  const { data: mij } = useQuery({
+    queryKey: ['mij'],
+    queryFn: () => api.get<{ medewerker: { naam: string; voornaam?: string }; rollen: string[] }>('/medewerkers/mij'),
+    staleTime: 5 * 60 * 1000
+  })
+  const rollen = mij?.rollen ?? []
+  const magBewerken = rollen.some(r => r === 'productie' || r === 'beheerder')
+  const magStap = rollen.some(r => ['productie', 'montage', 'beheerder'].includes(r))
   const ververs = () => { zetFout(undefined); qc.invalidateQueries({ queryKey: ['productie', projectId] }) }
   const bijFout = (f: unknown) => zetFout((f as Error).message)
 
@@ -418,19 +428,25 @@ function ProductieTab({ projectId }: { projectId: string }) {
             Nog geen stuklijst voor dit dossier. Start de stuklijst en voeg de onderdelen toe;
             de behandelingsketen (voorbehandeling en lakwerk) volgt per onderdeel.
           </p>
-          <Knop variant="primair" onClick={() => maakStuklijst.mutate()} disabled={maakStuklijst.isPending}>
-            {maakStuklijst.isPending ? 'Bezig…' : 'Stuklijst starten'}
-          </Knop>
+          {magBewerken && (
+            <Knop variant="primair" onClick={() => maakStuklijst.mutate()} disabled={maakStuklijst.isPending}>
+              {maakStuklijst.isPending ? 'Bezig…' : 'Stuklijst starten'}
+            </Knop>
+          )}
         </Paneel>
       ) : (
         <Paneel titel={`Stuklijst versie ${data.stuklijst.versieStuklijst} · ${datum(data.stuklijst.datumOpmaak)}`}
           actie={
             <div className="flex items-center gap-3">
               <Badge status={data.productieStatus} />
-              <Knop variant="ghost" className="h-8 px-3 text-xs" onClick={() => nieuweVersie.mutate()} disabled={nieuweVersie.isPending}>
-                Nieuwe versie
-              </Knop>
-              <Knop variant="secundair" className="h-8 px-3 text-xs" onClick={openNieuw}>Onderdeel toevoegen</Knop>
+              {magBewerken && (
+                <>
+                  <Knop variant="ghost" className="h-8 px-3 text-xs" onClick={() => nieuweVersie.mutate()} disabled={nieuweVersie.isPending}>
+                    Nieuwe versie
+                  </Knop>
+                  <Knop variant="secundair" className="h-8 px-3 text-xs" onClick={openNieuw}>Onderdeel toevoegen</Knop>
+                </>
+              )}
             </div>
           }>
           {data.onderdelen.length === 0 ? (
@@ -467,14 +483,18 @@ function ProductieTab({ projectId }: { projectId: string }) {
                       <Td><Badge status={o.status} /></Td>
                       <Td>
                         <div className="flex items-center justify-end gap-2">
-                          {volgende && (
+                          {volgende && magStap && (
                             <Knop variant="secundair" className="h-7 whitespace-nowrap px-2.5 text-xs"
                               onClick={() => zetStatus.mutate({ id: o.id, status: volgende })} disabled={zetStatus.isPending}>
                               → {statusTekst[volgende]}
                             </Knop>
                           )}
-                          <PotloodKnop onClick={() => openBewerk(o)} />
-                          <VuilbakKnop onClick={() => verwijderOnderdeel.mutate(o.id)} />
+                          {magBewerken && (
+                            <>
+                              <PotloodKnop onClick={() => openBewerk(o)} />
+                              <VuilbakKnop onClick={() => verwijderOnderdeel.mutate(o.id)} />
+                            </>
+                          )}
                         </div>
                       </Td>
                     </tr>

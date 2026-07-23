@@ -182,7 +182,7 @@ export default function LeadDetail() {
   const wizard = parseWizard(lead.wizardGegevens)
   return (
     <>
-      <PaginaKop eyebrow="Verkoop · lead" titel={persoon(lead.voornaam, lead.naam) || leeg(lead.email)}
+      <PaginaKop eyebrow="Verkoop · lead" titel={weergaveNaam(lead) || leeg(lead.email)}
         actie={<div className="flex gap-2">
           {!lead.gearchiveerdOp && (lead.status === 'nieuw' || lead.status === 'gekwalificeerd') &&
             <Knop variant="primair" onClick={openOmzetten}>Omzetten naar dossier ↗</Knop>}
@@ -209,6 +209,8 @@ export default function LeadDetail() {
                 : null)}</dd></div>
             <div className="flex justify-between"><dt className="text-inkt-muted">Gewenste timing</dt>
               <dd>{leeg(lead.gewensteTiming ? timingTekst[lead.gewensteTiming] ?? lead.gewensteTiming : null)}</dd></div>
+            <div className="flex justify-between"><dt className="text-inkt-muted">Type klant</dt>
+              <dd>{lead.klantType === 'bedrijf' ? 'Bedrijf' : 'Particulier'}</dd></div>
             {lead.bedrijfsnaam && <div className="flex justify-between"><dt className="text-inkt-muted">Bedrijfsnaam</dt><dd>{lead.bedrijfsnaam}</dd></div>}
             {lead.btwNummer && <div className="flex justify-between"><dt className="text-inkt-muted">Btw nummer</dt><dd>{lead.btwNummer}</dd></div>}
             <div className="flex justify-between"><dt className="text-inkt-muted">Voornaam</dt><dd>{leeg(lead.voornaam)}</dd></div>
@@ -341,7 +343,7 @@ export default function LeadDetail() {
 
       <Modaal open={verwijderOpen} titel="Lead verwijderen?" onSluit={() => zetVerwijderOpen(false)}>
         <p className="mb-4 text-sm text-inkt-body">
-          Dit verwijdert de lead van {leeg(lead.naam ?? lead.email)} definitief uit de werking.
+          Dit verwijdert de lead van {weergaveNaam(lead) || leeg(lead.email)} definitief uit de werking.
           De audit trail bewaart de historiek. Deze actie kan niet ongedaan worden gemaakt.
         </p>
         <div className="flex justify-end gap-2">

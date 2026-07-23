@@ -74,11 +74,20 @@ public class LeadService(PoortlandDbContext db, ClaimsContext claims)
             db.Klanten.Add(klant);
         }
 
+        // Type aanvraag en gewenste timing reizen mee in de dossieromschrijving
+        // zodat die context niet enkel op de lead achterblijft (veldenaudit).
+        var kop = new List<string>();
+        if (!string.IsNullOrWhiteSpace(lead.TypeAanvraag)) kop.Add($"Type aanvraag: {lead.TypeAanvraag}");
+        if (!string.IsNullOrWhiteSpace(lead.GewensteTiming)) kop.Add($"Gewenste timing: {lead.GewensteTiming}");
+        var basis = verzoek.Omschrijving ?? lead.EersteVraag;
+        var omschrijving = kop.Count == 0 ? basis
+            : string.Join(" · ", kop) + (string.IsNullOrWhiteSpace(basis) ? "" : $"\n\n{basis}");
+
         var project = new Project
         {
             Klant = klant,
             Werfadres = verzoek.Werfadres,
-            Omschrijving = verzoek.Omschrijving ?? lead.EersteVraag,
+            Omschrijving = omschrijving,
             AangemaaktDoor = claims.MedewerkerId
         };
         db.Projecten.Add(project);

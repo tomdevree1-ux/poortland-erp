@@ -45,6 +45,14 @@ export default function Service() {
     queryKey: ['medewerkers-overzicht'],
     queryFn: () => api.get<MedewerkerKeuze[]>('/medewerkers/overzicht'), staleTime: 5 * 60 * 1000
   })
+  // Knoppen volgen de rechtenmatrix: geen knop tonen die de databank weigert.
+  const { data: mij } = useQuery({
+    queryKey: ['mij'],
+    queryFn: () => api.get<{ medewerker: { naam: string; voornaam?: string }; rollen: string[] }>('/medewerkers/mij'),
+    staleTime: 5 * 60 * 1000
+  })
+  const rollen = mij?.rollen ?? []
+  const magMelden = rollen.some(r => ['verkoop', 'planning', 'montage', 'beheerder'].includes(r))
 
   const ververs = () => qc.invalidateQueries({ queryKey: ['service'] })
   const actief = dossiers?.find(d => d.id === actiefId) ?? null
@@ -52,7 +60,9 @@ export default function Service() {
   return (
     <>
       <PaginaKop eyebrow="Nazorg · meldingen" titel="Service"
-        actie={<Knop variant="primair" onClick={() => { zetFout(''); zetNieuwOpen(true) }}>Nieuwe melding</Knop>} />
+        actie={magMelden
+          ? <Knop variant="primair" onClick={() => { zetFout(''); zetNieuwOpen(true) }}>Nieuwe melding</Knop>
+          : undefined} />
 
       <div className="mb-4 flex items-center gap-3">
         <Selecteer klein value={statusFilter} onChange={e => zetStatusFilter(e.target.value as '' | ServiceStatus)}>
@@ -97,7 +107,7 @@ export default function Service() {
           onSluit={() => zetNieuwOpen(false)} onKlaar={() => { zetNieuwOpen(false); ververs() }} />
       )}
       {actief && (
-        <MeldingDetail dossier={actief} medewerkers={medewerkers ?? []} fout={fout} zetFout={zetFout}
+        <MeldingDetail dossier={actief} medewerkers={medewerkers ?? []} rollen={rollen} fout={fout} zetFout={zetFout}
           onSluit={() => zetActiefId(null)} onWijzig={ververs} />
       )}
     </>
@@ -183,12 +193,16 @@ function NieuweMelding({ medewerkers, fout, zetFout, onSluit, onKlaar }: {
   )
 }
 
-function MeldingDetail({ dossier, medewerkers, fout, zetFout, onSluit, onWijzig }: {
-  dossier: ServiceRij; medewerkers: MedewerkerKeuze[]; fout: string; zetFout: (f: string) => void
+function MeldingDetail({ dossier, medewerkers, rollen, fout, zetFout, onSluit, onWijzig }: {
+  dossier: ServiceRij; medewerkers: MedewerkerKeuze[]; rollen: string[]; fout: string; zetFout: (f: string) => void
   onSluit: () => void; onWijzig: () => void
 }) {
   const [techniekerId, zetTechniekerId] = useState(dossier.techniekerId ?? '')
   const [geplandOp, zetGeplandOp] = useState(dossier.geplandOp ?? '')
+  // Spiegel van de statusovergangen in de databank (migratie 0030).
+  const magStatus = rollen.some(r => ['planning', 'montage', 'beheerder'].includes(r))
+  const magAfsluiten = rollen.some(r => ['planning', 'beheerder'].includes(r))
+  const magBewaren = rollen.some(r => ['planning', 'montage', 'verkoop', 'beheerder'].includes(r))
 
   const bewaar = useMutation({
     mutationFn: () => api.patch(`/service/${dossier.id}`, {
@@ -251,22 +265,26 @@ function MeldingDetail({ dossier, medewerkers, fout, zetFout, onSluit, onWijzig 
         <p className="text-xs text-inkt-faint">Gemeld op {datum(dossier.gemeldOp)}</p>
         {fout && <Melding soort="fout">{fout}</Melding>}
         <div className="flex flex-wrap justify-end gap-2">
-          {dossier.status !== 'afgesloten' && (
+          {dossier.status !== 'afgesloten' && magBewaren && (
             <Knop disabled={bewaar.isPending} onClick={() => bewaar.mutate()}>Bewaren</Knop>
           )}
-          {dossier.status === 'gemeld' && (
+          {dossier.status === 'gemeld' && magStatus && (
             <Knop variant="primair" disabled={zetStatus.isPending || !geplandOp}
               onClick={() => zetStatus.mutate('ingepland')}>Inplannen</Knop>
           )}
-          {dossier.status === 'ingepland' && (
+          {dossier.status === 'ingepland' && magStatus && (
             <Knop variant="primair" disabled={zetStatus.isPending}
               onClick={() => zetStatus.mutate('uitgevoerd')}>Uitgevoerd</Knop>
           )}
           {dossier.status === 'uitgevoerd' && (
             <>
-              <Knop disabled={zetStatus.isPending} onClick={() => zetStatus.mutate('ingepland')}>Vervolginterventie</Knop>
-              <Knop variant="primair" disabled={zetStatus.isPending}
-                onClick={() => zetStatus.mutate('afgesloten')}>Afsluiten</Knop>
+              {magStatus && (
+                <Knop disabled={zetStatus.isPending} onClick={() => zetStatus.mutate('ingepland')}>Vervolginterventie</Knop>
+              )}
+              {magAfsluiten && (
+                <Knop variant="primair" disabled={zetStatus.isPending}
+                  onClick={() => zetStatus.mutate('afgesloten')}>Afsluiten</Knop>
+              )}
             </>
           )}
         </div>

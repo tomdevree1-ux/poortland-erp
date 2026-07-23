@@ -129,7 +129,7 @@ export default function KlantDetail() {
                   className="flex cursor-pointer items-start justify-between gap-3 rounded-control border border-inkt/[.07] bg-vlak-surface px-3 py-2 transition hover:bg-bronze-500/[.08]"
                   onClick={() => openBewerk(p)}>
                   <div>
-                    <div className="font-semibold">{[p.voornaam, p.naam].filter(Boolean).join(' ')}
+                    <div className="font-semibold">{volledigeNaam(p.voornaam, p.naam)}
                       {p.functie && <span className="ml-2 rounded-chip bg-bronze-500/15 px-1.5 py-0.5 text-xs font-semibold text-bronze-600">{p.functie}</span>}
                     </div>
                     <div className="text-inkt-muted">{[p.telefoon, p.email].filter(Boolean).join(' · ') || '—'}</div>

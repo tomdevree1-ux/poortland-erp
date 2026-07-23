@@ -23,12 +23,12 @@ export interface Lead {
 export interface Klant {
   id: string; type: 'particulier' | 'bedrijf'; naam: string; voornaam?: string; bedrijfsnaam?: string; btwNummer?: string
   straat?: string; postcode?: string; gemeente?: string; email?: string; telefoon?: string
-  communicatietaal: 'nl' | 'fr' | 'en'
+  communicatietaal: 'nl' | 'fr' | 'en'; communicatievoorkeur?: string
 }
 export interface ProjectRij {
   id: string; nummer?: number; werfadres: string; omschrijving?: string; status: OrderStatus
   garantieMaanden: number; verwachteOpleverdatum?: string; aangemaaktOp: string
-  klant: { id: string; naam: string; voornaam?: string; gemeente?: string }; offerteWaarde?: number
+  klant: { id: string; naam: string; voornaam?: string; bedrijfsnaam?: string; gemeente?: string }; offerteWaarde?: number
 }
 export interface Offerteregel {
   id?: string; volgnummer?: number; soort: string; artikelId?: string; omschrijving: string

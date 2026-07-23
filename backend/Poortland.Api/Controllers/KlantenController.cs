@@ -77,7 +77,10 @@ public class KlantenController(PoortlandDbContext db, ClaimsContext claims) : Co
         klant.BtwNummer = invoer.BtwNummer;
         klant.Straat = invoer.Straat; klant.Postcode = invoer.Postcode; klant.Gemeente = invoer.Gemeente;
         klant.Email = invoer.Email; klant.Telefoon = invoer.Telefoon;
-        klant.Communicatietaal = invoer.Communicatietaal; klant.Communicatievoorkeur = invoer.Communicatievoorkeur;
+        klant.Communicatietaal = invoer.Communicatietaal;
+        // Niet meegestuurd betekent behouden: geen enkel scherm bewerkt de
+        // voorkeur vandaag en een volledige vervanging zou ze anders wissen.
+        if (invoer.Communicatievoorkeur is not null) klant.Communicatievoorkeur = invoer.Communicatievoorkeur;
         await db.SaveChangesAsync();
         return Ok(klant);
     }
