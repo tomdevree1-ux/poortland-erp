@@ -107,9 +107,8 @@ function App() {
       });
       break;
     case 'garantie':
-      Screen = /*#__PURE__*/React.createElement(window.PaginaNL, {
-        onNav: onNav,
-        content: window.PAGINAS['garantie']
+      Screen = /*#__PURE__*/React.createElement(window.GarantieNL, {
+        onNav: onNav
       });
       break;
     case 'faq':

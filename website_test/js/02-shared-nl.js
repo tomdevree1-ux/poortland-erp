@@ -4642,6 +4642,290 @@ function OverkappingenNL({
   }, "Vraag uw offerte aan")))));
 }
 
+/* ---- Garantie en kwaliteit ---- */
+function GarantieNL({
+  onNav
+}) {
+  React.useEffect(() => {
+    document.title = 'Garantie en kwaliteit | Poortland';
+    if (window.scrollTo) window.scrollTo(0, 0);
+  }, []);
+  const faac = [['5 jaar', 'Hydraulische FAAC aandrijvingen'], ['3 jaar', 'FAAC schuifpoortmotoren'], ['2 jaar', 'Elektromechanische FAAC aandrijvingen'], ['2 jaar', 'Elektronische toebehoren']];
+  const kwaliteit = [['Snel geholpen met ruilmotoren', 'Bij een defect aan een motor hoeft u niet onnodig lang op een herstelling te wachten. Poortland werkt met een systeem van ruilmotoren. Waar nodig vervangen we de motor onmiddellijk door een geschikt exemplaar, zodat uw poort zo snel mogelijk opnieuw werkt.'], ['Duurzame materialen', 'Voor de montage gebruiken wij uitsluitend bouten, schroeven en scharnieren in roestvrij staal. Zo beperken we slijtage en corrosie en verhogen we de levensduur van uw poort of hekwerk.'], ['Volledige afwerking na plaatsing', 'Onze dienstverlening stopt niet bij de installatie. Na de plaatsing zorgen wij voor een nette en volledige afwerking. Waar nodig werken we de bestrating opnieuw aan en ruimen we de werf zorgvuldig op.']];
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-ground)',
+      color: 'var(--text-on-dark)',
+      padding: '84px 44px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 900,
+      margin: '0 auto'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(SEyebrow, {
+    dark: true,
+    style: {
+      marginBottom: 18
+    }
+  }, "Garantie en service"), /*#__PURE__*/React.createElement("h1", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 56,
+      lineHeight: 1.04,
+      letterSpacing: '-0.01em',
+      color: 'var(--stone-100)',
+      margin: 0
+    }
+  }, "Garantie en kwaliteit"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 18,
+      lineHeight: 1.6,
+      color: 'var(--stone-300)',
+      maxWidth: '58ch',
+      margin: '22px 0 32px'
+    }
+  }, "Bij Poortland kiezen we voor duidelijke garanties, duurzame materialen en een professionele plaatsing. Zo weet u vooraf precies waarop u kunt rekenen."), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 16,
+      flexWrap: 'wrap'
+    }
+  }, /*#__PURE__*/React.createElement(SButton, {
+    variant: "primary",
+    arrow: true,
+    onClick: () => window.dispatchEvent(new CustomEvent('pl-offerte-open'))
+  }, "Vraag een offerte aan"), /*#__PURE__*/React.createElement(SButton, {
+    variant: "ghost",
+    dark: true,
+    arrow: true,
+    onClick: () => onNav('voorwaarden')
+  }, "Bekijk verkoopsvoorwaarden"))))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-paper)',
+      padding: '90px 44px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pl-split",
+    style: {
+      maxWidth: 1160,
+      margin: '0 auto',
+      display: 'grid',
+      gridTemplateColumns: '0.72fr 1.28fr',
+      gap: 56,
+      alignItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'flex-start'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 92,
+      lineHeight: 0.9,
+      color: 'var(--accent)'
+    }
+  }, "10"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-label)',
+      fontSize: 12,
+      fontWeight: 600,
+      letterSpacing: '0.18em',
+      textTransform: 'uppercase',
+      color: 'var(--text-muted)',
+      marginTop: 10
+    }
+  }, "jaar garantie"))), /*#__PURE__*/React.createElement(Reveal, {
+    delay: 80
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(SEyebrow, {
+    style: {
+      marginBottom: 12
+    }
+  }, "Lakkwaliteit en roestvorming"), /*#__PURE__*/React.createElement("h2", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 34,
+      lineHeight: 1.1,
+      letterSpacing: '-0.01em',
+      color: 'var(--text-heading)',
+      margin: '0 0 16px'
+    }
+  }, "10 jaar garantie op lakkwaliteit en roestvorming"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 16.5,
+      lineHeight: 1.72,
+      color: 'var(--text-body)',
+      margin: 0
+    }
+  }, "Op de lakkwaliteit van onze poorten en hekwerken bieden wij een effectieve garantie van 10 jaar die haar volledige waarde behoudt. De waarde van de garantie vermindert tijdens deze periode dus niet jaarlijks."), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 16.5,
+      lineHeight: 1.72,
+      color: 'var(--text-body)',
+      margin: '14px 0 0'
+    }
+  }, "Wij vinden transparantie belangrijk. Daarom raden we aan om bij de keuze van een leverancier niet alleen naar de duur van de garantie te kijken, maar ook naar de concrete voorwaarden, de ervaring van het bedrijf en de continuïteit van de onderneming."))))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--forest-900)',
+      padding: '90px 44px',
+      color: 'var(--text-on-dark)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 1160,
+      margin: '0 auto'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(SectieKop, {
+    dark: true,
+    align: "center",
+    eyebrow: "Automatisatie",
+    titel: "Garantie op FAAC aandrijvingen en motoren",
+    intro: "Poortland werkt met betrouwbare aandrijvingen en motoren van FAAC. Afhankelijk van het type installatie gelden de volgende garantieperiodes."
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "pl-cards4",
+    style: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(4, 1fr)',
+      gap: 18,
+      marginTop: 46
+    }
+  }, faac.map(([jaar, wat], i) => /*#__PURE__*/React.createElement(Reveal, {
+    key: wat,
+    delay: i % 4 * 70
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'var(--forest-850)',
+      border: '1px solid var(--line-on-dark-soft)',
+      borderRadius: 'var(--radius-md)',
+      padding: '26px 24px',
+      height: '100%'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 30,
+      color: 'var(--accent)',
+      lineHeight: 1
+    }
+  }, jaar), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 14.5,
+      lineHeight: 1.55,
+      color: 'var(--text-on-dark-muted)',
+      marginTop: 10
+    }
+  }, wat))))), /*#__PURE__*/React.createElement(Reveal, {
+    delay: 80
+  }, /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 15.5,
+      lineHeight: 1.7,
+      color: 'var(--stone-300)',
+      textAlign: 'center',
+      maxWidth: '60ch',
+      margin: '30px auto 0'
+    }
+  }, "Daarnaast kunt u kiezen uit verschillende onderhoudscontracten, afgestemd op uw installatie en gebruik.")))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-paper)',
+      padding: '90px 44px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 1160,
+      margin: '0 auto'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(SectieKop, {
+    align: "center",
+    eyebrow: "Kwaliteit en nazorg",
+    titel: "Meer dan alleen een garantietermijn."
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "pl-cards",
+    style: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(3, 1fr)',
+      gap: 20,
+      marginTop: 46
+    }
+  }, kwaliteit.map(([titel, tekst], i) => /*#__PURE__*/React.createElement(Reveal, {
+    key: titel,
+    delay: i % 3 * 80
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'var(--surface-card)',
+      border: '1px solid var(--line-on-light-soft)',
+      borderRadius: 'var(--radius-md)',
+      padding: '28px 26px',
+      height: '100%'
+    }
+  }, /*#__PURE__*/React.createElement("h3", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 22,
+      color: 'var(--text-heading)',
+      margin: '0 0 10px',
+      lineHeight: 1.2
+    }
+  }, titel), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 15,
+      lineHeight: 1.7,
+      color: 'var(--text-muted)',
+      margin: 0
+    }
+  }, tekst))))))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-deep)',
+      padding: '90px 44px',
+      textAlign: 'center'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(SEyebrow, {
+    dark: true,
+    style: {
+      marginBottom: 18
+    }
+  }, "Verkoopsvoorwaarden"), /*#__PURE__*/React.createElement("h2", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 44,
+      color: 'var(--stone-100)',
+      margin: '0 auto 16px',
+      maxWidth: '22ch',
+      lineHeight: 1.08,
+      letterSpacing: '-0.01em'
+    }
+  }, "De volledige voorwaarden op een rij"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 17,
+      lineHeight: 1.65,
+      color: 'var(--stone-300)',
+      maxWidth: '56ch',
+      margin: '0 auto 32px'
+    }
+  }, "De volledige garantievoorwaarden en verkoopsvoorwaarden vindt u terug in onze algemene verkoopsvoorwaarden."), /*#__PURE__*/React.createElement(SButton, {
+    variant: "primary",
+    size: "lg",
+    arrow: true,
+    onClick: () => onNav('voorwaarden')
+  }, "Bekijk onze verkoopsvoorwaarden"))));
+}
+
 /* ---- Algemene voorwaarden (verkoopsvoorwaarden 2022) ---- */
 function VoorwaardenNL({
   onNav
@@ -5474,6 +5758,7 @@ Object.assign(window, {
   CATEGORIEEN,
   OverkappingenNL,
   VoorwaardenNL,
+  GarantieNL,
   OverOnsNL,
   Teller,
   MobileNav,
