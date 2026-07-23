@@ -26,10 +26,10 @@ export function Knop({ variant = 'secundair', className, ...rest }:
   )
 }
 
-export function VeldLabel({ children, optioneel, htmlFor }: { children: ReactNode; optioneel?: boolean; htmlFor?: string }) {
+export function VeldLabel({ children, htmlFor }: { children: ReactNode; optioneel?: boolean; htmlFor?: string }) {
   return (
     <label htmlFor={htmlFor} className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.14em] text-inkt-muted">
-      {children}{optioneel && <span className="ml-1 font-normal normal-case tracking-normal text-inkt-faint">(optioneel)</span>}
+      {children}
     </label>
   )
 }

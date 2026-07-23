@@ -95,7 +95,7 @@ export default function Leads() {
                 <Td>{kanaalTekst[lead.kanaal] ?? lead.kanaal}</Td>
                 <Td className="max-w-72 truncate text-inkt-muted">{leeg(lead.eersteVraag)}</Td>
                 <Td><Badge status={lead.status} /></Td>
-                <Td>{datum(lead.opvolgdatum)}</Td>
+                <Td>{datum(lead.aangemaaktOp)}</Td>
                 <Td>
                   <div className="flex items-center justify-end gap-0.5" onClick={e => e.stopPropagation()}>
                     {(lead.status === 'nieuw' || lead.status === 'gekwalificeerd') && !lead.gearchiveerdOp && (

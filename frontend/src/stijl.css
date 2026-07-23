@@ -14,3 +14,6 @@ body { @apply bg-vlak-canvas text-inkt-body font-sans antialiased; }
 h1, h2 { @apply font-display; }
 .cijfers { font-variant-numeric: tabular-nums; }
 .focusring:focus-visible { outline: 2px solid #A6824C; outline-offset: 2px; box-shadow: 0 0 0 5px rgba(166,130,76,.25); }
+/* Geen spinnerpijltjes op nummervelden (rustiger formulieren). */
+input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+input[type=number] { -moz-appearance: textfield; appearance: textfield; }

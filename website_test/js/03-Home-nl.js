@@ -92,7 +92,7 @@ function HomeNL({
       gap: 44,
       marginTop: 54
     }
-  }, [['1999', 'Sinds'], ['100%', 'Handgemaakt'], ['320+', 'Werven']].map(([n, l]) => /*#__PURE__*/React.createElement("div", {
+  }, [[1999, 'Sinds', '', true], [100, 'Handgemaakt', '%', false], [320, 'Werven', '+', false]].map(([n, l, suf, plat]) => /*#__PURE__*/React.createElement("div", {
     key: l
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -101,7 +101,11 @@ function HomeNL({
       color: 'var(--stone-100)',
       lineHeight: 1
     }
-  }, n), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement(window.Teller, {
+    eind: n,
+    suffix: suf,
+    plat: plat
+  })), /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-label)',
       fontSize: 10,
