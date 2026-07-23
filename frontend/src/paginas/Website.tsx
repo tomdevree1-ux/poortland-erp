@@ -328,14 +328,6 @@ function PopupTab() {
         ? <div className="flex gap-1"><PotloodKnop onClick={startBewerken} /><VuilbakKnop onClick={() => zetVerwijderOpen(true)} /></div>
         : <PlusKnop onClick={startBewerken} label="Banner opstellen" />}>
         {fout && <div className="mb-4"><Melding soort="fout">{fout}</Melding></div>}
-        {actief && (
-          <div className="mb-4">
-            <Melding soort="ok">
-              Nu actief: "{actief.titel}" tot {datum(actief.actiefTot)}.
-              <button className="focusring ml-2 font-semibold underline" onClick={() => depubliceer.mutate(actief.id)}>Intrekken</button>
-            </Melding>
-          </div>
-        )}
         {bewerkModus && vorm ? (
           <div className="space-y-4">
             <Invoer label="Titel" maxLength={80} value={vorm.titel}
@@ -359,19 +351,15 @@ function PopupTab() {
               <div className="flex justify-between"><dt className="text-inkt-muted">Periode</dt>
                 <dd>{datum(huidig.actiefVan)} tot {datum(huidig.actiefTot)}</dd></div>
             </dl>
-            {huidig.status === 'concept' && (
-              <div className="mt-4 flex justify-end">
-                <Knop variant="primair" onClick={() => publiceer.mutate(huidig.id)}>Publiceren ↗</Knop>
-              </div>
-            )}
+            <div className="mt-4 flex justify-end">
+              {huidig.status === 'concept'
+                ? <Knop variant="primair" onClick={() => publiceer.mutate(huidig.id)}>Publiceren ↗</Knop>
+                : <Knop variant="secundair" onClick={() => depubliceer.mutate(huidig.id)}>Intrekken</Knop>}
+            </div>
           </>
         ) : (
           <p className="text-sm text-inkt-muted">Nog geen banner. Klik op het plusteken om er een op te stellen.</p>
         )}
-        <p className="mt-4 text-xs text-inkt-faint">
-          Banners mogen elkaar niet overlappen in periode. Bezoekers zien een banner hoogstens 1 keer per 7 dagen
-          en kunnen hem sluiten met Escape. Elke wijziging komt meteen op de site.
-        </p>
       </Paneel>
       <Paneel titel="Voorbeeld op de website">
         <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-card border border-inkt/10 bg-vlak-sunken p-6">

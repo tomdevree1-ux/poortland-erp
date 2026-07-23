@@ -212,7 +212,8 @@ public class WebsiteContentService(PoortlandDbContext db, ClaimsContext claims, 
             sleutel = $"{popupRij.Id}:{popupRij.GewijzigdOp.ToUnixTimeSeconds()}",
             titel = popupRij.Titel, body = popupRij.BodyTekst, van = popupRij.ActiefVan, tot = popupRij.ActiefTot
         };
-        var inhoud = new { versie = DateTimeOffset.UtcNow.ToUnixTimeSeconds(), popup, popupFrequentieDagen = 7, fotos };
+        // 1 dag: een bezoeker ziet dezelfde banner hoogstens 1 keer per dag.
+        var inhoud = new { versie = DateTimeOffset.UtcNow.ToUnixTimeSeconds(), popup, popupFrequentieDagen = 1, fotos };
         var json = JsonSerializer.SerializeToUtf8Bytes(inhoud,
             new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
         // Geen cache op content.json zodat intrekken en publiceren meteen doorkomen.
