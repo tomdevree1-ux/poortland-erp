@@ -23,16 +23,21 @@
 	handle /api/* {
 		reverse_proxy api:5000
 	}
+	# Foto's apart afhandelen: een ontbrekend mediabestand geeft nu een echte 404
+	# in plaats van terug te vallen op index.html. Anders cachet de browser die
+	# HTML een dag lang als 'foto' en blijft een later toegevoegde foto onzichtbaar.
+	handle /media/* {
+		root * /srv-site
+		header Cache-Control "public, max-age=86400"
+		file_server
+	}
 	handle {
 		root * /srv-site
-		# De site heeft vaste bestandsnamen die per uitrol wijzigen. Zonder
-		# cacheheader gebruikt de browser heuristische caching en toont hij een
-		# oude versie. no-cache laat de browser altijd revalideren (Etag), dus
-		# een nieuwe uitrol komt meteen door; foto's mogen wel een dag cachen.
+		# De site heeft vaste bestandsnamen die per uitrol wijzigen. no-cache laat
+		# de browser altijd revalideren (Etag), dus een nieuwe uitrol komt meteen
+		# door zonder een oude versie te tonen.
 		@site path / *.html *.js
 		header @site Cache-Control "no-cache"
-		@media path /media/*
-		header @media Cache-Control "public, max-age=86400"
 		try_files {path} /index.html
 		file_server
 	}
