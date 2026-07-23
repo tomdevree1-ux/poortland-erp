@@ -15,8 +15,31 @@ function CollectionNL({
   const {
     PROJECTEN
   } = window;
+  const OVERKAPPINGEN = [{
+    id: 'ok-1',
+    foto: 'media/overkappingen/overkapping-1.jpg',
+    titel: 'Terrasoverkapping op maat'
+  }, {
+    id: 'ok-2',
+    foto: 'media/overkappingen/overkapping-2.jpg',
+    titel: 'Aluminium overkapping'
+  }, {
+    id: 'ok-3',
+    foto: 'media/overkappingen/overkapping-3.jpg',
+    titel: 'Overkapping aan de woning'
+  }, {
+    id: 'ok-4',
+    foto: 'media/overkappingen/overkapping-4.jpg',
+    titel: 'Vrijstaande overkapping'
+  }, {
+    id: 'ok-5',
+    foto: 'media/overkappingen/overkapping-5.jpg',
+    titel: 'Overkapping op maat'
+  }];
+  const producten = ['Poort', 'Overkapping'];
   const materialen = ['Alle', 'Metaal', 'Hout', 'Combinatie hout en metaal'];
   const types = ['Alle', 'Schuifpoort', 'Draaipoort'];
+  const [product, setProduct] = React.useState('Poort');
   const [mat, setMat] = React.useState('Alle');
   const [type, setType] = React.useState('Alle');
   const shown = PROJECTEN.filter(p => (mat === 'Alle' || (p.materiaal === 'Hout' ? 'Hout' : p.materiaal === 'Staal en hout' ? 'Combinatie hout en metaal' : 'Metaal') === mat) && (type === 'Alle' || p.poorttype === type));
@@ -109,7 +132,7 @@ function CollectionNL({
       marginTop: 20,
       lineHeight: 1.6
     }
-  }, "Een selectie van recente projecten in Vlaanderen en de rand van Brussel. Filter op materiaal en poorttype, en open een project voor de details.")))), /*#__PURE__*/React.createElement("section", {
+  }, "Een selectie van recente projecten in Vlaanderen en de rand van Brussel. Kies een product, filter verder en open een poort voor de details.")))), /*#__PURE__*/React.createElement("section", {
     style: {
       padding: '40px 44px 28px',
       borderBottom: '1px solid var(--line-on-light-soft)'
@@ -123,6 +146,11 @@ function CollectionNL({
       gap: 16
     }
   }, /*#__PURE__*/React.createElement(FilterRij, {
+    label: "Product",
+    opties: producten,
+    waarde: product,
+    onKies: setProduct
+  }), product === 'Poort' && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(FilterRij, {
     label: "Materiaal",
     opties: materialen,
     waarde: mat,
@@ -132,7 +160,7 @@ function CollectionNL({
     opties: types,
     waarde: type,
     onKies: setType
-  }))), /*#__PURE__*/React.createElement("section", {
+  })))), /*#__PURE__*/React.createElement("section", {
     style: {
       padding: '36px 44px 92px'
     }
@@ -141,7 +169,7 @@ function CollectionNL({
       maxWidth: 1320,
       margin: '0 auto'
     }
-  }, /*#__PURE__*/React.createElement("div", {
+  }, product === 'Poort' ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 13,
@@ -181,7 +209,57 @@ function CollectionNL({
   }, /*#__PURE__*/React.createElement(ProjectKaart, {
     project: p,
     onNav: onNav
-  })))))));
+  }))))) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 13,
+      color: 'var(--text-muted)',
+      marginBottom: 26
+    }
+  }, OVERKAPPINGEN.length, " realisaties"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(3, 1fr)',
+      gap: 24
+    }
+  }, OVERKAPPINGEN.map((o, i) => /*#__PURE__*/React.createElement(Reveal, {
+    key: o.id,
+    delay: i % 3 * 80
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      borderRadius: 'var(--radius-md)',
+      overflow: 'hidden',
+      border: '1px solid var(--line-on-light-soft)',
+      background: 'var(--surface-card)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      aspectRatio: '4 / 3',
+      overflow: 'hidden'
+    }
+  }, /*#__PURE__*/React.createElement("img", {
+    src: o.foto,
+    alt: o.titel,
+    loading: "lazy",
+    style: {
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+      display: 'block'
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '17px 19px 21px'
+    }
+  }, /*#__PURE__*/React.createElement(ClEyebrow, null, "Overkapping"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontSize: 22,
+      color: 'var(--text-heading)',
+      lineHeight: 1.1,
+      marginTop: 8
+    }
+  }, o.titel))))))))));
 }
 window.CollectionNL = CollectionNL;
 })();

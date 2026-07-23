@@ -164,13 +164,17 @@ en accenten maar nooit als achtergrondvlak.
 ## Migratiewachtrij (actie nodig)
 
 De migraties tot en met 0028 staan op het dev project. **0029 (werkbon), 0030
-(servicedossier) en 0031 (facturatie) staan klaar in `supabase/migrations` maar
-zijn nog niet toegepast** omdat de Supabase koppeling van de werkomgeving aan
-het verkeerde account hangt. Toepassen kan op twee manieren: de Supabase
-connector opnieuw verbinden met de Poortland organisatie of de drie bestanden
-in volgorde in de SQL editor van het dashboard plakken. Tot dan werken de
-pagina's Veld, Service en Facturatie niet op dev; het dashboard en de rest
-vangen dat netjes op.
+(servicedossier), 0031 (facturatie), 0032 (bewaking en rechtenfixes), 0033
+(indexen en constraints) en 0034 (popup index) staan klaar in
+`supabase/migrations` maar zijn nog niet toegepast** omdat de Supabase koppeling
+van de werkomgeving aan een ander project hangt. Bevestigd op 2026-07-23: de
+aangesloten connector wijst naar het project AMAI Production (de tabel `recht`
+bestaat daar niet), niet naar de Poortland database, waardoor de ERP database
+niet bevraagbaar is. Toepassen kan op twee manieren: de Supabase connector
+opnieuw verbinden met de Poortland organisatie of de zes bestanden in volgorde
+in de SQL editor van het dashboard plakken. Tot dan werken de pagina's Veld,
+Service en Facturatie niet op dev en mist de overlapcontrole op banners haar
+index; het dashboard en de rest vangen dat netjes op.
 
 ## Lokaal draaien
 
@@ -206,6 +210,8 @@ Performantie: de service en werkbonlijsten deden per rij een aparte query voor d
 Randgevallen: factuurregels waren op geen enkele laag begrensd zodat een negatieve of nulfactuur goedgekeurd kon worden. Gefixt met een controle op de regel en op het totaal en met een databankconstraint. Werkboneinduren konden vóór de beginuren liggen: nu geweigerd.
 
 Privacy (TS-03): de bewaartermijn `bewaren_tot` wordt nergens gezet of opgeruimd en het recht om vergeten te worden bestaat enkel als soft delete. Dit blijft openstaand als bewust ontwerpwerk omdat de bewaartermijnen per entiteit een beslissing van de klant vragen; het staat als blok in de backlog. PII in de logs is beperkt: de emailconsolemodus maskeert nu het adres.
+
+**2026-07-23 staging bijsturing na de klanttest.** Bevindingen uit het testen door de klant, meteen gefixt. Formulieren: het contact en offerteformulier gaven Verificatie mislukt omdat Turnstile in productie dicht faalde terwijl er geen Turnstile geheim is ingesteld, waardoor élke inzending werd geweigerd. Bewust teruggedraaid: zonder geheim laat de server nu door zodat de klant kan testen en de snelheidsbegrenzer van vijf per minuut per IP blijft de basisbescherming. **Actie voor productie: stel `Turnstile:Secret` in voor volwaardige botbescherming** (dit heft de eerdere dichtfaal uit de diepteronde bewust op zolang er geen sleutel is). Leads: de leadlijst opent standaard op Nieuw en verwijderen gebeurt inline vanuit de tabel met bevestiging en melding in plaats van de fiche te openen. Bij het verwijderen kwam op staging een databankweigering (42501); de code klopt (beheerder heeft RCUDS op lead en de zachte verwijdering vraagt enkel het wijzigrecht) en de weigering kon niet gereproduceerd worden uit de repo, dus dit hoort na het uitrollen weg te zijn. Blijft het terugkomen, dan is de ERP database nodig om de live rollen na te kijken (nu niet mogelijk, zie de migratiewachtrij). Marketingsite en juridische pagina's (contactpillen, Over cijfer 320 werven, procesregel weg, realisaties met productkeuze Poort of Overkapping, onderhoudsknop preselecteert de pill, footer btw, privacy en cookiebeleid): zie het masterdocument v2.0.
 
 ### Staande auditchecklist (herbruikbare prompts)
 

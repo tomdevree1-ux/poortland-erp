@@ -1325,7 +1325,7 @@ function Footer({
       fontSize: 'inherit'
     }
   }, "Algemene voorwaarden"), /*#__PURE__*/React.createElement("button", {
-    onClick: () => onNav('atelier'),
+    onClick: () => onNav('privacy'),
     style: {
       background: 'none',
       border: 0,
@@ -1335,7 +1335,7 @@ function Footer({
       fontSize: 'inherit'
     }
   }, "Privacybeleid"), /*#__PURE__*/React.createElement("button", {
-    onClick: () => onNav('atelier'),
+    onClick: () => onNav('cookie'),
     style: {
       background: 'none',
       border: 0,
@@ -1344,7 +1344,7 @@ function Footer({
       fontFamily: 'inherit',
       fontSize: 'inherit'
     }
-  }, "Cookiebeleid"), /*#__PURE__*/React.createElement("span", null, "BTW BE 0xxx.xxx.xxx")))));
+  }, "Cookiebeleid"), /*#__PURE__*/React.createElement("span", null, "BTW BE 0464 838 351")))));
 }
 function FooterKol({
   title,
@@ -1565,7 +1565,7 @@ function PaginaNL({
   }, /*#__PURE__*/React.createElement(SButton, {
     variant: "primary",
     arrow: true,
-    onClick: () => onNav(c.cta && c.cta.route || 'contact')
+    onClick: () => onNav(c.cta && c.cta.route || 'contact', c.cta && c.cta.params)
   }, c.cta && c.cta.label || 'Vraag een offerte aan'), c.cta2 && /*#__PURE__*/React.createElement(SButton, {
     variant: "ghost",
     dark: true,
@@ -1914,7 +1914,10 @@ var PAGINAS = {
     intro: 'Een poort die dagelijks opengaat verdient af en toe onderhoud. Zo blijft ze veilig, soepel en betrouwbaar.',
     cta: {
       label: 'Vraag onderhoud aan',
-      route: 'contact'
+      route: 'contact',
+      params: {
+        type: 'onderhoud'
+      }
     },
     secties: [{
       h2: 'Onderhoud van automatische poorten',
@@ -5129,9 +5132,9 @@ function OverOnsNL({
     getal: '1999',
     label: 'Opgericht'
   }, {
-    teller: 3000,
+    teller: 320,
     suffix: '+',
-    label: 'Poorten en hekwerken geplaatst'
+    label: 'Werven gerealiseerd'
   }, {
     getal: 'Mechelen',
     label: 'Eigen atelier'
@@ -5144,7 +5147,6 @@ function OverOnsNL({
   }];
   const mijlpalen = [['1999', 'De start van Poortland NV', 'Poortland NV gaat van start. We nemen materiaal, materieel en ervaren vakmensen over van een stopgezette zaak en zetten de dienstverlening zonder onderbreking verder. Een volledig nieuw bedrijf met een eigen visie, los van het verleden.'], ['2000', 'Eigen transport en plaatsing', 'Een eerste grote investering: een vrachtwagen met hydraulische kraan en een laadbak van 9 meter. Zo plaatsen we ook grotere poorten volledig in eigen beheer.'], ['2001–2003', 'Een sterker atelier', 'Nieuwe las- en bewerkingsmachines, van halfautomaat en TIG tot profielwals, lintzaag en freesmachine. Meer capaciteit, meer precisie en een fijnere afwerking.'], ['2004', 'Meer hefkracht', 'Een krachtiger kraanvoertuig heft 750 kilogram op 10 meter afstand, zodat ook grotere en zwaardere poorten vlot geplaatst worden.'], ['2005', 'Eigen gebouwen en FAAC', 'We kopen de gehuurde gebouwen en terreinen, samen zo\'n 3.000 m². Tegelijk breiden we de samenwerking uit met FAAC, een wereldspeler in professionele poortautomatisering.'], ['2006', 'Ontwerpen met CAD', 'Een professioneel CAD-programma doet zijn intrede. Complexe projecten worden vooraf tot in detail uitgetekend, met nauwkeurige productietekeningen voor het atelier.'], ['Vanaf 2007', 'Van staal naar aluminium', 'Geleidelijk verschuift het accent van staal naar aluminium, voor onderhoudsgemak en corrosiebestendigheid. Waar staal begin de jaren 2000 nog overheerste, is die verhouding vandaag omgekeerd. Toch blijft Poortland een van de weinige Belgische makers van klassieke sierpoorten, van landelijke stijl tot kasteelpoort.'], ['Doorlopend', 'Blijven vernieuwen', 'De atelieruitrusting wordt voortdurend vernieuwd waar nodig, zodat kwaliteit en afwerking mee blijven evolueren.'], ['2024', 'Laserlassen', 'Een laserlasser levert veel fijnere lasnaden op: een strakkere, mooiere afwerking met nauwelijks zichtbare lassen en veel minder nabewerking.'], ['2026', 'Nieuwe kraanwagen', 'Een nieuwe Euro 6 vrachtwagen met een kraan tot 11,5 meter en een mobiele werkunit. Nauwkeuriger plaatsen, ook op moeilijk bereikbare werven, en lichter werk voor het team.']];
   const beheer = [['Eigen productie', 'Poortland beschikt over een eigen atelier in Mechelen. Alle poorten en hekwerken worden er door ervaren vakmensen gemaakt, met voortdurende aandacht voor kwaliteit en afwerking.'], ['Eigen plaatsingsdienst', 'Poortland heeft een eigen plaatsingsteam en professioneel transport en plaatsingsmaterieel. Zo zetten wij onder meer een telescopische kraan in die tot 1.500 kilogram heft op 10 meter afstand. Elke poort wordt veilig en duurzaam geplaatst.'], ['Eigen techniekers', 'Onze eigen techniekers verzorgen de automatisatie van de poorten. Zij staan ook in voor technische ondersteuning, onderhoud en naverkoop.'], ['Afwerking van de werf', 'Na de plaatsing werken wij de werf netjes af. Waar nodig herstellen wij de bestrating en ruimen wij de volledige werkzone op.']];
-  const proces = ['Ontwerp en advies', 'Productie', 'Plaatsing', 'Automatisatie', 'Afwerking', 'Naverkoop'];
   const kwaliteit = [['Sterke constructie', 'Poortland verwerkt staal, aluminium en inox. Voor stalen constructies gebruiken wij dikwandig staal, afhankelijk van de toepassing en de constructie van 2 tot 5 millimeter.'], ['Roestvrije bevestiging', 'Bouten, schroeven en scharnieren voert Poortland uit in roestvrij staal, zodat de bevestiging betrouwbaar blijft.'], ['Kwaliteitsgerichte leveranciers', 'Poortland kiest leveranciers op de verhouding tussen kwaliteit en prijs, niet enkel op de laagste aankoopprijs.']];
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("nav", {
     "aria-label": "Kruimelpad",
@@ -5391,22 +5393,7 @@ function OverOnsNL({
       lineHeight: 1.6,
       color: 'var(--text-muted)'
     }
-  }, b[1]))))), /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginTop: 40,
-      display: 'flex',
-      justifyContent: 'center'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "pl-flow"
-  }, proces.map((s, i) => /*#__PURE__*/React.createElement(React.Fragment, {
-    key: s
-  }, i > 0 ? /*#__PURE__*/React.createElement("span", {
-    className: "pl-flow-pijl",
-    "aria-hidden": "true"
-  }, "→") : null, /*#__PURE__*/React.createElement("span", {
-    className: "pl-flow-stap"
-  }, s)))))))), /*#__PURE__*/React.createElement("section", {
+  }, b[1]))))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-ground)',
       color: 'var(--text-on-dark)',
@@ -5750,6 +5737,239 @@ function OverOnsNL({
     }
   }, "Vraag een offerte aan"));
 }
+
+/* ---- Gedeelde beleidpagina (privacy en cookies) in de huisstijl ---- */
+function BeleidPagina({
+  eyebrow,
+  titel,
+  intro,
+  secties,
+  onNav
+}) {
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-ground)',
+      color: 'var(--text-on-dark)',
+      padding: '78px 44px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 900,
+      margin: '0 auto'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(SEyebrow, {
+    dark: true,
+    style: {
+      marginBottom: 18
+    }
+  }, eyebrow), /*#__PURE__*/React.createElement("h1", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 54,
+      lineHeight: 1.04,
+      letterSpacing: '-0.01em',
+      color: 'var(--stone-100)',
+      margin: 0
+    }
+  }, titel), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 17,
+      lineHeight: 1.6,
+      color: 'var(--stone-300)',
+      maxWidth: '62ch',
+      margin: '22px 0 0'
+    }
+  }, intro)))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-paper)',
+      padding: '68px 44px 92px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 900,
+      margin: '0 auto'
+    }
+  }, secties.map((s, i) => /*#__PURE__*/React.createElement(Reveal, {
+    key: s.nr,
+    delay: i % 3 * 40
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 40,
+      paddingTop: i ? 34 : 0,
+      borderTop: i ? '1px solid var(--line-on-light-soft)' : 'none'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'baseline',
+      gap: 14,
+      marginBottom: 20
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontSize: 30,
+      fontWeight: 500,
+      color: 'var(--accent)',
+      lineHeight: 1
+    }
+  }, s.nr), /*#__PURE__*/React.createElement("h2", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 26,
+      color: 'var(--text-heading)',
+      margin: 0,
+      letterSpacing: '-0.01em'
+    }
+  }, s.titel)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 15
+    }
+  }, s.clausules.map(([nr, tekst]) => /*#__PURE__*/React.createElement("div", {
+    key: nr,
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '48px 1fr',
+      gap: 6,
+      alignItems: 'baseline'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: 'var(--font-label)',
+      fontSize: 13,
+      fontWeight: 600,
+      color: 'var(--accent)'
+    }
+  }, nr), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 15.5,
+      lineHeight: 1.72,
+      color: 'var(--text-body)',
+      margin: 0
+    }
+  }, tekst))))))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 8,
+      paddingTop: 28,
+      borderTop: '1px solid var(--line-on-light-soft)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-label)',
+      fontSize: 11,
+      fontWeight: 600,
+      letterSpacing: '0.18em',
+      textTransform: 'uppercase',
+      color: 'var(--text-heading)',
+      marginBottom: 10
+    }
+  }, "Poortland nv"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 13.5,
+      lineHeight: 1.8,
+      color: 'var(--text-muted)',
+      margin: 0
+    }
+  }, "Hombeeksesteenweg 164-166, 2800 Mechelen · Tel +32 (0)15 432 111 · info@poortland.be", /*#__PURE__*/React.createElement("br", null), "BTW BE 0464 838 351")))), /*#__PURE__*/React.createElement(CTASectie, {
+    onNav: onNav,
+    dark: true
+  }));
+}
+function PrivacyNL({
+  onNav
+}) {
+  React.useEffect(() => {
+    document.title = 'Privacybeleid | Poortland';
+    if (window.scrollTo) window.scrollTo(0, 0);
+  }, []);
+  const secties = [{
+    nr: '1',
+    titel: 'Wie verwerkt uw gegevens',
+    clausules: [['1.1', 'Poortland nv, met zetel te Hombeeksesteenweg 164-166, 2800 Mechelen, is verantwoordelijk voor de verwerking van uw persoonsgegevens. U bereikt ons via info@poortland.be of +32 (0)15 432 111.'], ['1.2', 'In dit beleid leest u welke gegevens wij verwerken, waarom, hoe lang en welke rechten u heeft. Wij verwerken uw gegevens volgens de Algemene Verordening Gegevensbescherming.']]
+  }, {
+    nr: '2',
+    titel: 'Welke gegevens wij verwerken',
+    clausules: [['2.1', 'Identiteits en contactgegevens die u zelf doorgeeft: naam, voornaam, emailadres, telefoonnummer en adres.'], ['2.2', 'Projectgegevens: uw vraag of omschrijving, het type aanvraag, de gewenste timing en eventuele fotos die u toevoegt.'], ['2.3', 'Voor bedrijven verwerken wij ook de bedrijfsnaam en het btw nummer.'], ['2.4', 'Technische gegevens die nodig zijn om uw aanvraag veilig te verwerken, zoals uw ip adres op het moment van verzending.']]
+  }, {
+    nr: '3',
+    titel: 'Waarvoor en op welke grond',
+    clausules: [['3.1', 'Wij gebruiken uw gegevens om uw aanvraag te beantwoorden, een offerte op te maken en uw project uit te voeren. De grondslag is de uitvoering van een overeenkomst of stappen op uw verzoek voor de sluiting ervan.'], ['3.2', 'Voor klantenbeheer, facturatie en boekhouding verwerken wij uw gegevens op grond van onze wettelijke verplichtingen en ons gerechtvaardigd belang bij een correcte bedrijfsvoering.'], ['3.3', 'Wij gebruiken uw gegevens niet voor geautomatiseerde besluitvorming of profilering.']]
+  }, {
+    nr: '4',
+    titel: 'Hoe lang wij uw gegevens bewaren',
+    clausules: [['4.1', 'Wij bewaren uw gegevens niet langer dan nodig voor de doeleinden hierboven.'], ['4.2', 'Aanvragen die niet tot een opdracht leiden bewaren wij maximaal twee jaar. Gegevens die verband houden met een overeenkomst of factuur bewaren wij zolang de wettelijke bewaarplicht dit vereist, voor de boekhouding zeven jaar.']]
+  }, {
+    nr: '5',
+    titel: 'Met wie wij uw gegevens delen',
+    clausules: [['5.1', 'Wij verkopen uw gegevens nooit. Wij delen ze enkel met dienstverleners die ons helpen, zoals een hostingpartij of een verzenddienst voor email, en enkel voor zover dat nodig is.'], ['5.2', 'Deze partijen verwerken uw gegevens in onze opdracht en onder een verwerkersovereenkomst, binnen de Europese Economische Ruimte.'], ['5.3', 'Wij geven gegevens enkel door aan overheden of derden wanneer een wettelijke verplichting ons daartoe verplicht.']]
+  }, {
+    nr: '6',
+    titel: 'Hoe wij uw gegevens beveiligen',
+    clausules: [['6.1', 'Wij nemen passende technische en organisatorische maatregelen om uw gegevens te beschermen tegen verlies, misbruik en ongeoorloofde toegang. Fotos worden bij verzending ontdaan van verborgen locatiegegevens.']]
+  }, {
+    nr: '7',
+    titel: 'Uw rechten',
+    clausules: [['7.1', 'U heeft recht op inzage, verbetering en verwijdering van uw gegevens. U kan de verwerking laten beperken, bezwaar maken en uw gegevens laten overdragen.'], ['7.2', 'U oefent deze rechten uit via info@poortland.be. Wij antwoorden binnen de wettelijke termijn.'], ['7.3', 'Bent u niet tevreden over hoe wij met uw gegevens omgaan, dan kan u klacht indienen bij de Gegevensbeschermingsautoriteit, Drukpersstraat 35, 1000 Brussel, via contact@apd-gba.be.']]
+  }, {
+    nr: '8',
+    titel: 'Cookies',
+    clausules: [['8.1', 'Onze website gebruikt een beperkt aantal cookies. Meer daarover leest u in ons cookiebeleid.']]
+  }, {
+    nr: '9',
+    titel: 'Wijzigingen',
+    clausules: [['9.1', 'Wij kunnen dit privacybeleid aanpassen. De meest recente versie staat steeds op deze pagina.']]
+  }];
+  return /*#__PURE__*/React.createElement(BeleidPagina, {
+    eyebrow: "Privacy",
+    titel: "Privacybeleid",
+    intro: "Poortland nv respecteert uw privacy en gaat zorgvuldig om met uw persoonsgegevens. Hieronder leest u hoe wij dat doen.",
+    secties: secties,
+    onNav: onNav
+  });
+}
+function CookieNL({
+  onNav
+}) {
+  React.useEffect(() => {
+    document.title = 'Cookiebeleid | Poortland';
+    if (window.scrollTo) window.scrollTo(0, 0);
+  }, []);
+  const secties = [{
+    nr: '1',
+    titel: 'Wat zijn cookies',
+    clausules: [['1.1', 'Een cookie is een klein tekstbestand dat een website op uw toestel plaatst wanneer u de site bezoekt. Cookies laten de site onder meer toe om te werken en uw voorkeuren te onthouden.']]
+  }, {
+    nr: '2',
+    titel: 'Welke cookies wij gebruiken',
+    clausules: [['2.1', 'Wij gebruiken enkel strikt noodzakelijke cookies die de website laten werken. Deze onthouden bijvoorbeeld uw taalkeuze en beveiligen het contactformulier tegen misbruik.'], ['2.2', 'Wij plaatsen geen cookies voor advertenties en wij volgen uw surfgedrag niet voor marketingdoeleinden.'], ['2.3', 'Voor de beveiliging van onze formulieren kan een dienst van een derde partij een technische cookie plaatsen, enkel om geautomatiseerd misbruik tegen te gaan.']]
+  }, {
+    nr: '3',
+    titel: 'Uw cookies beheren',
+    clausules: [['3.1', 'U kan cookies steeds beheren of verwijderen via de instellingen van uw browser. Het uitschakelen van noodzakelijke cookies kan de werking van de site beperken.']]
+  }, {
+    nr: '4',
+    titel: 'Wijzigingen',
+    clausules: [['4.1', 'Wij kunnen dit cookiebeleid aanpassen. De meest recente versie staat steeds op deze pagina.']]
+  }, {
+    nr: '5',
+    titel: 'Contact',
+    clausules: [['5.1', 'Heeft u vragen over dit cookiebeleid, mail dan naar info@poortland.be.']]
+  }];
+  return /*#__PURE__*/React.createElement(BeleidPagina, {
+    eyebrow: "Cookies",
+    titel: "Cookiebeleid",
+    intro: "Onze website gebruikt een beperkt aantal cookies. Hieronder leest u welke en waarom.",
+    secties: secties,
+    onNav: onNav
+  });
+}
 Object.assign(window, {
   OfferteModal,
   PaginaNL,
@@ -5759,6 +5979,8 @@ Object.assign(window, {
   OverkappingenNL,
   VoorwaardenNL,
   GarantieNL,
+  PrivacyNL,
+  CookieNL,
   OverOnsNL,
   Teller,
   MobileNav,

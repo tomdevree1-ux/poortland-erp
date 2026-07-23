@@ -8,11 +8,13 @@ function App() {
   const [route, setRoute] = React.useState('home');
   const [productKey, setProductKey] = React.useState('houten');
   const [project, setProject] = React.useState(null);
+  const [contactType, setContactType] = React.useState(null);
   const [lang, setLang] = React.useState('NL');
   const scrollRef = React.useRef(null);
   const onNav = (r, payload) => {
     if (payload && payload.productKey) setProductKey(payload.productKey);
     if (payload && payload.project) setProject(payload.project);
+    if (r === 'contact') setContactType(payload && payload.type ? payload.type : null);
     setRoute(r);
     if (scrollRef.current) scrollRef.current.scrollTo({
       top: 0,
@@ -49,6 +51,16 @@ function App() {
         onNav: onNav
       });
       break;
+    case 'privacy':
+      Screen = /*#__PURE__*/React.createElement(window.PrivacyNL, {
+        onNav: onNav
+      });
+      break;
+    case 'cookie':
+      Screen = /*#__PURE__*/React.createElement(window.CookieNL, {
+        onNav: onNav
+      });
+      break;
     case 'atelier':
       Screen = /*#__PURE__*/React.createElement(window.OverOnsNL, {
         onNav: onNav
@@ -56,7 +68,8 @@ function App() {
       break;
     case 'contact':
       Screen = /*#__PURE__*/React.createElement(window.ContactNL, {
-        onNav: onNav
+        onNav: onNav,
+        voorselectie: contactType
       });
       break;
     case 'poorten':

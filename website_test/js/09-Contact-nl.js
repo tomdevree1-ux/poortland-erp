@@ -78,13 +78,14 @@ function Select({
   }, "▾")));
 }
 function ContactNL({
-  onNav
+  onNav,
+  voorselectie
 }) {
   const {
     Reveal
   } = window;
   const [sent, setSent] = React.useState(false);
-  const [types, setTypes] = React.useState([]);
+  const [types, setTypes] = React.useState(voorselectie ? [voorselectie] : []);
   const [akkoord, setAkkoord] = React.useState(false);
   const [bestand, setBestand] = React.useState('');
   const [timing, setTiming] = React.useState('');
@@ -105,7 +106,7 @@ function ContactNL({
     label: 'Onderhoud'
   }, {
     value: 'andere',
-    label: 'Andere vraag'
+    label: 'Vraag'
   }];
   const timingOpties = [{
     value: '',
@@ -339,10 +340,11 @@ function ContactNL({
       "aria-pressed": aan,
       style: {
         fontFamily: 'var(--font-sans)',
-        fontSize: 14.5,
+        fontSize: 13.5,
         cursor: 'pointer',
-        padding: '11px 18px',
+        padding: '8px 14px',
         borderRadius: 999,
+        whiteSpace: 'nowrap',
         transition: 'all var(--dur) var(--ease-out)',
         background: aan ? 'var(--accent)' : 'transparent',
         color: aan ? '#fff' : 'var(--stone-200)',
