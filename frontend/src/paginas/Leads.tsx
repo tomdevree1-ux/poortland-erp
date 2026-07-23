@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { keepPreviousData, useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { FolderPlus, TrendingDown, Archive, Trash2, RotateCcw } from 'lucide-react'
@@ -6,7 +6,7 @@ import { api } from '../lib/api'
 import { useZoekterm } from '../lib/zoek'
 import { datum, leeg, weergaveNaam } from '../lib/formaat'
 import type { Lead } from '../lib/types'
-import { Badge, Invoer, Knop, Modaal, PaginaKop, Selecteer, TekstVak, Th, Td, rijKlik } from '../ui'
+import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Selecteer, TekstVak, Th, Td, rijKlik } from '../ui'
 
 // Snelknop in de leadtabel: rustig gedempt, kleurt op bij hover, met tooltip.
 const actieBtn = 'inline-flex h-8 w-8 items-center justify-center rounded-control text-inkt-faint transition'
@@ -34,7 +34,7 @@ export default function Leads() {
   const isBeheerder = mij?.rollen.includes('beheerder') ?? false
   // De icoonknop opent de fiche en start daar exact dezelfde actie als de knoppen.
   const ga = (id: string, actie: string) => navigeer({ to: '/leads/$leadId', params: { leadId: id }, search: { actie } })
-  const [status, zetStatus] = useState('')
+  const [status, zetStatus] = useState('nieuw')
   const { invoer, zetInvoer, term } = useZoekterm()
   const [weergave, zetWeergave] = useState('actief')
   const [nieuwOpen, zetNieuwOpen] = useState(false)
@@ -60,11 +60,32 @@ export default function Leads() {
     }),
     onSuccess: () => { qc.invalidateQueries({ queryKey: ['leads'] }); zetNieuwOpen(false) }
   })
+  // Verwijderen gebeurt inline vanuit de tabel: bevestigen, de rij verdwijnt en een korte melding blijft in beeld.
+  const [teVerwijderen, zetTeVerwijderen] = useState<Lead | null>(null)
+  const [melding, zetMelding] = useState<{ soort: 'ok' | 'fout'; tekst: string } | null>(null)
+  useEffect(() => {
+    if (!melding) return
+    const t = setTimeout(() => zetMelding(null), 4000)
+    return () => clearTimeout(t)
+  }, [melding])
+  const verwijderen = useMutation({
+    mutationFn: (lead: Lead) => api.del(`/leads/${lead.id}`),
+    onSuccess: (_data, lead) => {
+      qc.invalidateQueries({ queryKey: ['leads'] })
+      zetMelding({ soort: 'ok', tekst: `Lead "${weergaveNaam(lead) || leeg(lead.email)}" verwijderd.` })
+      zetTeVerwijderen(null)
+    },
+    onError: (f: unknown) => {
+      zetMelding({ soort: 'fout', tekst: f instanceof Error ? f.message : 'Verwijderen mislukt.' })
+      zetTeVerwijderen(null)
+    }
+  })
 
   return (
     <>
       <PaginaKop eyebrow="Verkoop · leadinbox" titel="Leads"
         actie={<Knop variant="primair" onClick={openNieuw}>Nieuwe lead ↗</Knop>} />
+      {melding && <div className="mb-4"><Melding soort={melding.soort}>{melding.tekst}</Melding></div>}
       <div className="mb-4 flex gap-3">
         <Selecteer value={status} onChange={e => zetStatus(e.target.value)} className="w-48">
           <option value="">Alle statussen</option>
@@ -117,7 +138,7 @@ export default function Leads() {
                           className={`${actieBtn} hover:bg-inkt/[.06] hover:text-inkt-body`}><Archive size={17} /></button>}
                     {isBeheerder && (
                       <button type="button" title="Verwijderen" aria-label="Verwijderen"
-                        onClick={() => ga(lead.id, 'verwijderen')}
+                        onClick={() => zetTeVerwijderen(lead)}
                         className={`${actieBtn} hover:bg-corten-500/10 hover:text-corten-600`}><Trash2 size={17} /></button>
                     )}
                   </div>
@@ -180,6 +201,19 @@ export default function Leads() {
             <Knop variant="primair" disabled={maak.isPending}>{maak.isPending ? 'Bezig…' : 'Bewaren'}</Knop>
           </div>
         </form>
+      </Modaal>
+      <Modaal open={!!teVerwijderen} titel="Lead verwijderen?" onSluit={() => zetTeVerwijderen(null)}>
+        <p className="text-sm text-inkt-body">
+          Dit verwijdert de lead van {teVerwijderen && (weergaveNaam(teVerwijderen) || leeg(teVerwijderen.email))} uit de werking.
+          De audit trail bewaart de historiek. Deze actie kan niet ongedaan worden gemaakt.
+        </p>
+        <div className="mt-6 flex justify-end gap-2">
+          <Knop type="button" variant="ghost" onClick={() => zetTeVerwijderen(null)}>Annuleren</Knop>
+          <Knop variant="destructief" disabled={verwijderen.isPending}
+            onClick={() => teVerwijderen && verwijderen.mutate(teVerwijderen)}>
+            {verwijderen.isPending ? 'Bezig…' : 'Verwijderen'}
+          </Knop>
+        </div>
       </Modaal>
     </>
   )

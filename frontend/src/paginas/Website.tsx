@@ -304,10 +304,6 @@ function PopupTab() {
     mutationFn: (id: string) => api.post<Popup>(`/website/popup/${id}/publiceer`),
     onSuccess: ververs, onError: f => zetFout((f as Error).message)
   })
-  const depubliceer = useMutation({
-    mutationFn: (id: string) => api.post<Popup>(`/website/popup/${id}/depubliceer`),
-    onSuccess: ververs, onError: f => zetFout((f as Error).message)
-  })
   const verwijder = useMutation({
     mutationFn: (id: string) => api.del(`/website/popup/${id}`),
     onSuccess: () => { ververs(); zetVerwijderOpen(false); zetBewerkModus(false) },
@@ -351,11 +347,11 @@ function PopupTab() {
               <div className="flex justify-between"><dt className="text-inkt-muted">Periode</dt>
                 <dd>{datum(huidig.actiefVan)} tot {datum(huidig.actiefTot)}</dd></div>
             </dl>
-            <div className="mt-4 flex justify-end">
-              {huidig.status === 'concept'
-                ? <Knop variant="primair" onClick={() => publiceer.mutate(huidig.id)}>Publiceren ↗</Knop>
-                : <Knop variant="secundair" onClick={() => depubliceer.mutate(huidig.id)}>Intrekken</Knop>}
-            </div>
+            {huidig.status === 'concept' && (
+              <div className="mt-4 flex justify-end">
+                <Knop variant="primair" onClick={() => publiceer.mutate(huidig.id)}>Publiceren ↗</Knop>
+              </div>
+            )}
           </>
         ) : (
           <p className="text-sm text-inkt-muted">Nog geen banner. Klik op het plusteken om er een op te stellen.</p>
