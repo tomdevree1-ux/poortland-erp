@@ -2956,6 +2956,7 @@ function CategoriePagina({
     CTASectie
   } = window;
   const [filter, setFilter] = React.useState('Alle');
+  const [modelTab, setModelTab] = React.useState(0);
   React.useEffect(() => {
     if (d.title) document.title = d.title;
     if (window.scrollTo) window.scrollTo(0, 0);
@@ -3319,8 +3320,107 @@ function CategoriePagina({
     align: "center",
     eyebrow: "Modellen",
     titel: d.productenTitel || 'Modellen en stijlen',
-    intro: "Van strak en modern tot klassiek en landelijk, telkens volledig op maat gemaakt."
-  })), /*#__PURE__*/React.createElement("div", {
+    intro: d.productenIntro || 'Van strak en modern tot klassiek en landelijk, telkens volledig op maat gemaakt.'
+  })), d.productenGroepen ? /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 1000,
+      margin: '46px auto 0'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    role: "tablist",
+    "aria-label": d.productenTitel,
+    style: {
+      display: 'flex',
+      gap: 4,
+      justifyContent: 'center'
+    }
+  }, d.productenGroepen.map((g, i) => /*#__PURE__*/React.createElement("button", {
+    key: g.tab,
+    role: "tab",
+    type: "button",
+    "aria-selected": modelTab === i,
+    onClick: () => setModelTab(i),
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 15,
+      fontWeight: 600,
+      cursor: 'pointer',
+      padding: '12px 22px',
+      border: '1px solid var(--line-on-light-soft)',
+      borderBottom: 0,
+      borderRadius: '8px 8px 0 0',
+      position: 'relative',
+      bottom: -1,
+      background: modelTab === i ? 'var(--surface-card)' : 'transparent',
+      color: modelTab === i ? 'var(--text-heading)' : 'var(--text-muted)'
+    }
+  }, g.tab))), /*#__PURE__*/React.createElement("div", {
+    role: "tabpanel",
+    style: {
+      background: 'var(--surface-card)',
+      border: '1px solid var(--line-on-light-soft)',
+      borderRadius: '10px',
+      padding: '30px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
+      gap: 18
+    }
+  }, ((d.productenGroepen[modelTab] || {}).types || []).map((t, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      display: 'flex',
+      flexDirection: 'column'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'relative',
+      aspectRatio: '4 / 3',
+      borderRadius: 'var(--radius-md)',
+      overflow: 'hidden',
+      background: 'var(--surface-paper-2)',
+      border: '1px dashed var(--line-on-light)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: 'var(--font-label)',
+      fontSize: 11,
+      fontWeight: 600,
+      letterSpacing: '0.14em',
+      textTransform: 'uppercase',
+      color: 'var(--text-muted)',
+      padding: '0 12px',
+      textAlign: 'center'
+    }
+  }, t.naam || 'Type'), t.foto ? /*#__PURE__*/React.createElement("img", {
+    src: t.foto,
+    alt: t.naam || 'Metalen poort',
+    loading: "lazy",
+    onError: e => {
+      e.currentTarget.style.display = 'none';
+    },
+    style: {
+      position: 'absolute',
+      inset: 0,
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover'
+    }
+  }) : null), t.naam ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 15,
+      fontWeight: 600,
+      color: 'var(--text-heading)',
+      marginTop: 10,
+      textAlign: 'center'
+    }
+  }, t.naam) : null)))))) : /*#__PURE__*/React.createElement("div", {
     className: "pl-cards",
     style: {
       display: 'grid',
@@ -3850,6 +3950,32 @@ var CATEGORIEEN = {
     heroLabel: 'Volledig op maat',
     materiaalFotos: ['media/stalen-poort.png', 'media/realisatie-metaal-1.jpeg', 'media/aluminium-poort.png', 'media/realisatie-metaal-2.jpeg', 'media/realisatie-alu-1.jpeg'],
     productenTitel: 'Modellen in metaal',
+    productenIntro: 'Hieronder ziet u onze verschillende soorten metalen poorten ingedeeld in Klassiek zonder sierpunten en Klassiek met sierpunten. Daaronder tonen we de bijhorende types.',
+    productenGroepen: [{
+      tab: 'Klassiek zonder sierpunten',
+      types: [{
+        naam: '',
+        foto: ''
+      }, {
+        naam: '',
+        foto: ''
+      }, {
+        naam: '',
+        foto: ''
+      }]
+    }, {
+      tab: 'Klassiek met sierpunten',
+      types: [{
+        naam: '',
+        foto: ''
+      }, {
+        naam: '',
+        foto: ''
+      }, {
+        naam: '',
+        foto: ''
+      }]
+    }],
     producten: [{
       titel: 'Strak en modern',
       tekst: 'Gesloten of halfopen poorten met rustige, horizontale lijnen.',
