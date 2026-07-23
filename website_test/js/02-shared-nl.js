@@ -3957,28 +3957,28 @@ var CATEGORIEEN = {
       tab: "Klassiek zonder sierpunten",
       types: [{
         naam: "Mississipi",
-        foto: "media/metaal/Klassiek%20zonder%20punten/Mississipi.jpeg"
+        foto: "media/metaal/Klassiek%20zonder%20punten/Mississipi.png"
       }, {
         naam: "Siret",
-        foto: "media/metaal/Klassiek%20zonder%20punten/Siret.jpeg"
+        foto: "media/metaal/Klassiek%20zonder%20punten/Siret.png"
       }, {
         naam: "Taag",
-        foto: "media/metaal/Klassiek%20zonder%20punten/Taag.jpeg"
+        foto: "media/metaal/Klassiek%20zonder%20punten/Taag.png"
       }, {
         naam: "Taag met plaat",
-        foto: "media/metaal/Klassiek%20zonder%20punten/Taag%20met%20plaat.jpeg"
+        foto: "media/metaal/Klassiek%20zonder%20punten/Taag%20met%20plaat.png"
       }, {
         naam: "Veluwe",
-        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe.jpeg"
+        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe.png"
       }, {
         naam: "Veluwe dubbele cirkel",
-        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe%20dubbele%20cirkel.jpeg"
+        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe%20dubbele%20cirkel.png"
       }, {
         naam: "Veluwe recht met plaat",
-        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe%20recht%20met%20plaat.jpeg"
+        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe%20recht%20met%20plaat.png"
       }, {
         naam: "Veluwe ronde boog met plaat",
-        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe%20ronde%20boog%20met%20plaat.jpeg"
+        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe%20ronde%20boog%20met%20plaat.png"
       }]
     }, {
       tab: "Klassiek met sierpunten",
