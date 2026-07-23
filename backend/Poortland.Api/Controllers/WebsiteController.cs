@@ -141,4 +141,12 @@ public class WebsiteController(PoortlandDbContext db, ClaimsContext claims,
     [HttpPost("popup/{id:guid}/depubliceer")]
     [VereistRol("verkoop")]
     public async Task<IActionResult> DepubliceerPopup(Guid id) => Ok(await service.DepubliceerPopup(id));
+
+    [HttpDelete("popup/{id:guid}")]
+    [VereistRol("verkoop")]
+    public async Task<IActionResult> VerwijderPopup(Guid id)
+    {
+        await service.VerwijderPopup(id);
+        return NoContent();
+    }
 }

@@ -276,6 +276,7 @@ function PopupTab() {
   const qc = useQueryClient()
   const [fout, zetFout] = useState<string>()
   const [bewerkModus, zetBewerkModus] = useState(false)
+  const [verwijderOpen, zetVerwijderOpen] = useState(false)
   const { data: popups } = useQuery({ queryKey: ['popup'], queryFn: () => api.get<Popup[]>('/website/popup') })
   const concept = popups?.find(p => p.status === 'concept')
   const actief = popups?.find(p => p.status === 'gepubliceerd')
@@ -307,9 +308,15 @@ function PopupTab() {
     mutationFn: (id: string) => api.post<Popup>(`/website/popup/${id}/depubliceer`),
     onSuccess: ververs, onError: f => zetFout((f as Error).message)
   })
+  const verwijder = useMutation({
+    mutationFn: (id: string) => api.del(`/website/popup/${id}`),
+    onSuccess: () => { ververs(); zetVerwijderOpen(false); zetBewerkModus(false) },
+    onError: f => zetFout((f as Error).message)
+  })
 
-  const voorbeeld = bewerkModus ? vorm : concept
+  const voorbeeld = bewerkModus ? vorm : huidig
   return (
+    <>
     <div className="grid grid-cols-2 gap-6">
       <Paneel titel="Popup" actie={bewerkModus ? (
         <div className="flex gap-2">
@@ -318,7 +325,7 @@ function PopupTab() {
             onClick={() => bewaar.mutate()}>Opslaan</Knop>
         </div>
       ) : huidig
-        ? <PotloodKnop onClick={startBewerken} />
+        ? <div className="flex gap-1"><PotloodKnop onClick={startBewerken} /><VuilbakKnop onClick={() => zetVerwijderOpen(true)} /></div>
         : <PlusKnop onClick={startBewerken} label="Banner opstellen" />}>
         {fout && <div className="mb-4"><Melding soort="fout">{fout}</Melding></div>}
         {actief && (
@@ -380,5 +387,17 @@ function PopupTab() {
         </div>
       </Paneel>
     </div>
+      <Modaal open={verwijderOpen} titel="Banner verwijderen?" onSluit={() => zetVerwijderOpen(false)}>
+        <p className="mb-4 text-sm text-inkt-body">
+          Dit verwijdert de banner "{huidig?.titel}" en haalt hem indien nodig meteen van de site.
+          De audit trail bewaart de historiek.
+        </p>
+        <div className="flex justify-end gap-2">
+          <Knop type="button" variant="ghost" onClick={() => zetVerwijderOpen(false)}>Annuleren</Knop>
+          <Knop variant="destructief" disabled={verwijder.isPending}
+            onClick={() => huidig && verwijder.mutate(huidig.id)}>Verwijderen</Knop>
+        </div>
+      </Modaal>
+    </>
   )
 }

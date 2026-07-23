@@ -173,6 +173,17 @@ public class WebsiteContentService(PoortlandDbContext db, ClaimsContext claims, 
         return popup;
     }
 
+    // Banner verwijderen (soft delete, TS-01) en meteen van de site halen als
+    // hij nog getoond werd.
+    public async Task VerwijderPopup(Guid id)
+    {
+        var popup = await db.WebsitePopups.FirstOrDefaultAsync(p => p.Id == id && p.VerwijderdOp == null)
+            ?? throw new DomeinFout("Banner niet gevonden.");
+        popup.VerwijderdOp = DateTimeOffset.UtcNow;
+        await db.SaveChangesAsync();
+        await HerbouwContentJson();
+    }
+
     // Het contract met de website: 1 json bestand met korte cache (TS-17 sectie 3).
     public async Task HerbouwContentJson()
     {
