@@ -6174,17 +6174,38 @@ function AutomatiseringNL({
     alt
   }) => /*#__PURE__*/React.createElement("div", {
     style: {
+      position: 'relative',
       borderRadius: 'var(--radius-md)',
       overflow: 'hidden',
       border: '1px solid var(--line-on-light-soft)',
       boxShadow: 'var(--shadow-lg)',
-      aspectRatio: '4 / 3'
+      aspectRatio: '4 / 3',
+      background: 'var(--surface-paper-2)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
     }
-  }, /*#__PURE__*/React.createElement("img", {
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: 'var(--font-label)',
+      fontSize: 11,
+      fontWeight: 600,
+      letterSpacing: '0.14em',
+      textTransform: 'uppercase',
+      color: 'var(--text-muted)',
+      padding: '0 16px',
+      textAlign: 'center'
+    }
+  }, alt), /*#__PURE__*/React.createElement("img", {
     src: src,
     alt: alt,
     loading: "lazy",
+    onError: e => {
+      e.currentTarget.style.display = 'none';
+    },
     style: {
+      position: 'absolute',
+      inset: 0,
       width: '100%',
       height: '100%',
       objectFit: 'cover',
