@@ -25,6 +25,14 @@
 	}
 	handle {
 		root * /srv-site
+		# De site heeft vaste bestandsnamen die per uitrol wijzigen. Zonder
+		# cacheheader gebruikt de browser heuristische caching en toont hij een
+		# oude versie. no-cache laat de browser altijd revalideren (Etag), dus
+		# een nieuwe uitrol komt meteen door; foto's mogen wel een dag cachen.
+		@site path / *.html *.js
+		header @site Cache-Control "no-cache"
+		@media path /media/*
+		header @media Cache-Control "public, max-age=86400"
 		try_files {path} /index.html
 		file_server
 	}
