@@ -3957,16 +3957,28 @@ var CATEGORIEEN = {
       tab: "Klassiek zonder sierpunten",
       types: [{
         naam: "Mississipi",
+        foto: "media/metaal/Klassiek%20zonder%20punten/Mississipi%20.jpg"
+      }, {
+        naam: "Mississipi",
         foto: "media/metaal/Klassiek%20zonder%20punten/Mississipi.jpg"
       }, {
         naam: "Siret",
         foto: "media/metaal/Klassiek%20zonder%20punten/Siret.jpg"
       }, {
         naam: "Taag",
+        foto: "media/metaal/Klassiek%20zonder%20punten/Taag%20.jpg"
+      }, {
+        naam: "Taag",
         foto: "media/metaal/Klassiek%20zonder%20punten/Taag.jpg"
       }, {
         naam: "Taag met plaat",
         foto: "media/metaal/Klassiek%20zonder%20punten/Taag%20met%20plaat.jpg"
+      }, {
+        naam: "Veluwe",
+        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe%20.jpg"
+      }, {
+        naam: "Veluwe",
+        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe.%20.jpg"
       }, {
         naam: "Veluwe",
         foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe.jpg"
@@ -3993,10 +4005,22 @@ var CATEGORIEEN = {
         foto: "media/metaal/Klassiek%20met%20punten/Aveyron.jpeg"
       }, {
         naam: "Beekvliet",
+        foto: "media/metaal/Klassiek%20met%20punten/Beekvliet%20%20.jpeg"
+      }, {
+        naam: "Beekvliet",
+        foto: "media/metaal/Klassiek%20met%20punten/Beekvliet%20.jpeg"
+      }, {
+        naam: "Beekvliet",
         foto: "media/metaal/Klassiek%20met%20punten/Beekvliet.jpeg"
       }, {
         naam: "Beekvliet met plaat",
         foto: "media/metaal/Klassiek%20met%20punten/Beekvliet%20met%20plaat.jpeg"
+      }, {
+        naam: "Brenta",
+        foto: "media/metaal/Klassiek%20met%20punten/Brenta%20%20.jpeg"
+      }, {
+        naam: "Brenta",
+        foto: "media/metaal/Klassiek%20met%20punten/Brenta%20.jpeg"
       }, {
         naam: "Brenta",
         foto: "media/metaal/Klassiek%20met%20punten/Brenta.jpeg"
@@ -4005,10 +4029,19 @@ var CATEGORIEEN = {
         foto: "media/metaal/Klassiek%20met%20punten/Brenta%20met%20plaat.jpeg"
       }, {
         naam: "Cumberland",
+        foto: "media/metaal/Klassiek%20met%20punten/Cumberland%20.jpeg"
+      }, {
+        naam: "Cumberland",
+        foto: "media/metaal/Klassiek%20met%20punten/Cumberland.%20%20.jpeg"
+      }, {
+        naam: "Cumberland",
         foto: "media/metaal/Klassiek%20met%20punten/Cumberland.jpeg"
       }, {
         naam: "Cumberland met plaat",
         foto: "media/metaal/Klassiek%20met%20punten/Cumberland%20met%20plaat.jpeg"
+      }, {
+        naam: "Esla",
+        foto: "media/metaal/Klassiek%20met%20punten/Esla.%20.jpeg"
       }, {
         naam: "Esla",
         foto: "media/metaal/Klassiek%20met%20punten/Esla.jpeg"
@@ -4023,7 +4056,13 @@ var CATEGORIEEN = {
         foto: "media/metaal/Klassiek%20met%20punten/Lake%20ontario.jpeg"
       }, {
         naam: "Manitoba",
+        foto: "media/metaal/Klassiek%20met%20punten/Manitoba%20.jpeg"
+      }, {
+        naam: "Manitoba",
         foto: "media/metaal/Klassiek%20met%20punten/Manitoba.jpeg"
+      }, {
+        naam: "Oosterschelde",
+        foto: "media/metaal/Klassiek%20met%20punten/Oosterschelde%20.jpeg"
       }, {
         naam: "Oosterschelde",
         foto: "media/metaal/Klassiek%20met%20punten/Oosterschelde.jpeg"
@@ -4042,6 +4081,9 @@ var CATEGORIEEN = {
       }, {
         naam: "Siret",
         foto: "media/metaal/Klassiek%20met%20punten/Siret.jpeg"
+      }, {
+        naam: "Vienne",
+        foto: "media/metaal/Klassiek%20met%20punten/Vienne%20.jpeg"
       }, {
         naam: "Vienne",
         foto: "media/metaal/Klassiek%20met%20punten/Vienne.jpeg"
