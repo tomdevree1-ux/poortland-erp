@@ -4420,7 +4420,7 @@ function OverkappingenNL({
       gap: 56,
       flexWrap: 'wrap'
     }
-  }, [[1999, 'Poortland sinds', '', true], [7, 'Overspanning met twee staanders', ' m', false], [100, 'Op maat gemaakt', '%', false]].map(([n, l, suf, plat]) => /*#__PURE__*/React.createElement("div", {
+  }, [[1999, 'Poortland sinds', '', true], [250, 'Tevreden Poortland klanten', '+', false], [100, 'Op maat gemaakt', '%', false]].map(([n, l, suf, plat]) => /*#__PURE__*/React.createElement("div", {
     key: l,
     style: {
       textAlign: 'center',
