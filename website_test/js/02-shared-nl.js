@@ -4566,7 +4566,6 @@ function OverOnsNL({
     SectieKop,
     CTASectie
   } = window;
-  const [tl, setTl] = React.useState(0);
   const offerte = () => window.dispatchEvent(new CustomEvent('pl-offerte-open'));
   React.useEffect(() => {
     document.title = 'Over Poortland | vakmanschap in eigen beheer sinds 1999';
@@ -4598,7 +4597,7 @@ function OverOnsNL({
     getal: '100%',
     label: 'In eigen beheer'
   }];
-  const mijlpalen = [['1999', 'Oprichting van Poortland NV', 'Poortland NV wordt opgericht met een duidelijke ambitie: poorten en overkappingen op maat maken en plaatsen.'], ['Vanaf het begin', 'Ervaren vakmensen', 'Poortland trekt medewerkers aan met jarenlange ervaring in de productie en de plaatsing van poorten.'], ['Doorheen de jaren', 'Eigen atelier in Mechelen', 'Het eigen atelier in Mechelen wordt verder uitgebouwd zodat alles onder een dak gemaakt wordt.'], ['Doorheen de jaren', 'Eigen plaatsingsdienst', 'Een eigen plaatsingsteam met professioneel materieel zorgt voor een verzorgde en veilige plaatsing.'], ['Doorheen de jaren', 'Eigen technische dienst', 'Een eigen technische dienst staat in voor automatisatie, onderhoud en naverkoop.'], ['Vandaag', 'Meer dan 3.000 realisaties', 'Poortland realiseerde ondertussen meer dan 3.000 poorten en hekwerken.']];
+  const mijlpalen = [['1999', 'De start van Poortland NV', 'Poortland NV gaat van start. We nemen materiaal, materieel en ervaren vakmensen over van een stopgezette zaak en zetten de dienstverlening zonder onderbreking verder. Een volledig nieuw bedrijf met een eigen visie, los van het verleden.'], ['2000', 'Eigen transport en plaatsing', 'Een eerste grote investering: een vrachtwagen met hydraulische kraan en een laadbak van 9 meter. Zo plaatsen we ook grotere poorten volledig in eigen beheer.'], ['2001–2003', 'Een sterker atelier', 'Nieuwe las- en bewerkingsmachines, van halfautomaat en TIG tot profielwals, lintzaag en freesmachine. Meer capaciteit, meer precisie en een fijnere afwerking.'], ['2004', 'Meer hefkracht', 'Een krachtiger kraanvoertuig heft 750 kilogram op 10 meter afstand, zodat ook grotere en zwaardere poorten vlot geplaatst worden.'], ['2005', 'Eigen gebouwen en FAAC', 'We kopen de gehuurde gebouwen en terreinen, samen zo\'n 3.000 m². Tegelijk breiden we de samenwerking uit met FAAC, een wereldspeler in professionele poortautomatisering.'], ['2006', 'Ontwerpen met CAD', 'Een professioneel CAD-programma doet zijn intrede. Complexe projecten worden vooraf tot in detail uitgetekend, met nauwkeurige productietekeningen voor het atelier.'], ['Vanaf 2007', 'Van staal naar aluminium', 'Geleidelijk verschuift het accent van staal naar aluminium, voor onderhoudsgemak en corrosiebestendigheid. Waar staal begin de jaren 2000 nog overheerste, is die verhouding vandaag omgekeerd. Toch blijft Poortland een van de weinige Belgische makers van klassieke sierpoorten, van landelijke stijl tot kasteelpoort.'], ['Doorlopend', 'Blijven vernieuwen', 'De atelieruitrusting wordt voortdurend vernieuwd waar nodig, zodat kwaliteit en afwerking mee blijven evolueren.'], ['2024', 'Laserlassen', 'Een laserlasser levert veel fijnere lasnaden op: een strakkere, mooiere afwerking met nauwelijks zichtbare lassen en veel minder nabewerking.'], ['2026', 'Nieuwe kraanwagen', 'Een nieuwe Euro 6 vrachtwagen met een kraan tot 11,5 meter en een mobiele werkunit. Nauwkeuriger plaatsen, ook op moeilijk bereikbare werven, en lichter werk voor het team.']];
   const beheer = [['Eigen productie', 'Poortland beschikt over een eigen atelier in Mechelen. Alle poorten en hekwerken worden er door ervaren vakmensen gemaakt, met voortdurende aandacht voor kwaliteit en afwerking.'], ['Eigen plaatsingsdienst', 'Poortland heeft een eigen plaatsingsteam en professioneel transport en plaatsingsmaterieel. Zo zetten wij onder meer een telescopische kraan in die tot 1.500 kilogram heft op 10 meter afstand. Elke poort wordt veilig en duurzaam geplaatst.'], ['Eigen techniekers', 'Onze eigen techniekers verzorgen de automatisatie van de poorten. Zij staan ook in voor technische ondersteuning, onderhoud en naverkoop.'], ['Afwerking van de werf', 'Na de plaatsing werken wij de werf netjes af. Waar nodig herstellen wij de bestrating en ruimen wij de volledige werkzone op.']];
   const proces = ['Ontwerp en advies', 'Productie', 'Plaatsing', 'Automatisatie', 'Afwerking', 'Naverkoop'];
   const kwaliteit = [['Sterke constructie', 'Poortland verwerkt staal, aluminium en inox. Voor stalen constructies gebruiken wij dikwandig staal, afhankelijk van de toepassing en de constructie van 2 tot 5 millimeter.'], ['Roestvrije bevestiging', 'Bouten, schroeven en scharnieren voert Poortland uit in roestvrij staal, zodat de bevestiging betrouwbaar blijft.'], ['Kwaliteitsgerichte leveranciers', 'Poortland kiest leveranciers op de verhouding tussen kwaliteit en prijs, niet enkel op de laagste aankoopprijs.']];
@@ -4760,72 +4759,72 @@ function OverOnsNL({
     align: "center",
     eyebrow: "Onze weg",
     titel: "Van oprichting tot vandaag",
-    intro: "Klik door de mijlpalen die Poortland maakten tot wat het vandaag is."
+    intro: "Een korte geschiedenis van Poortland, van 1999 tot vandaag."
   })), /*#__PURE__*/React.createElement("div", {
     style: {
-      marginTop: 44
+      marginTop: 56
     }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "pl-tl-track"
-  }, mijlpalen.map((m, i) => /*#__PURE__*/React.createElement("button", {
+  }, mijlpalen.map((m, i) => /*#__PURE__*/React.createElement(Reveal, {
     key: i,
-    onClick: () => setTl(i),
-    className: "pl-tl-punt",
-    "aria-pressed": tl === i
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "pl-tl-dot",
+    delay: i % 3 * 60
+  }, /*#__PURE__*/React.createElement("div", {
     style: {
-      background: tl === i ? 'var(--accent)' : 'var(--surface-ground)',
-      borderColor: tl === i ? 'var(--accent)' : 'var(--line-on-dark)'
-    }
-  }), /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontFamily: 'var(--font-label)',
-      fontSize: 10.5,
-      fontWeight: 600,
-      letterSpacing: '0.08em',
-      textTransform: 'uppercase',
-      color: tl === i ? 'var(--stone-100)' : 'var(--text-on-dark-muted)',
-      whiteSpace: 'nowrap'
-    }
-  }, m[0])))), /*#__PURE__*/React.createElement("div", {
-    className: "pl-tl-panel",
-    style: {
-      marginTop: 30,
-      width: '100%',
-      background: 'var(--forest-850)',
-      border: '1px solid var(--line-on-dark-soft)',
-      borderRadius: 'var(--radius-md)',
-      padding: '30px 32px',
-      ['--tlx']: 'clamp(0px, calc(' + ((tl + 0.5) / mijlpalen.length * 100).toFixed(2) + '% - 220px), calc(100% - 440px))'
+      display: 'grid',
+      gridTemplateColumns: '130px 1fr',
+      gap: 0
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontFamily: 'var(--font-label)',
-      fontSize: 11,
-      fontWeight: 600,
-      letterSpacing: '0.16em',
-      textTransform: 'uppercase',
-      color: 'var(--accent)'
+      textAlign: 'right',
+      paddingRight: 26,
+      paddingTop: 1
     }
-  }, mijlpalen[tl][0]), /*#__PURE__*/React.createElement("h3", {
+  }, /*#__PURE__*/React.createElement("span", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
-      fontSize: 26,
-      color: 'var(--stone-100)',
-      margin: '8px 0 10px',
-      lineHeight: 1.15
+      fontSize: 20,
+      color: 'var(--accent)',
+      whiteSpace: 'nowrap'
     }
-  }, mijlpalen[tl][1]), /*#__PURE__*/React.createElement("p", {
+  }, m[0])), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'relative',
+      borderLeft: '1px solid var(--line-on-dark-soft)',
+      paddingLeft: 30,
+      paddingBottom: i < mijlpalen.length - 1 ? 42 : 0
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    "aria-hidden": "true",
+    style: {
+      position: 'absolute',
+      left: -6,
+      top: 5,
+      width: 11,
+      height: 11,
+      borderRadius: '50%',
+      background: 'var(--accent)',
+      boxShadow: '0 0 0 4px var(--surface-ground)'
+    }
+  }), /*#__PURE__*/React.createElement("h3", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 23,
+      color: 'var(--stone-100)',
+      margin: '0 0 8px',
+      lineHeight: 1.2
+    }
+  }, m[1]), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
-      fontSize: 16,
-      lineHeight: 1.7,
+      fontSize: 15.5,
+      lineHeight: 1.72,
       color: 'var(--stone-300)',
-      margin: 0
+      margin: 0,
+      maxWidth: '58ch'
     }
-  }, mijlpalen[tl][2]))))), /*#__PURE__*/React.createElement("section", {
+  }, m[2])))))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper)',
       padding: '90px 44px'
