@@ -503,8 +503,8 @@ function HomeNL({
   }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(SectieKop, {
     dark: true,
     eyebrow: "Materialen en afwerking",
-    titel: "Hout en metaal, eindeloos gecombineerd.",
-    max: "16ch",
+    titel: /*#__PURE__*/React.createElement(React.Fragment, null, "Hout en metaal,", /*#__PURE__*/React.createElement("br", null), "eindeloos gecombineerd."),
+    max: "26ch",
     intro: "Elke poort begint bij de juiste verhouding tussen materiaal, stijl en omgeving. Poortland werkt met hout en metaal als basis, afzonderlijk of gecombineerd, telkens op maat van de woning en het dagelijks gebruik."
   })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     className: "pl-cards",
