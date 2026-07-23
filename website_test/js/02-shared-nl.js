@@ -4790,57 +4790,32 @@ function OverOnsNL({
     eyebrow: "Onze weg",
     titel: "Van oprichting tot vandaag",
     intro: "Een korte geschiedenis van Poortland, van 1999 tot vandaag."
-  })), /*#__PURE__*/React.createElement("div", {
+  })), /*#__PURE__*/React.createElement(Reveal, {
+    delay: 40
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pl-tlc",
     style: {
       marginTop: 56
     }
-  }, mijlpalen.map((m, i) => /*#__PURE__*/React.createElement(Reveal, {
+  }, mijlpalen.map((m, i) => /*#__PURE__*/React.createElement("div", {
     key: i,
-    delay: i % 3 * 60
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: 'grid',
-      gridTemplateColumns: '130px 1fr',
-      gap: 0
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      textAlign: 'right',
-      paddingRight: 26,
-      paddingTop: 1
-    }
+    className: 'pl-tlc-row ' + (i % 2 === 0 ? 'links' : 'rechts')
   }, /*#__PURE__*/React.createElement("span", {
+    "aria-hidden": "true",
+    className: "pl-tlc-dot"
+  }), /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
       fontSize: 20,
       color: 'var(--accent)',
-      whiteSpace: 'nowrap'
+      marginBottom: 6
     }
-  }, m[0])), /*#__PURE__*/React.createElement("div", {
-    style: {
-      position: 'relative',
-      borderLeft: '1px solid var(--line-on-dark-soft)',
-      paddingLeft: 30,
-      paddingBottom: i < mijlpalen.length - 1 ? 42 : 0
-    }
-  }, /*#__PURE__*/React.createElement("span", {
-    "aria-hidden": "true",
-    style: {
-      position: 'absolute',
-      left: -6,
-      top: 5,
-      width: 11,
-      height: 11,
-      borderRadius: '50%',
-      background: 'var(--accent)',
-      boxShadow: '0 0 0 4px var(--surface-ground)'
-    }
-  }), /*#__PURE__*/React.createElement("h3", {
+  }, m[0]), /*#__PURE__*/React.createElement("h3", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
-      fontSize: 23,
+      fontSize: 22,
       color: 'var(--stone-100)',
       margin: '0 0 8px',
       lineHeight: 1.2
@@ -4848,13 +4823,12 @@ function OverOnsNL({
   }, m[1]), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
-      fontSize: 15.5,
-      lineHeight: 1.72,
+      fontSize: 15,
+      lineHeight: 1.7,
       color: 'var(--stone-300)',
-      margin: 0,
-      maxWidth: '58ch'
+      margin: 0
     }
-  }, m[2])))))))), /*#__PURE__*/React.createElement("section", {
+  }, m[2]))))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper)',
       padding: '90px 44px'
