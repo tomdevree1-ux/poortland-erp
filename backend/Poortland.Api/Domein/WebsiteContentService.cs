@@ -124,12 +124,41 @@ public class WebsiteContentService(PoortlandDbContext db, ClaimsContext claims, 
         return media;
     }
 
+    // Twee gepubliceerde banners mogen elkaar niet overlappen in periode (TS-17).
+    async Task ControleerGeenOverlap(Guid id, DateOnly van, DateOnly tot)
+    {
+        if (tot < van) throw new DomeinFout("De einddatum ligt voor de begindatum.");
+        var overlap = await db.WebsitePopups.AsNoTracking().AnyAsync(p =>
+            p.Id != id && p.Status == WebsiteContentStatus.Gepubliceerd && p.VerwijderdOp == null
+            && p.ActiefVan <= tot && p.ActiefTot >= van);
+        if (overlap) throw new DomeinFout("Er is al een banner gepubliceerd die met deze periode overlapt. Kies een andere periode of trek de andere eerst in.");
+    }
+
+    // Elke banner (ook een gepubliceerde) bewerkbaar; een gepubliceerde wijziging
+    // gaat meteen naar de site.
+    public async Task<WebsitePopup> WijzigPopup(Guid id, string titel, string bodyTekst, DateOnly van, DateOnly tot)
+    {
+        var popup = await db.WebsitePopups.FirstOrDefaultAsync(p => p.Id == id && p.VerwijderdOp == null)
+            ?? throw new DomeinFout("Banner niet gevonden.");
+        if (popup.Status == WebsiteContentStatus.Gepubliceerd) await ControleerGeenOverlap(id, van, tot);
+        popup.Titel = titel; popup.BodyTekst = bodyTekst; popup.ActiefVan = van; popup.ActiefTot = tot;
+        await db.SaveChangesAsync();
+        if (popup.Status == WebsiteContentStatus.Gepubliceerd) await HerbouwContentJson();
+        return popup;
+    }
+
     public async Task<WebsitePopup> PubliceerPopup(Guid id)
     {
-        var popup = await db.WebsitePopups.FirstOrDefaultAsync(p => p.Id == id)
-            ?? throw new DomeinFout("Popup niet gevonden.");
+        var popup = await db.WebsitePopups.FirstOrDefaultAsync(p => p.Id == id && p.VerwijderdOp == null)
+            ?? throw new DomeinFout("Banner niet gevonden.");
+        await ControleerGeenOverlap(id, popup.ActiefVan, popup.ActiefTot);
         popup.Status = WebsiteContentStatus.Gepubliceerd;
-        await db.SaveChangesAsync();
+        try { await db.SaveChangesAsync(); }
+        catch (Npgsql.PostgresException e) when (e.SqlState == "23505")
+        {
+            // Oude max-1 index tot migratie 0034 toegepast is: nette melding.
+            throw new DomeinFout("Er is al een gepubliceerde banner. Trek die eerst in of plan een niet overlappende periode.");
+        }
         await HerbouwContentJson();
         return popup;
     }
@@ -160,15 +189,22 @@ public class WebsiteContentService(PoortlandDbContext db, ClaimsContext claims, 
             })
             .ToListAsync();
         var vandaag = DateOnly.FromDateTime(DateTime.Today);
-        var popup = await db.WebsitePopups.AsNoTracking()
+        var popupRij = await db.WebsitePopups.AsNoTracking()
             .Where(p => p.Status == WebsiteContentStatus.Gepubliceerd && p.VerwijderdOp == null
                 && p.ActiefVan <= vandaag && p.ActiefTot >= vandaag)
-            .Select(p => new { titel = p.Titel, body = p.BodyTekst, van = p.ActiefVan, tot = p.ActiefTot })
+            .Select(p => new { p.Id, p.Titel, p.BodyTekst, p.ActiefVan, p.ActiefTot, p.GewijzigdOp })
             .FirstOrDefaultAsync();
-        var frequentie = 7;
-        var inhoud = new { versie = DateTimeOffset.UtcNow.ToUnixTimeSeconds(), popup, popupFrequentieDagen = frequentie, fotos };
+        // Sleutel per bannerversie: een nieuwe of gewijzigde banner toont opnieuw,
+        // ook als de bezoeker de vorige al sloot (frequentiecap geldt per versie).
+        var popup = popupRij is null ? null : new
+        {
+            sleutel = $"{popupRij.Id}:{popupRij.GewijzigdOp.ToUnixTimeSeconds()}",
+            titel = popupRij.Titel, body = popupRij.BodyTekst, van = popupRij.ActiefVan, tot = popupRij.ActiefTot
+        };
+        var inhoud = new { versie = DateTimeOffset.UtcNow.ToUnixTimeSeconds(), popup, popupFrequentieDagen = 7, fotos };
         var json = JsonSerializer.SerializeToUtf8Bytes(inhoud,
             new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
-        await opslag.Upload(BucketPubliek, "content.json", json, "application/json", "public, max-age=300");
+        // Geen cache op content.json zodat intrekken en publiceren meteen doorkomen.
+        await opslag.Upload(BucketPubliek, "content.json", json, "application/json", "no-cache");
     }
 }

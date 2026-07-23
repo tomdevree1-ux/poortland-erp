@@ -197,9 +197,13 @@
 
   function toonPopup(popup, dagen) {
     if (!popup || !popup.titel) return;
+    var versie = popup.sleutel || (popup.titel + '|' + (popup.van || '') + '|' + (popup.tot || ''));
     try {
-      var gezien = localStorage.getItem(sleutel);
-      if (gezien && (Date.now() - Number(gezien)) < dagen * 864e5) return;
+      var ruw = localStorage.getItem(sleutel);
+      if (ruw) {
+        var vorig = JSON.parse(ruw);
+        if (vorig && vorig.versie === versie && (Date.now() - Number(vorig.ts)) < dagen * 864e5) return;
+      }
     } catch (f) { }
     var sluier = document.createElement('div');
     sluier.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(15,22,15,.55);padding:20px';
@@ -219,7 +223,7 @@
     function sluit() {
       sluier.remove();
       document.removeEventListener('keydown', opToets);
-      try { localStorage.setItem(sleutel, String(Date.now())); } catch (f) { }
+      try { localStorage.setItem(sleutel, JSON.stringify({ versie: versie, ts: Date.now() })); } catch (f) { }
     }
     function opToets(e) { if (e.key === 'Escape') sluit(); }
     knop.addEventListener('click', sluit);

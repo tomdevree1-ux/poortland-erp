@@ -128,6 +128,12 @@ public class WebsiteController(PoortlandDbContext db, ClaimsContext claims,
         return Ok(concept);
     }
 
+    // Elke banner bewerkbaar, ook een gepubliceerde (gaat dan meteen naar de site).
+    [HttpPatch("popup/{id:guid}")]
+    [VereistRol("verkoop")]
+    public async Task<IActionResult> WijzigPopup(Guid id, PopupInvoer invoer) =>
+        Ok(await service.WijzigPopup(id, invoer.Titel, invoer.BodyTekst, invoer.ActiefVan, invoer.ActiefTot));
+
     [HttpPost("popup/{id:guid}/publiceer")]
     [VereistRol("verkoop")]
     public async Task<IActionResult> PubliceerPopup(Guid id) => Ok(await service.PubliceerPopup(id));

@@ -279,19 +279,23 @@ function PopupTab() {
   const { data: popups } = useQuery({ queryKey: ['popup'], queryFn: () => api.get<Popup[]>('/website/popup') })
   const concept = popups?.find(p => p.status === 'concept')
   const actief = popups?.find(p => p.status === 'gepubliceerd')
+  const huidig = concept ?? actief // de banner die we tonen en bewerken (ook gepubliceerd)
   const [vorm, zetVorm] = useState<{ titel: string; bodyTekst: string; actiefVan: string; actiefTot: string } | null>(null)
   const ververs = () => { zetFout(undefined); qc.invalidateQueries({ queryKey: ['popup'] }) }
 
   function startBewerken() {
     zetVorm({
-      titel: concept?.titel ?? '', bodyTekst: concept?.bodyTekst ?? '',
-      actiefVan: concept?.actiefVan ?? new Date().toISOString().slice(0, 10),
-      actiefTot: concept?.actiefTot ?? new Date(Date.now() + 14 * 864e5).toISOString().slice(0, 10)
+      titel: huidig?.titel ?? '', bodyTekst: huidig?.bodyTekst ?? '',
+      actiefVan: huidig?.actiefVan ?? new Date().toISOString().slice(0, 10),
+      actiefTot: huidig?.actiefTot ?? new Date(Date.now() + 14 * 864e5).toISOString().slice(0, 10)
     })
     zetBewerkModus(true)
   }
   const bewaar = useMutation({
-    mutationFn: () => api.put<Popup>('/website/popup', vorm),
+    // Bestaande banner via PATCH (werkt ook op een gepubliceerde), anders een nieuw concept.
+    mutationFn: () => huidig
+      ? api.patch<Popup>(`/website/popup/${huidig.id}`, vorm)
+      : api.put<Popup>('/website/popup', vorm),
     onSuccess: () => { ververs(); zetBewerkModus(false) },
     onError: f => zetFout((f as Error).message)
   })
@@ -313,9 +317,9 @@ function PopupTab() {
           <Knop variant="primair" className="h-8 px-3 text-xs" disabled={bewaar.isPending}
             onClick={() => bewaar.mutate()}>Opslaan</Knop>
         </div>
-      ) : concept
+      ) : huidig
         ? <PotloodKnop onClick={startBewerken} />
-        : <PlusKnop onClick={startBewerken} label="Popup opstellen" />}>
+        : <PlusKnop onClick={startBewerken} label="Banner opstellen" />}>
         {fout && <div className="mb-4"><Melding soort="fout">{fout}</Melding></div>}
         {actief && (
           <div className="mb-4">
@@ -338,26 +342,28 @@ function PopupTab() {
                 onChange={e => zetVorm({ ...vorm, actiefTot: e.target.value })} required />
             </div>
           </div>
-        ) : concept ? (
+        ) : huidig ? (
           <>
             <dl className="space-y-2 text-sm">
-              <div className="flex justify-between"><dt className="text-inkt-muted">Status</dt><dd><Badge status={concept.status} /></dd></div>
-              <div className="flex justify-between"><dt className="text-inkt-muted">Titel</dt><dd className="font-medium">{concept.titel}</dd></div>
+              <div className="flex justify-between"><dt className="text-inkt-muted">Status</dt><dd><Badge status={huidig.status} /></dd></div>
+              <div className="flex justify-between"><dt className="text-inkt-muted">Titel</dt><dd className="font-medium">{huidig.titel}</dd></div>
               <div className="flex justify-between gap-6"><dt className="text-inkt-muted">Bodytekst</dt>
-                <dd className="max-w-64 text-right">{concept.bodyTekst}</dd></div>
+                <dd className="max-w-64 text-right">{huidig.bodyTekst}</dd></div>
               <div className="flex justify-between"><dt className="text-inkt-muted">Periode</dt>
-                <dd>{datum(concept.actiefVan)} tot {datum(concept.actiefTot)}</dd></div>
+                <dd>{datum(huidig.actiefVan)} tot {datum(huidig.actiefTot)}</dd></div>
             </dl>
-            <div className="mt-4 flex justify-end">
-              <Knop variant="primair" onClick={() => publiceer.mutate(concept.id)}>Publiceren ↗</Knop>
-            </div>
+            {huidig.status === 'concept' && (
+              <div className="mt-4 flex justify-end">
+                <Knop variant="primair" onClick={() => publiceer.mutate(huidig.id)}>Publiceren ↗</Knop>
+              </div>
+            )}
           </>
         ) : (
-          <p className="text-sm text-inkt-muted">Nog geen popup. Klik op het plusteken om er een op te stellen.</p>
+          <p className="text-sm text-inkt-muted">Nog geen banner. Klik op het plusteken om er een op te stellen.</p>
         )}
         <p className="mt-4 text-xs text-inkt-faint">
-          Maximaal 1 actieve popup. Bezoekers zien hem hoogstens 1 keer per 7 dagen en hij is sluitbaar met Escape.
-          Voor minder dringende boodschappen presteert een stille banner vaak beter dan een popup.
+          Banners mogen elkaar niet overlappen in periode. Bezoekers zien een banner hoogstens 1 keer per 7 dagen
+          en kunnen hem sluiten met Escape. Elke wijziging komt meteen op de site.
         </p>
       </Paneel>
       <Paneel titel="Voorbeeld op de website">
