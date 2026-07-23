@@ -79,9 +79,8 @@ function App() {
       });
       break;
     case 'overkappingen':
-      Screen = /*#__PURE__*/React.createElement(window.PaginaNL, {
-        onNav: onNav,
-        content: window.PAGINAS['overkappingen']
+      Screen = /*#__PURE__*/React.createElement(window.OverkappingenNL, {
+        onNav: onNav
       });
       break;
     case 'service':

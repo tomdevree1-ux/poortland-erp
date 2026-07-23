@@ -4192,6 +4192,315 @@ function Teller({
     ref: ref
   }, w.toLocaleString('nl-BE') + (suffix || ''));
 }
+
+/* ---- Overkappingen (eigen pagina met afwisselend fotoritme) ---- */
+function OverkappingenNL({
+  onNav
+}) {
+  const sectieRef = React.useRef(null);
+  React.useEffect(() => {
+    document.title = 'Overkappingen op maat | Poortland Mechelen';
+    if (window.scrollTo) window.scrollTo(0, 0);
+  }, []);
+  const offerte = () => window.dispatchEvent(new CustomEvent('pl-offerte-open'));
+  const naarSecties = () => {
+    if (sectieRef.current) sectieRef.current.scrollIntoView({
+      behavior: 'smooth'
+    });
+  };
+  const secties = [{
+    h2: 'Een buitenruimte die u vaker gebruikt',
+    beeld: 'media/overkappingen/overkapping-2.jpg',
+    alinea: ['Een overkapping beschut uw terras tegen regen en felle zon. Zo hoeft een onverwachte bui uw plannen niet te onderbreken en wordt uw buitenruimte een volwaardig verlengstuk van uw woning.', 'Van een compacte terrasoverkapping tot een ruime, vrijstaande constructie: iedere oplossing wordt op maat samengesteld.']
+  }, {
+    h2: 'Ontworpen voor uw woning',
+    beeld: 'media/overkappingen/overkapping-3.jpg',
+    alinea: ['Een overkapping moet niet alleen praktisch zijn. Ze moet ook passen bij de architectuur van uw woning en de inrichting van uw tuin.', 'Daarom kunt u kiezen uit verschillende modellen, kleuren en afwerkingen. Een strak aluminium ontwerp sluit mooi aan bij zowel moderne woningen als gerenoveerde gevels. Afhankelijk van het gekozen systeem is een uitvoering als aanbouw of als vrijstaande overkapping mogelijk.', 'Sommige modellen kunnen met slechts twee staanders een breedte tot zeven meter overspannen. Zo blijft het uitzicht open en krijgt u maximale bewegingsruimte onder de overkapping.']
+  }, {
+    h2: 'Licht, beschutting en comfort op maat',
+    beeld: 'media/overkappingen/overkapping-4.jpg',
+    alinea: ['De dakbedekking bepaalt in grote mate de uitstraling en de lichtinval. Naargelang het model en uw voorkeur kan de overkapping worden uitgevoerd met polycarbonaat of glas.', 'Wilt u meer beschutting? Dan kan de constructie verder worden aangevuld met onder meer:'],
+    lijst: ['glazen schuifwanden', 'aluminium of polycarbonaat zijwanden', 'zijwanden in steellook', 'geïntegreerde zipscreens', 'ingebouwde ledverlichting'],
+    slot: 'Met beweegbare glazen wanden opent of sluit u de ruimte volgens het weer. Zo verandert uw terras in enkele ogenblikken van een open buitenruimte in een beschutte tuinkamer.'
+  }, {
+    h2: 'Afgewerkt tot in de details',
+    beeld: 'media/overkappingen/overkapping-5.jpg',
+    alinea: ['De aluminium profielen combineren een strakke vormgeving met een verzorgde technische afwerking. De hemelwaterafvoer wordt in de staanders geïntegreerd, zodat regenwater discreet wordt afgevoerd.', 'Ook de bevestigingen worden zo veel mogelijk aan het zicht onttrokken. Dat zorgt voor een rustige, hoogwaardige uitstraling zonder storende montageschroeven.', 'Voor extra sfeer en comfort kan ledverlichting in de constructie worden geïntegreerd. Zo blijft uw terras ook na zonsondergang een aangename plek om samen te zitten.']
+  }, {
+    h2: 'Van eerste advies tot verzorgde plaatsing',
+    alinea: ['Een goede overkapping begint met de juiste keuzes. Hoe groot mag de constructie worden? Welke dakbedekking past bij de gewenste lichtinval? Is een open terras voldoende, of wilt u ook bescherming tegen wind?', 'Poortland bekijkt samen met u de mogelijkheden, meet de situatie nauwkeurig op en werkt een voorstel uit dat past bij uw woning en budget. Vervolgens zorgt ons eigen team voor een zorgvuldige plaatsing en een nette oplevering.']
+  }];
+  const keuzes = [['Aanbouw of vrijstaand', 'Laat de overkapping aansluiten op uw gevel of kies voor een vrijstaande constructie elders in de tuin.'], ['Glas of polycarbonaat', 'Kies de dakbedekking op basis van de gewenste uitstraling, lichtinval en het gekozen model.'], ['Open of afsluitbaar', 'Voeg glazen schuifwanden, zijwanden of screens toe voor meer beschutting, privacy en comfort.'], ['Verlichting', "Geintegreerde ledstrips of inbouwspots zorgen 's avonds voor functioneel en sfeervol licht."]];
+  const alinea = (t, i) => /*#__PURE__*/React.createElement("p", {
+    key: i,
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 16.5,
+      lineHeight: 1.72,
+      color: 'var(--text-body)',
+      margin: i ? '14px 0 0' : 0
+    }
+  }, t);
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-ground)',
+      color: 'var(--text-on-dark)',
+      padding: '84px 44px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pl-split",
+    style: {
+      maxWidth: 1320,
+      margin: '0 auto',
+      display: 'grid',
+      gridTemplateColumns: '1.05fr 0.95fr',
+      gap: 60,
+      alignItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(SEyebrow, {
+    dark: true,
+    style: {
+      marginBottom: 20
+    }
+  }, "Aluminium overkappingen"), /*#__PURE__*/React.createElement("h1", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 58,
+      lineHeight: 1.04,
+      letterSpacing: '-0.01em',
+      color: 'var(--stone-100)',
+      margin: 0
+    }
+  }, "Meer buitenleven, in elk seizoen"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 18,
+      lineHeight: 1.6,
+      color: 'var(--stone-300)',
+      maxWidth: '48ch',
+      margin: '24px 0 32px'
+    }
+  }, "Met een aluminium overkapping geniet u langer van uw terras. Poortland stemt het ontwerp, de afmetingen en de afwerking zorgvuldig af op uw woning en uw manier van leven."), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 16,
+      flexWrap: 'wrap'
+    }
+  }, /*#__PURE__*/React.createElement(SButton, {
+    variant: "primary",
+    arrow: true,
+    onClick: () => onNav('contact')
+  }, "Vraag persoonlijk advies"), /*#__PURE__*/React.createElement(SButton, {
+    variant: "ghost",
+    dark: true,
+    arrow: true,
+    onClick: naarSecties
+  }, "Ontdek de mogelijkheden"))), /*#__PURE__*/React.createElement(Reveal, {
+    delay: 80
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      borderRadius: 8,
+      overflow: 'hidden',
+      aspectRatio: '3 / 2',
+      boxShadow: 'var(--shadow-lg)'
+    }
+  }, /*#__PURE__*/React.createElement("img", {
+    src: "media/overkappingen/overkapping-1.jpg",
+    alt: "Aluminium terrasoverkapping van Poortland",
+    style: {
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+      display: 'block'
+    }
+  }))))), /*#__PURE__*/React.createElement("section", {
+    ref: sectieRef,
+    style: {
+      background: 'var(--surface-paper)',
+      padding: '84px 44px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 1180,
+      margin: '0 auto',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 72
+    }
+  }, secties.map((s, i) => {
+    const kop = /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", {
+      style: {
+        fontFamily: 'var(--font-display)',
+        fontWeight: 500,
+        fontSize: 30,
+        color: 'var(--text-heading)',
+        margin: '0 0 14px',
+        letterSpacing: '-0.01em'
+      }
+    }, s.h2), s.alinea.map(alinea), s.lijst && /*#__PURE__*/React.createElement("ul", {
+      style: {
+        margin: '16px 0 0',
+        padding: 0,
+        listStyle: 'none',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 9
+      }
+    }, s.lijst.map(li => /*#__PURE__*/React.createElement("li", {
+      key: li,
+      style: {
+        display: 'flex',
+        gap: 12,
+        alignItems: 'baseline',
+        fontFamily: 'var(--font-sans)',
+        fontSize: 16,
+        lineHeight: 1.5,
+        color: 'var(--text-body)'
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: 'var(--accent)',
+        flex: '0 0 auto'
+      }
+    }, "—"), /*#__PURE__*/React.createElement("span", null, li)))), s.slot && alinea(s.slot, 1));
+    if (!s.beeld) {
+      return /*#__PURE__*/React.createElement(Reveal, {
+        key: i
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          maxWidth: '74ch'
+        }
+      }, kop));
+    }
+    const foto = /*#__PURE__*/React.createElement("div", {
+      style: {
+        borderRadius: 8,
+        overflow: 'hidden',
+        aspectRatio: '4 / 3',
+        boxShadow: 'var(--shadow-lg)'
+      }
+    }, /*#__PURE__*/React.createElement("img", {
+      src: s.beeld,
+      alt: s.h2,
+      loading: "lazy",
+      style: {
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover',
+        display: 'block'
+      }
+    }));
+    return /*#__PURE__*/React.createElement(Reveal, {
+      key: i
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "pl-split",
+      style: {
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr',
+        gap: 54,
+        alignItems: 'center'
+      }
+    }, i % 2 === 0 ? /*#__PURE__*/React.createElement(React.Fragment, null, kop, foto) : /*#__PURE__*/React.createElement(React.Fragment, null, foto, kop)));
+  }))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--forest-900)',
+      padding: '90px 44px',
+      color: 'var(--text-on-dark)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 1180,
+      margin: '0 auto'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(SectieKop, {
+    dark: true,
+    eyebrow: "Keuzemogelijkheden",
+    titel: "Stel uw overkapping samen."
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "pl-cards4",
+    style: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(4, 1fr)',
+      gap: 18,
+      marginTop: 44
+    }
+  }, keuzes.map(([titel, tekst], i) => /*#__PURE__*/React.createElement(Reveal, {
+    key: titel,
+    delay: i % 4 * 70
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'var(--forest-800)',
+      border: '1px solid var(--line-on-dark-soft)',
+      borderRadius: 'var(--radius-md)',
+      padding: '26px 24px',
+      height: '100%'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontSize: 22,
+      color: 'var(--stone-100)',
+      marginBottom: 9
+    }
+  }, titel), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 14.5,
+      lineHeight: 1.65,
+      color: 'var(--text-on-dark-muted)'
+    }
+  }, tekst))))))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-deep)',
+      padding: '96px 44px',
+      textAlign: 'center'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(SEyebrow, {
+    dark: true,
+    style: {
+      marginBottom: 18
+    }
+  }, "Overkappingen op maat"), /*#__PURE__*/React.createElement("h2", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 52,
+      color: 'var(--stone-100)',
+      margin: '0 auto 18px',
+      maxWidth: '20ch',
+      lineHeight: 1.06,
+      letterSpacing: '-0.01em'
+    }
+  }, "Maak van uw terras een plek voor elk seizoen"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 17,
+      lineHeight: 1.65,
+      color: 'var(--stone-300)',
+      maxWidth: '52ch',
+      margin: '0 auto 34px'
+    }
+  }, "Benieuwd welke overkapping het best bij uw woning past? Bespreek uw wensen met Poortland. We begeleiden u van de eerste ideeën en de opmeting tot de uiteindelijke plaatsing."), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 16,
+      justifyContent: 'center',
+      flexWrap: 'wrap'
+    }
+  }, /*#__PURE__*/React.createElement(SButton, {
+    variant: "primary",
+    size: "lg",
+    arrow: true,
+    onClick: () => onNav('contact')
+  }, "Plan een adviesgesprek"), /*#__PURE__*/React.createElement(SButton, {
+    variant: "secondary",
+    size: "lg",
+    dark: true,
+    arrow: true,
+    onClick: offerte
+  }, "Vraag uw offerte aan")))));
+}
 function OverOnsNL({
   onNav
 }) {
@@ -4872,6 +5181,7 @@ Object.assign(window, {
   PAGINAS,
   CategoriePagina,
   CATEGORIEEN,
+  OverkappingenNL,
   OverOnsNL,
   Teller,
   MobileNav,
