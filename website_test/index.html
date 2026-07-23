@@ -336,6 +336,9 @@ body {
   }
   /* Zachte paginaovergang */
   .pl-page { animation: pl-fade 460ms var(--ease-out) both; }
+  /* Klikbare contentfoto's tonen een vergrootcursor; navigatiekaarten houden de gewone cursor */
+  #root .pl-page img { cursor: zoom-in; }
+  #root .pl-page a img, #root .pl-page button img { cursor: inherit; }
   @keyframes pl-fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
   /* Doorlopende fotobanner */
   .pl-marquee { -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
