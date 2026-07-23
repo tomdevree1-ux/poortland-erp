@@ -7,22 +7,25 @@ import {
 import { supabase } from './lib/supabase'
 import AppSchil from './AppSchil'
 import Aanmelden from './paginas/Aanmelden'
-import Dashboard from './paginas/Dashboard'
-import Leads from './paginas/Leads'
-import LeadDetail from './paginas/LeadDetail'
-import Klanten from './paginas/Klanten'
-import KlantDetail from './paginas/KlantDetail'
-import Dossiers from './paginas/Dossiers'
-import DossierDetail from './paginas/DossierDetail'
-import OfferteEditor from './paginas/OfferteEditor'
-import Werkschema from './paginas/Werkschema'
-import Planning from './paginas/Planning'
-import Veld from './paginas/Veld'
-import Service from './paginas/Service'
-import Facturatie from './paginas/Facturatie'
-import Website from './paginas/Website'
-import Beheer from './paginas/Beheer'
 import './stijl.css'
+
+// Elke pagina lazy zodat de eerste lading (login en het veld) klein blijft;
+// per route splitst Vite een eigen chunk (audit snelheid 7 en 10).
+const Dashboard = React.lazy(() => import('./paginas/Dashboard'))
+const Leads = React.lazy(() => import('./paginas/Leads'))
+const LeadDetail = React.lazy(() => import('./paginas/LeadDetail'))
+const Klanten = React.lazy(() => import('./paginas/Klanten'))
+const KlantDetail = React.lazy(() => import('./paginas/KlantDetail'))
+const Dossiers = React.lazy(() => import('./paginas/Dossiers'))
+const DossierDetail = React.lazy(() => import('./paginas/DossierDetail'))
+const OfferteEditor = React.lazy(() => import('./paginas/OfferteEditor'))
+const Werkschema = React.lazy(() => import('./paginas/Werkschema'))
+const Planning = React.lazy(() => import('./paginas/Planning'))
+const Veld = React.lazy(() => import('./paginas/Veld'))
+const Service = React.lazy(() => import('./paginas/Service'))
+const Facturatie = React.lazy(() => import('./paginas/Facturatie'))
+const Website = React.lazy(() => import('./paginas/Website'))
+const Beheer = React.lazy(() => import('./paginas/Beheer'))
 
 const rootRoute = createRootRoute({ component: () => <Outlet /> })
 

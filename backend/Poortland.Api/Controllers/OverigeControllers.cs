@@ -16,9 +16,12 @@ public class ArtikelenController(PoortlandDbContext db, ClaimsContext claims) : 
 
     [HttpGet]
     public async Task<IActionResult> Lijst() =>
+        // Smalle projectie met een vangnetgrens (audit snelheid 2 en 3).
         Ok(await db.Artikelen.AsNoTracking()
             .Where(a => a.VerwijderdOp == null && a.IsActief)
-            .OrderBy(a => a.Code).ToListAsync());
+            .OrderBy(a => a.Code)
+            .Select(a => new { a.Id, a.Code, a.Omschrijving, a.Eenheid, a.Basisprijs, a.BtwDefault, a.IsActief })
+            .Take(1000).ToListAsync());
 
     [HttpPost]
     [VereistRol("beheerder")]

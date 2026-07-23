@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { Suspense, useState } from 'react'
 import { Link, Outlet, useNavigate, useRouter, useRouterState } from '@tanstack/react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { clsx } from 'clsx'
@@ -152,7 +152,9 @@ export default function AppSchil() {
           </div>
         </header>
         <main className="mx-auto max-w-[1120px] px-8 py-8">
-          <Outlet />
+          <Suspense fallback={<div className="py-16 text-center text-sm text-inkt-faint">Laden…</div>}>
+            <Outlet />
+          </Suspense>
         </main>
       </div>
     </div>

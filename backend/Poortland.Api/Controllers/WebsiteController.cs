@@ -25,11 +25,10 @@ public class WebsiteController(PoortlandDbContext db, ClaimsContext claims,
     {
         var query = db.WebsiteMedias.AsNoTracking().Where(m => m.VerwijderdOp == null);
         if (status is { } s) query = query.Where(m => m.Status == s);
-        var lijst = await query.OrderBy(m => m.Volgnummer).ToListAsync();
-        var resultaat = new List<object>();
-        foreach (var m in lijst)
+        var lijst = await query.OrderBy(m => m.Volgnummer).Take(200).ToListAsync();
+        // Voorbeeld-urls parallel ophalen in plaats van een voor een (audit snelheid 1 en 2).
+        var resultaat = await Task.WhenAll(lijst.Select(async m =>
         {
-            // Voorbeeld in het ERP via een kortlevende signed URL op het private origineel.
             // Weerbaar per foto: een ontbrekend bestand blokkeert nooit de hele lijst.
             string? voorbeeld = null;
             try
@@ -39,10 +38,10 @@ public class WebsiteController(PoortlandDbContext db, ClaimsContext claims,
                     : await opslag.SignedUrl("website_origineel", $"{m.Id}/thumb.webp");
             }
             catch { /* voorbeeld blijft leeg en de kaart toont een plaatshouder */ }
-            resultaat.Add(new { m.Id, m.Titel, m.AltTekst, m.Categorie, m.Volgnummer, m.Status,
+            return (object)new { m.Id, m.Titel, m.AltTekst, m.Categorie, m.Volgnummer, m.Status,
                 m.ProductSoort, m.PoortType, m.PoortUitvoering,
-                m.Breedte, m.Hoogte, m.PersonenInBeeld, m.ToestemmingBevestigd, m.GepubliceerdOp, voorbeeld });
-        }
+                m.Breedte, m.Hoogte, m.PersonenInBeeld, m.ToestemmingBevestigd, m.GepubliceerdOp, voorbeeld };
+        }));
         return Ok(resultaat);
     }
 

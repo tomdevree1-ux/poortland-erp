@@ -36,13 +36,13 @@ public class WerkbonnenController(PoortlandDbContext db, ClaimsContext claims, S
 
     async Task<object> Projectie(Werkbon w, IReadOnlyDictionary<Guid, string> plaatsers)
     {
-        var fotos = new List<object>();
-        foreach (var f in w.Fotos.Where(f => f.VerwijderdOp == null))
+        // Signed urls parallel ophalen in plaats van een voor een (audit snelheid 1).
+        var fotos = await Task.WhenAll(w.Fotos.Where(f => f.VerwijderdOp == null).Select(async f =>
         {
             string? url = null;
             try { url = await opslag.SignedUrl(Bucket, f.BestandPad, 600); } catch { }
-            fotos.Add(new { f.Id, f.Moment, f.Bestandsnaam, f.GpsLat, f.GpsLon, f.AangemaaktOp, url });
-        }
+            return (object)new { f.Id, f.Moment, f.Bestandsnaam, f.GpsLat, f.GpsLon, f.AangemaaktOp, url };
+        }));
         string? handtekeningUrl = null;
         if (w.KlanthandtekeningPad is not null)
             try { handtekeningUrl = await opslag.SignedUrl(Bucket, w.KlanthandtekeningPad, 600); } catch { }
@@ -72,8 +72,7 @@ public class WerkbonnenController(PoortlandDbContext db, ClaimsContext claims, S
             .OrderByDescending(w => w.AangemaaktOp)
             .ToListAsync();
         var namen = await LaadPlaatsers(bonnen);
-        var lijst = new List<object>();
-        foreach (var w in bonnen) lijst.Add(await Projectie(w, namen));
+        var lijst = await Task.WhenAll(bonnen.Select(w => Projectie(w, namen)));
         return Ok(lijst);
     }
 
@@ -91,8 +90,7 @@ public class WerkbonnenController(PoortlandDbContext db, ClaimsContext claims, S
             .Take(50)
             .ToListAsync();
         var namen = await LaadPlaatsers(bonnen);
-        var lijst = new List<object>();
-        foreach (var w in bonnen) lijst.Add(await Projectie(w, namen));
+        var lijst = await Task.WhenAll(bonnen.Select(w => Projectie(w, namen)));
         return Ok(lijst);
     }
 

@@ -12,7 +12,7 @@ export default function OfferteEditor() {
   const { offerteId } = useParams({ from: '/app/offertes/$offerteId' })
   const qc = useQueryClient()
   const { data: offerte } = useQuery({ queryKey: ['offerte', offerteId], queryFn: () => api.get<Offerte>(`/offertes/${offerteId}`) })
-  const { data: artikelen } = useQuery({ queryKey: ['artikelen'], queryFn: () => api.get<Artikel[]>('/artikelen') })
+  const { data: artikelen } = useQuery({ queryKey: ['artikelen'], queryFn: () => api.get<Artikel[]>('/artikelen'), staleTime: 10 * 60 * 1000 })
   const [regels, zetRegels] = useState<Offerteregel[]>([])
   const [kortingPct, zetKortingPct] = useState(0)
   const [kortingBedrag, zetKortingBedrag] = useState(0)

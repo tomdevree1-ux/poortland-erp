@@ -27,10 +27,19 @@ public class KlantenController(PoortlandDbContext db, ClaimsContext claims) : Co
                 .SqlQuery<Guid>($@"select id as ""Value"" from zoek_klanten({zoek})")
                 .ToListAsync();
             var treffers = await query.Where(k => ids.Contains(k.Id)).ToListAsync();
-            return Ok(ids.Select(i => treffers.FirstOrDefault(k => k.Id == i)).Where(k => k is not null).ToList());
+            return Ok(ids.Select(i => treffers.FirstOrDefault(k => k.Id == i)).Where(k => k is not null)
+                .Select(k => Lijstrij(k!)).ToList());
         }
-        return Ok(await query.OrderBy(k => k.Naam).Take(200).ToListAsync());
+        var lijst = await query.OrderBy(k => k.Naam).Take(200).ToListAsync();
+        return Ok(lijst.Select(Lijstrij));
     }
+
+    // Smalle lijstprojectie zonder audit- en systeemkolommen (audit snelheid 3).
+    static object Lijstrij(Klant k) => new
+    {
+        k.Id, k.Type, k.Naam, k.Voornaam, k.Bedrijfsnaam, k.BtwNummer,
+        k.Straat, k.Postcode, k.Gemeente, k.Email, k.Telefoon, k.Communicatietaal
+    };
 
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> Detail(Guid id)

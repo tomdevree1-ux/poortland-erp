@@ -66,9 +66,9 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
             .Include(l => l.Bijlagen.Where(b => b.VerwijderdOp == null))
             .FirstOrDefaultAsync(l => l.Id == id && l.VerwijderdOp == null);
         if (lead is null) return NotFound();
-        var fotos = new List<object>();
-        foreach (var b in lead.Bijlagen)
-            fotos.Add(new { b.Id, b.Bestandsnaam, url = await opslag.SignedUrl(BucketUploads, b.BestandPad, 600) });
+        // Signed urls parallel ophalen (audit snelheid 1).
+        var fotos = await Task.WhenAll(lead.Bijlagen.Select(async b =>
+            (object)new { b.Id, b.Bestandsnaam, url = await opslag.SignedUrl(BucketUploads, b.BestandPad, 600) }));
         return Ok(new
         {
             lead.Id, lead.KlantId, lead.Kanaal, lead.Status, lead.EigenaarId, lead.Opvolgdatum,

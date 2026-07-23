@@ -81,14 +81,21 @@ public class DagelijkseTaken(IServiceScopeFactory scopes, ILogger<DagelijkseTake
             .Where(p => p.VerwijderdOp == null && p.Status != "uitgevoerd"
                 && (p.GeplandeDatum == vandaag.AddDays(2) || p.GeplandeDatum == vandaag.AddDays(1)))
             .ToListAsync(stop);
+        // Reeds gelogde afspraakmails in een keer laden in plaats van een query per
+        // afspraak (audit snelheid 4).
+        var afspraakProjectIds = afspraken.Select(a => a.ProjectId).Distinct().ToList();
+        var reedsGelogd = await db.Communicaties.AsNoTracking()
+            .Where(c => c.ProjectId != null && afspraakProjectIds.Contains(c.ProjectId.Value))
+            .Select(c => new { c.ProjectId, c.Onderwerp })
+            .ToListAsync(stop);
         var verzonden = 0;
         foreach (var afspraak in afspraken)
         {
             var klant = afspraak.Project?.Klant;
             if (klant?.Email is not { Length: > 0 } naar) continue;
             var soort = afspraak.GeplandeDatum == vandaag.AddDays(2) ? "afspraakbevestiging" : "afspraakreminder";
-            var alVerstuurd = await db.Communicaties.AnyAsync(c =>
-                c.ProjectId == afspraak.ProjectId && c.Onderwerp.StartsWith(soort + ":" + afspraak.Id), stop);
+            var voorvoegsel = soort + ":" + afspraak.Id;
+            var alVerstuurd = reedsGelogd.Any(c => c.ProjectId == afspraak.ProjectId && c.Onderwerp.StartsWith(voorvoegsel));
             if (alVerstuurd) continue;
             var wanneer = afspraak.GeplandeDatum.ToString("dd-MM-yyyy");
             var titel = soort == "afspraakbevestiging"

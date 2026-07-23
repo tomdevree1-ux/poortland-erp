@@ -42,7 +42,7 @@ export default function Service() {
     queryFn: () => api.get<ServiceRij[]>(`/service${statusFilter ? `?status=${statusFilter}` : ''}`)
   })
   const { data: medewerkers } = useQuery({
-    queryKey: ['medewerkers-overzicht'],
+    queryKey: ['medewerker-overzicht'],
     queryFn: () => api.get<MedewerkerKeuze[]>('/medewerkers/overzicht'), staleTime: 5 * 60 * 1000
   })
   // Knoppen volgen de rechtenmatrix: geen knop tonen die de databank weigert.

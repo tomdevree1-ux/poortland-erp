@@ -55,14 +55,14 @@ public class ProductieController(PoortlandDbContext db, ClaimsContext claims, Su
         var auteurs = await db.Medewerkers.AsNoTracking()
             .Where(m => tekeningen.Select(t => t.AuteurId).Contains(m.Id))
             .ToDictionaryAsync(m => m.Id, m => ($"{m.Voornaam} {m.Naam}").Trim());
-        var tekeningLijst = new List<object>();
-        foreach (var t in tekeningen)
+        // Signed urls parallel ophalen (audit snelheid 1).
+        var tekeningLijst = await Task.WhenAll(tekeningen.Select(async t =>
         {
             string? url = null;
             try { url = await opslag.SignedUrl(BucketTekeningen, t.BestandPad, 600); } catch { }
-            tekeningLijst.Add(new { t.Id, t.TekeningVersie, t.Datum, t.Bestandsnaam,
-                auteur = t.AuteurId is { } a && auteurs.TryGetValue(a, out var naam) ? naam : null, url });
-        }
+            return (object)new { t.Id, t.TekeningVersie, t.Datum, t.Bestandsnaam,
+                auteur = t.AuteurId is { } a && auteurs.TryGetValue(a, out var naam) ? naam : null, url };
+        }));
         var leveranciers = await db.Leveranciers.AsNoTracking()
             .Where(l => l.VerwijderdOp == null && l.IsActief).OrderBy(l => l.Naam).ToListAsync();
         return Ok(new

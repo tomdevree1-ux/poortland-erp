@@ -61,7 +61,7 @@ export default function Planning() {
     queryKey: ['medewerker-overzicht'],
     queryFn: () => api.get<MedewerkerKeuze[]>('/medewerkers/overzicht'), staleTime: 5 * 60 * 1000
   })
-  const { data: ploegen } = useQuery({ queryKey: ['ploegen'], queryFn: () => api.get<PloegRij[]>('/ploegen') })
+  const { data: ploegen } = useQuery({ queryKey: ['ploegen'], queryFn: () => api.get<PloegRij[]>('/ploegen'), staleTime: 5 * 60 * 1000 })
   const { data: projecten } = useQuery({
     queryKey: ['projecten-keuze'],
     queryFn: () => api.get<{ id: string; nummer?: number; werfadres: string; klant: { naam: string; voornaam?: string; bedrijfsnaam?: string } }[]>('/projecten'),
