@@ -44,6 +44,11 @@ function App() {
         onNav: onNav
       });
       break;
+    case 'voorwaarden':
+      Screen = /*#__PURE__*/React.createElement(window.VoorwaardenNL, {
+        onNav: onNav
+      });
+      break;
     case 'atelier':
       Screen = /*#__PURE__*/React.createElement(window.OverOnsNL, {
         onNav: onNav

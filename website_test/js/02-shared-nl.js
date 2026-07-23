@@ -1315,6 +1315,16 @@ function Footer({
       letterSpacing: '0.06em'
     }
   }, /*#__PURE__*/React.createElement("button", {
+    onClick: () => onNav('voorwaarden'),
+    style: {
+      background: 'none',
+      border: 0,
+      color: 'inherit',
+      cursor: 'pointer',
+      fontFamily: 'inherit',
+      fontSize: 'inherit'
+    }
+  }, "Algemene voorwaarden"), /*#__PURE__*/React.createElement("button", {
     onClick: () => onNav('atelier'),
     style: {
       background: 'none',
@@ -4588,6 +4598,184 @@ function OverkappingenNL({
     onClick: offerte
   }, "Vraag uw offerte aan")))));
 }
+
+/* ---- Algemene voorwaarden (verkoopsvoorwaarden 2022) ---- */
+function VoorwaardenNL({
+  onNav
+}) {
+  React.useEffect(() => {
+    document.title = 'Algemene voorwaarden | Poortland';
+    if (window.scrollTo) window.scrollTo(0, 0);
+  }, []);
+  const secties = [{
+    nr: '1',
+    titel: 'Algemene bepalingen',
+    clausules: [['1.1', "Deze algemene verkoopsvoorwaarden gelden voor alle bij ons gedane aankopen, bestellingen en/of plaatsingen. De klant aanvaardt ze door het feit van zijn aankoop en/of bestelling."], ['1.2', "Eventuele aankoopvoorwaarden van de klant binden ons enkel indien ze voorafgaand en uitdrukkelijk schriftelijk door ons aanvaard werden."], ['1.3', "Al onze opgegeven prijzen zijn exclusief BTW, tenzij anders vermeld."], ['1.4', "In geval de koper gerechtigd is de BTW niet bij de aankoop te betalen, dient de koper daarvan het wettelijke vereiste bewijs te leveren vooraleer dit afzonderlijk op de factuur verrekend zal worden."], ['1.5', "Bij een bestelling voor latere levering blijft de prijs vast gedurende 3 maanden, te tellen vanaf de datum van de bestelling. Nadien kan deze herzien worden, tenzij anders is overeengekomen."]]
+  }, {
+    nr: '2',
+    titel: 'Bestelling',
+    clausules: [['2.1', "Tenzij ons schriftelijk anders is bedongen gelden onze monsters, tekeningen, afmetingen, gewichten en andere gegevens slechts als benaderende beschrijving van onze producten en kunnen eventuele afwijkingen ervan, van welke aard dan ook, nimmer door de koper ingeroepen worden om hetzij de afneming te weigeren, hetzij de verbreking of schadevergoeding te vorderen. Evenzo kunnen wij, behoudens andersluidende en schriftelijke overeenkomst nimmer aansprakelijk gesteld worden wegens eventuele ongeschiktheid van onze producten voor speciale doeleinden waartoe ze door de koper bestemd werden."], ['2.2', "De door de koper opgegeven maten zullen bij de productie stipt gevolgd worden. In geval de opgegeven maten niet met de werkelijkheid overeenstemmen, ligt de verantwoordelijkheid uitsluitend bij de koper en kan geen schadevergoeding geëist worden."], ['2.3', "In geval de maten door onze verkopers moeten uitgerekend worden op basis van een plan door de koper ter beschikking gesteld, zal dit gebeuren op risico van de koper voor eventuele afwijkingen van de werkelijke maten t.o.v. het plan."], ['2.4', "Wanneer een opmeting gebeurd door onze diensten, is de koper verplicht elke wijziging aan de situatie onmiddellijk te melden. Kosten die teweeg worden gebracht door wijzigingen van de situatie, na opmeting, worden doorberekend aan de klant."]]
+  }, {
+    nr: '3',
+    titel: 'Levering en afhaling',
+    clausules: [['3.1', "Bij verkoop uit voorraad kunnen de goederen onmiddellijk door de koper meegenomen worden tegen contante betaling."], ['3.2', "Aan huis bestelling kan gebeuren tegen een vergoeding en op een vooraf overeengekomen datum."], ['3.3', "In geval de levering en/of plaatsing niet kan gebeuren op de afgesproken datum om redenen onafhankelijk van onze wil, zal de koper een nieuwe datum voorgesteld worden zonder bijkomende kosten."], ['3.4', "In geval de levering en/of plaatsing niet kan gebeuren op de voorziene levertijd om redenen die bij de koper of aannemers van de koper liggen, heeft de verkoper het recht om reeds het bedrag van het materiaal, vermeld in de bestelling, zonder plaatsingskosten, te factureren."], ['3.5', "De opgegeven leverings- en uitvoeringstermijnen worden opgegeven bij benadering en bij niet nakomen door ons van deze termijnen, kan de koper de bestelling niet annuleren, noch kan hij enige schadevergoeding eisen."], ['3.6', "Alle geleverde goederen blijven onze eigendom tot de factuur volledig betaald is."]]
+  }, {
+    nr: '4',
+    titel: 'Plaatsingen',
+    clausules: [['4.1', "De verkoper kan nooit verantwoordelijk gesteld worden voor het ontbreken van vergunning met betrekking tot de toelating tot plaatsen van poorten, zuilen en afsluitingen. Indien niet voldaan is aan het aanvragen van de nodige toelatingen/vergunningen en hieruit volgt dat de geplaatste werken geheel of gedeeltelijk dienen verwijderd te worden, blijft de koper de koopsom verschuldigd aan de verkoper. De eventuele kosten voor verwijdering zijn geheel voor rekening van de koper."], ['4.2', "Plaatsingen zullen uitgevoerd worden volgens het geldende tarief en op een vooraf afgesproken datum. Indien deze datum door ons niet kan gerespecteerd worden om redenen onafhankelijk van onze wil, zal de koper een nieuwe datum voorgesteld worden zonder bijkomende kosten. In geen enkel geval kan de koper bij niet naleving van deze datum door ons de bestelling annuleren, noch schadevergoeding eisen."], ['4.3', "De koper verbindt er zich toe tijdig de locatie waar de plaatsing dient te gebeuren, te ontruimen zodat het werk zonder tijdverlies kan worden uitgevoerd. Indien de plaatsers de locatie zelf moeten ontruimen, alvorens aan de werkzaamheden te kunnen beginnen, uitgezonderd indien uitdrukkelijk en schriftelijk anders is overeengekomen, zullen de kosten voor deze ontruiming aangerekend worden."], ['4.4', "De koper geeft de staat van de ondergrond op in volgende categorieën in stijgende lijn van moeilijkheidsgraad voor plaatsing: volle grond – volle grond met wortels van struiken en bomen – grond met steenafval – steenafval, stenen, beton. Op basis hiervan wordt de prijs voor plaatsing berekend door ons. Indien de werkelijke ondergrond niet overeenkomt met deze opgegeven door de koper en de moeilijkheidsgraad hoger is, zal hiervoor een extra kost worden aangerekend."], ['4.5', "In geval er door de plaatser schade wordt berokkend aan leidingen en andere voorwerpen die zich in de ondergrond bevinden en die ons vooraf niet werden meegedeeld, dan kan de koper geen enkele schadevergoeding vorderen, en is de koper verantwoordelijk voor de opgelopen schade ook indien de leidingen en/of voorwerpen toebehoren aan derden."]]
+  }, {
+    nr: '5',
+    titel: 'Waarborg',
+    clausules: [['5.1', "Alle door ons geleverde en geplaatste metalen constructies, die door ons tegen roest behandeld en nadien geverfd zijn, worden gewaarborgd tegen doorroesten en op de lakkwaliteit voor een termijn van 10 jaar, op voorwaarde dat er geen beschadigingen werden aangebracht en dat de goederen zijn onderhouden als door een goede huisvader. Oppervlakkige roestvorming en roestvorming aan scharnierpunten en sloten of ondergrondse roestvorming, vallen buiten bovenstaande waarborg."], ['5.2', "Alle door ons geplaatste elektrische leidingen en automatiseringen zijn gewaarborgd voor een periode van één jaar, tenzij anders bepaald in de offerte en/of bestelbon."], ['5.3', "Alle door ons geplaatste aandrijvingen, elektrische en elektronische materialen zijn gewaarborgd voor 2 jaar, tenzij een langere termijn op de bestelban wordt vermeld, tenzij anders bepaald in de offerte en/of bestelbon."], ['5.4', "Bovenvermelde waarborgperiodes gelden vanaf de factuurdatum en enkel indien de factuur voldaan is."], ['5.5', "Voor elke tussenkomst door ons, die onder bovenvermelde waarborgen valt, worden evenwel de verplaatsingskost en de werkuren aangerekend na meer dan 2 jaar na de levering voor particulieren en na meer dan 1 jaar voor professionelen (factuur aan BTW nummer)."], ['5.6', "Evenwel zijn uitdrukkelijk uit onze waarborg gesloten, alle schade veroorzaakt door beschadiging, aardbeving, grondverzakking, verschuivingen, extreme storm, windhoos, orkaan, enz."], ['5.7', "Alle klachten voor zichtbare gebreken bij levering en/of plaatsing, moeten schriftelijk gebeuren en gericht worden aan onze zetel binnen de 8 dagen na uitvoering of ontvangst ervan."]]
+  }, {
+    nr: '6',
+    titel: 'Prijzen',
+    clausules: [['6.1', "De prijs voor een project wordt bepaald in de offerte en bestelbon en is bindend voor zover niet voldaan wordt aan punt 6.2 of mits onderling overleg."], ['6.2', "Indien de aankooprijzen van de grondstoffen met meer dan 10% stijgen of de lonen met meer dan 4% tussen datum bestelbon en datum oplevering, wordt de prijs aangepast volgens de door Poortland aan te tonen verhoging à rato van deze stijging."]]
+  }, {
+    nr: '7',
+    titel: 'Betalingen',
+    clausules: [['7.1', "Alle betalingen moeten gebeuren op onze bankrekening. Wij aanvaarden geen cheques."], ['7.2', "De betalingsverplichtingen van de koper worden niet geschorst door het indienen van een zelfs klaarblijkelijk gegronde klacht betreffende de kwestieuze of andere goederen."], ['7.3', "Bij het plaatsen van de bestelling is er steeds een voorschot van 30% van het totale factuurbedrag verschuldigd, tenzij anders uitdrukkelijk en schriftelijk is overeengekomen."], ['7.4', "Elk bedrag dat niet betaald is geworden binnen de 14 dagen volgend op het zenden van een aangetekende aanmaning, zal van rechtswege verhoogd worden met een forfaitair bedrag van 10% (met een minimum van 50,00 €) tot vergoeding van onze buitengerechtelijke inningskosten, onverminderd de andere vergoedingen en kosten in geval van gerechtelijke vordering. Tevens zal op alle uitstaande bedragen een intrest berekend worden gelijk aan de basisrente van het kaskrediet aangerekend door de Belgische banken, vermeerderd met 2%."], ['7.5', "Indien een factuur is opgesteld aan de klant, waarbij later zou blijken dat een foutief BTW percentage is verrekend, zijn beide partijen gehouden aan de regularisatie hiervan."], ['7.6', "Indien bij interventies de kosten onder de 150 euro (btw exclusief) liggen, zal er een administratieve kost van 15 euro (btw exclusief) worden aangerekend."]]
+  }, {
+    nr: '8',
+    titel: 'Annulatie, verbreking, klachten en algemeen',
+    clausules: [['8.1', "In geval de koper zijn bestelling geheel of gedeeltelijk annuleert is er een schadevergoeding verschuldigd gelijk aan het betaalde voorschot met een minimum 30% van het totale bedrag van de geannuleerde bestelling. Indien de bestelde goederen reeds geproduceerd zijn volgens de indicaties van de koper, kan de bestelling niet geannuleerd worden en is het volledige bedrag verschuldigd."], ['8.2', "Wij aanvaarden geen algemene voorwaarden van onze medecontractanten."], ['8.3', "In geval van betwisting zijn alleen de Rechtbanken van Mechelen of andere naar onze keuze bevoegd."]]
+  }];
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-ground)',
+      color: 'var(--text-on-dark)',
+      padding: '78px 44px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 900,
+      margin: '0 auto'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(SEyebrow, {
+    dark: true,
+    style: {
+      marginBottom: 18
+    }
+  }, "Verkoopsvoorwaarden"), /*#__PURE__*/React.createElement("h1", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 54,
+      lineHeight: 1.04,
+      letterSpacing: '-0.01em',
+      color: 'var(--stone-100)',
+      margin: 0
+    }
+  }, "Algemene voorwaarden"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 17,
+      lineHeight: 1.6,
+      color: 'var(--stone-300)',
+      maxWidth: '62ch',
+      margin: '22px 0 0'
+    }
+  }, "Deze algemene verkoopsvoorwaarden gelden voor alle aankopen, bestellingen en plaatsingen bij Poortland nv. Versie 2022.")))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-paper)',
+      padding: '68px 44px 92px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 900,
+      margin: '0 auto'
+    }
+  }, secties.map((s, i) => /*#__PURE__*/React.createElement(Reveal, {
+    key: s.nr,
+    delay: i % 3 * 40
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 40,
+      paddingTop: i ? 34 : 0,
+      borderTop: i ? '1px solid var(--line-on-light-soft)' : 'none'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'baseline',
+      gap: 14,
+      marginBottom: 20
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontSize: 30,
+      fontWeight: 500,
+      color: 'var(--accent)',
+      lineHeight: 1
+    }
+  }, s.nr), /*#__PURE__*/React.createElement("h2", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 26,
+      color: 'var(--text-heading)',
+      margin: 0,
+      letterSpacing: '-0.01em'
+    }
+  }, s.titel)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 15
+    }
+  }, s.clausules.map(([nr, tekst]) => /*#__PURE__*/React.createElement("div", {
+    key: nr,
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '48px 1fr',
+      gap: 6,
+      alignItems: 'baseline'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: 'var(--font-label)',
+      fontSize: 13,
+      fontWeight: 600,
+      color: 'var(--accent)'
+    }
+  }, nr), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 15.5,
+      lineHeight: 1.72,
+      color: 'var(--text-body)',
+      margin: 0
+    }
+  }, tekst))))))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 8,
+      paddingTop: 28,
+      borderTop: '1px solid var(--line-on-light-soft)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-label)',
+      fontSize: 11,
+      fontWeight: 600,
+      letterSpacing: '0.18em',
+      textTransform: 'uppercase',
+      color: 'var(--text-heading)',
+      marginBottom: 10
+    }
+  }, "Poortland nv"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 13.5,
+      lineHeight: 1.8,
+      color: 'var(--text-muted)',
+      margin: 0
+    }
+  }, "Hombeeksesteenweg 164-166, 2800 Mechelen · Tel +32 (0)15 432 111 · info@poortland.be", /*#__PURE__*/React.createElement("br", null), "BTW BE 0464 838 351 · KBC BE38 7330 0060 5672 · Belfius BE85 0682 4455 4306 · Reg.nr. 02.23.01")))), /*#__PURE__*/React.createElement(CTASectie, {
+    onNav: onNav,
+    dark: true
+  }));
+}
 function OverOnsNL({
   onNav
 }) {
@@ -5242,6 +5430,7 @@ Object.assign(window, {
   CategoriePagina,
   CATEGORIEEN,
   OverkappingenNL,
+  VoorwaardenNL,
   OverOnsNL,
   Teller,
   MobileNav,
