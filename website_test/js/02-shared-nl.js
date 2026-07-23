@@ -4656,6 +4656,16 @@ function GarantieNL({
   }, []);
   const faac = [['5 jaar', 'Hydraulische FAAC aandrijvingen'], ['3 jaar', 'FAAC schuifpoortmotoren'], ['2 jaar', 'Elektromechanische FAAC aandrijvingen'], ['2 jaar', 'Elektronische toebehoren']];
   const kwaliteit = [['Snel geholpen met ruilmotoren', 'Bij een defect aan een motor hoeft u niet onnodig lang op een herstelling te wachten. Poortland werkt met een systeem van ruilmotoren. Waar nodig vervangen we de motor onmiddellijk door een geschikt exemplaar, zodat uw poort zo snel mogelijk opnieuw werkt.'], ['Duurzame materialen', 'Voor de montage gebruiken wij uitsluitend bouten, schroeven en scharnieren in roestvrij staal. Zo beperken we slijtage en corrosie en verhogen we de levensduur van uw poort of hekwerk.'], ['Volledige afwerking na plaatsing', 'Onze dienstverlening stopt niet bij de installatie. Na de plaatsing zorgen wij voor een nette en volledige afwerking. Waar nodig werken we de bestrating opnieuw aan en ruimen we de werf zorgvuldig op.']];
+  const [tab, setTab] = React.useState(0);
+  const corrosie = [{
+    titel: 'Metalliseren',
+    foto: 'media/anti-corrosie-metalliseren.jpg',
+    tekst: 'Het vlamverzinken of metalliseren bestaat erin het staal met een variabele beschermlaag van zink en aluminium te bedekken. Bij het metallisatieproces met zink of een legering van zink en aluminium wordt het zinkmateriaal, onder de vorm van een draad, gesmolten met een vlamspuitpistool en perslucht en op het te behandelen oppervlak gespoten. Het proces wordt steeds voorafgegaan door het stralen van het stalen oppervlak, enerzijds om elk spoor van roest of vuil te verwijderen en zo een zuiverheidsgraad gelijk aan de norm SA2,5 tot Sa3 te bereiken, en anderzijds om de ruwheidsgraad te bekomen die nodig is voor de hechting van de metallisatie.'
+  }, {
+    titel: 'Thermisch verzinken',
+    foto: 'media/anti-corrosie-verzinken.jpg',
+    tekst: 'De toepassing op industriële schaal van het thermisch verzinken is weldra 200 jaar oud. Toch blijft het een zeer efficiënte manier om staal te vrijwaren van roest. Het proces bestaat uit het onderdompelen van staal in een bad van gesmolten zink van 450 °C.'
+  }];
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-ground)',
@@ -4778,6 +4788,143 @@ function GarantieNL({
       margin: '14px 0 0'
     }
   }, "Wij vinden transparantie belangrijk. Daarom raden we aan om bij de keuze van een leverancier niet alleen naar de duur van de garantie te kijken, maar ook naar de concrete voorwaarden, de ervaring van het bedrijf en de continuïteit van de onderneming."))))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-paper-2)',
+      padding: '90px 44px',
+      borderTop: '1px solid var(--line-on-light-soft)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 1000,
+      margin: '0 auto'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(SEyebrow, {
+    style: {
+      marginBottom: 12
+    }
+  }, "Roestbescherming"), /*#__PURE__*/React.createElement("h2", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 34,
+      lineHeight: 1.1,
+      letterSpacing: '-0.01em',
+      color: 'var(--text-heading)',
+      margin: '0 0 16px'
+    }
+  }, "Anti corrosie behandeling"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 16.5,
+      lineHeight: 1.72,
+      color: 'var(--text-body)',
+      maxWidth: '68ch',
+      margin: 0
+    }
+  }, "Om een lange levensduur te verzekeren worden alle hekwerken en poorten van Poortland tegen roest behandeld. Hiervoor gebruiken wij twee technieken, namelijk thermisch verzinken en metalliseren. Daarna worden de hekwerken en poorten met twee lagen gepoederlakt.")), /*#__PURE__*/React.createElement(Reveal, {
+    delay: 80
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 36
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    role: "tablist",
+    "aria-label": "Anti corrosie technieken",
+    style: {
+      display: 'flex',
+      gap: 4
+    }
+  }, corrosie.map((c, i) => /*#__PURE__*/React.createElement("button", {
+    key: c.titel,
+    role: "tab",
+    type: "button",
+    "aria-selected": tab === i,
+    onClick: () => setTab(i),
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 15,
+      fontWeight: 600,
+      cursor: 'pointer',
+      padding: '12px 22px',
+      border: '1px solid var(--line-on-light-soft)',
+      borderBottom: 0,
+      borderRadius: '8px 8px 0 0',
+      position: 'relative',
+      bottom: -1,
+      background: tab === i ? 'var(--surface-card)' : 'transparent',
+      color: tab === i ? 'var(--text-heading)' : 'var(--text-muted)'
+    }
+  }, c.titel))), /*#__PURE__*/React.createElement("div", {
+    role: "tabpanel",
+    style: {
+      background: 'var(--surface-card)',
+      border: '1px solid var(--line-on-light-soft)',
+      borderRadius: '0 10px 10px 10px',
+      padding: '32px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pl-split",
+    style: {
+      display: 'grid',
+      gridTemplateColumns: '1.25fr 0.75fr',
+      gap: 36,
+      alignItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h3", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 24,
+      color: 'var(--text-heading)',
+      margin: '0 0 14px',
+      lineHeight: 1.2
+    }
+  }, corrosie[tab].titel), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 15.5,
+      lineHeight: 1.75,
+      color: 'var(--text-body)',
+      margin: 0
+    }
+  }, corrosie[tab].tekst)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'relative',
+      aspectRatio: '4 / 3',
+      borderRadius: 'var(--radius-md)',
+      overflow: 'hidden',
+      background: 'var(--surface-paper-2)',
+      border: '1px dashed var(--line-on-light)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: 'var(--font-label)',
+      fontSize: 11,
+      fontWeight: 600,
+      letterSpacing: '0.14em',
+      textTransform: 'uppercase',
+      color: 'var(--text-muted)',
+      padding: '0 16px',
+      textAlign: 'center'
+    }
+  }, "Foto ", corrosie[tab].titel.toLowerCase()), /*#__PURE__*/React.createElement("img", {
+    src: corrosie[tab].foto,
+    alt: corrosie[tab].titel,
+    loading: "lazy",
+    onError: e => {
+      e.currentTarget.style.display = 'none';
+    },
+    style: {
+      position: 'absolute',
+      inset: 0,
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover'
+    }
+  })))))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--forest-900)',
       padding: '90px 44px',
