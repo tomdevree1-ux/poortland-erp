@@ -4341,13 +4341,13 @@ function OverkappingenNL({
   }, /*#__PURE__*/React.createElement(SButton, {
     variant: "primary",
     arrow: true,
-    onClick: () => onNav('contact')
-  }, "Vraag persoonlijk advies"), /*#__PURE__*/React.createElement(SButton, {
+    onClick: () => window.dispatchEvent(new CustomEvent('pl-offerte-open'))
+  }, "Vraag een offerte aan"), /*#__PURE__*/React.createElement(SButton, {
     variant: "ghost",
     dark: true,
     arrow: true,
-    onClick: naarSecties
-  }, "Ontdek de mogelijkheden")), /*#__PURE__*/React.createElement("div", {
+    onClick: () => onNav('contact')
+  }, "Plan een adviesgesprek")), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 26,
@@ -4404,7 +4404,50 @@ function OverkappingenNL({
       textTransform: 'uppercase',
       color: 'var(--text-heading)'
     }
-  }, "Terrasoverkapping op maat"))))), /*#__PURE__*/React.createElement("div", {
+  }, "Terrasoverkapping op maat"))))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-paper-2)',
+      borderTop: '1px solid var(--line-on-light-soft)',
+      borderBottom: '1px solid var(--line-on-light-soft)',
+      padding: '40px 44px'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 1000,
+      margin: '0 auto',
+      display: 'flex',
+      justifyContent: 'center',
+      gap: 56,
+      flexWrap: 'wrap'
+    }
+  }, [[1999, 'Poortland sinds', '', true], [7, 'Overspanning met twee staanders', ' m', false], [100, 'Op maat gemaakt', '%', false]].map(([n, l, suf, plat]) => /*#__PURE__*/React.createElement("div", {
+    key: l,
+    style: {
+      textAlign: 'center',
+      minWidth: 150
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 40,
+      color: 'var(--accent)',
+      lineHeight: 1
+    }
+  }, /*#__PURE__*/React.createElement(Teller, {
+    eind: n,
+    suffix: suf,
+    plat: plat
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-label)',
+      fontSize: 10.5,
+      letterSpacing: '0.16em',
+      textTransform: 'uppercase',
+      color: 'var(--text-muted)',
+      marginTop: 10
+    }
+  }, l)))))), /*#__PURE__*/React.createElement("div", {
     ref: sectieRef
   }, secties.map((s, i) => {
     const donker = i % 2 === 1;
@@ -4626,7 +4669,7 @@ function VoorwaardenNL({
   }, {
     nr: '5',
     titel: 'Waarborg',
-    clausules: [['5.1', "Alle door ons geleverde en geplaatste metalen constructies, die door ons tegen roest behandeld en nadien geverfd zijn, worden gewaarborgd tegen doorroesten en op de lakkwaliteit voor een termijn van 10 jaar, op voorwaarde dat er geen beschadigingen werden aangebracht en dat de goederen zijn onderhouden als door een goede huisvader. Oppervlakkige roestvorming en roestvorming aan scharnierpunten en sloten of ondergrondse roestvorming, vallen buiten bovenstaande waarborg."], ['5.2', "Alle door ons geplaatste elektrische leidingen en automatiseringen zijn gewaarborgd voor een periode van één jaar, tenzij anders bepaald in de offerte en/of bestelbon."], ['5.3', "Alle door ons geplaatste aandrijvingen, elektrische en elektronische materialen zijn gewaarborgd voor 2 jaar, tenzij een langere termijn op de bestelban wordt vermeld, tenzij anders bepaald in de offerte en/of bestelbon."], ['5.4', "Bovenvermelde waarborgperiodes gelden vanaf de factuurdatum en enkel indien de factuur voldaan is."], ['5.5', "Voor elke tussenkomst door ons, die onder bovenvermelde waarborgen valt, worden evenwel de verplaatsingskost en de werkuren aangerekend na meer dan 2 jaar na de levering voor particulieren en na meer dan 1 jaar voor professionelen (factuur aan BTW nummer)."], ['5.6', "Evenwel zijn uitdrukkelijk uit onze waarborg gesloten, alle schade veroorzaakt door beschadiging, aardbeving, grondverzakking, verschuivingen, extreme storm, windhoos, orkaan, enz."], ['5.7', "Alle klachten voor zichtbare gebreken bij levering en/of plaatsing, moeten schriftelijk gebeuren en gericht worden aan onze zetel binnen de 8 dagen na uitvoering of ontvangst ervan."]]
+    clausules: [['5.1', "Alle door ons geleverde en geplaatste metalen constructies, die door ons tegen roest behandeld en nadien geverfd zijn, worden gewaarborgd tegen doorroesten en op de lakkwaliteit voor een termijn van 10 jaar, op voorwaarde dat er geen beschadigingen werden aangebracht en dat de goederen zijn onderhouden als door een goede huisvader. Oppervlakkige roestvorming en roestvorming aan scharnierpunten en sloten of ondergrondse roestvorming, vallen buiten bovenstaande waarborg."], ['5.2', "Alle door ons geplaatste elektrische leidingen en automatiseringen zijn gewaarborgd voor een periode van één jaar, tenzij anders bepaald in de offerte en/of bestelbon."], ['5.3', "Alle door ons geplaatste aandrijvingen, elektrische en elektronische materialen zijn gewaarborgd voor 2 jaar, tenzij een langere termijn op de bestelbon wordt vermeld, tenzij anders bepaald in de offerte en/of bestelbon."], ['5.4', "Bovenvermelde waarborgperiodes gelden vanaf de factuurdatum en enkel indien de factuur voldaan is."], ['5.5', "Voor elke tussenkomst door ons, die onder bovenvermelde waarborgen valt, worden evenwel de verplaatsingskost en de werkuren aangerekend na meer dan 2 jaar na de levering voor particulieren en na meer dan 1 jaar voor professionelen (factuur aan BTW nummer)."], ['5.6', "Evenwel zijn uitdrukkelijk uit onze waarborg gesloten, alle schade veroorzaakt door beschadiging, aardbeving, grondverzakking, verschuivingen, extreme storm, windhoos, orkaan, enz."], ['5.7', "Alle klachten voor zichtbare gebreken bij levering en/of plaatsing, moeten schriftelijk gebeuren en gericht worden aan onze zetel binnen de 8 dagen na uitvoering of ontvangst ervan."]]
   }, {
     nr: '6',
     titel: 'Prijzen',
