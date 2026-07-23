@@ -19,6 +19,15 @@ public class FacturatieController(PoortlandDbContext db, ClaimsContext claims) :
 {
     public record VoorstelInvoer(FactuurSoort Soort);
     public record RegelInvoer(string Omschrijving, decimal Aantal, string? Eenheid, decimal Eenheidsprijs, BtwTarief Btw);
+
+    // Een regel moet een positief aantal hebben; de prijs mag negatief zijn voor
+    // een kortingregel maar niet nul-op-nul onzin (audit randgevallen 1).
+    static string? RegelFout(RegelInvoer r)
+    {
+        if (string.IsNullOrWhiteSpace(r.Omschrijving)) return "Geef een omschrijving.";
+        if (r.Aantal <= 0) return "Het aantal moet groter zijn dan nul.";
+        return null;
+    }
     public record GoedkeurInvoer(bool AfwijkingBevestigd);
     public record GefactureerdInvoer(string? ExactNummer);
 
@@ -272,6 +281,7 @@ public class FacturatieController(PoortlandDbContext db, ClaimsContext claims) :
         var v = await db.Factuurvoorstellen.Include(f => f.Regels).FirstOrDefaultAsync(f => f.Id == id && f.VerwijderdOp == null);
         if (v is null) return NotFound();
         if (v.Status != FactuurStatus.Concept) return BadRequest(new { fout = "Alleen een concept is bewerkbaar." });
+        if (RegelFout(invoer) is { } f) return BadRequest(new { fout = f });
         v.Regels.Add(new Factuurvoorstelregel
         {
             Volgnummer = v.Regels.Where(r => r.VerwijderdOp == null).Select(r => r.Volgnummer).DefaultIfEmpty(0).Max() + 1,
@@ -297,6 +307,7 @@ public class FacturatieController(PoortlandDbContext db, ClaimsContext claims) :
         var v = await db.Factuurvoorstellen.Include(f => f.Regels)
             .FirstOrDefaultAsync(f => f.Id == regel.FactuurvoorstelId && f.VerwijderdOp == null);
         if (v is null || v.Status != FactuurStatus.Concept) return BadRequest(new { fout = "Alleen een concept is bewerkbaar." });
+        if (RegelFout(invoer) is { } f) return BadRequest(new { fout = f });
         regel.Omschrijving = invoer.Omschrijving;
         regel.Aantal = invoer.Aantal;
         regel.Eenheid = invoer.Eenheid;
@@ -336,6 +347,8 @@ public class FacturatieController(PoortlandDbContext db, ClaimsContext claims) :
         if (regels.Count == 0) return BadRequest(new { fout = "Een leeg voorstel kan niet goedgekeurd worden." });
         if (regels.Any(r => r.Bron == FactuurregelBron.Meerwerk && r.Eenheidsprijs == 0))
             return BadRequest(new { fout = "Prijs eerst alle meerwerkregels of verwijder ze." });
+        // Een factuur van nul of minder heeft geen betekenis (audit randgevallen 1).
+        if (v.TotaalInclBtw <= 0) return BadRequest(new { fout = "Het factuurtotaal moet groter zijn dan nul." });
 
         var offerteTotaal = await OfferteTotaal(v.ProjectId);
         var afwijking = regels.Any(r => r.Bron == FactuurregelBron.Meerwerk) ||

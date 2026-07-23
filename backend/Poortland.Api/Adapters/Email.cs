@@ -14,9 +14,17 @@ public class ConsoleEmailVerzender(ILogger<ConsoleEmailVerzender> log) : IEmailV
 {
     public Task Verzend(string naar, string onderwerp, string tekst, (byte[] inhoud, string naam)? bijlage = null)
     {
+        // Adres gemaskeerd zodat er geen PII in de logs belandt (audit privacy 7).
         log.LogInformation("EMAIL (console modus) naar {Naar}: {Onderwerp} | bijlage: {Bijlage}",
-            naar, onderwerp, bijlage?.naam ?? "geen");
+            Maskeer(naar), onderwerp, bijlage?.naam ?? "geen");
         return Task.CompletedTask;
+    }
+
+    public static string Maskeer(string email)
+    {
+        var at = email.IndexOf('@');
+        if (at <= 1) return "***";
+        return $"{email[0]}***{email[at..]}";
     }
 }
 

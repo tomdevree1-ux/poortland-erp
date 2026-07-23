@@ -23,20 +23,13 @@ public class ServiceController(PoortlandDbContext db, ClaimsContext claims) : Co
         return oplever.AddMonths(project.GarantieMaanden) >= DateOnly.FromDateTime(DateTime.Today);
     }
 
-    async Task<object> Projectie(Servicedossier s)
+    static object Projectie(Servicedossier s, IReadOnlyDictionary<Guid, string> technici) => new
     {
-        var technieker = s.TechniekerId is { } t
-            ? await db.Medewerkers.AsNoTracking().Where(m => m.Id == t)
-                .Select(m => ($"{m.Voornaam} {m.Naam}").Trim()).FirstOrDefaultAsync()
-            : null;
-        return new
-        {
-            s.Id, s.Status, s.GarantieIndicatie, s.Klacht, s.GemeldOp, s.GeplandOp, s.TechniekerId,
-            technieker,
-            klant = new { s.Klant!.Id, s.Klant.Naam, s.Klant.Voornaam, s.Klant.Bedrijfsnaam, s.Klant.Telefoon, s.Klant.Gemeente },
-            project = s.Project is null ? null : new { s.Project.Id, s.Project.Nummer, s.Project.Werfadres, s.Project.GarantieMaanden }
-        };
-    }
+        s.Id, s.Status, s.GarantieIndicatie, s.Klacht, s.GemeldOp, s.GeplandOp, s.TechniekerId,
+        technieker = s.TechniekerId is { } t ? technici.GetValueOrDefault(t) : null,
+        klant = new { s.Klant!.Id, s.Klant.Naam, s.Klant.Voornaam, s.Klant.Bedrijfsnaam, s.Klant.Telefoon, s.Klant.Gemeente },
+        project = s.Project is null ? null : new { s.Project.Id, s.Project.Nummer, s.Project.Werfadres, s.Project.GarantieMaanden }
+    };
 
     [HttpGet]
     public async Task<IActionResult> Lijst([FromQuery] ServicedossierStatus? status)
@@ -46,9 +39,11 @@ public class ServiceController(PoortlandDbContext db, ClaimsContext claims) : Co
             .Where(s => s.VerwijderdOp == null);
         if (status is { } st) query = query.Where(s => s.Status == st);
         var dossiers = await query.OrderBy(s => s.Status).ThenByDescending(s => s.GemeldOp).Take(200).ToListAsync();
-        var lijst = new List<object>();
-        foreach (var s in dossiers) lijst.Add(await Projectie(s));
-        return Ok(lijst);
+        // Techniekernamen in een keer laden in plaats van per dossier (audit performantie 1).
+        var ids = dossiers.Where(s => s.TechniekerId is not null).Select(s => s.TechniekerId!.Value).Distinct().ToList();
+        var technici = await db.Medewerkers.AsNoTracking().Where(m => ids.Contains(m.Id))
+            .ToDictionaryAsync(m => m.Id, m => ($"{m.Voornaam} {m.Naam}").Trim());
+        return Ok(dossiers.Select(s => Projectie(s, technici)));
     }
 
     // FR-015: bij een melding binnen de garantie staat alles vooringevuld.

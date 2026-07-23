@@ -44,11 +44,20 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
                 .SqlQuery<Guid>($@"select id as ""Value"" from zoek_leads({zoek}, {archief})")
                 .ToListAsync();
             var treffers = await query.Where(l => ids.Contains(l.Id)).ToListAsync();
-            return Ok(ids.Select(i => treffers.FirstOrDefault(l => l.Id == i)).Where(l => l is not null).ToList());
+            return Ok(ids.Select(i => treffers.FirstOrDefault(l => l.Id == i)).Where(l => l is not null)
+                .Select(l => Lijstrij(l!)).ToList());
         }
         var leads = await query.OrderByDescending(l => l.AangemaaktOp).Take(200).ToListAsync();
-        return Ok(leads);
+        return Ok(leads.Select(Lijstrij));
     }
+
+    // Smalle lijstprojectie zonder de wizardblob en detailvelden (audit performantie 3).
+    static object Lijstrij(Lead l) => new
+    {
+        l.Id, l.Kanaal, l.Status, l.EigenaarId, l.Naam, l.Voornaam, l.Email, l.Telefoon,
+        l.EersteVraag, l.Prijsindicatie, l.Opvolgdatum, l.TypeAanvraag, l.KlantType,
+        l.Bedrijfsnaam, l.BtwNummer, l.Gemeente, l.GearchiveerdOp, l.OmgezetProjectId, l.AangemaaktOp
+    };
 
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> Detail(Guid id)
@@ -124,6 +133,7 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
     // Het contactformulier en de offertewizard komen hier samen binnen.
     [HttpPost("webformulier")]
     [AllowAnonymous]
+    [Microsoft.AspNetCore.RateLimiting.EnableRateLimiting("webformulier")]
     [RequestSizeLimit(60 * 1024 * 1024)]
     public async Task<IActionResult> Webformulier([FromForm] WebformulierInvoer invoer,
         [FromServices] TurnstileValidator turnstile)
@@ -168,7 +178,7 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
             {
                 if (foto.Length == 0 || foto.Length > 10 * 1024 * 1024) continue;
                 if (!FotoTypes.Contains(foto.ContentType)) continue;
-                await BewaarFoto(lead.Id, foto);
+                await BewaarFoto(lead.Id, foto); // valideert de inhoud en slaat vervalste bestanden over
             }
             await db.SaveChangesAsync();
         }
@@ -180,19 +190,23 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
         string? KlantType, string? Bedrijfsnaam, string? BtwNummer, string? Vraag,
         bool PrivacyAkkoord, string? WizardGegevens, string? TurnstileToken, IFormFileCollection? Fotos);
 
-    async Task BewaarFoto(Guid leadId, IFormFile foto)
+    async Task<bool> BewaarFoto(Guid leadId, IFormFile foto)
     {
+        using var geheugen = new MemoryStream();
+        await foto.CopyToAsync(geheugen);
+        var bytes = geheugen.ToArray();
+        // Inhoud valideren, niet de header (audit sectie 7): geen echte afbeelding, geen opslag.
+        if (!Bestandsvalidatie.IsGeldigeAfbeelding(bytes)) return false;
         var extensie = Path.GetExtension(foto.FileName);
         if (string.IsNullOrWhiteSpace(extensie)) extensie = ".jpg";
         var pad = $"{leadId}/{Guid.NewGuid()}{extensie}";
-        using var geheugen = new MemoryStream();
-        await foto.CopyToAsync(geheugen);
-        await opslag.Upload(BucketUploads, pad, geheugen.ToArray(), foto.ContentType);
+        await opslag.Upload(BucketUploads, pad, bytes, foto.ContentType);
         db.LeadBijlagen.Add(new LeadBijlage
         {
             LeadId = leadId, Bestandsnaam = foto.FileName, ContentType = foto.ContentType, BestandPad = pad,
             AangemaaktDoor = claims.MedewerkerId
         });
+        return true;
     }
 
     [HttpPost("{id:guid}/fotos")]
@@ -204,7 +218,8 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
             return BadRequest(new { fout = "Toegelaten formaten: jpeg, png, webp of heic." });
         var lead = await db.Leads.FirstOrDefaultAsync(l => l.Id == id && l.VerwijderdOp == null);
         if (lead is null) return NotFound();
-        await BewaarFoto(id, bestand);
+        if (!await BewaarFoto(id, bestand))
+            return BadRequest(new { fout = "Dit bestand is geen geldige afbeelding." });
         await db.SaveChangesAsync();
         return Ok(new { boodschap = "Foto toegevoegd." });
     }

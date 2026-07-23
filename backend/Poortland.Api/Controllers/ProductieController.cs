@@ -273,7 +273,11 @@ public class ProductieController(PoortlandDbContext db, ClaimsContext claims, Su
 
         using var geheugen = new MemoryStream();
         await bestand.CopyToAsync(geheugen);
-        await opslag.Upload(BucketTekeningen, tekening.BestandPad, geheugen.ToArray(), "application/pdf");
+        var bytes = geheugen.ToArray();
+        // Inhoud controleren, niet de header (audit sectie 7): echt een PDF of niets.
+        if (!Poortland.Api.Domein.Bestandsvalidatie.IsGeldigePdf(bytes))
+            return BadRequest(new { fout = "Dit bestand is geen geldige PDF." });
+        await opslag.Upload(BucketTekeningen, tekening.BestandPad, bytes, "application/pdf");
 
         db.Tekeningen.Add(tekening);
         await db.SaveChangesAsync();

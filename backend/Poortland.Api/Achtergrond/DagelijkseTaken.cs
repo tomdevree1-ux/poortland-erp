@@ -109,7 +109,7 @@ public class DagelijkseTaken(IServiceScopeFactory scopes, ILogger<DagelijkseTake
                 });
                 verzonden++;
             }
-            catch (Exception fout) { log.LogError(fout, "Afspraakmail naar {Naar} mislukt", naar); }
+            catch (Exception fout) { log.LogError(fout, "Afspraakmail naar {Naar} mislukt", Poortland.Api.Adapters.ConsoleEmailVerzender.Maskeer(naar)); }
         }
 
         var wijzigingen = await db.SaveChangesAsync(stop);

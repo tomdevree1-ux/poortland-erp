@@ -24,12 +24,18 @@ public class WerkbonnenController(PoortlandDbContext db, ClaimsContext claims, S
     public record RegelInvoer(string Soort, string Omschrijving, decimal? Aantal, string? Eenheid, bool? AfwijkingVanStuklijst);
     public record TekenInvoer(string HandtekeningPng, decimal? GpsLat, decimal? GpsLon);
 
-    async Task<object> Projectie(Werkbon w)
+    // Plaatsersnamen in een keer laden zodat de lijstprojectie geen query per bon doet
+    // (audit performantie 1, patroon uit PlanningController).
+    async Task<Dictionary<Guid, string>> LaadPlaatsers(IEnumerable<Werkbon> bonnen)
     {
-        var plaatsers = await db.Medewerkers.AsNoTracking()
-            .Where(m => m.Id == w.PlaatserId)
-            .Select(m => ($"{m.Voornaam} {m.Naam}").Trim())
-            .ToListAsync();
+        var ids = bonnen.Select(w => w.PlaatserId).Distinct().ToList();
+        return await db.Medewerkers.AsNoTracking()
+            .Where(m => ids.Contains(m.Id))
+            .ToDictionaryAsync(m => m.Id, m => ($"{m.Voornaam} {m.Naam}").Trim());
+    }
+
+    async Task<object> Projectie(Werkbon w, IReadOnlyDictionary<Guid, string> plaatsers)
+    {
         var fotos = new List<object>();
         foreach (var f in w.Fotos.Where(f => f.VerwijderdOp == null))
         {
@@ -44,7 +50,7 @@ public class WerkbonnenController(PoortlandDbContext db, ClaimsContext claims, S
         {
             w.Id, w.ProjectId, w.PlaatserId, w.Type, w.Status, w.Uitvoeringsdatum, w.UrenBegin, w.UrenEinde,
             w.Opmerkingen, w.GetekendOp, handtekeningUrl,
-            plaatser = plaatsers.FirstOrDefault() ?? "—",
+            plaatser = plaatsers.GetValueOrDefault(w.PlaatserId, "—"),
             project = w.Project is null ? null : new
             {
                 w.Project.Id, w.Project.Nummer, w.Project.Werfadres,
@@ -65,8 +71,9 @@ public class WerkbonnenController(PoortlandDbContext db, ClaimsContext claims, S
             .Where(w => w.ProjectId == projectId && w.VerwijderdOp == null)
             .OrderByDescending(w => w.AangemaaktOp)
             .ToListAsync();
+        var namen = await LaadPlaatsers(bonnen);
         var lijst = new List<object>();
-        foreach (var w in bonnen) lijst.Add(await Projectie(w));
+        foreach (var w in bonnen) lijst.Add(await Projectie(w, namen));
         return Ok(lijst);
     }
 
@@ -83,8 +90,9 @@ public class WerkbonnenController(PoortlandDbContext db, ClaimsContext claims, S
             .OrderBy(w => w.Status).ThenBy(w => w.Uitvoeringsdatum)
             .Take(50)
             .ToListAsync();
+        var namen = await LaadPlaatsers(bonnen);
         var lijst = new List<object>();
-        foreach (var w in bonnen) lijst.Add(await Projectie(w));
+        foreach (var w in bonnen) lijst.Add(await Projectie(w, namen));
         return Ok(lijst);
     }
 
@@ -96,7 +104,7 @@ public class WerkbonnenController(PoortlandDbContext db, ClaimsContext claims, S
             .Include(w => w.Regels).Include(w => w.Fotos)
             .FirstOrDefaultAsync(w => w.Id == id && w.VerwijderdOp == null);
         if (bon is null) return NotFound();
-        return Ok(await Projectie(bon));
+        return Ok(await Projectie(bon, await LaadPlaatsers([bon])));
     }
 
     // De planner (of montage zelf) maakt de werkbon aan (TS-09 sectie 4 en 7).
@@ -125,6 +133,9 @@ public class WerkbonnenController(PoortlandDbContext db, ClaimsContext claims, S
         if (bon is null) return NotFound();
         if (bon.Status is WerkbonStatus.KlantGetekend or WerkbonStatus.VerwerktInFacturatie)
             return BadRequest(new { fout = "Een getekende werkbon wijzigt niet meer." });
+        // Uren einde mag niet vóór uren begin liggen (audit randgevallen 5).
+        if (invoer.UrenBegin is { } b && invoer.UrenEinde is { } e && e < b)
+            return BadRequest(new { fout = "De einduren liggen vóór de beginuren." });
         if (invoer.Uitvoeringsdatum is { } d) bon.Uitvoeringsdatum = d;
         bon.UrenBegin = invoer.UrenBegin;
         bon.UrenEinde = invoer.UrenEinde;

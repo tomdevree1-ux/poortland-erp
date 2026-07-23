@@ -41,9 +41,10 @@ function Staafgrafiek({ punten, formatteer }: {
 }
 
 export default function Dashboard() {
-  const { data } = useQuery({ queryKey: ['dashboard'], queryFn: () => api.get<Kerncijfers>('/dashboard') })
+  // Dure aggregaties: een minuut vers is ruim genoeg (audit performantie 4).
+  const { data } = useQuery({ queryKey: ['dashboard'], queryFn: () => api.get<Kerncijfers>('/dashboard'), staleTime: 60_000 })
   const { data: rapport } = useQuery({
-    queryKey: ['rapporten'], queryFn: () => api.get<RapportOverzicht>('/rapporten/overzicht')
+    queryKey: ['rapporten'], queryFn: () => api.get<RapportOverzicht>('/rapporten/overzicht'), staleTime: 60_000
   })
 
   const orderTotaal = rapport ? Math.max(rapport.orderStatussen.reduce((s, o) => s + o.aantal, 0), 1) : 1

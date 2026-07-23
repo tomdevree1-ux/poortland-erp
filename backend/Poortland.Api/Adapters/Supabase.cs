@@ -1,6 +1,7 @@
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using Microsoft.Extensions.Hosting;
 
 namespace Poortland.Api.Adapters;
 
@@ -93,12 +94,14 @@ public class SupabaseAdmin(HttpClient http, IConfiguration config)
 }
 
 // Cloudflare Turnstile op het publieke leadformulier (TS-04 sectie 2).
-public class TurnstileValidator(HttpClient http, IConfiguration config)
+public class TurnstileValidator(HttpClient http, IConfiguration config, IHostEnvironment env)
 {
     public async Task<bool> Valideer(string? token, string? ip)
     {
         var secret = config["Turnstile:Secret"];
-        if (string.IsNullOrWhiteSpace(secret)) return true; // dev zonder Turnstile
+        if (string.IsNullOrWhiteSpace(secret))
+            // Dev zonder Turnstile mag door; productie faalt dicht (geen geheim, geen doorgang).
+            return !env.IsProduction();
         if (string.IsNullOrWhiteSpace(token)) return false;
         var velden = new Dictionary<string, string> { ["secret"] = secret, ["response"] = token };
         if (ip is not null) velden["remoteip"] = ip;

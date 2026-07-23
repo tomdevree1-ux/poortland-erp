@@ -273,7 +273,7 @@ function VoorstelDetail({ id, magBoekhouden, onSluit, onWijzig }: {
             <div className="grid gap-3 md:grid-cols-2">
               <Invoer label="Omschrijving" value={vorm.omschrijving} onChange={e => zetVorm({ ...vorm, omschrijving: e.target.value })} />
               <div className="grid grid-cols-3 gap-3">
-                <Invoer label="Aantal" type="number" step="0.01" value={vorm.aantal} onChange={e => zetVorm({ ...vorm, aantal: e.target.value })} />
+                <Invoer label="Aantal" type="number" min="0.01" step="0.01" value={vorm.aantal} onChange={e => zetVorm({ ...vorm, aantal: e.target.value })} />
                 <Invoer label="Eenheid" optioneel value={vorm.eenheid} onChange={e => zetVorm({ ...vorm, eenheid: e.target.value })} />
                 <Invoer label="Prijs excl" type="number" step="0.01" value={vorm.eenheidsprijs} onChange={e => zetVorm({ ...vorm, eenheidsprijs: e.target.value })} />
               </div>
@@ -284,7 +284,7 @@ function VoorstelDetail({ id, magBoekhouden, onSluit, onWijzig }: {
               </Selecteer>
               <div className="flex gap-2">
                 <Knop onClick={() => zetBewerkRegel(null)}>Annuleren</Knop>
-                <Knop variant="primair" disabled={bewaarRegel.isPending || !vorm.omschrijving.trim()} onClick={() => bewaarRegel.mutate()}>Bewaren</Knop>
+                <Knop variant="primair" disabled={bewaarRegel.isPending || !vorm.omschrijving.trim() || Number(vorm.aantal) <= 0} onClick={() => bewaarRegel.mutate()}>Bewaren</Knop>
               </div>
             </div>
           </div>
@@ -334,7 +334,7 @@ function VoorstelDetail({ id, magBoekhouden, onSluit, onWijzig }: {
             </Knop>
           )}
           {concept && (
-            <Knop variant="primair" disabled={goedkeuren.isPending || (afwijking && !bevestigAfwijking)}
+            <Knop variant="primair" disabled={goedkeuren.isPending || (afwijking && !bevestigAfwijking) || v.totaalInclBtw <= 0}
               onClick={() => goedkeuren.mutate()}>Goedkeuren</Knop>
           )}
           {v.status === 'goedgekeurd' && magBoekhouden && (

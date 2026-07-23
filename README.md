@@ -189,6 +189,34 @@ vangen dat netjes op.
    Die gebruiker wordt automatisch medewerker met de rol beheerder en nodigt daarna de rest uit
    via het scherm Beheer. Er is bewust geen open registratie.
 
+## Audits
+
+Het platform houdt een auditlogboek bij: uitgevoerde rondes met wat gevonden en gefixt is en een staande checklist met herbruikbare prompts. Draai deze rondes opnieuw bij elke grote wijziging of vóór een release. De les uit de eerste ronde geldt overal: naam en voornaam blijven gescheiden en een knop tonen die de databank daarna weigert is een halve bug, dus de rechtenmatrix en de statusovergangen en de endpointguard en de zichtbaarheid van de knop horen alle vier hetzelfde te zeggen.
+
+### Uitgevoerde rondes
+
+**2026-07-20 brede ronde (naamweergave, velddoorstroming, rechten).** Drie parallelle audits over het volledige platform. Gevonden en gefixt: de leadlijst en de leadfiche toonden bij een bedrijf de contactpersoon in plaats van de bedrijfsnaam, elke klantbewerking wiste stil de communicatievoorkeur en de omzetting liet type aanvraag en timing achter op de lead. Migratie 0032 zette drie zaken recht: montage mag de eindstap gemonteerd zetten, planningsitems staan onder statusbewaking en dode matrixrijen zijn opgeruimd. End tot end bewezen op staging dat een webformulier met dertien velden gescheiden in de databank aankomt. Details in `Poortland_ERP_Veldenaudit.md`.
+
+**2026-07-20 diepteronde (aanvaller, performantie, randgevallen, privacy).** Vier sporen met de belangrijkste bevindingen hieronder.
+
+Beveiliging: het publieke webformulier stond zwak omdat Turnstile open faalde als het geheim ontbrak en er geen snelheidsbegrenzing was. Gefixt: Turnstile faalt nu dicht in productie en er staat een snelheidsbegrenzer op het formulier. Bestandsuploads vertrouwden enkel de door de client opgegeven Content-Type: nu valideert de server de inhoud echt (afbeeldingen worden gedecodeerd, PDF wordt op magische bytes gecontroleerd) zoals het websitepad al deed. Swagger staat niet langer open in productie. Openstaand voor de gebruiker: de service_role sleutel roteren en per omgeving scheiden.
+
+Performantie: de service en werkbonlijsten deden per rij een aparte query voor de medewerkersnaam (N plus 1). Gefixt met het dictionarypatroon dat de planning al gebruikte. De leadlijst gaf de volledige entiteit terug inclusief de wizardblob: nu een smalle projectie. Twee indexen toegevoegd (planning op medewerker en werkbon op status). Nog aanbevolen: paginalazyloading in de frontend voor de veld PWA.
+
+Randgevallen: factuurregels waren op geen enkele laag begrensd zodat een negatieve of nulfactuur goedgekeurd kon worden. Gefixt met een controle op de regel en op het totaal en met een databankconstraint. Werkboneinduren konden vóór de beginuren liggen: nu geweigerd.
+
+Privacy (TS-03): de bewaartermijn `bewaren_tot` wordt nergens gezet of opgeruimd en het recht om vergeten te worden bestaat enkel als soft delete. Dit blijft openstaand als bewust ontwerpwerk omdat de bewaartermijnen per entiteit een beslissing van de klant vragen; het staat als blok in de backlog. PII in de logs is beperkt: de emailconsolemodus maskeert nu het adres.
+
+### Staande auditchecklist (herbruikbare prompts)
+
+Vraag me een van deze rondes uit te voeren; de eerste twee kunnen zonder uitrol, de derde is het sterkst na een uitrol met ingelogde browser.
+
+1. Aanvallersaudit: probeer elk endpoint zonder login en met de verkeerde rol, probeer records van iemand anders op te vragen via geraden ids, spam het webformulier, zoek secrets in de repo en controleer CORS en de foutmeldingen op informatielekken.
+2. Performantieronde: zoek N plus 1 queries in de controllers, ontbrekende indexen op veelgebruikte filters, te grote responses en de bundelgrootte van de frontend.
+3. Visuele doorloop: klik met de browser elk scherm op staging door en beoordeel lege staten, foutstaten, lange namen, afgebroken teksten en huisstijlafwijkingen.
+4. Randgevallenaudit: test rare invoer overal, negatieve aantallen en prijzen op factuurregels, extreem lange namen, emoji, datums in het verleden bij planning en een offerte van nul euro.
+5. Privacyronde tegen TS-03: wordt `bewaren_tot` ergens gezet en opgeruimd, staan er persoonsgegevens in logs en wie kan de audittrail lezen.
+
 ## Beveiligingsafspraken in deze repo
 
 - De backend verbindt als de rol `erp_app` (geen eigenaar, geen bypass) en zet per verzoek

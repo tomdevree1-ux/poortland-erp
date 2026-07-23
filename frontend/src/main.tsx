@@ -69,7 +69,8 @@ declare module '@tanstack/react-router' {
 }
 
 const queryClient = new QueryClient({
-  defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: false } }
+  // Standaard 30s vers zodat navigeren niet elke lijst opnieuw ophaalt (audit performantie 4).
+  defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: false, staleTime: 30_000 } }
 })
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
