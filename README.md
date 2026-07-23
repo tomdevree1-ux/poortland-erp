@@ -281,6 +281,16 @@ realisatiespagina. Ververs de snapshot met een nieuwe kopie van de marketingsite
 `website_test/` voor je opnieuw uitrolt. De echte marketingsite blijft los van deze repo;
 `website_test/` is enkel een testkopie voor staging.
 
+**Regenereren uit de bron (belangrijk).** De bestanden `website_test/js/01` tot `10-nl.js`
+zijn gecompileerde blokken uit de bron `Poortland website/index.html` (babel classic
+runtime, in een IIFE, geen minify). Patch ze dus niet los, want dan loopt de snapshot uit
+de bron en verdwijnt broninhoud bij de volgende herbouw (zo raakte de tijdlijnpagina ooit
+weg). Wijzig altijd de bron `index.html` en genereer de blokken opnieuw met
+`_build/build_production.js` (of een gelijkwaardig babelscript), waarna je `js/01` tot `10`
+in `website_test/js/` vervangt. Het design system `_ds_bundle.js`, de ERP scripts en
+`js/11-erp-realisaties.js` blijven ongewijzigd; `index.html` verwijst naar dezelfde
+bestandsnamen.
+
 ## Repo naar GitHub met CI (kwaliteitsronde)
 
 De workflow `.github/workflows/ci.yml` draait bij elke push: backend build met
