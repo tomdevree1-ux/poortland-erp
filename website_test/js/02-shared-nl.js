@@ -4268,13 +4268,7 @@ var CATEGORIEEN = {
         foto: "media/metaal/Modern/Glenfiddich%20%20%20%20%20%20%20.jpg"
       }, {
         naam: "Glenfiddich",
-        foto: "media/metaal/Modern/Glenfiddich%20%20%20%20%20%20.jpg"
-      }, {
-        naam: "Glenfiddich",
         foto: "media/metaal/Modern/Glenfiddich%20%20%20%20%20.jpg"
-      }, {
-        naam: "Glenfiddich",
-        foto: "media/metaal/Modern/Glenfiddich%20%20%20%20.jpg"
       }, {
         naam: "Glenfiddich",
         foto: "media/metaal/Modern/Glenfiddich%20%20%20.jpg"
@@ -4461,9 +4455,6 @@ var CATEGORIEEN = {
       }, {
         naam: "Spijlenpoort",
         foto: "media/metaal/Modern/Spijlenpoort.jpg"
-      }, {
-        naam: "Talisker",
-        foto: "media/metaal/Modern/Talisker%20.jpg"
       }, {
         naam: "Talisker",
         foto: "media/metaal/Modern/Talisker.jpg"
