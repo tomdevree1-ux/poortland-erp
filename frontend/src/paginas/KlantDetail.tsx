@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Link, useParams } from '@tanstack/react-router'
+import { Link, useNavigate, useParams } from '@tanstack/react-router'
 import { api } from '../lib/api'
 import { datum, leeg, persoon as volledigeNaam, weergaveNaam } from '../lib/formaat'
 import type { Klant } from '../lib/types'
@@ -21,6 +21,15 @@ export default function KlantDetail() {
   const [fout, zetFout] = useState<string>()
   const { data } = useQuery({ queryKey: ['klant', klantId], queryFn: () => api.get<KlantDossier>(`/klanten/${klantId}`) })
   const ververs = () => { zetFout(undefined); qc.invalidateQueries({ queryKey: ['klant', klantId] }) }
+  const navigeer = useNavigate()
+  const { data: mij } = useQuery({ queryKey: ['mij'], queryFn: () => api.get<{ rollen: string[] }>('/medewerkers/mij'), staleTime: 5 * 60 * 1000 })
+  const isBeheerder = mij?.rollen.includes('beheerder') ?? false
+  const [verwijderOpen, zetVerwijderOpen] = useState(false)
+  const verwijderKlant = useMutation({
+    mutationFn: () => api.del(`/klanten/${klantId}`),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['klanten'] }); navigeer({ to: '/klanten' }) },
+    onError: (f: unknown) => { zetVerwijderOpen(false); zetFout(f instanceof Error ? f.message : 'Verwijderen mislukt.') }
+  })
 
   const [persoonOpen, zetPersoonOpen] = useState(false)
   const [bewerkId, zetBewerkId] = useState<string>()
@@ -99,7 +108,15 @@ export default function KlantDetail() {
   const { klant, projecten, contactmomenten } = data
   return (
     <>
-      <PaginaKop eyebrow="Klantfiche" titel={weergaveNaam(klant)} />
+      <PaginaKop eyebrow="Klantfiche" titel={weergaveNaam(klant)}
+        actie={isBeheerder ? <Knop variant="destructief" onClick={() => zetVerwijderOpen(true)}>Verwijderen</Knop> : undefined} />
+      <Modaal open={verwijderOpen} titel="Klant verwijderen?" onSluit={() => zetVerwijderOpen(false)}>
+        <p className="text-sm text-inkt-body">Dit verwijdert {weergaveNaam(klant)} uit de werking. De audit trail bewaart de historiek. Een klant met lopende dossiers kan niet verwijderd worden; verwijder dan eerst de dossiers.</p>
+        <div className="mt-6 flex justify-end gap-2">
+          <Knop type="button" variant="ghost" onClick={() => zetVerwijderOpen(false)}>Annuleren</Knop>
+          <Knop variant="destructief" disabled={verwijderKlant.isPending} onClick={() => verwijderKlant.mutate()}>{verwijderKlant.isPending ? 'Bezig…' : 'Verwijderen'}</Knop>
+        </div>
+      </Modaal>
       {fout && <div className="mb-4"><Melding soort="fout">{fout}</Melding></div>}
       <div className="grid grid-cols-2 gap-6">
         <Paneel titel="Gegevens" actie={<PotloodKnop onClick={openKlantBewerk} />}>

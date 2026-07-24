@@ -94,6 +94,23 @@ public class KlantenController(PoortlandDbContext db, ClaimsContext claims) : Co
         return Ok(klant);
     }
 
+    // Verwijderen is aan de beheerder (rollenmatrix: klant D) en blijft soft delete.
+    // Een klant met lopende dossiers kan niet weg: eerst het dossier verwijderen,
+    // zo blijft de historiek consistent en verweest er geen project.
+    [HttpDelete("{id:guid}")]
+    [VereistRol("beheerder")]
+    public async Task<IActionResult> Verwijder(Guid id)
+    {
+        var klant = await db.Klanten.FirstOrDefaultAsync(k => k.Id == id && k.VerwijderdOp == null);
+        if (klant is null) return NotFound();
+        var heeftDossiers = await db.Projecten.AnyAsync(p => p.KlantId == id && p.VerwijderdOp == null);
+        if (heeftDossiers)
+            return Conflict(new { fout = "Deze klant heeft nog dossiers. Verwijder eerst de dossiers." });
+        klant.VerwijderdOp = DateTimeOffset.UtcNow;
+        await db.SaveChangesAsync();
+        return Ok(new { klant.Id, verwijderd = true });
+    }
+
     // Contactpersonen bij de klant: tuinman, architect, elektricien, concierge...
     [HttpPost("{id:guid}/contactpersonen")]
     [VereistRol("verkoop")]

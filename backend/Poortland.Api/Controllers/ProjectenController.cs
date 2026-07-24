@@ -66,4 +66,18 @@ public class ProjectenController(PoortlandDbContext db) : ControllerBase
             .OrderByDescending(c => c.Datum).Take(50).ToListAsync();
         return Ok(new { project, offertes, order, communicatie, contactmomenten });
     }
+
+    // Verwijderen is aan de beheerder (rollenmatrix: project D) en blijft soft delete.
+    // Handig om testdossiers op te kuisen; de audit trail bewaart de historiek en
+    // onderliggende records blijven onbereikbaar via het verborgen dossier.
+    [HttpDelete("{id:guid}")]
+    [VereistRol("beheerder")]
+    public async Task<IActionResult> Verwijder(Guid id)
+    {
+        var project = await db.Projecten.FirstOrDefaultAsync(p => p.Id == id && p.VerwijderdOp == null);
+        if (project is null) return NotFound();
+        project.VerwijderdOp = DateTimeOffset.UtcNow;
+        await db.SaveChangesAsync();
+        return Ok(new { project.Id, verwijderd = true });
+    }
 }

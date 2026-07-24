@@ -23,6 +23,14 @@ export default function DossierDetail() {
   const qc = useQueryClient()
   const [tab, zetTab] = useState<'overzicht' | 'productie' | 'offertes' | 'communicatie'>('overzicht')
   const { data } = useQuery({ queryKey: ['dossier', projectId], queryFn: () => api.get<Dossier>(`/projecten/${projectId}`) })
+  const { data: mij } = useQuery({ queryKey: ['mij'], queryFn: () => api.get<{ rollen: string[] }>('/medewerkers/mij'), staleTime: 5 * 60 * 1000 })
+  const isBeheerder = mij?.rollen.includes('beheerder') ?? false
+  const [verwijderOpen, zetVerwijderOpen] = useState(false)
+  const verwijderDossier = useMutation({
+    mutationFn: () => api.del(`/projecten/${projectId}`),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['dossiers'] }); navigeer({ to: '/dossiers' }) },
+    onError: () => zetVerwijderOpen(false)
+  })
   const { data: planning } = useQuery({
     queryKey: ['dossier-planning', projectId],
     queryFn: () => api.get<PlanningsItemRij[]>(`/projecten/${projectId}/planning`)
@@ -100,8 +108,18 @@ export default function DossierDetail() {
     <>
       <PaginaKop eyebrow={project.nummer ? `Dossier ${project.nummer}` : 'Dossier'}
         titel={weergaveNaam(project.klant)}
-        actie={<Knop variant="primair" onClick={() => maakOfferte.mutate()} disabled={maakOfferte.isPending}>
-          {offertes.length ? 'Nieuwe offerteversie ↗' : 'Offerte maken ↗'}</Knop>} />
+        actie={<div className="flex items-center gap-2">
+          {isBeheerder && <Knop variant="destructief" onClick={() => zetVerwijderOpen(true)}>Verwijderen</Knop>}
+          <Knop variant="primair" onClick={() => maakOfferte.mutate()} disabled={maakOfferte.isPending}>
+            {offertes.length ? 'Nieuwe offerteversie ↗' : 'Offerte maken ↗'}</Knop>
+        </div>} />
+      <Modaal open={verwijderOpen} titel="Dossier verwijderen?" onSluit={() => zetVerwijderOpen(false)}>
+        <p className="text-sm text-inkt-body">Dit verwijdert dossier {project.nummer ?? ''} van {weergaveNaam(project.klant)} uit de werking. De audit trail bewaart de historiek.</p>
+        <div className="mt-6 flex justify-end gap-2">
+          <Knop type="button" variant="ghost" onClick={() => zetVerwijderOpen(false)}>Annuleren</Knop>
+          <Knop variant="destructief" disabled={verwijderDossier.isPending} onClick={() => verwijderDossier.mutate()}>{verwijderDossier.isPending ? 'Bezig…' : 'Verwijderen'}</Knop>
+        </div>
+      </Modaal>
       <div className="mb-5 flex gap-1 border-b border-inkt/10">
         {tabs.map(([sleutel, tekst]) => (
           <button key={sleutel} onClick={() => zetTab(sleutel)}
