@@ -4372,8 +4372,314 @@ var CATEGORIEEN = {
     }, {
       tab: "Modern",
       types: [{
-        naam: '',
-        foto: ''
+        naam: "Allegro",
+        foto: "media/metaal/Modern/Allegro%20%20.jpg"
+      }, {
+        naam: "Allegro",
+        foto: "media/metaal/Modern/Allegro%20.jpg"
+      }, {
+        naam: "Allegro",
+        foto: "media/metaal/Modern/Allegro.jpg"
+      }, {
+        naam: "Arno",
+        foto: "media/metaal/Modern/Arno%20%20%20%20.jpg"
+      }, {
+        naam: "Arno",
+        foto: "media/metaal/Modern/Arno%20%20%20.jpg"
+      }, {
+        naam: "Arno",
+        foto: "media/metaal/Modern/Arno%20.jpg"
+      }, {
+        naam: "Arno",
+        foto: "media/metaal/Modern/Arno.jpg"
+      }, {
+        naam: "Arno futuris",
+        foto: "media/metaal/Modern/Arno%20futuris.jpg"
+      }, {
+        naam: "Boogpoort",
+        foto: "media/metaal/Modern/Boogpoort%20.jpg"
+      }, {
+        naam: "Boogpoort",
+        foto: "media/metaal/Modern/Boogpoort.jpg"
+      }, {
+        naam: "Contessa",
+        foto: "media/metaal/Modern/Contessa.jpg"
+      }, {
+        naam: "Corni",
+        foto: "media/metaal/Modern/Corni%20%20%20.jpg"
+      }, {
+        naam: "Corni",
+        foto: "media/metaal/Modern/Corni%20.jpg"
+      }, {
+        naam: "Corni",
+        foto: "media/metaal/Modern/Corni.jpg"
+      }, {
+        naam: "Ebro",
+        foto: "media/metaal/Modern/Ebro.jpg"
+      }, {
+        naam: "Espoort",
+        foto: "media/metaal/Modern/Espoort%20.jpg"
+      }, {
+        naam: "Espoort",
+        foto: "media/metaal/Modern/Espoort.jpg"
+      }, {
+        naam: "Glen Kwai",
+        foto: "media/metaal/Modern/Glen%20Kwai%20%20%20%20%20%20%20.jpg"
+      }, {
+        naam: "Glen Kwai",
+        foto: "media/metaal/Modern/Glen%20Kwai%20%20%20%20%20%20.jpg"
+      }, {
+        naam: "Glen Kwai",
+        foto: "media/metaal/Modern/Glen%20Kwai%20%20%20%20.jpg"
+      }, {
+        naam: "Glen Kwai",
+        foto: "media/metaal/Modern/Glen%20Kwai%20%20%20.jpg"
+      }, {
+        naam: "Glen Kwai",
+        foto: "media/metaal/Modern/Glen%20Kwai%20%20.jpg"
+      }, {
+        naam: "Glen Kwai",
+        foto: "media/metaal/Modern/Glen%20Kwai%20.jpg"
+      }, {
+        naam: "Glen Kwai",
+        foto: "media/metaal/Modern/Glen%20Kwai.jpg"
+      }, {
+        naam: "Glenfiddich",
+        foto: "media/metaal/Modern/Glenfiddich%20%20%20%20%20%20%20%20%20%20%20%20%20.jpg"
+      }, {
+        naam: "Glenfiddich",
+        foto: "media/metaal/Modern/Glenfiddich%20%20%20%20%20%20%20%20%20%20.jpg"
+      }, {
+        naam: "Glenfiddich",
+        foto: "media/metaal/Modern/Glenfiddich%20%20%20%20%20%20%20%20%20.jpg"
+      }, {
+        naam: "Glenfiddich",
+        foto: "media/metaal/Modern/Glenfiddich%20%20%20%20%20%20%20.jpg"
+      }, {
+        naam: "Glenfiddich",
+        foto: "media/metaal/Modern/Glenfiddich%20%20%20%20%20%20.jpg"
+      }, {
+        naam: "Glenfiddich",
+        foto: "media/metaal/Modern/Glenfiddich%20%20%20%20%20.jpg"
+      }, {
+        naam: "Glenfiddich",
+        foto: "media/metaal/Modern/Glenfiddich%20%20%20%20.jpg"
+      }, {
+        naam: "Glenfiddich",
+        foto: "media/metaal/Modern/Glenfiddich%20%20%20.jpg"
+      }, {
+        naam: "Glenfiddich",
+        foto: "media/metaal/Modern/Glenfiddich%20%20.jpg"
+      }, {
+        naam: "Glenfiddich",
+        foto: "media/metaal/Modern/Glenfiddich%20.jpg"
+      }, {
+        naam: "Glenfiddich",
+        foto: "media/metaal/Modern/Glenfiddich.jpg"
+      }, {
+        naam: "Glenfiddich plane",
+        foto: "media/metaal/Modern/Glenfiddich%20plane%20%20%20.jpg"
+      }, {
+        naam: "Glenfiddich plane",
+        foto: "media/metaal/Modern/Glenfiddich%20plane%20%20.jpg"
+      }, {
+        naam: "Glenfiddich plane",
+        foto: "media/metaal/Modern/Glenfiddich%20plane%20.jpg"
+      }, {
+        naam: "Glenfiddich plane",
+        foto: "media/metaal/Modern/Glenfiddich%20plane.jpg"
+      }, {
+        naam: "Glenfiddich Verticaal",
+        foto: "media/metaal/Modern/Glenfiddich%20Verticaal.jpg"
+      }, {
+        naam: "Japura",
+        foto: "media/metaal/Modern/Japura%20.jpg"
+      }, {
+        naam: "Japura",
+        foto: "media/metaal/Modern/Japura.jpg"
+      }, {
+        naam: "Kama",
+        foto: "media/metaal/Modern/Kama%20%20%20%20.jpg"
+      }, {
+        naam: "Kama",
+        foto: "media/metaal/Modern/Kama%20%20%20.jpg"
+      }, {
+        naam: "Kama",
+        foto: "media/metaal/Modern/Kama%20%20.jpg"
+      }, {
+        naam: "Kama",
+        foto: "media/metaal/Modern/Kama%20.jpg"
+      }, {
+        naam: "Kama",
+        foto: "media/metaal/Modern/Kama.jpg"
+      }, {
+        naam: "Kama zonder middenstijl",
+        foto: "media/metaal/Modern/Kama%20zonder%20middenstijl.jpg"
+      }, {
+        naam: "Kassai",
+        foto: "media/metaal/Modern/Kassai%20.jpg"
+      }, {
+        naam: "Kassai",
+        foto: "media/metaal/Modern/Kassai.jpg"
+      }, {
+        naam: "Killian",
+        foto: "media/metaal/Modern/Killian.jpg"
+      }, {
+        naam: "Kwai",
+        foto: "media/metaal/Modern/Kwai%20%20%20.jpg"
+      }, {
+        naam: "Kwai combi glas",
+        foto: "media/metaal/Modern/Kwai%20combi%20glas%20.jpg"
+      }, {
+        naam: "Kwai combi glas",
+        foto: "media/metaal/Modern/Kwai%20combi%20glas.jpg"
+      }, {
+        naam: "Kwai met boog",
+        foto: "media/metaal/Modern/Kwai%20met%20boog%20%20%20.jpg"
+      }, {
+        naam: "Kwai met boog",
+        foto: "media/metaal/Modern/Kwai%20met%20boog%20.jpg"
+      }, {
+        naam: "Kwai met boog",
+        foto: "media/metaal/Modern/Kwai%20met%20boog.jpg"
+      }, {
+        naam: "Kwai perfo",
+        foto: "media/metaal/Modern/Kwai%20perfo%20%20%20%20%20%20%20%20%20%20.jpg"
+      }, {
+        naam: "Kwai perfo",
+        foto: "media/metaal/Modern/Kwai%20perfo%20%20%20%20%20%20%20%20.jpg"
+      }, {
+        naam: "Kwai perfo",
+        foto: "media/metaal/Modern/Kwai%20perfo%20%20%20%20%20%20%20.jpg"
+      }, {
+        naam: "Kwai perfo",
+        foto: "media/metaal/Modern/Kwai%20perfo%20%20%20%20%20%20.jpg"
+      }, {
+        naam: "Kwai perfo",
+        foto: "media/metaal/Modern/Kwai%20perfo%20%20%20%20%20.jpg"
+      }, {
+        naam: "Kwai perfo",
+        foto: "media/metaal/Modern/Kwai%20perfo%20%20%20%20.jpg"
+      }, {
+        naam: "Kwai perfo",
+        foto: "media/metaal/Modern/Kwai%20perfo%20%20%20.jpg"
+      }, {
+        naam: "Kwai perfo",
+        foto: "media/metaal/Modern/Kwai%20perfo%20.jpg"
+      }, {
+        naam: "Kwai perfo",
+        foto: "media/metaal/Modern/Kwai%20perfo.%20.jpg"
+      }, {
+        naam: "Kwai perfo",
+        foto: "media/metaal/Modern/Kwai%20perfo.jpg"
+      }, {
+        naam: "Kwai plane",
+        foto: "media/metaal/Modern/Kwai%20plane%20%20%20%20.jpg"
+      }, {
+        naam: "Kwai plane",
+        foto: "media/metaal/Modern/Kwai%20plane%20%20%20.jpg"
+      }, {
+        naam: "Kwai plane",
+        foto: "media/metaal/Modern/Kwai%20plane%20.jpg"
+      }, {
+        naam: "Kwai plane",
+        foto: "media/metaal/Modern/Kwai%20plane.%20.jpg"
+      }, {
+        naam: "Kwai plane",
+        foto: "media/metaal/Modern/Kwai%20plane.jpg"
+      }, {
+        naam: "Kwai plane ligna",
+        foto: "media/metaal/Modern/Kwai%20plane%20ligna%20%20%20%20.jpg"
+      }, {
+        naam: "Kwai plane ligna",
+        foto: "media/metaal/Modern/Kwai%20plane%20ligna%20%20%20.jpg"
+      }, {
+        naam: "Kwai plane ligna",
+        foto: "media/metaal/Modern/Kwai%20plane%20ligna%20%20.jpg"
+      }, {
+        naam: "Kwai plane ligna",
+        foto: "media/metaal/Modern/Kwai%20plane%20ligna%20.jpg"
+      }, {
+        naam: "Kwai plane ligna",
+        foto: "media/metaal/Modern/Kwai%20plane%20ligna.jpg"
+      }, {
+        naam: "Kwai vlak",
+        foto: "media/metaal/Modern/Kwai%20vlak.jpg"
+      }, {
+        naam: "Kwai volle plaat",
+        foto: "media/metaal/Modern/Kwai%20volle%20plaat.jpg"
+      }, {
+        naam: "Kwai volle plaat combi perfo",
+        foto: "media/metaal/Modern/Kwai%20volle%20plaat%20combi%20perfo.jpg"
+      }, {
+        naam: "Notec",
+        foto: "media/metaal/Modern/Notec.jpg"
+      }, {
+        naam: "Po",
+        foto: "media/metaal/Modern/Po.jpg"
+      }, {
+        naam: "Puntpoort",
+        foto: "media/metaal/Modern/Puntpoort%20%20.jpg"
+      }, {
+        naam: "Puntpoort",
+        foto: "media/metaal/Modern/Puntpoort%20.jpg"
+      }, {
+        naam: "Puntpoort",
+        foto: "media/metaal/Modern/Puntpoort.jpg"
+      }, {
+        naam: "Robson met plaat",
+        foto: "media/metaal/Modern/Robson%20met%20plaat.jpg"
+      }, {
+        naam: "Spijlenpoort",
+        foto: "media/metaal/Modern/Spijlenpoort%20%20%20%20%20%20.jpg"
+      }, {
+        naam: "Spijlenpoort",
+        foto: "media/metaal/Modern/Spijlenpoort%20%20%20%20%20.jpg"
+      }, {
+        naam: "Spijlenpoort",
+        foto: "media/metaal/Modern/Spijlenpoort%20%20%20%20.jpg"
+      }, {
+        naam: "Spijlenpoort",
+        foto: "media/metaal/Modern/Spijlenpoort%20%20%20.jpg"
+      }, {
+        naam: "Spijlenpoort",
+        foto: "media/metaal/Modern/Spijlenpoort%20%20.jpg"
+      }, {
+        naam: "Spijlenpoort",
+        foto: "media/metaal/Modern/Spijlenpoort%20.jpg"
+      }, {
+        naam: "Spijlenpoort",
+        foto: "media/metaal/Modern/Spijlenpoort.jpg"
+      }, {
+        naam: "Talisker",
+        foto: "media/metaal/Modern/Talisker%20.jpg"
+      }, {
+        naam: "Talisker",
+        foto: "media/metaal/Modern/Talisker.jpg"
+      }, {
+        naam: "Tigris",
+        foto: "media/metaal/Modern/Tigris%20%20%20%20%20%20%20.jpg"
+      }, {
+        naam: "Tigris",
+        foto: "media/metaal/Modern/Tigris%20%20%20%20%20%20.jpg"
+      }, {
+        naam: "Tigris",
+        foto: "media/metaal/Modern/Tigris%20%20%20%20%20.jpg"
+      }, {
+        naam: "Tigris",
+        foto: "media/metaal/Modern/Tigris%20%20%20%20.jpg"
+      }, {
+        naam: "Tigris",
+        foto: "media/metaal/Modern/Tigris%20%20%20.jpg"
+      }, {
+        naam: "Tigris",
+        foto: "media/metaal/Modern/Tigris%20%20.jpg"
+      }, {
+        naam: "Tigris",
+        foto: "media/metaal/Modern/Tigris%20.jpg"
+      }, {
+        naam: "Tigris",
+        foto: "media/metaal/Modern/Tigris.jpg"
       }]
     }, {
       tab: "Unieke poorten",
