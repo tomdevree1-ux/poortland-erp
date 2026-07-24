@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Poortland.Api.Auth;
 using Poortland.Api.Data;
 
 namespace Poortland.Api.Controllers;
