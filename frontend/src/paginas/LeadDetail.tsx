@@ -23,6 +23,22 @@ function parseWizard(json?: string): WizardStap[] | null {
   } catch { return null }
 }
 
+// Nette veldnamen voor de ruwe sleutels uit de websitewizard (poorten,
+// overkappingen, automatisering en onderhoud). Onbekende sleutels tonen we as is.
+const wizardVeldLabels: Record<string, string> = {
+  Dienst: 'Dienst', typePoort: 'Type poort', typeOpening: 'Type opening',
+  breedte: 'Breedte (cm)', zijhoogte: 'Zijhoogte (cm)', bediening: 'Type bediening',
+  uitvoering: 'Uitvoering', lengte: 'Lengte (cm)', hoogte: 'Hoogte (cm)',
+  wanden: 'Aantal wanden', glazenSchuifwand: 'Glazen schuifwand', zonnewerendGlas: 'Zonnewerend glas',
+  autoBeschrijving: 'Gegevens van de poort', bouwjaar: 'Bouwjaar', typeMotor: 'Type of merk motor'
+}
+const wizardLabel = (l: string) => wizardVeldLabels[l] ?? l
+const wizardDienstTekst: Record<string, string> = {
+  poorten: 'Poorten', overkappingen: 'Overkapping', automatisering: 'Automatisering', onderhoud: 'Onderhoud'
+}
+const wizardWaarde = (veld: { label: string; waarde: string }) =>
+  veld.label === 'Dienst' ? (wizardDienstTekst[veld.waarde] ?? veld.waarde) : veld.waarde
+
 export default function LeadDetail() {
   const { leadId } = useParams({ from: '/app/leads/$leadId' })
   const zoek = useSearch({ strict: false }) as { actie?: string }
@@ -45,9 +61,11 @@ export default function LeadDetail() {
 
   const wijzig = useMutation({
     mutationFn: (deel: Record<string, unknown>) => api.patch<Lead>(`/leads/${leadId}`, deel),
-    onSuccess: () => { ververs(); zetBewerkOpen(false) },
+    onSuccess: () => { ververs(); zetBewerkOpen(false); zetWizardOpen(false) },
     onError: f => zetFout((f as Error).message)
   })
+  const [wizardOpen, zetWizardOpen] = useState(false)
+  const [wizardVorm, zetWizardVorm] = useState<WizardStap[] | null>(null)
 
   const [vorm, zetVorm] = useState<{ naam: string; voornaam: string; email: string; telefoon: string
     klantType: string; bedrijfsnaam: string; btwNummer: string
@@ -196,6 +214,11 @@ export default function LeadDetail() {
 
   if (!lead) return null
   const wizard = parseWizard(lead.wizardGegevens)
+  const openWizardBewerk = () => {
+    if (!wizard) return
+    zetWizardVorm(wizard.map(s => ({ titel: s.titel, velden: s.velden.map(v => ({ ...v })) })))
+    zetWizardOpen(true)
+  }
   return (
     <>
       <PaginaKop eyebrow="Verkoop · lead" titel={weergaveNaam(lead) || leeg(lead.email)}
@@ -277,17 +300,39 @@ export default function LeadDetail() {
         </Paneel>
 
         {wizard && (
-          <Paneel titel="Offerteaanvraag (wizard van de website)">
+          <Paneel titel="Offerteaanvraag (wizard van de website)" actie={bewerkbaar && <PotloodKnop onClick={openWizardBewerk} />}>
             <dl className="space-y-1.5 text-sm">
               {wizard.flatMap(s => s.velden).filter(v => v.waarde).map((veld, i) => (
                 <div key={i} className="flex justify-between gap-4 border-b border-inkt/[.06] py-1.5 last:border-0">
-                  <dt className="text-inkt-muted">{veld.label}</dt>
-                  <dd className="text-right font-medium">{veld.waarde}</dd>
+                  <dt className="text-inkt-muted">{wizardLabel(veld.label)}</dt>
+                  <dd className="text-right font-medium">{wizardWaarde(veld)}</dd>
                 </div>
               ))}
             </dl>
           </Paneel>
         )}
+        <Modaal open={wizardOpen} titel="Offerteaanvraag bewerken" onSluit={() => zetWizardOpen(false)}>
+          {wizardVorm && (
+            <form className="space-y-4" onSubmit={e => {
+              e.preventDefault()
+              wijzig.mutate({ wizardGegevens: JSON.stringify({ stappen: wizardVorm }) })
+            }}>
+              {wizardVorm.flatMap((s, si) => s.velden.map((v, vi) => (
+                <Invoer key={`${si}-${vi}`} label={wizardLabel(v.label)} optioneel value={v.waarde}
+                  onChange={e => zetWizardVorm(w => {
+                    if (!w) return w
+                    const kopie = w.map(st => ({ titel: st.titel, velden: st.velden.map(x => ({ ...x })) }))
+                    kopie[si].velden[vi].waarde = e.target.value
+                    return kopie
+                  })} />
+              )))}
+              <div className="flex justify-end gap-2">
+                <Knop type="button" variant="ghost" onClick={() => zetWizardOpen(false)}>Annuleren</Knop>
+                <Knop variant="primair" disabled={wijzig.isPending}>{wijzig.isPending ? 'Bezig…' : 'Bewaren'}</Knop>
+              </div>
+            </form>
+          )}
+        </Modaal>
       </div>
 
       <Modaal open={bewerkOpen} titel="Lead bewerken" onSluit={() => zetBewerkOpen(false)}>
