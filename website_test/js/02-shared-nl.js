@@ -2956,7 +2956,10 @@ function CategoriePagina({
     CTASectie
   } = window;
   const [filter, setFilter] = React.useState('Alle');
-  const [modelTab, setModelTab] = React.useState(0);
+  const [modelFilter, setModelFilter] = React.useState('Alle');
+  const modelGroepen = (d.productenGroepen || []).filter(g => (g.types || []).some(t => t.foto));
+  const modelFilters = ['Alle'].concat(modelGroepen.map(g => g.tab));
+  const modelZichtbaar = modelFilter === 'Alle' ? modelGroepen.reduce((a, g) => a.concat((g.types || []).filter(t => t.foto)), []) : ((modelGroepen.find(g => g.tab === modelFilter) || {}).types || []).filter(t => t.foto);
   React.useEffect(() => {
     if (d.title) document.title = d.title;
     if (window.scrollTo) window.scrollTo(0, 0);
@@ -3323,54 +3326,56 @@ function CategoriePagina({
     intro: d.productenIntro || 'Van strak en modern tot klassiek en landelijk, telkens volledig op maat gemaakt.'
   })), d.productenGroepen ? /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("div", {
     style: {
-      maxWidth: 1000,
-      margin: '46px auto 0'
+      maxWidth: 1100,
+      margin: '40px auto 0'
     }
   }, /*#__PURE__*/React.createElement("div", {
-    role: "tablist",
+    role: "group",
     "aria-label": d.productenTitel,
     style: {
       display: 'flex',
       flexWrap: 'wrap',
-      gap: 4,
-      rowGap: 4,
+      gap: 8,
       justifyContent: 'center'
     }
-  }, d.productenGroepen.map((g, i) => /*#__PURE__*/React.createElement("button", {
-    key: g.tab,
-    role: "tab",
-    type: "button",
-    "aria-selected": modelTab === i,
-    onClick: () => setModelTab(i),
+  }, modelFilters.map(f => {
+    const actief = modelFilter === f;
+    return /*#__PURE__*/React.createElement("button", {
+      key: f,
+      type: "button",
+      "aria-pressed": actief,
+      onClick: () => setModelFilter(f),
+      style: {
+        fontFamily: 'var(--font-label)',
+        fontSize: 11,
+        fontWeight: 600,
+        letterSpacing: '0.1em',
+        textTransform: 'uppercase',
+        padding: '9px 16px',
+        borderRadius: 999,
+        cursor: 'pointer',
+        transition: 'all var(--dur) var(--ease-out)',
+        background: actief ? 'var(--accent)' : 'transparent',
+        color: actief ? '#fff' : 'var(--text-body)',
+        border: '1px solid ' + (actief ? 'var(--accent)' : 'var(--line-on-light)')
+      }
+    }, f);
+  })), /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-sans)',
-      fontSize: 15,
-      fontWeight: 600,
-      cursor: 'pointer',
-      padding: '12px 22px',
-      border: '1px solid var(--line-on-light-soft)',
-      borderBottom: 0,
-      borderRadius: '8px 8px 0 0',
-      position: 'relative',
-      bottom: -1,
-      background: modelTab === i ? 'var(--surface-card)' : 'transparent',
-      color: modelTab === i ? 'var(--text-heading)' : 'var(--text-muted)'
+      fontSize: 13,
+      color: 'var(--text-muted)',
+      textAlign: 'center',
+      marginTop: 18
     }
-  }, g.tab))), /*#__PURE__*/React.createElement("div", {
-    role: "tabpanel",
-    style: {
-      background: 'var(--surface-card)',
-      border: '1px solid var(--line-on-light-soft)',
-      borderRadius: '10px',
-      padding: '30px'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
+  }, modelZichtbaar.length, " ", modelZichtbaar.length === 1 ? 'model' : 'modellen'), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
-      gap: 18
+      gap: 18,
+      marginTop: 18
     }
-  }, ((d.productenGroepen[modelTab] || {}).types || []).map((t, i) => /*#__PURE__*/React.createElement("div", {
+  }, modelZichtbaar.map((t, i) => /*#__PURE__*/React.createElement("div", {
     key: i,
     style: {
       display: 'flex',
@@ -3383,7 +3388,7 @@ function CategoriePagina({
       borderRadius: 'var(--radius-md)',
       overflow: 'hidden',
       background: 'var(--surface-paper-2)',
-      border: '1px dashed var(--line-on-light)',
+      border: '1px solid var(--line-on-light-soft)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center'
@@ -3399,7 +3404,7 @@ function CategoriePagina({
       padding: '0 12px',
       textAlign: 'center'
     }
-  }, t.naam || 'Type'), t.foto ? /*#__PURE__*/React.createElement("img", {
+  }, t.naam || 'Type'), /*#__PURE__*/React.createElement("img", {
     src: t.foto,
     alt: t.naam || 'Metalen poort',
     loading: "lazy",
@@ -3413,7 +3418,7 @@ function CategoriePagina({
       height: '100%',
       objectFit: 'cover'
     }
-  }) : null), t.naam ? /*#__PURE__*/React.createElement("div", {
+  })), t.naam ? /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 15,
@@ -3422,7 +3427,7 @@ function CategoriePagina({
       marginTop: 10,
       textAlign: 'center'
     }
-  }, t.naam) : null)))))) : /*#__PURE__*/React.createElement("div", {
+  }, t.naam) : null))))) : /*#__PURE__*/React.createElement("div", {
     className: "pl-cards",
     style: {
       display: 'grid',
@@ -3952,7 +3957,7 @@ var CATEGORIEEN = {
     heroLabel: 'Volledig op maat',
     materiaalFotos: ['media/stalen-poort.jpg', 'media/realisatie-metaal-1.jpeg', 'media/aluminium-poort.jpg', 'media/realisatie-metaal-2.jpeg', 'media/realisatie-alu-1.jpeg'],
     productenTitel: 'Modellen in metaal',
-    productenIntro: 'Hieronder ziet u onze verschillende soorten metalen poorten, ingedeeld per stijl. Kies een stijl om de bijhorende types te zien.',
+    productenIntro: 'Hieronder ziet u onze verschillende soorten metalen poorten, ingedeeld per stijl. Filter op een stijl of bekijk ze allemaal.',
     productenGroepen: [{
       tab: "Klassiek zonder sierpunten",
       types: [{
