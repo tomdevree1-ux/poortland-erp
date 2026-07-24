@@ -4112,8 +4112,44 @@ var CATEGORIEEN = {
     }, {
       tab: "Art Deco",
       types: [{
-        naam: '',
-        foto: ''
+        naam: "Apollo",
+        foto: "media/metaal/Art%20Deco/Apollo%20.jpg"
+      }, {
+        naam: "Apollo",
+        foto: "media/metaal/Art%20Deco/Apollo.jpg"
+      }, {
+        naam: "Loch Lomond",
+        foto: "media/metaal/Art%20Deco/Loch%20Lomond%20%20%20%20.jpg"
+      }, {
+        naam: "Loch Lomond",
+        foto: "media/metaal/Art%20Deco/Loch%20Lomond%20%20.jpg"
+      }, {
+        naam: "Loch Lomond",
+        foto: "media/metaal/Art%20Deco/Loch%20Lomond%20.jpg"
+      }, {
+        naam: "Loch Lomond",
+        foto: "media/metaal/Art%20Deco/Loch%20Lomond.jpg"
+      }, {
+        naam: "Tweed",
+        foto: "media/metaal/Art%20Deco/Tweed%20%20%20%20%20.jpg"
+      }, {
+        naam: "Tweed",
+        foto: "media/metaal/Art%20Deco/Tweed%20%20%20%20.jpg"
+      }, {
+        naam: "Tweed",
+        foto: "media/metaal/Art%20Deco/Tweed%20%20.jpg"
+      }, {
+        naam: "Tweed",
+        foto: "media/metaal/Art%20Deco/Tweed%20.jpg"
+      }, {
+        naam: "Tweed",
+        foto: "media/metaal/Art%20Deco/Tweed.jpg"
+      }, {
+        naam: "Vleet",
+        foto: "media/metaal/Art%20Deco/Vleet%20.jpg"
+      }, {
+        naam: "Vleet",
+        foto: "media/metaal/Art%20Deco/Vleet.jpg"
       }]
     }, {
       tab: "Cottage",
