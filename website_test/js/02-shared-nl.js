@@ -2380,7 +2380,7 @@ function OfferteModal({
       gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
       gap: 14
     }
-  }, [['poorten', 'Poorten', 'Nieuwe poort op maat'], ['overkappingen', 'Overkapping', 'Terras, carport of pergola', true], ['automatisering', 'Automatisering', 'Bestaande poort automatiseren'], ['onderhoud', 'Onderhoud', 'Nazorg en herstelling']].map(([k, t, d, uit]) => uit ? /*#__PURE__*/React.createElement("div", {
+  }, [['poorten', 'Poorten', 'Nieuwe poort op maat'], ['overkappingen', 'Overkapping', 'Terras, carport of pergola'], ['automatisering', 'Automatisering', 'Bestaande poort automatiseren'], ['onderhoud', 'Onderhoud', 'Nazorg en herstelling']].map(([k, t, d, uit]) => uit ? /*#__PURE__*/React.createElement("div", {
     key: k,
     "aria-disabled": "true",
     style: {
@@ -2493,15 +2493,96 @@ function OfferteModal({
     style: {
       height: 18
     }
-  }), Keuze({
-    label: 'Type overkapping',
-    name: 'typeOverkapping',
-    options: ['Terrasoverkapping', 'Carport', 'Pergola', 'Andere / ik weet het niet']
-  }), Keuze({
-    label: 'Uitvoering',
-    name: 'uitvoering',
-    options: ['Vrijstaand', 'Aanbouw tegen woning of gebouw', 'Ik weet het nog niet']
-  }), Field({
+  }), /*#__PURE__*/React.createElement("div", {
+    "data-veld": "uitvoering",
+    style: {
+      marginBottom: 22
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    style: labelSt
+  }, "Uitvoering"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
+      gap: 10
+    }
+  }, [['Aanbouw', 'Tegen de woning of een gebouw', /*#__PURE__*/React.createElement("svg", {
+    key: "a",
+    viewBox: "0 0 64 44",
+    width: "76",
+    height: "52",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    "aria-hidden": "true"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M10 4 V40"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M10 12 L54 18"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M52 18 V40"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M4 40 H60",
+    opacity: "0.35"
+  }))], ['Vrijstaand', 'Los in de tuin of op het terras', /*#__PURE__*/React.createElement("svg", {
+    key: "v",
+    viewBox: "0 0 64 44",
+    width: "76",
+    height: "52",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2.5",
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    "aria-hidden": "true"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M8 14 H56"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M12 14 V40"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M52 14 V40"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M4 40 H60",
+    opacity: "0.35"
+  }))]].map(([naam, sub, figuur]) => {
+    const sel = data.uitvoering === naam;
+    return /*#__PURE__*/React.createElement("button", {
+      key: naam,
+      type: "button",
+      onClick: () => {
+        set('uitvoering', naam);
+        if (naam === 'Aanbouw' && data.wanden === '3') set('wanden', '');
+      },
+      style: {
+        textAlign: 'center',
+        cursor: 'pointer',
+        padding: '18px 16px 16px',
+        borderRadius: 'var(--radius-md)',
+        border: sel ? '2px solid var(--accent)' : '1px solid var(--line-on-light)',
+        background: sel ? 'rgba(138,106,60,0.08)' : '#fff',
+        color: sel ? 'var(--accent)' : 'var(--text-muted)'
+      }
+    }, figuur, /*#__PURE__*/React.createElement("span", {
+      style: {
+        display: 'block',
+        fontFamily: 'var(--font-sans)',
+        fontSize: 15.5,
+        fontWeight: sel ? 600 : 500,
+        color: 'var(--text-heading)',
+        marginTop: 10
+      }
+    }, naam), /*#__PURE__*/React.createElement("span", {
+      style: {
+        display: 'block',
+        fontFamily: 'var(--font-sans)',
+        fontSize: 12.5,
+        color: 'var(--text-muted)',
+        marginTop: 3
+      }
+    }, sub));
+  }))), Field({
     label: 'Lengte in cm',
     name: 'lengte',
     placeholder: 'Bijvoorbeeld: 500',
@@ -2516,6 +2597,18 @@ function OfferteModal({
     name: 'hoogte',
     placeholder: 'Bijvoorbeeld: 250',
     inputMode: 'numeric'
+  }), Keuze({
+    label: 'Aantal wanden',
+    name: 'wanden',
+    options: data.uitvoering === 'Vrijstaand' ? ['Geen', '1', '2', '3'] : ['Geen', '1', '2']
+  }), Keuze({
+    label: 'Glazen schuifwand',
+    name: 'glazenSchuifwand',
+    options: ['Ja', 'Nee']
+  }), Keuze({
+    label: 'Zonnewerend glas',
+    name: 'zonnewerendGlas',
+    options: ['Ja', 'Nee']
   }), Area({
     label: 'Heeft u nog extra informatie of wensen?',
     name: 'opmerkingen',
