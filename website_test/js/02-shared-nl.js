@@ -2156,7 +2156,7 @@ function OfferteModal({
   }, p.label), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(' + (p.min || 190) + 'px, 1fr))',
       gap: 10
     }
   }, p.options.map(o => {
@@ -2518,7 +2518,8 @@ function OfferteModal({
     strokeLinejoin: "round",
     "aria-hidden": "true"
   }, /*#__PURE__*/React.createElement("path", {
-    d: "M10 4 V40"
+    d: "M10 4 V40",
+    stroke: "var(--accent-rust)"
   }), /*#__PURE__*/React.createElement("path", {
     d: "M10 12 L54 18"
   }), /*#__PURE__*/React.createElement("path", {
@@ -2600,6 +2601,7 @@ function OfferteModal({
   }), Keuze({
     label: 'Aantal wanden',
     name: 'wanden',
+    min: 100,
     options: data.uitvoering === 'Vrijstaand' ? ['Geen', '1', '2', '3'] : ['Geen', '1', '2']
   }), Keuze({
     label: 'Glazen schuifwand',
