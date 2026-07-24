@@ -2971,13 +2971,17 @@ function CatChip({
 }) {
   // Puur informatieve stijllabels, bewust niet klikbaar.
   return /*#__PURE__*/React.createElement("span", {
+    "aria-hidden": "true",
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 13.5,
       padding: '9px 16px',
       borderRadius: 999,
       color: 'var(--stone-200)',
-      border: '1px solid var(--line-on-dark-soft)'
+      border: '1px solid var(--line-on-dark-soft)',
+      cursor: 'default',
+      pointerEvents: 'none',
+      userSelect: 'none'
     }
   }, label);
 }
