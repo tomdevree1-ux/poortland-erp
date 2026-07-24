@@ -4672,7 +4672,7 @@ function OverkappingenNL({
     eyebrow: 'Op maat',
     label: 'Afgestemd op de woning',
     h2: 'Ontworpen voor uw woning',
-    beeld: 'media/overkappingen/overkapping-3.jpg',
+    beeld: 'media/overkappingen/overkapping-6.jpg',
     alinea: ['Een overkapping moet niet alleen praktisch zijn. Ze moet ook passen bij de architectuur van uw woning en de inrichting van uw tuin.', 'Daarom kunt u kiezen uit verschillende modellen, kleuren en afwerkingen. Een strak aluminium ontwerp sluit mooi aan bij zowel moderne woningen als gerenoveerde gevels. Afhankelijk van het gekozen systeem is een uitvoering als aanbouw of als vrijstaande overkapping mogelijk.', 'Sommige modellen kunnen met slechts twee staanders een breedte tot zeven meter overspannen. Zo blijft het uitzicht open en krijgt u maximale bewegingsruimte onder de overkapping.']
   }, {
     eyebrow: 'Licht en beschutting',
