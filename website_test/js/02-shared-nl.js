@@ -3926,7 +3926,23 @@ function CategoriePagina({
       color: 'var(--text-muted)',
       marginTop: 4
     }
-  }, k.tekst))))))), /*#__PURE__*/React.createElement("section", {
+  }, k.tekst)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 32
+    }
+  }, /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 15,
+      lineHeight: 1.6,
+      color: 'var(--text-body)',
+      margin: '0 0 14px'
+    }
+  }, "Bekijk ook onze garantiepagina voor meer informatie over onze garanties en de anti corrosie behandeling."), /*#__PURE__*/React.createElement(SButton, {
+    variant: "secondary",
+    arrow: true,
+    onClick: () => onNav('garantie')
+  }, "Bekijk onze garantie"))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-ground)',
       color: 'var(--text-on-dark)',
