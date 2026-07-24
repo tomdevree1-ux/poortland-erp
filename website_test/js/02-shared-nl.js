@@ -2944,6 +2944,73 @@ var CAT_PROCES = [{
   tekst: 'Onze eigen plaatsers monteren de poort en stellen alles zorgvuldig af.'
 }];
 var CAT_FILTERS = ['Alle', 'Modern', 'Klassiek', 'Hout', 'Metaal'];
+
+/* Basisnaam per model voor de filters: varianten zoals "met plaat" of codes
+   zoals DV en ESR vallen weg (Veluwe dubbele cirkel wordt Veluwe), maar echte
+   tweedelige namen blijven heel (Loch Lomond). */
+var MODEL_STOPWOORDEN = {
+  met: 1,
+  zonder: 1,
+  recht: 1,
+  ronde: 1,
+  dubbele: 1,
+  special: 1,
+  plane: 1,
+  perfo: 1,
+  laser: 1,
+  vlak: 1,
+  volle: 1,
+  combi: 1,
+  glas: 1,
+  ligna: 1,
+  open: 1,
+  type: 1,
+  staal: 1,
+  boog: 1,
+  cirkel: 1,
+  cirkels: 1,
+  middenstijl: 1,
+  plaat: 1,
+  punt: 1,
+  punten: 1,
+  sides: 1,
+  side: 1,
+  futuris: 1
+};
+function modelBasisKaart(labels) {
+  var tokens = {};
+  labels.forEach(function (l) {
+    tokens[l] = l.replace(/\s*\(\d+\)\s*$/, '').split(/\s+/).filter(Boolean);
+  });
+  function codeachtig(w) {
+    return /^[A-Z0-9+°().\/-]+$/.test(w) || !!MODEL_STOPWOORDEN[w.toLowerCase()];
+  }
+  var kaart = {};
+  labels.forEach(function (l) {
+    var eigen = tokens[l];
+    var basis = [eigen[0] || l];
+    while (true) {
+      var idx = basis.length;
+      var pref = basis.join(' ').toLowerCase();
+      var groep = labels.filter(function (a) {
+        return tokens[a].slice(0, idx).join(' ').toLowerCase() === pref;
+      });
+      var volgend = null,
+        ok = groep.length > 0 && !!eigen[idx];
+      groep.forEach(function (a) {
+        var t = tokens[a][idx];
+        if (!t || codeachtig(t)) {
+          ok = false;
+          return;
+        }
+        if (volgend === null) volgend = t.toLowerCase();else if (t.toLowerCase() !== volgend) ok = false;
+      });
+      if (ok) basis.push(eigen[idx]);else break;
+    }
+    kaart[l] = basis.join(' ');
+  });
+  return kaart;
+}
 function CategoriePagina({
   onNav,
   data
@@ -2956,10 +3023,13 @@ function CategoriePagina({
     CTASectie
   } = window;
   const [filter, setFilter] = React.useState('Alle');
-  const [modelFilter, setModelFilter] = React.useState('Alle');
-  const modelGroepen = (d.productenGroepen || []).filter(g => (g.types || []).some(t => t.foto));
-  const modelFilters = ['Alle'].concat(modelGroepen.map(g => g.tab));
-  const modelZichtbaar = modelFilter === 'Alle' ? modelGroepen.reduce((a, g) => a.concat((g.types || []).filter(t => t.foto)), []) : ((modelGroepen.find(g => g.tab === modelFilter) || {}).types || []).filter(t => t.foto);
+  const [modelTab, setModelTab] = React.useState(0);
+  const [modelType, setModelType] = React.useState('Alle');
+  const modelGroep = (d.productenGroepen || [])[modelTab] || {};
+  const modelTypes = modelGroep.types || [];
+  const modelKaart = modelBasisKaart(modelTypes.filter(t => t.naam).map(t => t.naam));
+  const modelChips = Object.keys(modelKaart).map(k => modelKaart[k]).filter((v, i, a) => a.indexOf(v) === i).sort((a, b) => a.localeCompare(b, 'nl'));
+  const modelZichtbaar = modelType === 'Alle' ? modelTypes : modelTypes.filter(t => modelKaart[t.naam] === modelType);
   React.useEffect(() => {
     if (d.title) document.title = d.title;
     if (window.scrollTo) window.scrollTo(0, 0);
@@ -3326,32 +3396,72 @@ function CategoriePagina({
     intro: d.productenIntro || 'Van strak en modern tot klassiek en landelijk, telkens volledig op maat gemaakt.'
   })), d.productenGroepen ? /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("div", {
     style: {
-      maxWidth: 1100,
-      margin: '40px auto 0'
+      maxWidth: 1000,
+      margin: '46px auto 0'
     }
   }, /*#__PURE__*/React.createElement("div", {
-    role: "group",
+    role: "tablist",
     "aria-label": d.productenTitel,
     style: {
       display: 'flex',
       flexWrap: 'wrap',
-      gap: 8,
+      gap: 4,
+      rowGap: 4,
       justifyContent: 'center'
     }
-  }, modelFilters.map(f => {
-    const actief = modelFilter === f;
+  }, d.productenGroepen.map((g, i) => /*#__PURE__*/React.createElement("button", {
+    key: g.tab,
+    role: "tab",
+    type: "button",
+    "aria-selected": modelTab === i,
+    onClick: () => {
+      setModelTab(i);
+      setModelType('Alle');
+    },
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 15,
+      fontWeight: 600,
+      cursor: 'pointer',
+      padding: '12px 22px',
+      border: '1px solid var(--line-on-light-soft)',
+      borderBottom: 0,
+      borderRadius: '8px 8px 0 0',
+      position: 'relative',
+      bottom: -1,
+      background: modelTab === i ? 'var(--surface-card)' : 'transparent',
+      color: modelTab === i ? 'var(--text-heading)' : 'var(--text-muted)'
+    }
+  }, g.tab))), /*#__PURE__*/React.createElement("div", {
+    role: "tabpanel",
+    style: {
+      background: 'var(--surface-card)',
+      border: '1px solid var(--line-on-light-soft)',
+      borderRadius: '10px',
+      padding: '30px'
+    }
+  }, modelChips.length > 1 ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      gap: 8,
+      justifyContent: 'center',
+      marginBottom: 24
+    }
+  }, ['Alle'].concat(modelChips).map(chip => {
+    const actief = modelType === chip;
     return /*#__PURE__*/React.createElement("button", {
-      key: f,
+      key: chip,
       type: "button",
       "aria-pressed": actief,
-      onClick: () => setModelFilter(f),
+      onClick: () => setModelType(chip),
       style: {
         fontFamily: 'var(--font-label)',
         fontSize: 11,
         fontWeight: 600,
         letterSpacing: '0.1em',
         textTransform: 'uppercase',
-        padding: '9px 16px',
+        padding: '8px 14px',
         borderRadius: 999,
         cursor: 'pointer',
         transition: 'all var(--dur) var(--ease-out)',
@@ -3359,21 +3469,12 @@ function CategoriePagina({
         color: actief ? '#fff' : 'var(--text-body)',
         border: '1px solid ' + (actief ? 'var(--accent)' : 'var(--line-on-light)')
       }
-    }, f);
-  })), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontFamily: 'var(--font-sans)',
-      fontSize: 13,
-      color: 'var(--text-muted)',
-      textAlign: 'center',
-      marginTop: 18
-    }
-  }, modelZichtbaar.length, " ", modelZichtbaar.length === 1 ? 'model' : 'modellen'), /*#__PURE__*/React.createElement("div", {
+    }, chip);
+  })) : null, /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
-      gap: 18,
-      marginTop: 18
+      gap: 18
     }
   }, modelZichtbaar.map((t, i) => /*#__PURE__*/React.createElement("div", {
     key: i,
@@ -3388,7 +3489,7 @@ function CategoriePagina({
       borderRadius: 'var(--radius-md)',
       overflow: 'hidden',
       background: 'var(--surface-paper-2)',
-      border: '1px solid var(--line-on-light-soft)',
+      border: '1px dashed var(--line-on-light)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center'
@@ -3404,7 +3505,7 @@ function CategoriePagina({
       padding: '0 12px',
       textAlign: 'center'
     }
-  }, t.naam || 'Type'), /*#__PURE__*/React.createElement("img", {
+  }, t.naam || 'Type'), t.foto ? /*#__PURE__*/React.createElement("img", {
     src: t.foto,
     alt: t.naam || 'Metalen poort',
     loading: "lazy",
@@ -3418,7 +3519,7 @@ function CategoriePagina({
       height: '100%',
       objectFit: 'cover'
     }
-  })), t.naam ? /*#__PURE__*/React.createElement("div", {
+  }) : null), t.naam ? /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 15,
@@ -3427,7 +3528,7 @@ function CategoriePagina({
       marginTop: 10,
       textAlign: 'center'
     }
-  }, t.naam) : null))))) : /*#__PURE__*/React.createElement("div", {
+  }, t.naam) : null)))))) : /*#__PURE__*/React.createElement("div", {
     className: "pl-cards",
     style: {
       display: 'grid',
@@ -3957,7 +4058,7 @@ var CATEGORIEEN = {
     heroLabel: 'Volledig op maat',
     materiaalFotos: ['media/stalen-poort.jpg', 'media/realisatie-metaal-1.jpeg', 'media/aluminium-poort.jpg', 'media/realisatie-metaal-2.jpeg', 'media/realisatie-alu-1.jpeg'],
     productenTitel: 'Modellen in metaal',
-    productenIntro: 'Hieronder ziet u onze verschillende soorten metalen poorten, ingedeeld per stijl. Filter op een stijl of bekijk ze allemaal.',
+    productenIntro: 'Hieronder ziet u onze verschillende soorten metalen poorten, ingedeeld per stijl. Kies een stijl en filter daarbinnen op model.',
     productenGroepen: [{
       tab: "Klassiek zonder sierpunten",
       types: [{
@@ -4117,9 +4218,6 @@ var CATEGORIEEN = {
     }, {
       tab: "Art Deco",
       types: [{
-        naam: "Apollo",
-        foto: "media/metaal/Art%20Deco/Apollo%20.jpg"
-      }, {
         naam: "Apollo",
         foto: "media/metaal/Art%20Deco/Apollo.jpg"
       }, {
