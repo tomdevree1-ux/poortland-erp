@@ -3996,106 +3996,118 @@ var CATEGORIEEN = {
       tab: "Klassiek met sierpunten",
       types: [{
         naam: "Amstel",
-        foto: "media/metaal/Klassiek%20met%20punten/Amstel.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Amstel.jpg"
       }, {
         naam: "Argesj",
-        foto: "media/metaal/Klassiek%20met%20punten/Argesj.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Argesj.jpg"
       }, {
         naam: "Aveyron",
-        foto: "media/metaal/Klassiek%20met%20punten/Aveyron.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Aveyron.jpg"
       }, {
         naam: "Beekvliet",
-        foto: "media/metaal/Klassiek%20met%20punten/Beekvliet%20%20.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Beekvliet%20.jpg"
       }, {
         naam: "Beekvliet",
-        foto: "media/metaal/Klassiek%20met%20punten/Beekvliet%20.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Beekvliet.%20.jpg"
       }, {
         naam: "Beekvliet",
-        foto: "media/metaal/Klassiek%20met%20punten/Beekvliet.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Beekvliet.jpg"
       }, {
         naam: "Beekvliet met plaat",
-        foto: "media/metaal/Klassiek%20met%20punten/Beekvliet%20met%20plaat.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Beekvliet%20met%20plaat.jpg"
       }, {
         naam: "Brenta",
-        foto: "media/metaal/Klassiek%20met%20punten/Brenta%20%20.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Brenta%20%20.jpg"
       }, {
         naam: "Brenta",
-        foto: "media/metaal/Klassiek%20met%20punten/Brenta%20.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Brenta%20.jpg"
       }, {
         naam: "Brenta",
-        foto: "media/metaal/Klassiek%20met%20punten/Brenta.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Brenta.jpg"
       }, {
         naam: "Brenta met plaat",
-        foto: "media/metaal/Klassiek%20met%20punten/Brenta%20met%20plaat.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Brenta%20met%20plaat.jpg"
       }, {
         naam: "Cumberland",
-        foto: "media/metaal/Klassiek%20met%20punten/Cumberland%20.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Cumberland%20.jpg"
       }, {
         naam: "Cumberland",
-        foto: "media/metaal/Klassiek%20met%20punten/Cumberland.%20%20.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Cumberland.%20%20%20.jpg"
       }, {
         naam: "Cumberland",
-        foto: "media/metaal/Klassiek%20met%20punten/Cumberland.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Cumberland.%20%20.jpg"
+      }, {
+        naam: "Cumberland",
+        foto: "media/metaal/Klassiek%20met%20punten/Cumberland.%20.jpg"
+      }, {
+        naam: "Cumberland",
+        foto: "media/metaal/Klassiek%20met%20punten/Cumberland.jpg"
       }, {
         naam: "Cumberland met plaat",
-        foto: "media/metaal/Klassiek%20met%20punten/Cumberland%20met%20plaat.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Cumberland%20met%20plaat%20.jpg"
+      }, {
+        naam: "Cumberland met plaat",
+        foto: "media/metaal/Klassiek%20met%20punten/Cumberland%20met%20plaat.jpg"
       }, {
         naam: "Esla",
-        foto: "media/metaal/Klassiek%20met%20punten/Esla.%20.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Esla%20%20.jpg"
       }, {
         naam: "Esla",
-        foto: "media/metaal/Klassiek%20met%20punten/Esla.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Esla%20.jpg"
+      }, {
+        naam: "Esla",
+        foto: "media/metaal/Klassiek%20met%20punten/Esla.jpg"
       }, {
         naam: "Esla met plaat",
-        foto: "media/metaal/Klassiek%20met%20punten/Esla%20met%20plaat.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Esla%20met%20plaat.jpg"
       }, {
         naam: "Esla special",
-        foto: "media/metaal/Klassiek%20met%20punten/Esla%20special.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Esla%20special.jpg"
       }, {
         naam: "Lake ontario",
-        foto: "media/metaal/Klassiek%20met%20punten/Lake%20ontario.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Lake%20ontario.jpg"
       }, {
         naam: "Manitoba",
-        foto: "media/metaal/Klassiek%20met%20punten/Manitoba%20.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Manitoba%20.jpg"
       }, {
         naam: "Manitoba",
-        foto: "media/metaal/Klassiek%20met%20punten/Manitoba.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Manitoba.jpg"
       }, {
         naam: "Oosterschelde",
-        foto: "media/metaal/Klassiek%20met%20punten/Oosterschelde%20.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Oosterschelde%20.jpg"
       }, {
         naam: "Oosterschelde",
-        foto: "media/metaal/Klassiek%20met%20punten/Oosterschelde.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Oosterschelde.jpg"
       }, {
         naam: "Oosterschelde met plaat",
-        foto: "media/metaal/Klassiek%20met%20punten/Oosterschelde%20met%20plaat.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Oosterschelde%20met%20plaat.jpg"
       }, {
         naam: "Rhone",
-        foto: "media/metaal/Klassiek%20met%20punten/Rhone.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Rhone.jpg"
       }, {
         naam: "Roer",
-        foto: "media/metaal/Klassiek%20met%20punten/Roer.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Roer.jpg"
       }, {
         naam: "Sado",
-        foto: "media/metaal/Klassiek%20met%20punten/Sado.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Sado.jpg"
       }, {
         naam: "Siret",
-        foto: "media/metaal/Klassiek%20met%20punten/Siret.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Siret.jpg"
       }, {
         naam: "Vienne",
-        foto: "media/metaal/Klassiek%20met%20punten/Vienne%20.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Vienne%20.jpg"
       }, {
         naam: "Vienne",
-        foto: "media/metaal/Klassiek%20met%20punten/Vienne.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Vienne.jpg"
       }, {
         naam: "Westerschelde",
-        foto: "media/metaal/Klassiek%20met%20punten/Westerschelde.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Westerschelde.jpg"
       }, {
         naam: "Yellowstone",
-        foto: "media/metaal/Klassiek%20met%20punten/Yellowstone.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Yellowstone.jpg"
       }, {
         naam: "Yukon",
-        foto: "media/metaal/Klassiek%20met%20punten/Yukon.jpeg"
+        foto: "media/metaal/Klassiek%20met%20punten/Yukon.jpg"
       }]
     }, {
       tab: "Art Deco",
