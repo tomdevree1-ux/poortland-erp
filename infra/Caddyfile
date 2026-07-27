@@ -1,5 +1,14 @@
 {$DOMEIN} {
 	encode gzip
+	# Basis securityheaders. Bewust geen strikte CSP: de app en de marketingsite
+	# leunen op inline styles, een strenge CSP zou ze breken.
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
 	handle /api/* {
 		reverse_proxy api:5000
 	}
@@ -20,6 +29,14 @@
 # naar /api, dus geen CORS nodig; de rest is de statische React site.
 {$SITE_DOMEIN} {
 	encode gzip
+	# Basis securityheaders (zie toelichting bij het ERP blok hierboven).
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "SAMEORIGIN"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
 
 	# 301 doorverwijzingen van de oude poortland.be slugs (slugtabel 2026-07-24).
 	@oud_over path /waarom-poortland /waarom-poortland/
