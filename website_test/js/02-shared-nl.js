@@ -356,9 +356,6 @@ var MENU = [{
   label: 'Overkappingen',
   route: 'overkappingen'
 }, {
-  label: 'Realisaties',
-  route: 'realisaties'
-}, {
   label: 'Service',
   kinderen: [{
     label: 'Automatisering',
@@ -819,13 +816,6 @@ function DesktopNav({
     },
     style: linkStyle(route === 'overkappingen')
   }, "Overkappingen"), /*#__PURE__*/React.createElement("button", {
-    onMouseEnter: () => setOpenMenu(null),
-    onClick: () => {
-      onNav('realisaties');
-      setOpenMenu(null);
-    },
-    style: linkStyle(route === 'realisaties')
-  }, "Realisaties"), /*#__PURE__*/React.createElement("button", {
     onMouseEnter: () => setOpenMenu('service'),
     onClick: () => setOpenMenu(v => v === 'service' ? null : 'service'),
     "aria-expanded": openMenu === 'service',
@@ -1448,7 +1438,7 @@ function FotoBanner({
       overflow: 'hidden',
       cursor: onNav ? 'pointer' : 'default'
     },
-    onClick: () => onNav && onNav('realisaties')
+    onClick: () => onNav && onNav('metalen')
   }, /*#__PURE__*/React.createElement("div", {
     className: "pl-marquee-track",
     style: {
@@ -3125,7 +3115,54 @@ function CategoriePagina({
   });
   const [modelType, setModelType] = React.useState('Alle');
   const [modelFilterOpen, setModelFilterOpen] = React.useState(false);
-  const modelGroep = (d.productenGroepen || [])[modelTab] || {};
+  // Gepubliceerde ERP foto's van dit poorttype met een modelnaam hangen
+  // automatisch naast dat model in de juiste tab (TS-17, realisaties).
+  const [erpFotos, setErpFotos] = React.useState([]);
+  React.useEffect(() => {
+    const url = window.POORTLAND_ERP && window.POORTLAND_ERP.contentUrl;
+    if (!url || !d.erpPoortType) return;
+    let actief = true;
+    fetch(url, {
+      cache: 'no-store'
+    }).then(r => r.ok ? r.json() : null).then(j => {
+      if (!actief || !j || !j.fotos) return;
+      setErpFotos(j.fotos.filter(f => f && f.poortType === d.erpPoortType && f.modelNaam && f.url));
+    }).catch(() => {/* stil falen: de catalogus blijft gewoon staan */});
+    return () => {
+      actief = false;
+    };
+  }, [d]);
+  const modelGroepen = React.useMemo(() => {
+    const basis = d.productenGroepen || [];
+    if (!erpFotos.length) return basis;
+    const kopie = basis.map(g => ({
+      tab: g.tab,
+      types: (g.types || []).slice()
+    }));
+    erpFotos.forEach(f => {
+      const naam = String(f.modelNaam || '').trim();
+      const doel = naam.toLowerCase();
+      for (let gi = 0; gi < kopie.length; gi++) {
+        const g = kopie[gi];
+        let laatste = -1;
+        for (let i = 0; i < g.types.length; i++) {
+          const b = String(g.types[i].naam || '').toLowerCase();
+          if (b === doel || b.indexOf(doel + ' ') === 0) laatste = i;
+        }
+        if (laatste >= 0) {
+          g.types.splice(laatste + 1, 0, {
+            naam: naam,
+            foto: f.url,
+            alt: f.alt || 'Realisatie van model ' + naam + ' door Poortland',
+            erp: true
+          });
+          return;
+        }
+      }
+    });
+    return kopie;
+  }, [d, erpFotos]);
+  const modelGroep = modelGroepen[modelTab] || {};
   const modelTypes = modelGroep.types || [];
   const modelKaart = modelBasisKaart(modelTypes.filter(t => t.naam).map(t => t.naam));
   const modelChips = Object.keys(modelKaart).map(k => modelKaart[k]).filter((v, i, a) => a.indexOf(v) === i).sort((a, b) => a.localeCompare(b, 'nl'));
@@ -3148,9 +3185,6 @@ function CategoriePagina({
   const types = d.poorttypes || CAT_TYPES;
   const auto = d.automatisering || CAT_AUTO;
   const proces = d.proces || CAT_PROCES;
-  const filters = d.realisaties && d.realisaties.filters || CAT_FILTERS;
-  const items = d.realisaties && d.realisaties.items || [];
-  const zichtbaar = items.filter(it => filter === 'Alle' || (it.tags || []).indexOf(filter) !== -1);
   const bc = {
     background: 'none',
     border: 0,
@@ -3183,9 +3217,11 @@ function CategoriePagina({
       margin: '0 9px',
       color: 'var(--line-on-light)'
     }
-  }, "/"), /*#__PURE__*/React.createElement("button", {
-    onClick: () => onNav('poorten'),
-    style: bc
+  }, "/"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      ...bc,
+      cursor: 'default'
+    }
   }, "Poorten"), /*#__PURE__*/React.createElement("span", {
     style: {
       margin: '0 9px',
@@ -3251,8 +3287,13 @@ function CategoriePagina({
     variant: "ghost",
     dark: true,
     arrow: true,
-    onClick: () => onNav('realisaties')
-  }, "Bekijk realisaties")), /*#__PURE__*/React.createElement("div", {
+    onClick: () => {
+      const el = document.getElementById('modellen');
+      if (el) el.scrollIntoView({
+        behavior: 'smooth'
+      });
+    }
+  }, "Bekijk de modellen")), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 26,
@@ -3562,6 +3603,7 @@ function CategoriePagina({
       marginTop: 4
     }
   }, tekst)))))))), /*#__PURE__*/React.createElement("section", {
+    id: "modellen",
     style: {
       background: 'var(--surface-paper)',
       padding: '88px 44px'
@@ -3591,7 +3633,7 @@ function CategoriePagina({
       rowGap: 4,
       justifyContent: 'center'
     }
-  }, d.productenGroepen.map((g, i) => /*#__PURE__*/React.createElement("button", {
+  }, modelGroepen.map((g, i) => /*#__PURE__*/React.createElement("button", {
     key: g.tab,
     role: "tab",
     type: "button",
@@ -3750,7 +3792,22 @@ function CategoriePagina({
       height: '100%',
       objectFit: 'cover'
     }
-  }) : null), t.naam ? /*#__PURE__*/React.createElement("div", {
+  }) : null, t.erp ? /*#__PURE__*/React.createElement("span", {
+    style: {
+      position: 'absolute',
+      left: 10,
+      top: 10,
+      background: 'rgba(251,248,241,0.94)',
+      borderRadius: 999,
+      padding: '5px 11px',
+      fontFamily: 'var(--font-label)',
+      fontSize: 10,
+      fontWeight: 600,
+      letterSpacing: '0.12em',
+      textTransform: 'uppercase',
+      color: 'var(--text-heading)'
+    }
+  }, "Realisatie") : null), t.naam ? /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 15,
@@ -3775,7 +3832,7 @@ function CategoriePagina({
     }
   }, /*#__PURE__*/React.createElement("button", {
     className: "pl-prod-card",
-    onClick: () => onNav('realisaties'),
+    onClick: offerte,
     style: {
       width: '100%',
       textAlign: 'left',
@@ -4303,6 +4360,7 @@ var CATEGORIEEN = {
     heroBeeld: 'media/stalen-poort.jpg',
     heroLabel: 'Volledig op maat',
     materiaalFotos: ['media/stalen-poort.jpg', 'media/realisatie-metaal-1.jpeg', 'media/aluminium-poort.jpg', 'media/realisatie-metaal-2.jpeg', 'media/realisatie-alu-1.jpeg'],
+    erpPoortType: 'metaal',
     productenTitel: 'Modellen in metaal',
     productenIntro: 'Hieronder ziet u onze verschillende soorten metalen poorten, ingedeeld per stijl. Kies een stijl en filter daarbinnen op model.',
     productenGroepen: [{
@@ -5188,6 +5246,7 @@ var CATEGORIEEN = {
     heroBeeld: 'media/hero.jpg',
     heroLabel: 'Natuurlijk maatwerk',
     materiaalFotos: ['media/houten-poort.jpg', 'media/realisatie-hout-1.jpeg', 'media/staal-hout.jpg', 'media/realisatie-hout-2.jpeg', 'media/hero.jpg'],
+    erpPoortType: 'hout',
     productenTitel: 'Modellen in hout',
     producten: [{
       titel: 'Tijdloos massief hout',
@@ -5295,6 +5354,7 @@ var CATEGORIEEN = {
     heroBeeld: 'media/staal-hout.jpg',
     heroLabel: 'Hout en metaal op maat',
     materiaalFotos: ['media/staal-hout.jpg', 'media/hero.jpg', 'media/realisatie-hout-1.jpeg', 'media/stalen-poort.jpg', 'media/realisatie-metaal-1.jpeg'],
+    erpPoortType: 'hout_metaal',
     productenTitel: 'Combinaties in hout en metaal',
     producten: [{
       titel: 'Warmte van hout',
@@ -6610,8 +6670,8 @@ function OverOnsNL({
     variant: "ghost",
     dark: true,
     arrow: true,
-    onClick: () => onNav('realisaties')
-  }, "Bekijk realisaties"))), /*#__PURE__*/React.createElement(Reveal, {
+    onClick: () => onNav('metalen')
+  }, "Bekijk onze poorten"))), /*#__PURE__*/React.createElement(Reveal, {
     delay: 80
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -6916,8 +6976,8 @@ function OverOnsNL({
     variant: "secondary",
     size: "lg",
     arrow: true,
-    onClick: () => onNav('realisaties')
-  }, "Ontdek onze realisaties"))))), /*#__PURE__*/React.createElement("section", {
+    onClick: () => onNav('metalen')
+  }, "Ontdek onze poorten"))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-ground)',
       color: 'var(--text-on-dark)',

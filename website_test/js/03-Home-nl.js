@@ -85,8 +85,8 @@ function HomeNL({
     variant: "ghost",
     dark: true,
     arrow: true,
-    onClick: () => onNav('realisaties')
-  }, "Ontdek onze realisaties")), /*#__PURE__*/React.createElement("div", {
+    onClick: () => onNav('metalen')
+  }, "Ontdek onze modellen")), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 44,
@@ -326,8 +326,8 @@ function HomeNL({
     max: "16ch"
   }), /*#__PURE__*/React.createElement(HButton, {
     variant: "secondary",
-    onClick: () => onNav('realisaties')
-  }, "Alle realisaties"))), /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(window.FotoBanner, {
+    onClick: () => onNav('metalen')
+  }, "Alle modellen"))), /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(window.FotoBanner, {
     onNav: onNav,
     fotos: [{
       src: 'media/realisatie-metaal-1.jpeg',
@@ -578,7 +578,7 @@ function HomeNL({
   }, /*#__PURE__*/React.createElement(HButton, {
     variant: "secondary",
     arrow: true,
-    onClick: () => onNav('poorten')
+    onClick: () => onNav('metalen')
   }, "Ontdek onze poorten"))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper)',
@@ -811,9 +811,7 @@ function ProjectKaart({
     Eyebrow: KEyebrow
   } = window.PoortlandDesignSystem_6dcc8b;
   return /*#__PURE__*/React.createElement("button", {
-    onClick: () => onNav('project', {
-      project: p
-    }),
+    onClick: () => onNav('metalen'),
     style: {
       textAlign: 'left',
       background: 'none',

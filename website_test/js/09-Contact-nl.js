@@ -250,8 +250,8 @@ function ContactNL({
   }, /*#__PURE__*/React.createElement(CoButton, {
     variant: "primary",
     arrow: true,
-    onClick: () => onNav('realisaties')
-  }, "Bekijk onze realisaties"), /*#__PURE__*/React.createElement(CoButton, {
+    onClick: () => onNav('metalen')
+  }, "Bekijk onze modellen"), /*#__PURE__*/React.createElement(CoButton, {
     variant: "secondary",
     dark: true,
     onClick: () => {

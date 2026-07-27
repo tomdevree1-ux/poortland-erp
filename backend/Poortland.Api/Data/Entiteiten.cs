@@ -218,6 +218,9 @@ public class WebsiteMedia : BasisEntiteit
     public string? ProductSoort { get; set; }
     public string? PoortType { get; set; }
     public string? PoortUitvoering { get; set; }
+    // Modelnaam zoals in de modellentabs op de site (bv. Mississipi); de website
+    // hangt de gepubliceerde foto naast dat model in de juiste tab.
+    public string? ModelNaam { get; set; }
     public int Volgnummer { get; set; }
     public WebsiteContentStatus Status { get; set; } = WebsiteContentStatus.Concept;
     public string BestandPadOrigineel { get; set; } = "";

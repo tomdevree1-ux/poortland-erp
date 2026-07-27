@@ -118,8 +118,8 @@ function ProductNL({
     variant: "ghost",
     dark: true,
     arrow: true,
-    onClick: () => onNav('realisaties')
-  }, "Bekijk realisaties"))), /*#__PURE__*/React.createElement(Reveal, {
+    onClick: () => onNav('metalen')
+  }, "Bekijk onze modellen"))), /*#__PURE__*/React.createElement(Reveal, {
     delay: 90
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -466,8 +466,8 @@ function ProductNL({
   }), /*#__PURE__*/React.createElement(PrButton, {
     variant: "secondary",
     dark: true,
-    onClick: () => onNav('realisaties')
-  }, "Alle realisaties"))), /*#__PURE__*/React.createElement("div", {
+    onClick: () => onNav('metalen')
+  }, "Alle modellen"))), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
       gridTemplateColumns: 'repeat(3, 1fr)',
@@ -477,9 +477,7 @@ function ProductNL({
     key: pr.id,
     delay: i * 80
   }, /*#__PURE__*/React.createElement("button", {
-    onClick: () => onNav('project', {
-      project: pr
-    }),
+    onClick: () => onNav('metalen'),
     style: {
       textAlign: 'left',
       background: 'none',

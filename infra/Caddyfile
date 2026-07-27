@@ -20,6 +20,26 @@
 # naar /api, dus geen CORS nodig; de rest is de statische React site.
 {$SITE_DOMEIN} {
 	encode gzip
+
+	# 301 doorverwijzingen van de oude poortland.be slugs (slugtabel 2026-07-24).
+	@oud_over path /waarom-poortland /waarom-poortland/
+	redir @oud_over /over-ons/ permanent
+	@oud_anticorrosie path /anti-corrosie-behandeling /anti-corrosie-behandeling/
+	redir @oud_anticorrosie /garantie/ permanent
+	@oud_aluminium path /aluminium-poorten /aluminium-poorten/
+	redir @oud_aluminium /metalen-poorten/ permanent
+	@oud_prijs path /prijsaanvraag /prijsaanvraag/
+	redir @oud_prijs /contact/ permanent
+	@oud_koopjes path /koopjes /koopjes/
+	redir @oud_koopjes / permanent
+	@oud_folders path /folders /folders/
+	redir @oud_folders / permanent
+	@oud_vacatures path /vacatures /vacatures/
+	redir @oud_vacatures /contact/ permanent
+	redir /wp-content/uploads/Verkoopsvoorwaarden_2022_NL.pdf /algemene-voorwaarden/ permanent
+	redir /wp-content/uploads/Privacy-policy.pdf /privacybeleid/ permanent
+	redir /wp-content/uploads/Cookie-policy.pdf /cookiebeleid/ permanent
+
 	handle /api/* {
 		reverse_proxy api:5000
 	}

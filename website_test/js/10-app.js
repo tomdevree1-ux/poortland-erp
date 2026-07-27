@@ -88,10 +88,53 @@ function Lightbox({
     }
   }, alt) : null));
 }
+
+/* Echte adressen per pagina (slugtabel goedgekeurd 2026-07-24). De oude
+   slugs van poortland.be blijven behouden waar de inhoud overeenkomt. */
+const SLUGS = {
+  home: '/',
+  metalen: '/metalen-poorten/',
+  houten: '/houten-poorten/',
+  combinatie: '/combinatie-staal-hout/',
+  overkappingen: '/overkappingen/',
+  werkwijze: '/werkwijze/',
+  atelier: '/over-ons/',
+  automatisering: '/automatisering/',
+  onderhoud: '/onderhoud/',
+  garantie: '/garantie/',
+  faq: '/faq/',
+  contact: '/contact/',
+  voorwaarden: '/algemene-voorwaarden/',
+  privacy: '/privacybeleid/',
+  cookie: '/cookiebeleid/'
+};
+function padVoorRoute(route, productKey) {
+  if (route === 'product') return '/poorten/' + (productKey || 'houten') + '/';
+  return SLUGS[route] || '/';
+}
+function routeUitPad(pad) {
+  if (!pad || pad === '/') return {
+    route: 'home'
+  };
+  const p = pad.replace(/\/+$/, '') + '/';
+  for (const r in SLUGS) {
+    if (SLUGS[r] === p) return {
+      route: r
+    };
+  }
+  const m = p.match(/^\/poorten\/([a-z0-9-]+)\/$/);
+  if (m) return {
+    route: 'product',
+    productKey: m[1]
+  };
+  return {
+    route: 'home'
+  };
+}
 function App() {
-  const [route, setRoute] = React.useState('home');
-  const [productKey, setProductKey] = React.useState('houten');
-  const [project, setProject] = React.useState(null);
+  const startRoute = routeUitPad(window.location.pathname);
+  const [route, setRoute] = React.useState(startRoute.route);
+  const [productKey, setProductKey] = React.useState(startRoute.productKey || 'houten');
   const [contactType, setContactType] = React.useState(null);
   const [lang, setLang] = React.useState('NL');
   const [lightbox, setLightbox] = React.useState(null);
@@ -116,33 +159,39 @@ function App() {
     return () => document.removeEventListener('click', onDocClick);
   }, []);
   const onNav = (r, payload) => {
-    if (payload && payload.productKey) setProductKey(payload.productKey);
-    if (payload && payload.project) setProject(payload.project);
+    const key = payload && payload.productKey;
+    if (key) setProductKey(key);
     if (r === 'contact') setContactType(payload && payload.type ? payload.type : null);
     setRoute(r);
+    const pad = padVoorRoute(r, key || productKey);
+    if (window.location.pathname !== pad) window.history.pushState({}, '', pad);
     if (scrollRef.current) scrollRef.current.scrollTo({
       top: 0,
       behavior: 'auto'
     });
   };
-  const navRoute = route === 'project' ? 'realisaties' : route;
+
+  // Terug- en vooruitknop van de browser.
+  React.useEffect(() => {
+    const onPop = () => {
+      const doel = routeUitPad(window.location.pathname);
+      setRoute(doel.route);
+      if (doel.productKey) setProductKey(doel.productKey);
+      if (scrollRef.current) scrollRef.current.scrollTo({
+        top: 0,
+        behavior: 'auto'
+      });
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
+  const navRoute = route;
   let Screen;
   switch (route) {
     case 'product':
       Screen = /*#__PURE__*/React.createElement(window.ProductNL, {
         onNav: onNav,
         productKey: productKey
-      });
-      break;
-    case 'realisaties':
-      Screen = /*#__PURE__*/React.createElement(window.CollectionNL, {
-        onNav: onNav
-      });
-      break;
-    case 'project':
-      Screen = /*#__PURE__*/React.createElement(window.ProjectDetailNL, {
-        onNav: onNav,
-        project: project
       });
       break;
     case 'werkwijze':
@@ -176,12 +225,6 @@ function App() {
         voorselectie: contactType
       });
       break;
-    case 'poorten':
-      Screen = /*#__PURE__*/React.createElement(window.PaginaNL, {
-        onNav: onNav,
-        content: window.PAGINAS['poorten']
-      });
-      break;
     case 'metalen':
       Screen = /*#__PURE__*/React.createElement(window.CategoriePagina, {
         onNav: onNav,
@@ -203,12 +246,6 @@ function App() {
     case 'overkappingen':
       Screen = /*#__PURE__*/React.createElement(window.OverkappingenNL, {
         onNav: onNav
-      });
-      break;
-    case 'service':
-      Screen = /*#__PURE__*/React.createElement(window.PaginaNL, {
-        onNav: onNav,
-        content: window.PAGINAS['service']
       });
       break;
     case 'automatisering':
@@ -238,7 +275,7 @@ function App() {
         onNav: onNav
       });
   }
-  const routeKey = route + (route === 'product' ? productKey : '') + (route === 'project' && project ? project.id : '');
+  const routeKey = route + (route === 'product' ? productKey : '');
   return /*#__PURE__*/React.createElement("div", {
     ref: scrollRef,
     style: {

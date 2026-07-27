@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Sitemap volgens de slugtabel van 2026-07-24. De basis wijst naar het
+     definitieve domein; bij de livegang hoeft hier niets te veranderen. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://poortland.be/</loc></url>
+  <url><loc>https://poortland.be/metalen-poorten/</loc></url>
+  <url><loc>https://poortland.be/houten-poorten/</loc></url>
+  <url><loc>https://poortland.be/combinatie-staal-hout/</loc></url>
+  <url><loc>https://poortland.be/overkappingen/</loc></url>
+  <url><loc>https://poortland.be/werkwijze/</loc></url>
+  <url><loc>https://poortland.be/over-ons/</loc></url>
+  <url><loc>https://poortland.be/automatisering/</loc></url>
+  <url><loc>https://poortland.be/onderhoud/</loc></url>
+  <url><loc>https://poortland.be/garantie/</loc></url>
+  <url><loc>https://poortland.be/faq/</loc></url>
+  <url><loc>https://poortland.be/contact/</loc></url>
+  <url><loc>https://poortland.be/algemene-voorwaarden/</loc></url>
+  <url><loc>https://poortland.be/privacybeleid/</loc></url>
+  <url><loc>https://poortland.be/cookiebeleid/</loc></url>
+</urlset>

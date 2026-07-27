@@ -24,7 +24,8 @@ public class WebsiteContentService(PoortlandDbContext db, ClaimsContext claims, 
     static readonly string[] Uitvoeringen = ["draaipoort", "schuifpoort"];
 
     public async Task<WebsiteMedia> Upload(Stream bestand, string bestandsnaam, string contentType,
-        string titel, string? categorie, string? productSoort, string? poortType, string? poortUitvoering)
+        string titel, string? categorie, string? productSoort, string? poortType, string? poortUitvoering,
+        string? modelNaam = null)
     {
         if (!ToegelatenTypes.Contains(contentType))
             throw new DomeinFout("Toegelaten formaten: jpeg, png, webp of heic.");
@@ -65,6 +66,7 @@ public class WebsiteContentService(PoortlandDbContext db, ClaimsContext claims, 
         {
             Id = id, Titel = titel, Categorie = categorie,
             ProductSoort = productSoort, PoortType = poortType, PoortUitvoering = poortUitvoering,
+            ModelNaam = string.IsNullOrWhiteSpace(modelNaam) ? null : modelNaam.Trim(),
             Volgnummer = (await db.WebsiteMedias.MaxAsync(m => (int?)m.Volgnummer) ?? 0) + 1,
             BestandPadOrigineel = padOrigineel,
             Breedte = web.breedte, Hoogte = web.hoogte,
@@ -196,6 +198,7 @@ public class WebsiteContentService(PoortlandDbContext db, ClaimsContext claims, 
                 thumb = opslag.PubliekeUrl(BucketPubliek, m.BestandPadThumb!),
                 alt = m.AltTekst, categorie = m.Categorie,
                 productSoort = m.ProductSoort, poortType = m.PoortType, uitvoering = m.PoortUitvoering,
+                modelNaam = m.ModelNaam,
                 breedte = m.Breedte, hoogte = m.Hoogte
             })
             .ToListAsync();
