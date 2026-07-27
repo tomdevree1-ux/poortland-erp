@@ -355,12 +355,13 @@ Poortland organisatie en NOOIT een hergebruik van deze omgeving.
 - Supabase:Url en Supabase:ServiceKey van het productieproject.
 - Email:Modus van console naar brevo plus BrevoApiKey en het echte afzenderadres.
 - Frontend:Origin (CORS) van localhost naar het productiedomein.
-- Turnstile:Secret invullen zodat het publieke leadformulier beschermd is.
+- Turnstile:Secret invullen zodat het publieke leadformulier beschermd is (zie het blok Turnstile hieronder).
 - Sentry DSN aanzetten (TS-15, EU regio).
 
 **Frontend (buildtime variabelen)**
 
 - VITE_SUPABASE_URL en VITE_SUPABASE_ANON_KEY van het productieproject.
+- VITE_TURNSTILE_SITE_KEY invullen als je de captcha op de ERP login aanzet (zie het blok Turnstile hieronder).
 - De dev proxy in vite.config.ts geldt alleen lokaal. In productie serveert Cloudflare
   de statische build en routeert het pad /api naar de backend container op hetzelfde
   domein. Zo blijft de API relatief bereikbaar en is er geen CORS nodig.
@@ -370,6 +371,26 @@ Poortland organisatie en NOOIT een hergebruik van deze omgeving.
 - De marketingwebsite leest content.json op een URL die het projectref bevat.
   Bij productie moet de website naar het productieproject wijzen en nooit naar staging,
   anders verschijnt testcontent op de echte site.
+
+**Turnstile aanzetten bij livegang (verplicht, auditbevinding M1)**
+
+Dit is het enige blokkerende beveiligingspunt uit de diepgaande audit van 2026-07-24
+(zie `Security_audit_diepgaand_2026-07-24.md` in de projectmap). Zonder sleutel laat
+de verificatie alles door en beschermt enkel de snelheidslimiet. De bekabeling staat
+klaar aan beide kanten; enkel de sleutels ontbreken. Maak in het Cloudflare dashboard
+onder Turnstile een widget met beide hostnames (de ERP en de site) of twee widgets.
+Je krijgt telkens een publieke sitesleutel en een geheime sleutel.
+
+- Website formulier (contact en offerte, verified via onze eigen backend):
+  - `Turnstile__Secret` in de serveromgeving van de API.
+  - `window.POORTLAND_ERP.turnstileSiteKey` in de website config (staat als lege plek
+    klaar in `website_test/index.html`).
+- ERP login (verified door Supabase Auth):
+  - Supabase dashboard, Authentication, Attack Protection: captchabescherming aan met
+    provider Turnstile, plak daar de geheime sleutel.
+  - `VITE_TURNSTILE_SITE_KEY` in de frontend omgeving vóór de bouw.
+  - Let op: deze twee horen samen. Zet je de Supabase knop aan zonder de frontend
+    sleutel, dan breekt het inloggen.
 
 **Overig**
 
