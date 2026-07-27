@@ -3124,6 +3124,7 @@ function CategoriePagina({
     return i >= 0 ? i : 0;
   });
   const [modelType, setModelType] = React.useState('Alle');
+  const [modelFilterOpen, setModelFilterOpen] = React.useState(false);
   const modelGroep = (d.productenGroepen || [])[modelTab] || {};
   const modelTypes = modelGroep.types || [];
   const modelKaart = modelBasisKaart(modelTypes.filter(t => t.naam).map(t => t.naam));
@@ -3541,11 +3542,60 @@ function CategoriePagina({
     }
   }, modelChips.length > 1 ? /*#__PURE__*/React.createElement("div", {
     style: {
+      marginBottom: modelFilterOpen ? 10 : 24
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      justifyContent: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    "aria-expanded": modelFilterOpen,
+    onClick: () => {
+      const open = !modelFilterOpen;
+      setModelFilterOpen(open);
+      if (!open) setModelType('Alle');
+    },
+    style: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: 9,
+      fontFamily: 'var(--font-label)',
+      fontSize: 11,
+      fontWeight: 600,
+      letterSpacing: '0.14em',
+      textTransform: 'uppercase',
+      padding: '9px 18px',
+      borderRadius: 999,
+      cursor: 'pointer',
+      transition: 'all var(--dur) var(--ease-out)',
+      background: modelFilterOpen ? 'rgba(138,106,60,0.08)' : 'transparent',
+      color: modelFilterOpen ? 'var(--accent)' : 'var(--text-muted)',
+      border: '1px solid ' + (modelFilterOpen ? 'var(--accent)' : 'var(--line-on-light)')
+    }
+  }, "Filter op model", /*#__PURE__*/React.createElement("span", {
+    "aria-hidden": "true",
+    style: {
+      display: 'inline-block',
+      fontSize: 10,
+      transition: 'transform var(--dur) var(--ease-out)',
+      transform: modelFilterOpen ? 'rotate(180deg)' : 'none'
+    }
+  }, "▾"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      overflow: 'hidden',
+      maxHeight: modelFilterOpen ? 400 : 0,
+      opacity: modelFilterOpen ? 1 : 0,
+      transition: 'max-height 420ms var(--ease-out), opacity 320ms var(--ease-out)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
       display: 'flex',
       flexWrap: 'wrap',
       gap: 8,
       justifyContent: 'center',
-      marginBottom: 24
+      padding: '18px 0 8px'
     }
   }, ['Alle'].concat(modelChips).map(chip => {
     const actief = modelType === chip;
@@ -3569,7 +3619,7 @@ function CategoriePagina({
         border: '1px solid ' + (actief ? 'var(--accent)' : 'var(--line-on-light)')
       }
     }, chip);
-  })) : null, /*#__PURE__*/React.createElement("div", {
+  })))) : null, /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
