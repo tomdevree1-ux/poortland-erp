@@ -4731,8 +4731,47 @@ var CATEGORIEEN = {
     }, {
       tab: "Cottage",
       types: [{
-        naam: '',
-        foto: ''
+        naam: "Luxus",
+        foto: "media/metaal/Cottage/Luxus%20%20%20.jpg"
+      }, {
+        naam: "Luxus",
+        foto: "media/metaal/Cottage/Luxus%20.jpg"
+      }, {
+        naam: "Luxus",
+        foto: "media/metaal/Cottage/Luxus.jpg"
+      }, {
+        naam: "Luxus met plaat",
+        foto: "media/metaal/Cottage/Luxus%20met%20plaat.jpg"
+      }, {
+        naam: "Odum",
+        foto: "media/metaal/Cottage/Odum.jpg"
+      }, {
+        naam: "Orinoco",
+        foto: "media/metaal/Cottage/Orinoco%20%20%20%20%20%20%20%20%20.jpg"
+      }, {
+        naam: "Orinoco",
+        foto: "media/metaal/Cottage/Orinoco%20%20%20%20%20%20%20%20.jpg"
+      }, {
+        naam: "Orinoco",
+        foto: "media/metaal/Cottage/Orinoco%20%20%20%20%20%20.jpg"
+      }, {
+        naam: "Orinoco",
+        foto: "media/metaal/Cottage/Orinoco%20%20%20%20%20.jpg"
+      }, {
+        naam: "Orinoco",
+        foto: "media/metaal/Cottage/Orinoco%20%20%20%20.jpg"
+      }, {
+        naam: "Orinoco",
+        foto: "media/metaal/Cottage/Orinoco%20%20%20.jpg"
+      }, {
+        naam: "Orinoco",
+        foto: "media/metaal/Cottage/Orinoco%20.jpg"
+      }, {
+        naam: "Orinoco",
+        foto: "media/metaal/Cottage/Orinoco.jpg"
+      }, {
+        naam: "Orinoco met plaat",
+        foto: "media/metaal/Cottage/Orinoco%20met%20plaat.jpg"
       }]
     }, {
       tab: "Uniek",
