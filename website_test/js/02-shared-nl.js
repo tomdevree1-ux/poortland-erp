@@ -3787,7 +3787,11 @@ function CategoriePagina({
       color: 'var(--text-heading)',
       margin: '0 0 18px'
     }
-  }, d.aluminiumBlok.titel), d.aluminiumBlok.alinea.map((a, i) => /*#__PURE__*/React.createElement("p", {
+  }, d.aluminiumBlok.titel, d.aluminiumBlok.titel2 ? /*#__PURE__*/React.createElement("span", {
+    style: {
+      display: 'block'
+    }
+  }, d.aluminiumBlok.titel2) : null), d.aluminiumBlok.alinea.map((a, i) => /*#__PURE__*/React.createElement("p", {
     key: i,
     style: {
       fontFamily: 'var(--font-sans)',
@@ -4912,7 +4916,8 @@ var CATEGORIEEN = {
     },
     aluminiumBlok: {
       eyebrow: 'Exclusief patent voor de Benelux',
-      titel: 'Zoek je de charme van hout met de ultieme kracht van metaal? Ontdek aluminium.',
+      titel: 'Zoek je de charme van hout met de ultieme kracht van metaal?',
+      titel2: 'Ontdek aluminium.',
       alinea: ['Wist je dat onze aluminium poorten op een heel unieke manier worden gebouwd? In ons gespecialiseerde atelier lassen we niet, maar passen we de profielen naadloos in elkaar met onzichtbare, roestvrije schroeven. Poortland heeft hiervoor het exclusieve patent voor de Benelux. Het resultaat? De verfijnde esthetiek van een klassieke houten poort, gecombineerd met ongeëvenaard gebruiksgemak.', 'Doordat elk profiel eerst afzonderlijk wordt gelakt en pas daarna gemonteerd, krijgt uitzetting door het weer geen kans om de lak te beschadigen.'],
       puntenKop: 'Waarom een geschroefde aluminium poort de slimste keuze is:',
       punten: [['Oersterk', 'Tot wel 2,5 keer sterker dan een traditionele gelaste poort.'], ['Geen lakschade', 'De lak blijft intact, ook als de temperatuur schommelt.'], ['Duurzame bevestigingen', 'Geen risico op uitgescheurde scharnieren of motorophangingen.'], ['Slim te herstellen', 'Bij eventuele schade vervangen we eenvoudig één afzonderlijk profiel.']]
