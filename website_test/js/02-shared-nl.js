@@ -3910,8 +3910,7 @@ function CategoriePagina({
   }, /*#__PURE__*/React.createElement(SButton, {
     variant: "primary",
     arrow: true,
-    as: "button",
-    onClick: offerte
+    onClick: () => onNav('contact')
   }, "Laat u adviseren over de beste oplossing")))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--forest-900)',
