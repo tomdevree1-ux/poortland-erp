@@ -3479,7 +3479,89 @@ function CategoriePagina({
       lineHeight: 1,
       boxShadow: '0 4px 14px rgba(20,28,21,0.28)'
     }
-  }, "›")))), /*#__PURE__*/React.createElement("section", {
+  }, "›")))), d.aluminiumBlok && /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-paper)',
+      padding: '72px 44px 10px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 1000,
+      margin: '0 auto'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'var(--surface-card)',
+      border: '1px solid var(--line-on-light-soft)',
+      borderTop: '3px solid var(--accent)',
+      borderRadius: 'var(--radius-md)',
+      padding: '42px 40px',
+      boxShadow: 'var(--shadow-lg)'
+    }
+  }, /*#__PURE__*/React.createElement(SEyebrow, {
+    style: {
+      marginBottom: 14
+    }
+  }, d.aluminiumBlok.eyebrow), /*#__PURE__*/React.createElement("h2", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 32,
+      lineHeight: 1.15,
+      letterSpacing: '-0.01em',
+      color: 'var(--text-heading)',
+      margin: '0 0 18px'
+    }
+  }, d.aluminiumBlok.titel, d.aluminiumBlok.titel2 ? /*#__PURE__*/React.createElement("span", {
+    style: {
+      display: 'block'
+    }
+  }, d.aluminiumBlok.titel2) : null), d.aluminiumBlok.alinea.map((a, i) => /*#__PURE__*/React.createElement("p", {
+    key: i,
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 16,
+      lineHeight: 1.72,
+      color: 'var(--text-body)',
+      margin: i ? '12px 0 0' : 0
+    }
+  }, a)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 15.5,
+      fontWeight: 600,
+      color: 'var(--text-heading)',
+      margin: '26px 0 16px'
+    }
+  }, d.aluminiumBlok.puntenKop), /*#__PURE__*/React.createElement("div", {
+    className: "pl-cards",
+    style: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(2, 1fr)',
+      gap: 20
+    }
+  }, d.aluminiumBlok.punten.map(([titel, tekst]) => /*#__PURE__*/React.createElement("div", {
+    key: titel,
+    style: {
+      borderTop: '2px solid var(--accent)',
+      paddingTop: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 15,
+      fontWeight: 600,
+      color: 'var(--text-heading)'
+    }
+  }, titel), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 14,
+      lineHeight: 1.6,
+      color: 'var(--text-muted)',
+      marginTop: 4
+    }
+  }, tekst)))))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper)',
       padding: '88px 44px'
@@ -3754,89 +3836,7 @@ function CategoriePagina({
       color: 'var(--accent)',
       marginTop: 16
     }
-  }, "Ontdek deze stijl →")))))))), d.aluminiumBlok && /*#__PURE__*/React.createElement("section", {
-    style: {
-      background: 'var(--surface-paper)',
-      padding: '10px 44px 88px'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      maxWidth: 1000,
-      margin: '0 auto'
-    }
-  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("div", {
-    style: {
-      background: 'var(--surface-card)',
-      border: '1px solid var(--line-on-light-soft)',
-      borderTop: '3px solid var(--accent)',
-      borderRadius: 'var(--radius-md)',
-      padding: '42px 40px',
-      boxShadow: 'var(--shadow-lg)'
-    }
-  }, /*#__PURE__*/React.createElement(SEyebrow, {
-    style: {
-      marginBottom: 14
-    }
-  }, d.aluminiumBlok.eyebrow), /*#__PURE__*/React.createElement("h2", {
-    style: {
-      fontFamily: 'var(--font-display)',
-      fontWeight: 500,
-      fontSize: 32,
-      lineHeight: 1.15,
-      letterSpacing: '-0.01em',
-      color: 'var(--text-heading)',
-      margin: '0 0 18px'
-    }
-  }, d.aluminiumBlok.titel, d.aluminiumBlok.titel2 ? /*#__PURE__*/React.createElement("span", {
-    style: {
-      display: 'block'
-    }
-  }, d.aluminiumBlok.titel2) : null), d.aluminiumBlok.alinea.map((a, i) => /*#__PURE__*/React.createElement("p", {
-    key: i,
-    style: {
-      fontFamily: 'var(--font-sans)',
-      fontSize: 16,
-      lineHeight: 1.72,
-      color: 'var(--text-body)',
-      margin: i ? '12px 0 0' : 0
-    }
-  }, a)), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontFamily: 'var(--font-sans)',
-      fontSize: 15.5,
-      fontWeight: 600,
-      color: 'var(--text-heading)',
-      margin: '26px 0 16px'
-    }
-  }, d.aluminiumBlok.puntenKop), /*#__PURE__*/React.createElement("div", {
-    className: "pl-cards",
-    style: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(2, 1fr)',
-      gap: 20
-    }
-  }, d.aluminiumBlok.punten.map(([titel, tekst]) => /*#__PURE__*/React.createElement("div", {
-    key: titel,
-    style: {
-      borderTop: '2px solid var(--accent)',
-      paddingTop: 12
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontFamily: 'var(--font-sans)',
-      fontSize: 15,
-      fontWeight: 600,
-      color: 'var(--text-heading)'
-    }
-  }, titel), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontFamily: 'var(--font-sans)',
-      fontSize: 14,
-      lineHeight: 1.6,
-      color: 'var(--text-muted)',
-      marginTop: 4
-    }
-  }, tekst)))))))), /*#__PURE__*/React.createElement("section", {
+  }, "Ontdek deze stijl →")))))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper)',
       padding: '20px 44px 90px',
