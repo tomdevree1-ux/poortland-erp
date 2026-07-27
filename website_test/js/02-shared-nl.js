@@ -3738,7 +3738,7 @@ function CategoriePagina({
     }
   }, t.naam || 'Type'), t.foto ? /*#__PURE__*/React.createElement("img", {
     src: t.foto,
-    alt: t.naam || 'Metalen poort',
+    alt: t.alt || t.naam || 'Metalen poort',
     loading: "lazy",
     onError: e => {
       e.currentTarget.style.display = 'none';
@@ -4315,550 +4315,763 @@ var CATEGORIEEN = {
       tab: "Modern",
       types: [{
         naam: "Allegro",
-        foto: "media/metaal/Modern/Allegro%20%20.jpg"
+        foto: "media/metaal/Modern/Allegro%20%20.jpg",
+        alt: "Model Allegro, moderne metalen poort van Poortland"
       }, {
         naam: "Allegro",
-        foto: "media/metaal/Modern/Allegro%20.jpg"
+        foto: "media/metaal/Modern/Allegro%20.jpg",
+        alt: "Model Allegro, moderne metalen poort van Poortland"
       }, {
         naam: "Allegro",
-        foto: "media/metaal/Modern/Allegro.jpg"
+        foto: "media/metaal/Modern/Allegro.jpg",
+        alt: "Model Allegro, moderne metalen poort van Poortland"
       }, {
         naam: "Arno",
-        foto: "media/metaal/Modern/Arno%20%20%20%20.jpg"
+        foto: "media/metaal/Modern/Arno%20%20%20%20.jpg",
+        alt: "Model Arno, moderne metalen poort van Poortland"
       }, {
         naam: "Arno",
-        foto: "media/metaal/Modern/Arno%20%20%20.jpg"
+        foto: "media/metaal/Modern/Arno%20%20%20.jpg",
+        alt: "Model Arno, moderne metalen poort van Poortland"
       }, {
         naam: "Arno",
-        foto: "media/metaal/Modern/Arno%20.jpg"
+        foto: "media/metaal/Modern/Arno%20.jpg",
+        alt: "Model Arno, moderne metalen poort van Poortland"
       }, {
         naam: "Arno",
-        foto: "media/metaal/Modern/Arno.jpg"
+        foto: "media/metaal/Modern/Arno.jpg",
+        alt: "Model Arno, moderne metalen poort van Poortland"
       }, {
         naam: "Arno futuris",
-        foto: "media/metaal/Modern/Arno%20futuris.jpg"
+        foto: "media/metaal/Modern/Arno%20futuris.jpg",
+        alt: "Model Arno futuris, moderne metalen poort van Poortland"
       }, {
         naam: "Boogpoort",
-        foto: "media/metaal/Modern/Boogpoort%20.jpg"
+        foto: "media/metaal/Modern/Boogpoort%20.jpg",
+        alt: "Model Boogpoort, moderne metalen poort van Poortland"
       }, {
         naam: "Boogpoort",
-        foto: "media/metaal/Modern/Boogpoort.jpg"
+        foto: "media/metaal/Modern/Boogpoort.jpg",
+        alt: "Model Boogpoort, moderne metalen poort van Poortland"
       }, {
         naam: "Contessa",
-        foto: "media/metaal/Modern/Contessa.jpg"
+        foto: "media/metaal/Modern/Contessa.jpg",
+        alt: "Model Contessa, moderne metalen poort van Poortland"
       }, {
         naam: "Corni",
-        foto: "media/metaal/Modern/Corni%20%20%20.jpg"
+        foto: "media/metaal/Modern/Corni%20%20%20.jpg",
+        alt: "Model Corni, moderne metalen poort van Poortland"
       }, {
         naam: "Corni",
-        foto: "media/metaal/Modern/Corni%20.jpg"
+        foto: "media/metaal/Modern/Corni%20.jpg",
+        alt: "Model Corni, moderne metalen poort van Poortland"
       }, {
         naam: "Corni",
-        foto: "media/metaal/Modern/Corni.jpg"
+        foto: "media/metaal/Modern/Corni.jpg",
+        alt: "Model Corni, moderne metalen poort van Poortland"
       }, {
         naam: "Ebro",
-        foto: "media/metaal/Modern/Ebro.jpg"
+        foto: "media/metaal/Modern/Ebro.jpg",
+        alt: "Model Ebro, moderne metalen poort van Poortland"
       }, {
         naam: "Espoort",
-        foto: "media/metaal/Modern/Espoort%20.jpg"
+        foto: "media/metaal/Modern/Espoort%20.jpg",
+        alt: "Model Espoort, moderne metalen poort van Poortland"
       }, {
         naam: "Espoort",
-        foto: "media/metaal/Modern/Espoort.jpg"
+        foto: "media/metaal/Modern/Espoort.jpg",
+        alt: "Model Espoort, moderne metalen poort van Poortland"
       }, {
         naam: "Glen Kwai",
-        foto: "media/metaal/Modern/Glen%20Kwai%20%20%20%20%20%20%20.jpg"
+        foto: "media/metaal/Modern/Glen%20Kwai%20%20%20%20%20%20%20.jpg",
+        alt: "Model Glen Kwai, moderne metalen poort van Poortland"
       }, {
         naam: "Glen Kwai",
-        foto: "media/metaal/Modern/Glen%20Kwai%20%20%20%20%20%20.jpg"
+        foto: "media/metaal/Modern/Glen%20Kwai%20%20%20%20%20%20.jpg",
+        alt: "Model Glen Kwai, moderne metalen poort van Poortland"
       }, {
         naam: "Glen Kwai",
-        foto: "media/metaal/Modern/Glen%20Kwai%20%20%20%20.jpg"
+        foto: "media/metaal/Modern/Glen%20Kwai%20%20%20%20.jpg",
+        alt: "Model Glen Kwai, moderne metalen poort van Poortland"
       }, {
         naam: "Glen Kwai",
-        foto: "media/metaal/Modern/Glen%20Kwai%20%20%20.jpg"
+        foto: "media/metaal/Modern/Glen%20Kwai%20%20%20.jpg",
+        alt: "Model Glen Kwai, moderne metalen poort van Poortland"
       }, {
         naam: "Glen Kwai",
-        foto: "media/metaal/Modern/Glen%20Kwai%20%20.jpg"
+        foto: "media/metaal/Modern/Glen%20Kwai%20%20.jpg",
+        alt: "Model Glen Kwai, moderne metalen poort van Poortland"
       }, {
         naam: "Glen Kwai",
-        foto: "media/metaal/Modern/Glen%20Kwai%20.jpg"
+        foto: "media/metaal/Modern/Glen%20Kwai%20.jpg",
+        alt: "Model Glen Kwai, moderne metalen poort van Poortland"
       }, {
         naam: "Glen Kwai",
-        foto: "media/metaal/Modern/Glen%20Kwai.jpg"
+        foto: "media/metaal/Modern/Glen%20Kwai.jpg",
+        alt: "Model Glen Kwai, moderne metalen poort van Poortland"
       }, {
         naam: "Glenfiddich",
-        foto: "media/metaal/Modern/Glenfiddich%20%20%20%20%20%20%20%20%20%20%20%20%20.jpg"
+        foto: "media/metaal/Modern/Glenfiddich%20%20%20%20%20%20%20%20%20%20%20%20%20.jpg",
+        alt: "Model Glenfiddich, moderne metalen poort van Poortland"
       }, {
         naam: "Glenfiddich",
-        foto: "media/metaal/Modern/Glenfiddich%20%20%20%20%20%20%20%20%20%20.jpg"
+        foto: "media/metaal/Modern/Glenfiddich%20%20%20%20%20%20%20%20%20%20.jpg",
+        alt: "Model Glenfiddich, moderne metalen poort van Poortland"
       }, {
         naam: "Glenfiddich",
-        foto: "media/metaal/Modern/Glenfiddich%20%20%20%20%20%20%20%20%20.jpg"
+        foto: "media/metaal/Modern/Glenfiddich%20%20%20%20%20%20%20%20%20.jpg",
+        alt: "Model Glenfiddich, moderne metalen poort van Poortland"
       }, {
         naam: "Glenfiddich",
-        foto: "media/metaal/Modern/Glenfiddich%20%20%20%20%20%20%20.jpg"
+        foto: "media/metaal/Modern/Glenfiddich%20%20%20%20%20%20%20.jpg",
+        alt: "Model Glenfiddich, moderne metalen poort van Poortland"
       }, {
         naam: "Glenfiddich",
-        foto: "media/metaal/Modern/Glenfiddich%20%20%20%20%20.jpg"
+        foto: "media/metaal/Modern/Glenfiddich%20%20%20%20%20.jpg",
+        alt: "Model Glenfiddich, moderne metalen poort van Poortland"
       }, {
         naam: "Glenfiddich",
-        foto: "media/metaal/Modern/Glenfiddich%20%20%20.jpg"
+        foto: "media/metaal/Modern/Glenfiddich%20%20%20.jpg",
+        alt: "Model Glenfiddich, moderne metalen poort van Poortland"
       }, {
         naam: "Glenfiddich",
-        foto: "media/metaal/Modern/Glenfiddich%20%20.jpg"
+        foto: "media/metaal/Modern/Glenfiddich%20%20.jpg",
+        alt: "Model Glenfiddich, moderne metalen poort van Poortland"
       }, {
         naam: "Glenfiddich",
-        foto: "media/metaal/Modern/Glenfiddich%20.jpg"
+        foto: "media/metaal/Modern/Glenfiddich%20.jpg",
+        alt: "Model Glenfiddich, moderne metalen poort van Poortland"
       }, {
         naam: "Glenfiddich",
-        foto: "media/metaal/Modern/Glenfiddich.jpg"
+        foto: "media/metaal/Modern/Glenfiddich.jpg",
+        alt: "Model Glenfiddich, moderne metalen poort van Poortland"
       }, {
         naam: "Glenfiddich plane",
-        foto: "media/metaal/Modern/Glenfiddich%20plane%20%20%20.jpg"
+        foto: "media/metaal/Modern/Glenfiddich%20plane%20%20%20.jpg",
+        alt: "Model Glenfiddich plane, moderne metalen poort van Poortland"
       }, {
         naam: "Glenfiddich plane",
-        foto: "media/metaal/Modern/Glenfiddich%20plane%20%20.jpg"
+        foto: "media/metaal/Modern/Glenfiddich%20plane%20%20.jpg",
+        alt: "Model Glenfiddich plane, moderne metalen poort van Poortland"
       }, {
         naam: "Glenfiddich plane",
-        foto: "media/metaal/Modern/Glenfiddich%20plane%20.jpg"
+        foto: "media/metaal/Modern/Glenfiddich%20plane%20.jpg",
+        alt: "Model Glenfiddich plane, moderne metalen poort van Poortland"
       }, {
         naam: "Glenfiddich plane",
-        foto: "media/metaal/Modern/Glenfiddich%20plane.jpg"
+        foto: "media/metaal/Modern/Glenfiddich%20plane.jpg",
+        alt: "Model Glenfiddich plane, moderne metalen poort van Poortland"
       }, {
         naam: "Glenfiddich Verticaal",
-        foto: "media/metaal/Modern/Glenfiddich%20Verticaal.jpg"
+        foto: "media/metaal/Modern/Glenfiddich%20Verticaal.jpg",
+        alt: "Model Glenfiddich Verticaal, moderne metalen poort van Poortland"
       }, {
         naam: "Japura",
-        foto: "media/metaal/Modern/Japura%20.jpg"
+        foto: "media/metaal/Modern/Japura%20.jpg",
+        alt: "Model Japura, moderne metalen poort van Poortland"
       }, {
         naam: "Japura",
-        foto: "media/metaal/Modern/Japura.jpg"
+        foto: "media/metaal/Modern/Japura.jpg",
+        alt: "Model Japura, moderne metalen poort van Poortland"
       }, {
         naam: "Kama",
-        foto: "media/metaal/Modern/Kama%20%20%20%20.jpg"
+        foto: "media/metaal/Modern/Kama%20%20%20%20.jpg",
+        alt: "Model Kama, moderne metalen poort van Poortland"
       }, {
         naam: "Kama",
-        foto: "media/metaal/Modern/Kama%20%20%20.jpg"
+        foto: "media/metaal/Modern/Kama%20%20%20.jpg",
+        alt: "Model Kama, moderne metalen poort van Poortland"
       }, {
         naam: "Kama",
-        foto: "media/metaal/Modern/Kama%20%20.jpg"
+        foto: "media/metaal/Modern/Kama%20%20.jpg",
+        alt: "Model Kama, moderne metalen poort van Poortland"
       }, {
         naam: "Kama",
-        foto: "media/metaal/Modern/Kama%20.jpg"
+        foto: "media/metaal/Modern/Kama%20.jpg",
+        alt: "Model Kama, moderne metalen poort van Poortland"
       }, {
         naam: "Kama",
-        foto: "media/metaal/Modern/Kama.jpg"
+        foto: "media/metaal/Modern/Kama.jpg",
+        alt: "Model Kama, moderne metalen poort van Poortland"
       }, {
         naam: "Kama zonder middenstijl",
-        foto: "media/metaal/Modern/Kama%20zonder%20middenstijl.jpg"
+        foto: "media/metaal/Modern/Kama%20zonder%20middenstijl.jpg",
+        alt: "Model Kama zonder middenstijl, moderne metalen poort van Poortland"
       }, {
         naam: "Kassai",
-        foto: "media/metaal/Modern/Kassai%20.jpg"
+        foto: "media/metaal/Modern/Kassai%20.jpg",
+        alt: "Model Kassai, moderne metalen poort van Poortland"
       }, {
         naam: "Kassai",
-        foto: "media/metaal/Modern/Kassai.jpg"
+        foto: "media/metaal/Modern/Kassai.jpg",
+        alt: "Model Kassai, moderne metalen poort van Poortland"
       }, {
         naam: "Killian",
-        foto: "media/metaal/Modern/Killian.jpg"
+        foto: "media/metaal/Modern/Killian.jpg",
+        alt: "Model Killian, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai",
-        foto: "media/metaal/Modern/Kwai%20%20%20.jpg"
+        foto: "media/metaal/Modern/Kwai%20%20%20.jpg",
+        alt: "Model Kwai, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai combi glas",
-        foto: "media/metaal/Modern/Kwai%20combi%20glas%20.jpg"
+        foto: "media/metaal/Modern/Kwai%20combi%20glas%20.jpg",
+        alt: "Model Kwai combi glas, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai combi glas",
-        foto: "media/metaal/Modern/Kwai%20combi%20glas.jpg"
+        foto: "media/metaal/Modern/Kwai%20combi%20glas.jpg",
+        alt: "Model Kwai combi glas, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai met boog",
-        foto: "media/metaal/Modern/Kwai%20met%20boog%20%20%20.jpg"
+        foto: "media/metaal/Modern/Kwai%20met%20boog%20%20%20.jpg",
+        alt: "Model Kwai met boog, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai met boog",
-        foto: "media/metaal/Modern/Kwai%20met%20boog%20.jpg"
+        foto: "media/metaal/Modern/Kwai%20met%20boog%20.jpg",
+        alt: "Model Kwai met boog, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai met boog",
-        foto: "media/metaal/Modern/Kwai%20met%20boog.jpg"
+        foto: "media/metaal/Modern/Kwai%20met%20boog.jpg",
+        alt: "Model Kwai met boog, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai perfo",
-        foto: "media/metaal/Modern/Kwai%20perfo%20%20%20%20%20%20%20%20%20%20.jpg"
+        foto: "media/metaal/Modern/Kwai%20perfo%20%20%20%20%20%20%20%20%20%20.jpg",
+        alt: "Model Kwai perfo, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai perfo",
-        foto: "media/metaal/Modern/Kwai%20perfo%20%20%20%20%20%20%20%20.jpg"
+        foto: "media/metaal/Modern/Kwai%20perfo%20%20%20%20%20%20%20%20.jpg",
+        alt: "Model Kwai perfo, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai perfo",
-        foto: "media/metaal/Modern/Kwai%20perfo%20%20%20%20%20%20%20.jpg"
+        foto: "media/metaal/Modern/Kwai%20perfo%20%20%20%20%20%20%20.jpg",
+        alt: "Model Kwai perfo, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai perfo",
-        foto: "media/metaal/Modern/Kwai%20perfo%20%20%20%20%20%20.jpg"
+        foto: "media/metaal/Modern/Kwai%20perfo%20%20%20%20%20%20.jpg",
+        alt: "Model Kwai perfo, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai perfo",
-        foto: "media/metaal/Modern/Kwai%20perfo%20%20%20%20%20.jpg"
+        foto: "media/metaal/Modern/Kwai%20perfo%20%20%20%20%20.jpg",
+        alt: "Model Kwai perfo, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai perfo",
-        foto: "media/metaal/Modern/Kwai%20perfo%20%20%20%20.jpg"
+        foto: "media/metaal/Modern/Kwai%20perfo%20%20%20%20.jpg",
+        alt: "Model Kwai perfo, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai perfo",
-        foto: "media/metaal/Modern/Kwai%20perfo%20%20%20.jpg"
+        foto: "media/metaal/Modern/Kwai%20perfo%20%20%20.jpg",
+        alt: "Model Kwai perfo, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai perfo",
-        foto: "media/metaal/Modern/Kwai%20perfo%20.jpg"
+        foto: "media/metaal/Modern/Kwai%20perfo%20.jpg",
+        alt: "Model Kwai perfo, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai perfo",
-        foto: "media/metaal/Modern/Kwai%20perfo.%20.jpg"
+        foto: "media/metaal/Modern/Kwai%20perfo.%20.jpg",
+        alt: "Model Kwai perfo, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai perfo",
-        foto: "media/metaal/Modern/Kwai%20perfo.jpg"
+        foto: "media/metaal/Modern/Kwai%20perfo.jpg",
+        alt: "Model Kwai perfo, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai plane",
-        foto: "media/metaal/Modern/Kwai%20plane%20%20%20%20.jpg"
+        foto: "media/metaal/Modern/Kwai%20plane%20%20%20%20.jpg",
+        alt: "Model Kwai plane, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai plane",
-        foto: "media/metaal/Modern/Kwai%20plane%20%20%20.jpg"
+        foto: "media/metaal/Modern/Kwai%20plane%20%20%20.jpg",
+        alt: "Model Kwai plane, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai plane",
-        foto: "media/metaal/Modern/Kwai%20plane%20.jpg"
+        foto: "media/metaal/Modern/Kwai%20plane%20.jpg",
+        alt: "Model Kwai plane, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai plane",
-        foto: "media/metaal/Modern/Kwai%20plane.%20.jpg"
+        foto: "media/metaal/Modern/Kwai%20plane.%20.jpg",
+        alt: "Model Kwai plane, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai plane",
-        foto: "media/metaal/Modern/Kwai%20plane.jpg"
+        foto: "media/metaal/Modern/Kwai%20plane.jpg",
+        alt: "Model Kwai plane, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai plane ligna",
-        foto: "media/metaal/Modern/Kwai%20plane%20ligna%20%20%20%20.jpg"
+        foto: "media/metaal/Modern/Kwai%20plane%20ligna%20%20%20%20.jpg",
+        alt: "Model Kwai plane ligna, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai plane ligna",
-        foto: "media/metaal/Modern/Kwai%20plane%20ligna%20%20%20.jpg"
+        foto: "media/metaal/Modern/Kwai%20plane%20ligna%20%20%20.jpg",
+        alt: "Model Kwai plane ligna, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai plane ligna",
-        foto: "media/metaal/Modern/Kwai%20plane%20ligna%20%20.jpg"
+        foto: "media/metaal/Modern/Kwai%20plane%20ligna%20%20.jpg",
+        alt: "Model Kwai plane ligna, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai plane ligna",
-        foto: "media/metaal/Modern/Kwai%20plane%20ligna%20.jpg"
+        foto: "media/metaal/Modern/Kwai%20plane%20ligna%20.jpg",
+        alt: "Model Kwai plane ligna, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai plane ligna",
-        foto: "media/metaal/Modern/Kwai%20plane%20ligna.jpg"
+        foto: "media/metaal/Modern/Kwai%20plane%20ligna.jpg",
+        alt: "Model Kwai plane ligna, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai vlak",
-        foto: "media/metaal/Modern/Kwai%20vlak.jpg"
+        foto: "media/metaal/Modern/Kwai%20vlak.jpg",
+        alt: "Model Kwai vlak, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai volle plaat",
-        foto: "media/metaal/Modern/Kwai%20volle%20plaat.jpg"
+        foto: "media/metaal/Modern/Kwai%20volle%20plaat.jpg",
+        alt: "Model Kwai volle plaat, moderne metalen poort van Poortland"
       }, {
         naam: "Kwai volle plaat combi perfo",
-        foto: "media/metaal/Modern/Kwai%20volle%20plaat%20combi%20perfo.jpg"
+        foto: "media/metaal/Modern/Kwai%20volle%20plaat%20combi%20perfo.jpg",
+        alt: "Model Kwai volle plaat combi perfo, moderne metalen poort van Poortland"
       }, {
         naam: "Notec",
-        foto: "media/metaal/Modern/Notec.jpg"
+        foto: "media/metaal/Modern/Notec.jpg",
+        alt: "Model Notec, moderne metalen poort van Poortland"
       }, {
         naam: "Po",
-        foto: "media/metaal/Modern/Po.jpg"
+        foto: "media/metaal/Modern/Po.jpg",
+        alt: "Model Po, moderne metalen poort van Poortland"
       }, {
         naam: "Puntpoort",
-        foto: "media/metaal/Modern/Puntpoort%20%20.jpg"
+        foto: "media/metaal/Modern/Puntpoort%20%20.jpg",
+        alt: "Model Puntpoort, moderne metalen poort van Poortland"
       }, {
         naam: "Puntpoort",
-        foto: "media/metaal/Modern/Puntpoort%20.jpg"
+        foto: "media/metaal/Modern/Puntpoort%20.jpg",
+        alt: "Model Puntpoort, moderne metalen poort van Poortland"
       }, {
         naam: "Puntpoort",
-        foto: "media/metaal/Modern/Puntpoort.jpg"
+        foto: "media/metaal/Modern/Puntpoort.jpg",
+        alt: "Model Puntpoort, moderne metalen poort van Poortland"
       }, {
         naam: "Robson met plaat",
-        foto: "media/metaal/Modern/Robson%20met%20plaat.jpg"
+        foto: "media/metaal/Modern/Robson%20met%20plaat.jpg",
+        alt: "Model Robson met plaat, moderne metalen poort van Poortland"
       }, {
         naam: "Spijlenpoort",
-        foto: "media/metaal/Modern/Spijlenpoort%20%20%20%20%20%20.jpg"
+        foto: "media/metaal/Modern/Spijlenpoort%20%20%20%20%20%20.jpg",
+        alt: "Model Spijlenpoort, moderne metalen poort van Poortland"
       }, {
         naam: "Spijlenpoort",
-        foto: "media/metaal/Modern/Spijlenpoort%20%20%20%20%20.jpg"
+        foto: "media/metaal/Modern/Spijlenpoort%20%20%20%20%20.jpg",
+        alt: "Model Spijlenpoort, moderne metalen poort van Poortland"
       }, {
         naam: "Spijlenpoort",
-        foto: "media/metaal/Modern/Spijlenpoort%20%20%20%20.jpg"
+        foto: "media/metaal/Modern/Spijlenpoort%20%20%20%20.jpg",
+        alt: "Model Spijlenpoort, moderne metalen poort van Poortland"
       }, {
         naam: "Spijlenpoort",
-        foto: "media/metaal/Modern/Spijlenpoort%20%20%20.jpg"
+        foto: "media/metaal/Modern/Spijlenpoort%20%20%20.jpg",
+        alt: "Model Spijlenpoort, moderne metalen poort van Poortland"
       }, {
         naam: "Spijlenpoort",
-        foto: "media/metaal/Modern/Spijlenpoort%20%20.jpg"
+        foto: "media/metaal/Modern/Spijlenpoort%20%20.jpg",
+        alt: "Model Spijlenpoort, moderne metalen poort van Poortland"
       }, {
         naam: "Spijlenpoort",
-        foto: "media/metaal/Modern/Spijlenpoort%20.jpg"
+        foto: "media/metaal/Modern/Spijlenpoort%20.jpg",
+        alt: "Model Spijlenpoort, moderne metalen poort van Poortland"
       }, {
         naam: "Spijlenpoort",
-        foto: "media/metaal/Modern/Spijlenpoort.jpg"
+        foto: "media/metaal/Modern/Spijlenpoort.jpg",
+        alt: "Model Spijlenpoort, moderne metalen poort van Poortland"
       }, {
         naam: "Talisker",
-        foto: "media/metaal/Modern/Talisker.jpg"
+        foto: "media/metaal/Modern/Talisker.jpg",
+        alt: "Model Talisker, moderne metalen poort van Poortland"
       }, {
         naam: "Tigris",
-        foto: "media/metaal/Modern/Tigris%20%20%20%20%20%20%20.jpg"
+        foto: "media/metaal/Modern/Tigris%20%20%20%20%20%20%20.jpg",
+        alt: "Model Tigris, moderne metalen poort van Poortland"
       }, {
         naam: "Tigris",
-        foto: "media/metaal/Modern/Tigris%20%20%20%20%20%20.jpg"
+        foto: "media/metaal/Modern/Tigris%20%20%20%20%20%20.jpg",
+        alt: "Model Tigris, moderne metalen poort van Poortland"
       }, {
         naam: "Tigris",
-        foto: "media/metaal/Modern/Tigris%20%20%20%20%20.jpg"
+        foto: "media/metaal/Modern/Tigris%20%20%20%20%20.jpg",
+        alt: "Model Tigris, moderne metalen poort van Poortland"
       }, {
         naam: "Tigris",
-        foto: "media/metaal/Modern/Tigris%20%20%20%20.jpg"
+        foto: "media/metaal/Modern/Tigris%20%20%20%20.jpg",
+        alt: "Model Tigris, moderne metalen poort van Poortland"
       }, {
         naam: "Tigris",
-        foto: "media/metaal/Modern/Tigris%20%20%20.jpg"
+        foto: "media/metaal/Modern/Tigris%20%20%20.jpg",
+        alt: "Model Tigris, moderne metalen poort van Poortland"
       }, {
         naam: "Tigris",
-        foto: "media/metaal/Modern/Tigris%20%20.jpg"
+        foto: "media/metaal/Modern/Tigris%20%20.jpg",
+        alt: "Model Tigris, moderne metalen poort van Poortland"
       }, {
         naam: "Tigris",
-        foto: "media/metaal/Modern/Tigris%20.jpg"
+        foto: "media/metaal/Modern/Tigris%20.jpg",
+        alt: "Model Tigris, moderne metalen poort van Poortland"
       }, {
         naam: "Tigris",
-        foto: "media/metaal/Modern/Tigris.jpg"
+        foto: "media/metaal/Modern/Tigris.jpg",
+        alt: "Model Tigris, moderne metalen poort van Poortland"
       }]
     }, {
       tab: "Klassiek zonder sierpunten",
       types: [{
         naam: "Mississipi",
-        foto: "media/metaal/Klassiek%20zonder%20punten/Mississipi%20.jpg"
+        foto: "media/metaal/Klassiek%20zonder%20punten/Mississipi%20.jpg",
+        alt: "Model Mississipi, klassieke metalen poort zonder sierpunten van Poortland"
       }, {
         naam: "Mississipi",
-        foto: "media/metaal/Klassiek%20zonder%20punten/Mississipi.jpg"
+        foto: "media/metaal/Klassiek%20zonder%20punten/Mississipi.jpg",
+        alt: "Model Mississipi, klassieke metalen poort zonder sierpunten van Poortland"
       }, {
         naam: "Siret",
-        foto: "media/metaal/Klassiek%20zonder%20punten/Siret.jpg"
+        foto: "media/metaal/Klassiek%20zonder%20punten/Siret.jpg",
+        alt: "Model Siret, klassieke metalen poort zonder sierpunten van Poortland"
       }, {
         naam: "Taag",
-        foto: "media/metaal/Klassiek%20zonder%20punten/Taag%20.jpg"
+        foto: "media/metaal/Klassiek%20zonder%20punten/Taag%20.jpg",
+        alt: "Model Taag, klassieke metalen poort zonder sierpunten van Poortland"
       }, {
         naam: "Taag",
-        foto: "media/metaal/Klassiek%20zonder%20punten/Taag.jpg"
+        foto: "media/metaal/Klassiek%20zonder%20punten/Taag.jpg",
+        alt: "Model Taag, klassieke metalen poort zonder sierpunten van Poortland"
       }, {
         naam: "Taag met plaat",
-        foto: "media/metaal/Klassiek%20zonder%20punten/Taag%20met%20plaat.jpg"
+        foto: "media/metaal/Klassiek%20zonder%20punten/Taag%20met%20plaat.jpg",
+        alt: "Model Taag met plaat, klassieke metalen poort zonder sierpunten van Poortland"
       }, {
         naam: "Veluwe",
-        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe%20.jpg"
+        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe%20.jpg",
+        alt: "Model Veluwe, klassieke metalen poort zonder sierpunten van Poortland"
       }, {
         naam: "Veluwe",
-        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe.%20.jpg"
+        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe.%20.jpg",
+        alt: "Model Veluwe, klassieke metalen poort zonder sierpunten van Poortland"
       }, {
         naam: "Veluwe",
-        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe.jpg"
+        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe.jpg",
+        alt: "Model Veluwe, klassieke metalen poort zonder sierpunten van Poortland"
       }, {
         naam: "Veluwe dubbele cirkel",
-        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe%20dubbele%20cirkel.jpg"
+        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe%20dubbele%20cirkel.jpg",
+        alt: "Model Veluwe dubbele cirkel, klassieke metalen poort zonder sierpunten van Poortland"
       }, {
         naam: "Veluwe recht met plaat",
-        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe%20recht%20met%20plaat.jpg"
+        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe%20recht%20met%20plaat.jpg",
+        alt: "Model Veluwe recht met plaat, klassieke metalen poort zonder sierpunten van Poortland"
       }, {
         naam: "Veluwe ronde boog met plaat",
-        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe%20ronde%20boog%20met%20plaat.jpg"
+        foto: "media/metaal/Klassiek%20zonder%20punten/Veluwe%20ronde%20boog%20met%20plaat.jpg",
+        alt: "Model Veluwe ronde boog met plaat, klassieke metalen poort zonder sierpunten van Poortland"
       }]
     }, {
       tab: "Klassiek met sierpunten",
       types: [{
         naam: "Amstel",
-        foto: "media/metaal/Klassiek%20met%20punten/Amstel.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Amstel.jpg",
+        alt: "Model Amstel, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Argesj",
-        foto: "media/metaal/Klassiek%20met%20punten/Argesj.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Argesj.jpg",
+        alt: "Model Argesj, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Aveyron",
-        foto: "media/metaal/Klassiek%20met%20punten/Aveyron.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Aveyron.jpg",
+        alt: "Model Aveyron, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Beekvliet",
-        foto: "media/metaal/Klassiek%20met%20punten/Beekvliet%20.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Beekvliet%20.jpg",
+        alt: "Model Beekvliet, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Beekvliet",
-        foto: "media/metaal/Klassiek%20met%20punten/Beekvliet.%20.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Beekvliet.%20.jpg",
+        alt: "Model Beekvliet, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Beekvliet",
-        foto: "media/metaal/Klassiek%20met%20punten/Beekvliet.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Beekvliet.jpg",
+        alt: "Model Beekvliet, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Beekvliet met plaat",
-        foto: "media/metaal/Klassiek%20met%20punten/Beekvliet%20met%20plaat.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Beekvliet%20met%20plaat.jpg",
+        alt: "Model Beekvliet met plaat, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Brenta",
-        foto: "media/metaal/Klassiek%20met%20punten/Brenta%20%20.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Brenta%20%20.jpg",
+        alt: "Model Brenta, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Brenta",
-        foto: "media/metaal/Klassiek%20met%20punten/Brenta%20.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Brenta%20.jpg",
+        alt: "Model Brenta, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Brenta",
-        foto: "media/metaal/Klassiek%20met%20punten/Brenta.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Brenta.jpg",
+        alt: "Model Brenta, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Brenta met plaat",
-        foto: "media/metaal/Klassiek%20met%20punten/Brenta%20met%20plaat.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Brenta%20met%20plaat.jpg",
+        alt: "Model Brenta met plaat, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Cumberland",
-        foto: "media/metaal/Klassiek%20met%20punten/Cumberland%20.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Cumberland%20.jpg",
+        alt: "Model Cumberland, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Cumberland",
-        foto: "media/metaal/Klassiek%20met%20punten/Cumberland.%20%20%20.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Cumberland.%20%20%20.jpg",
+        alt: "Model Cumberland, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Cumberland",
-        foto: "media/metaal/Klassiek%20met%20punten/Cumberland.%20%20.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Cumberland.%20%20.jpg",
+        alt: "Model Cumberland, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Cumberland",
-        foto: "media/metaal/Klassiek%20met%20punten/Cumberland.%20.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Cumberland.%20.jpg",
+        alt: "Model Cumberland, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Cumberland",
-        foto: "media/metaal/Klassiek%20met%20punten/Cumberland.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Cumberland.jpg",
+        alt: "Model Cumberland, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Cumberland met plaat",
-        foto: "media/metaal/Klassiek%20met%20punten/Cumberland%20met%20plaat%20.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Cumberland%20met%20plaat%20.jpg",
+        alt: "Model Cumberland met plaat, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Cumberland met plaat",
-        foto: "media/metaal/Klassiek%20met%20punten/Cumberland%20met%20plaat.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Cumberland%20met%20plaat.jpg",
+        alt: "Model Cumberland met plaat, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Esla",
-        foto: "media/metaal/Klassiek%20met%20punten/Esla%20%20.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Esla%20%20.jpg",
+        alt: "Model Esla, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Esla",
-        foto: "media/metaal/Klassiek%20met%20punten/Esla%20.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Esla%20.jpg",
+        alt: "Model Esla, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Esla",
-        foto: "media/metaal/Klassiek%20met%20punten/Esla.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Esla.jpg",
+        alt: "Model Esla, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Esla met plaat",
-        foto: "media/metaal/Klassiek%20met%20punten/Esla%20met%20plaat.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Esla%20met%20plaat.jpg",
+        alt: "Model Esla met plaat, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Esla special",
-        foto: "media/metaal/Klassiek%20met%20punten/Esla%20special.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Esla%20special.jpg",
+        alt: "Model Esla special, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Lake ontario",
-        foto: "media/metaal/Klassiek%20met%20punten/Lake%20ontario.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Lake%20ontario.jpg",
+        alt: "Model Lake ontario, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Manitoba",
-        foto: "media/metaal/Klassiek%20met%20punten/Manitoba%20.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Manitoba%20.jpg",
+        alt: "Model Manitoba, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Manitoba",
-        foto: "media/metaal/Klassiek%20met%20punten/Manitoba.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Manitoba.jpg",
+        alt: "Model Manitoba, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Oosterschelde",
-        foto: "media/metaal/Klassiek%20met%20punten/Oosterschelde%20.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Oosterschelde%20.jpg",
+        alt: "Model Oosterschelde, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Oosterschelde",
-        foto: "media/metaal/Klassiek%20met%20punten/Oosterschelde.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Oosterschelde.jpg",
+        alt: "Model Oosterschelde, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Oosterschelde met plaat",
-        foto: "media/metaal/Klassiek%20met%20punten/Oosterschelde%20met%20plaat.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Oosterschelde%20met%20plaat.jpg",
+        alt: "Model Oosterschelde met plaat, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Rhone",
-        foto: "media/metaal/Klassiek%20met%20punten/Rhone.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Rhone.jpg",
+        alt: "Model Rhone, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Roer",
-        foto: "media/metaal/Klassiek%20met%20punten/Roer.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Roer.jpg",
+        alt: "Model Roer, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Sado",
-        foto: "media/metaal/Klassiek%20met%20punten/Sado.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Sado.jpg",
+        alt: "Model Sado, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Siret",
-        foto: "media/metaal/Klassiek%20met%20punten/Siret.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Siret.jpg",
+        alt: "Model Siret, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Vienne",
-        foto: "media/metaal/Klassiek%20met%20punten/Vienne%20.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Vienne%20.jpg",
+        alt: "Model Vienne, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Vienne",
-        foto: "media/metaal/Klassiek%20met%20punten/Vienne.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Vienne.jpg",
+        alt: "Model Vienne, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Westerschelde",
-        foto: "media/metaal/Klassiek%20met%20punten/Westerschelde.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Westerschelde.jpg",
+        alt: "Model Westerschelde, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Yellowstone",
-        foto: "media/metaal/Klassiek%20met%20punten/Yellowstone.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Yellowstone.jpg",
+        alt: "Model Yellowstone, klassieke metalen poort met sierpunten van Poortland"
       }, {
         naam: "Yukon",
-        foto: "media/metaal/Klassiek%20met%20punten/Yukon.jpg"
+        foto: "media/metaal/Klassiek%20met%20punten/Yukon.jpg",
+        alt: "Model Yukon, klassieke metalen poort met sierpunten van Poortland"
       }]
     }, {
       tab: "Art Deco",
       types: [{
         naam: "Apollo",
-        foto: "media/metaal/Art%20Deco/Apollo.jpg"
+        foto: "media/metaal/Art%20Deco/Apollo.jpg",
+        alt: "Model Apollo, metalen poort in art deco stijl van Poortland"
       }, {
         naam: "Loch Lomond",
-        foto: "media/metaal/Art%20Deco/Loch%20Lomond%20%20%20%20.jpg"
+        foto: "media/metaal/Art%20Deco/Loch%20Lomond%20%20%20%20.jpg",
+        alt: "Model Loch Lomond, metalen poort in art deco stijl van Poortland"
       }, {
         naam: "Loch Lomond",
-        foto: "media/metaal/Art%20Deco/Loch%20Lomond%20%20.jpg"
+        foto: "media/metaal/Art%20Deco/Loch%20Lomond%20%20.jpg",
+        alt: "Model Loch Lomond, metalen poort in art deco stijl van Poortland"
       }, {
         naam: "Loch Lomond",
-        foto: "media/metaal/Art%20Deco/Loch%20Lomond%20.jpg"
+        foto: "media/metaal/Art%20Deco/Loch%20Lomond%20.jpg",
+        alt: "Model Loch Lomond, metalen poort in art deco stijl van Poortland"
       }, {
         naam: "Loch Lomond",
-        foto: "media/metaal/Art%20Deco/Loch%20Lomond.jpg"
+        foto: "media/metaal/Art%20Deco/Loch%20Lomond.jpg",
+        alt: "Model Loch Lomond, metalen poort in art deco stijl van Poortland"
       }, {
         naam: "Tweed",
-        foto: "media/metaal/Art%20Deco/Tweed%20%20%20%20%20.jpg"
+        foto: "media/metaal/Art%20Deco/Tweed%20%20%20%20%20.jpg",
+        alt: "Model Tweed, metalen poort in art deco stijl van Poortland"
       }, {
         naam: "Tweed",
-        foto: "media/metaal/Art%20Deco/Tweed%20%20%20%20.jpg"
+        foto: "media/metaal/Art%20Deco/Tweed%20%20%20%20.jpg",
+        alt: "Model Tweed, metalen poort in art deco stijl van Poortland"
       }, {
         naam: "Tweed",
-        foto: "media/metaal/Art%20Deco/Tweed%20%20.jpg"
+        foto: "media/metaal/Art%20Deco/Tweed%20%20.jpg",
+        alt: "Model Tweed, metalen poort in art deco stijl van Poortland"
       }, {
         naam: "Tweed",
-        foto: "media/metaal/Art%20Deco/Tweed%20.jpg"
+        foto: "media/metaal/Art%20Deco/Tweed%20.jpg",
+        alt: "Model Tweed, metalen poort in art deco stijl van Poortland"
       }, {
         naam: "Tweed",
-        foto: "media/metaal/Art%20Deco/Tweed.jpg"
+        foto: "media/metaal/Art%20Deco/Tweed.jpg",
+        alt: "Model Tweed, metalen poort in art deco stijl van Poortland"
       }, {
         naam: "Vleet",
-        foto: "media/metaal/Art%20Deco/Vleet%20.jpg"
+        foto: "media/metaal/Art%20Deco/Vleet%20.jpg",
+        alt: "Model Vleet, metalen poort in art deco stijl van Poortland"
       }, {
         naam: "Vleet",
-        foto: "media/metaal/Art%20Deco/Vleet.jpg"
+        foto: "media/metaal/Art%20Deco/Vleet.jpg",
+        alt: "Model Vleet, metalen poort in art deco stijl van Poortland"
       }]
     }, {
       tab: "Cottage",
       types: [{
         naam: "Luxus",
-        foto: "media/metaal/Cottage/Luxus%20%20%20.jpg"
+        foto: "media/metaal/Cottage/Luxus%20%20%20.jpg",
+        alt: "Model Luxus, metalen poort in cottagestijl van Poortland"
       }, {
         naam: "Luxus",
-        foto: "media/metaal/Cottage/Luxus%20.jpg"
+        foto: "media/metaal/Cottage/Luxus%20.jpg",
+        alt: "Model Luxus, metalen poort in cottagestijl van Poortland"
       }, {
         naam: "Luxus",
-        foto: "media/metaal/Cottage/Luxus.jpg"
+        foto: "media/metaal/Cottage/Luxus.jpg",
+        alt: "Model Luxus, metalen poort in cottagestijl van Poortland"
       }, {
         naam: "Luxus met plaat",
-        foto: "media/metaal/Cottage/Luxus%20met%20plaat.jpg"
+        foto: "media/metaal/Cottage/Luxus%20met%20plaat.jpg",
+        alt: "Model Luxus met plaat, metalen poort in cottagestijl van Poortland"
       }, {
         naam: "Odum",
-        foto: "media/metaal/Cottage/Odum.jpg"
+        foto: "media/metaal/Cottage/Odum.jpg",
+        alt: "Model Odum, metalen poort in cottagestijl van Poortland"
       }, {
         naam: "Orinoco",
-        foto: "media/metaal/Cottage/Orinoco%20%20%20%20%20%20%20%20%20.jpg"
+        foto: "media/metaal/Cottage/Orinoco%20%20%20%20%20%20%20%20%20.jpg",
+        alt: "Model Orinoco, metalen poort in cottagestijl van Poortland"
       }, {
         naam: "Orinoco",
-        foto: "media/metaal/Cottage/Orinoco%20%20%20%20%20%20%20%20.jpg"
+        foto: "media/metaal/Cottage/Orinoco%20%20%20%20%20%20%20%20.jpg",
+        alt: "Model Orinoco, metalen poort in cottagestijl van Poortland"
       }, {
         naam: "Orinoco",
-        foto: "media/metaal/Cottage/Orinoco%20%20%20%20%20%20.jpg"
+        foto: "media/metaal/Cottage/Orinoco%20%20%20%20%20%20.jpg",
+        alt: "Model Orinoco, metalen poort in cottagestijl van Poortland"
       }, {
         naam: "Orinoco",
-        foto: "media/metaal/Cottage/Orinoco%20%20%20%20%20.jpg"
+        foto: "media/metaal/Cottage/Orinoco%20%20%20%20%20.jpg",
+        alt: "Model Orinoco, metalen poort in cottagestijl van Poortland"
       }, {
         naam: "Orinoco",
-        foto: "media/metaal/Cottage/Orinoco%20%20%20%20.jpg"
+        foto: "media/metaal/Cottage/Orinoco%20%20%20%20.jpg",
+        alt: "Model Orinoco, metalen poort in cottagestijl van Poortland"
       }, {
         naam: "Orinoco",
-        foto: "media/metaal/Cottage/Orinoco%20%20%20.jpg"
+        foto: "media/metaal/Cottage/Orinoco%20%20%20.jpg",
+        alt: "Model Orinoco, metalen poort in cottagestijl van Poortland"
       }, {
         naam: "Orinoco",
-        foto: "media/metaal/Cottage/Orinoco%20.jpg"
+        foto: "media/metaal/Cottage/Orinoco%20.jpg",
+        alt: "Model Orinoco, metalen poort in cottagestijl van Poortland"
       }, {
         naam: "Orinoco",
-        foto: "media/metaal/Cottage/Orinoco.jpg"
+        foto: "media/metaal/Cottage/Orinoco.jpg",
+        alt: "Model Orinoco, metalen poort in cottagestijl van Poortland"
       }, {
         naam: "Orinoco met plaat",
-        foto: "media/metaal/Cottage/Orinoco%20met%20plaat.jpg"
+        foto: "media/metaal/Cottage/Orinoco%20met%20plaat.jpg",
+        alt: "Model Orinoco met plaat, metalen poort in cottagestijl van Poortland"
       }]
     }, {
       tab: "Uniek",
       types: [{
-        naam: '',
-        foto: ''
+        naam: "Custom klassiek",
+        foto: "media/metaal/Unieke%20poorten/Custom%20klassiek%20%20%20.jpg",
+        alt: "Custom klassiek, unieke poort op maat van Poortland"
+      }, {
+        naam: "Custom klassiek",
+        foto: "media/metaal/Unieke%20poorten/Custom%20klassiek%20%20.jpg",
+        alt: "Custom klassiek, unieke poort op maat van Poortland"
+      }, {
+        naam: "Custom klassiek",
+        foto: "media/metaal/Unieke%20poorten/Custom%20klassiek%20.jpg",
+        alt: "Custom klassiek, unieke poort op maat van Poortland"
+      }, {
+        naam: "Custom klassiek",
+        foto: "media/metaal/Unieke%20poorten/Custom%20klassiek.jpg",
+        alt: "Custom klassiek, unieke poort op maat van Poortland"
+      }, {
+        naam: "Custom kwai",
+        foto: "media/metaal/Unieke%20poorten/Custom%20kwai.jpg",
+        alt: "Custom kwai, unieke poort op maat van Poortland"
+      }, {
+        naam: "Custom made klassiek",
+        foto: "media/metaal/Unieke%20poorten/Custom%20made%20klassiek%20%20%20%20%20%20%20.jpg",
+        alt: "Custom made klassiek, unieke poort op maat van Poortland"
+      }, {
+        naam: "Custom made klassiek",
+        foto: "media/metaal/Unieke%20poorten/Custom%20made%20klassiek%20%20%20%20%20%20.jpg",
+        alt: "Custom made klassiek, unieke poort op maat van Poortland"
+      }, {
+        naam: "Custom made klassiek",
+        foto: "media/metaal/Unieke%20poorten/Custom%20made%20klassiek%20%20%20%20%20.jpg",
+        alt: "Custom made klassiek, unieke poort op maat van Poortland"
+      }, {
+        naam: "Custom modern",
+        foto: "media/metaal/Unieke%20poorten/Custom%20modern.jpg",
+        alt: "Custom modern, unieke poort op maat van Poortland"
+      }, {
+        naam: "Kwai laser ESV",
+        foto: "media/metaal/Unieke%20poorten/Kwai%20laser%20ESV.jpg",
+        alt: "Kwai laser ESV, unieke poort op maat van Poortland"
       }]
     }],
     producten: [{
