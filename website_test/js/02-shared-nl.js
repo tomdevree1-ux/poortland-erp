@@ -3754,7 +3754,85 @@ function CategoriePagina({
       color: 'var(--accent)',
       marginTop: 16
     }
-  }, "Ontdek deze stijl →")))))))), /*#__PURE__*/React.createElement("section", {
+  }, "Ontdek deze stijl →")))))))), d.aluminiumBlok && /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-paper)',
+      padding: '10px 44px 88px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 1000,
+      margin: '0 auto'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'var(--surface-card)',
+      border: '1px solid var(--line-on-light-soft)',
+      borderTop: '3px solid var(--accent)',
+      borderRadius: 'var(--radius-md)',
+      padding: '42px 40px',
+      boxShadow: 'var(--shadow-lg)'
+    }
+  }, /*#__PURE__*/React.createElement(SEyebrow, {
+    style: {
+      marginBottom: 14
+    }
+  }, d.aluminiumBlok.eyebrow), /*#__PURE__*/React.createElement("h2", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 32,
+      lineHeight: 1.15,
+      letterSpacing: '-0.01em',
+      color: 'var(--text-heading)',
+      margin: '0 0 18px'
+    }
+  }, d.aluminiumBlok.titel), d.aluminiumBlok.alinea.map((a, i) => /*#__PURE__*/React.createElement("p", {
+    key: i,
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 16,
+      lineHeight: 1.72,
+      color: 'var(--text-body)',
+      margin: i ? '12px 0 0' : 0
+    }
+  }, a)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 15.5,
+      fontWeight: 600,
+      color: 'var(--text-heading)',
+      margin: '26px 0 16px'
+    }
+  }, d.aluminiumBlok.puntenKop), /*#__PURE__*/React.createElement("div", {
+    className: "pl-cards",
+    style: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(2, 1fr)',
+      gap: 20
+    }
+  }, d.aluminiumBlok.punten.map(([titel, tekst]) => /*#__PURE__*/React.createElement("div", {
+    key: titel,
+    style: {
+      borderTop: '2px solid var(--accent)',
+      paddingTop: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 15,
+      fontWeight: 600,
+      color: 'var(--text-heading)'
+    }
+  }, titel), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 14,
+      lineHeight: 1.6,
+      color: 'var(--text-muted)',
+      marginTop: 4
+    }
+  }, tekst)))))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper)',
       padding: '20px 44px 90px',
@@ -4832,6 +4910,13 @@ var CATEGORIEEN = {
         tags: ['Modern', 'Metaal'],
         ratio: '3 / 4'
       }]
+    },
+    aluminiumBlok: {
+      eyebrow: 'Exclusief patent voor de Benelux',
+      titel: 'Zoek je de charme van hout met de ultieme kracht van metaal? Ontdek aluminium.',
+      alinea: ['Wist je dat onze aluminium poorten op een heel unieke manier worden gebouwd? In ons gespecialiseerde atelier lassen we niet, maar passen we de profielen naadloos in elkaar met onzichtbare, roestvrije schroeven. Poortland heeft hiervoor het exclusieve patent voor de Benelux. Het resultaat? De verfijnde esthetiek van een klassieke houten poort, gecombineerd met ongeëvenaard gebruiksgemak.', 'Doordat elk profiel eerst afzonderlijk wordt gelakt en pas daarna gemonteerd, krijgt uitzetting door het weer geen kans om de lak te beschadigen.'],
+      puntenKop: 'Waarom een geschroefde aluminium poort de slimste keuze is:',
+      punten: [['Oersterk', 'Tot wel 2,5 keer sterker dan een traditionele gelaste poort.'], ['Geen lakschade', 'De lak blijft intact, ook als de temperatuur schommelt.'], ['Duurzame bevestigingen', 'Geen risico op uitgescheurde scharnieren of motorophangingen.'], ['Slim te herstellen', 'Bij eventuele schade vervangen we eenvoudig één afzonderlijk profiel.']]
     },
     kwaliteit: {
       titel: 'Beschermd tegen roest en weer',
