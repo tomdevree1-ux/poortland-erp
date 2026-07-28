@@ -8462,7 +8462,15 @@ function PoortAdviesModal() {
       color: 'var(--text-heading)',
       margin: '0 0 6px'
     }
-  }, huidige.titel), huidige.waarom && /*#__PURE__*/React.createElement("div", {
+  }, huidige.titel), stap === 0 ? /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 15,
+      lineHeight: 1.65,
+      color: 'var(--text-muted)',
+      margin: '4px 0 20px'
+    }
+  }, "Deze korte test onderbouwt of een draaipoort of een schuifpoort het best bij uw situatie past. Aan de hand van uw oprit, de beschikbare ruimte en uw voorkeuren krijgt u een onderbouwd advies. Volledig vrijblijvend en zonder gegevens achter te laten.") : huidige.waarom && /*#__PURE__*/React.createElement("div", {
     style: {
       marginBottom: 16
     }
