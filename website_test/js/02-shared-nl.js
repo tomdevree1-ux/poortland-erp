@@ -5074,10 +5074,6 @@ var CATEGORIEEN = {
         naam: "Custom modern",
         foto: "media/metaal/Unieke%20poorten/Custom%20modern.jpg",
         alt: "Custom modern, unieke poort op maat van Poortland"
-      }, {
-        naam: "Kwai laser ESV",
-        foto: "media/metaal/Unieke%20poorten/Kwai%20laser%20ESV.jpg",
-        alt: "Kwai laser ESV, unieke poort op maat van Poortland"
       }]
     }],
     producten: [{
