@@ -4126,7 +4126,6 @@ function CategoriePagina({
     style: {
       borderRadius: 10,
       overflow: 'hidden',
-      aspectRatio: '4 / 5',
       boxShadow: 'var(--shadow-lg)'
     }
   }, /*#__PURE__*/React.createElement("img", {
@@ -4135,8 +4134,7 @@ function CategoriePagina({
     alt: "Kwaliteit en afwerking",
     style: {
       width: '100%',
-      height: '100%',
-      objectFit: 'cover',
+      height: 'auto',
       display: 'block'
     }
   }))), /*#__PURE__*/React.createElement(Reveal, {
