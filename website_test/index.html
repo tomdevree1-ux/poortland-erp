@@ -366,6 +366,7 @@ body {
 .pl-modelscroll::-webkit-scrollbar{ width: 8px; }
 .pl-modelscroll::-webkit-scrollbar-thumb{ background: var(--accent); border-radius: 999px; }
 .pl-modelscroll::-webkit-scrollbar-track{ background: var(--surface-paper-2); border-radius: 999px; }
+@media print { body * { visibility: hidden; } .pl-advies-overlay, .pl-advies-overlay * { visibility: visible; } .pl-advies-overlay{ position: absolute !important; inset: 0 !important; background: #fff !important; padding: 0 !important; overflow: visible !important; } .pl-advies-panel{ box-shadow: none !important; max-width: 100% !important; } .pl-advies-acties{ display: none !important; } }
 .pl-galpijl:hover{ border-color: var(--accent) !important; }
 #root input:focus, #root textarea:focus, #root select:focus, #root input:focus-visible, #root textarea:focus-visible, #root select:focus-visible { outline: none !important; border-color: var(--accent) !important; box-shadow: 0 0 0 3px rgba(138,106,60,0.16) !important; }
 .pl-tlc{ position: relative; max-width: 980px; margin: 0 auto; }

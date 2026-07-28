@@ -298,7 +298,7 @@ function App() {
     onNav: onNav,
     lang: lang,
     onLang: setLang
-  }), /*#__PURE__*/React.createElement(window.OfferteModal, null), /*#__PURE__*/React.createElement(Lightbox, {
+  }), /*#__PURE__*/React.createElement(window.OfferteModal, null), /*#__PURE__*/React.createElement(window.PoortAdviesModal, null), /*#__PURE__*/React.createElement(Lightbox, {
     src: lightbox && lightbox.src,
     alt: lightbox && lightbox.alt,
     onClose: () => setLightbox(null)

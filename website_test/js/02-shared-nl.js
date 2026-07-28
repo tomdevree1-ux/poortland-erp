@@ -666,7 +666,7 @@ function DesktopNav({
     cursor: 'pointer',
     padding: '4px 0',
     fontFamily: 'var(--font-sans)',
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: active ? 600 : 400,
     color: active ? fg : faint,
     borderBottom: active ? '1px solid var(--accent)' : '1px solid transparent'
@@ -3417,89 +3417,7 @@ function CategoriePagina({
       lineHeight: 1.6,
       color: 'var(--text-muted)'
     }
-  }, v.tekst))))))), d.aluminiumBlok && /*#__PURE__*/React.createElement("section", {
-    style: {
-      background: 'var(--surface-paper)',
-      padding: '72px 44px 10px'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      maxWidth: 1000,
-      margin: '0 auto'
-    }
-  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("div", {
-    style: {
-      background: 'var(--surface-card)',
-      border: '1px solid var(--line-on-light-soft)',
-      borderTop: '3px solid var(--accent)',
-      borderRadius: 'var(--radius-md)',
-      padding: '42px 40px',
-      boxShadow: 'var(--shadow-lg)'
-    }
-  }, /*#__PURE__*/React.createElement(SEyebrow, {
-    style: {
-      marginBottom: 14
-    }
-  }, d.aluminiumBlok.eyebrow), /*#__PURE__*/React.createElement("h2", {
-    style: {
-      fontFamily: 'var(--font-display)',
-      fontWeight: 500,
-      fontSize: 32,
-      lineHeight: 1.15,
-      letterSpacing: '-0.01em',
-      color: 'var(--text-heading)',
-      margin: '0 0 18px'
-    }
-  }, d.aluminiumBlok.titel, d.aluminiumBlok.titel2 ? /*#__PURE__*/React.createElement("span", {
-    style: {
-      display: 'block'
-    }
-  }, d.aluminiumBlok.titel2) : null), d.aluminiumBlok.alinea.map((a, i) => /*#__PURE__*/React.createElement("p", {
-    key: i,
-    style: {
-      fontFamily: 'var(--font-sans)',
-      fontSize: 16,
-      lineHeight: 1.72,
-      color: 'var(--text-body)',
-      margin: i ? '12px 0 0' : 0
-    }
-  }, a)), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontFamily: 'var(--font-sans)',
-      fontSize: 15.5,
-      fontWeight: 600,
-      color: 'var(--text-heading)',
-      margin: '26px 0 16px'
-    }
-  }, d.aluminiumBlok.puntenKop), /*#__PURE__*/React.createElement("div", {
-    className: "pl-cards",
-    style: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(2, 1fr)',
-      gap: 20
-    }
-  }, d.aluminiumBlok.punten.map(([titel, tekst]) => /*#__PURE__*/React.createElement("div", {
-    key: titel,
-    style: {
-      borderTop: '2px solid var(--accent)',
-      paddingTop: 12
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontFamily: 'var(--font-sans)',
-      fontSize: 15,
-      fontWeight: 600,
-      color: 'var(--text-heading)'
-    }
-  }, titel), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontFamily: 'var(--font-sans)',
-      fontSize: 14,
-      lineHeight: 1.6,
-      color: 'var(--text-muted)',
-      marginTop: 4
-    }
-  }, tekst)))))))), /*#__PURE__*/React.createElement("section", {
+  }, v.tekst))))))), /*#__PURE__*/React.createElement("section", {
     id: "modellen",
     style: {
       background: 'var(--surface-paper)',
@@ -3798,7 +3716,89 @@ function CategoriePagina({
       color: 'var(--accent)',
       marginTop: 16
     }
-  }, "Ontdek deze stijl →")))))))), /*#__PURE__*/React.createElement("section", {
+  }, "Ontdek deze stijl →")))))))), d.aluminiumBlok && /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-paper)',
+      padding: '10px 44px 20px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 1000,
+      margin: '0 auto'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'var(--surface-card)',
+      border: '1px solid var(--line-on-light-soft)',
+      borderTop: '3px solid var(--accent)',
+      borderRadius: 'var(--radius-md)',
+      padding: '42px 40px',
+      boxShadow: 'var(--shadow-lg)'
+    }
+  }, /*#__PURE__*/React.createElement(SEyebrow, {
+    style: {
+      marginBottom: 14
+    }
+  }, d.aluminiumBlok.eyebrow), /*#__PURE__*/React.createElement("h2", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 32,
+      lineHeight: 1.15,
+      letterSpacing: '-0.01em',
+      color: 'var(--text-heading)',
+      margin: '0 0 18px'
+    }
+  }, d.aluminiumBlok.titel, d.aluminiumBlok.titel2 ? /*#__PURE__*/React.createElement("span", {
+    style: {
+      display: 'block'
+    }
+  }, d.aluminiumBlok.titel2) : null), d.aluminiumBlok.alinea.map((a, i) => /*#__PURE__*/React.createElement("p", {
+    key: i,
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 16,
+      lineHeight: 1.72,
+      color: 'var(--text-body)',
+      margin: i ? '12px 0 0' : 0
+    }
+  }, a)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 15.5,
+      fontWeight: 600,
+      color: 'var(--text-heading)',
+      margin: '26px 0 16px'
+    }
+  }, d.aluminiumBlok.puntenKop), /*#__PURE__*/React.createElement("div", {
+    className: "pl-cards",
+    style: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(2, 1fr)',
+      gap: 20
+    }
+  }, d.aluminiumBlok.punten.map(([titel, tekst]) => /*#__PURE__*/React.createElement("div", {
+    key: titel,
+    style: {
+      borderTop: '2px solid var(--accent)',
+      paddingTop: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 15,
+      fontWeight: 600,
+      color: 'var(--text-heading)'
+    }
+  }, titel), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 14,
+      lineHeight: 1.6,
+      color: 'var(--text-muted)',
+      marginTop: 4
+    }
+  }, tekst)))))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper)',
       padding: '20px 44px 90px',
@@ -3870,14 +3870,22 @@ function CategoriePagina({
     }
   }, pt)))))))), /*#__PURE__*/React.createElement("div", {
     style: {
-      textAlign: 'center',
+      display: 'flex',
+      gap: 14,
+      justifyContent: 'center',
+      flexWrap: 'wrap',
       marginTop: 34
     }
   }, /*#__PURE__*/React.createElement(SButton, {
     variant: "primary",
     arrow: true,
+    as: "button",
+    onClick: () => window.dispatchEvent(new CustomEvent('pl-advies-open'))
+  }, "Doe de poortkeuzetest"), /*#__PURE__*/React.createElement(SButton, {
+    variant: "secondary",
+    arrow: true,
     onClick: () => onNav('contact')
-  }, "Laat u adviseren over de beste oplossing")))), /*#__PURE__*/React.createElement("section", {
+  }, "Laat u adviseren")))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--forest-900)',
       color: 'var(--text-on-dark)',
@@ -7531,8 +7539,1290 @@ function AutomatiseringNL({
     dark: true
   }));
 }
+
+/* =========================================================================
+   Advieswizard draaipoort of schuifpoort. Puur informatief: geen leadverplichting,
+   geen persoonsgegevens, geen opslag buiten de actieve sessie. De vragen staan in
+   ADVIES_STAPPEN, de regels in beoordeelPoort (pure functie), de presentatie in
+   PoortAdviesModal. Opent via het event pl-advies-open.
+   ========================================================================= */
+var ADVIES_WEETNIET = {
+  w: 'weet_niet',
+  l: 'Ik weet het niet'
+};
+var ADVIES_STAPPEN = [{
+  id: 'situatie',
+  titel: 'Situatie en gebruik',
+  waarom: 'De bestemming en hoe vaak de poort opent bepalen mee welke aandrijving en welk type het best passen.',
+  velden: [{
+    sleutel: 'gebruik',
+    label: 'Waarvoor is de poort bedoeld?',
+    type: 'enkel',
+    opties: [{
+      w: 'woning',
+      l: 'Woning'
+    }, {
+      w: 'praktijk',
+      l: 'Praktijk of kantoor'
+    }, {
+      w: 'bedrijf',
+      l: 'Bedrijf'
+    }, {
+      w: 'gemeenschappelijk',
+      l: 'Gemeenschappelijke toegang'
+    }, ADVIES_WEETNIET]
+  }, {
+    sleutel: 'frequentie',
+    label: 'Hoe vaak opent de poort gemiddeld?',
+    type: 'enkel',
+    opties: [{
+      w: 'min5',
+      l: 'Minder dan 5 keer per dag'
+    }, {
+      w: 'tot15',
+      l: '5 tot 15 keer per dag'
+    }, {
+      w: 'meer15',
+      l: 'Meer dan 15 keer per dag'
+    }, {
+      w: 'intensief',
+      l: 'Zeer intensief of gemeenschappelijk'
+    }, ADVIES_WEETNIET]
+  }]
+}, {
+  id: 'achter',
+  titel: 'Vrije ruimte achter de poort',
+  waarom: 'Een draaipoort heeft een vrije zone nodig waarin de vleugels kunnen openen. Voertuigen, muren, hellingen en begroeiing kunnen die beweging hinderen.',
+  illustratie: 'draaicirkel',
+  velden: [{
+    sleutel: 'ruimteAchter',
+    label: 'Hoeveel vrije ruimte is er achter de afsluiting?',
+    type: 'enkel',
+    opties: [{
+      w: 'ruim',
+      l: 'Ruim voldoende'
+    }, {
+      w: 'beperkt',
+      l: 'Beperkt'
+    }, {
+      w: 'nauwelijks',
+      l: 'Nauwelijks ruimte'
+    }, {
+      w: 'parkeren',
+      l: 'Er parkeren vaak voertuigen vlak achter de poort'
+    }, ADVIES_WEETNIET]
+  }]
+}, {
+  id: 'naast',
+  titel: 'Vrije ruimte naast de poort',
+  waarom: 'Een schuifpoort beweegt naast de doorgang en heeft daarom voldoende vrije ruimte in de schuifrichting nodig. Een vrijdragende schuifpoort vraagt meestal extra teruglooplengte.',
+  illustratie: 'schuif',
+  velden: [{
+    sleutel: 'ruimteNaast',
+    label: 'Is er ruimte naast de doorgang om open te schuiven?',
+    type: 'enkel',
+    opties: [{
+      w: 'beide',
+      l: 'Aan beide kanten voldoende'
+    }, {
+      w: 'links',
+      l: 'Links voldoende'
+    }, {
+      w: 'rechts',
+      l: 'Rechts voldoende'
+    }, {
+      w: 'geen',
+      l: 'Aan geen van beide kanten'
+    }, {
+      w: 'obstakels',
+      l: 'Er staan obstakels'
+    }, ADVIES_WEETNIET]
+  }]
+}, {
+  id: 'helling',
+  titel: 'Helling en terrein',
+  waarom: 'Wanneer een oprit binnen het draaibereik sterk stijgt, kunnen draaivleugels de ondergrond raken. Een schuifpoort kan dan interessanter zijn, mits voldoende zijruimte.',
+  illustratie: 'helling',
+  velden: [{
+    sleutel: 'helling',
+    label: 'Hoe ligt de oprit ter hoogte van de poort?',
+    type: 'enkel',
+    opties: [{
+      w: 'vlak',
+      l: 'Vlak'
+    }, {
+      w: 'omhoog',
+      l: 'Helt omhoog richting woning'
+    }, {
+      w: 'omlaag',
+      l: 'Helt omlaag richting woning'
+    }, {
+      w: 'zijwaarts',
+      l: 'Helt zijwaarts'
+    }, {
+      w: 'sterk',
+      l: 'Sterke of onregelmatige helling'
+    }, ADVIES_WEETNIET]
+  }]
+}, {
+  id: 'obstakels',
+  titel: 'Obstakels en omgeving',
+  waarom: 'Vaste elementen kunnen de draaicirkel of de schuifzone blokkeren.',
+  velden: [{
+    sleutel: 'obstakels',
+    label: 'Welke elementen staan er in de buurt van de doorgang?',
+    type: 'multi',
+    opties: [{
+      w: 'muur',
+      l: 'Muur'
+    }, {
+      w: 'haag',
+      l: 'Haag of begroeiing'
+    }, {
+      w: 'boom',
+      l: 'Boom'
+    }, {
+      w: 'brievenbus',
+      l: 'Brievenbus'
+    }, {
+      w: 'paal',
+      l: 'Verlichtingspaal'
+    }, {
+      w: 'kast',
+      l: 'Technische kast'
+    }, {
+      w: 'leidingen',
+      l: 'Nutsleidingen'
+    }, {
+      w: 'hoogteverschil',
+      l: 'Hoogteverschil'
+    }, {
+      w: 'geen',
+      l: 'Geen gekende obstakels'
+    }]
+  }]
+}, {
+  id: 'wind',
+  titel: 'Wind en poortvulling',
+  waarom: 'Een grote gesloten draaivleugel vangt meer wind dan een open structuur. Dat beinvloedt de belasting op scharnieren, motoren en funderingen.',
+  illustratie: 'wind',
+  velden: [{
+    sleutel: 'wind',
+    label: 'Hoe windgevoelig is de locatie?',
+    type: 'enkel',
+    opties: [{
+      w: 'beschut',
+      l: 'Beschut'
+    }, {
+      w: 'gemiddeld',
+      l: 'Gemiddeld'
+    }, {
+      w: 'sterk',
+      l: 'Regelmatig sterke wind'
+    }, {
+      w: 'zeer',
+      l: 'Zeer windgevoelige ligging'
+    }, ADVIES_WEETNIET]
+  }, {
+    sleutel: 'poortvulling',
+    label: 'Welke poortvulling heeft uw voorkeur?',
+    type: 'enkel',
+    opties: [{
+      w: 'gesloten',
+      l: 'Volledig gesloten'
+    }, {
+      w: 'halfopen',
+      l: 'Halfopen'
+    }, {
+      w: 'open',
+      l: 'Open spijlen'
+    }, ADVIES_WEETNIET]
+  }]
+}, {
+  id: 'ondergrond',
+  titel: 'Ondergrond en weer',
+  waarom: 'Een railpoort vraagt een propere, stabiele en goed afgewaterde loopzone. Een vrijdragende schuifpoort heeft geen rail in de doorgang maar wel andere funderingsvereisten.',
+  velden: [{
+    sleutel: 'ondergrond',
+    label: 'Wat is er van toepassing op de ondergrond?',
+    type: 'multi',
+    opties: [{
+      w: 'verhard',
+      l: 'Vlak en verhard'
+    }, {
+      w: 'kasseien',
+      l: 'Kasseien'
+    }, {
+      w: 'grind',
+      l: 'Grind'
+    }, {
+      w: 'zand',
+      l: 'Zand'
+    }, {
+      w: 'bladeren',
+      l: 'Veel bladeren'
+    }, {
+      w: 'modder',
+      l: 'Modder'
+    }, {
+      w: 'sneeuw',
+      l: 'Sneeuw of ijs'
+    }, {
+      w: 'afwatering',
+      l: 'Gebrekkige afwatering'
+    }]
+  }]
+}, {
+  id: 'veiligheid',
+  titel: 'Parkeren, voetgangers en veiligheid',
+  waarom: 'Deze antwoorden bepalen extra veiligheids- en gebruikstips en beinvloeden de draaicirkel.',
+  velden: [{
+    sleutel: 'veiligheid',
+    label: 'Wat is van toepassing rond de poort?',
+    type: 'multi',
+    opties: [{
+      w: 'parkeren',
+      l: 'Voertuigen parkeren vaak vlak achter de poort'
+    }, {
+      w: 'kinderen',
+      l: 'Kinderen spelen op de oprit'
+    }, {
+      w: 'huisdieren',
+      l: 'Er zijn huisdieren'
+    }, {
+      w: 'voetgangers',
+      l: 'Veel fietsers of voetgangers'
+    }, {
+      w: 'looppoort',
+      l: 'Een aparte looppoort is gewenst'
+    }, {
+      w: 'drukkeweg',
+      l: 'De ingang ligt aan een drukke weg'
+    }, {
+      w: 'geen',
+      l: 'Niets van toepassing'
+    }]
+  }]
+}, {
+  id: 'automatisatie',
+  titel: 'Comfort en automatisatie',
+  waarom: 'Dit verfijnt het advies, maar sluit geen enkel type uit.',
+  velden: [{
+    sleutel: 'automatisatie',
+    label: 'Wat is voor u het belangrijkst?',
+    type: 'enkel',
+    opties: [{
+      w: 'handmatig',
+      l: 'Handmatige bediening'
+    }, {
+      w: 'snel',
+      l: 'Snelle opening'
+    }, {
+      w: 'stil',
+      l: 'Stille werking'
+    }, {
+      w: 'stroomuitval',
+      l: 'Bediening bij stroomuitval'
+    }, ADVIES_WEETNIET]
+  }]
+}, {
+  id: 'stijl',
+  titel: 'Uitstraling en voorkeur',
+  waarom: 'Stijl verfijnt het advies maar laat nooit een technisch ongeschikte oplossing winnen.',
+  velden: [{
+    sleutel: 'stijl',
+    label: 'Welke uitstraling spreekt u aan?',
+    type: 'enkel',
+    opties: [{
+      w: 'klassiek',
+      l: 'Klassiek'
+    }, {
+      w: 'landelijk',
+      l: 'Landelijk'
+    }, {
+      w: 'modern',
+      l: 'Modern'
+    }, {
+      w: 'minimalistisch',
+      l: 'Minimalistisch'
+    }, {
+      w: 'architecturaal',
+      l: 'Architecturaal'
+    }, {
+      w: 'geen',
+      l: 'Geen voorkeur'
+    }]
+  }]
+}, {
+  id: 'prioriteiten',
+  titel: 'Uw prioriteiten',
+  waarom: 'Kies er maximaal drie. Dit bepaalt de volgorde van de argumenten in uw advies.',
+  velden: [{
+    sleutel: 'prioriteiten',
+    label: 'Wat vindt u het belangrijkst? (maximaal drie)',
+    type: 'multi',
+    max: 3,
+    opties: [{
+      w: 'ruimte',
+      l: 'Ruimte besparen'
+    }, {
+      w: 'wind',
+      l: 'Windbestendigheid'
+    }, {
+      w: 'veiligheid',
+      l: 'Veiligheid'
+    }, {
+      w: 'gemak',
+      l: 'Gebruiksgemak'
+    }, {
+      w: 'onderhoud',
+      l: 'Lage onderhoudsbehoefte'
+    }, {
+      w: 'snel',
+      l: 'Snelle opening'
+    }, {
+      w: 'stil',
+      l: 'Stille werking'
+    }, {
+      w: 'investering',
+      l: 'Lagere investering'
+    }, {
+      w: 'uitstraling',
+      l: 'Architecturale uitstraling'
+    }, {
+      w: 'privacy',
+      l: 'Privacy'
+    }]
+  }]
+}];
+function adviesWeet(v) {
+  return !v || v === 'weet_niet';
+}
+
+// Pure functie: beoordeelt beide poorttypes op basis van de antwoorden.
+function beoordeelPoort(a) {
+  var swing = {
+    score: 0,
+    uitgesloten: false,
+    redenen: [],
+    let: []
+  };
+  var slide = {
+    score: 0,
+    uitgesloten: false,
+    redenen: [],
+    let: []
+  };
+  var onbekend = [];
+  a = a || {};
+  switch (a.ruimteAchter) {
+    case 'ruim':
+      swing.score += 3;
+      swing.redenen.push('Er is ruim voldoende ruimte achter de poort voor de draaicirkel.');
+      break;
+    case 'beperkt':
+      swing.score -= 1;
+      swing.let.push('De ruimte achter de poort is beperkt voor een draaicirkel.');
+      break;
+    case 'nauwelijks':
+      swing.score -= 4;
+      slide.score += 2;
+      swing.let.push('Er is nauwelijks ruimte achter de poort voor draaivleugels.');
+      break;
+    case 'parkeren':
+      swing.score -= 4;
+      slide.score += 2;
+      swing.let.push('Er parkeren vaak voertuigen vlak achter de poort, wat draaivleugels hindert.');
+      slide.redenen.push('Voertuigen kunnen dicht bij een schuifpoort blijven staan.');
+      break;
+    default:
+      onbekend.push('de vrije ruimte achter de poort');
+  }
+  switch (a.ruimteNaast) {
+    case 'beide':
+      slide.score += 3;
+      slide.redenen.push('Er is aan beide kanten voldoende ruimte voor de schuifbeweging.');
+      break;
+    case 'links':
+    case 'rechts':
+      slide.score += 2;
+      slide.redenen.push('Er is aan een kant voldoende ruimte voor de schuifbeweging.');
+      break;
+    case 'geen':
+      slide.score -= 6;
+      slide.uitgesloten = true;
+      slide.let.push('Er lijkt aan geen van beide kanten voldoende ruimte voor een schuifpoort.');
+      swing.score += 1;
+      break;
+    case 'obstakels':
+      slide.score -= 2;
+      slide.let.push('Obstakels naast de doorgang kunnen de schuifbeweging hinderen.');
+      break;
+    default:
+      onbekend.push('de vrije ruimte naast de poort');
+      slide.let.push('De ruimte naast de doorgang is niet ingeschat; een vrijdragende schuifpoort vraagt extra teruglooplengte.');
+  }
+  switch (a.helling) {
+    case 'vlak':
+      swing.score += 1;
+      break;
+    case 'omhoog':
+    case 'omlaag':
+      swing.score -= 2;
+      slide.score += 2;
+      swing.let.push('De oprit helt, wat draaivleugels binnen het draaibereik kan hinderen.');
+      slide.redenen.push('Bij een hellende oprit is een schuifpoort vaak interessanter.');
+      break;
+    case 'zijwaarts':
+      swing.score -= 1;
+      slide.score += 1;
+      break;
+    case 'sterk':
+      swing.score -= 3;
+      slide.score += 2;
+      swing.let.push('Een sterke of onregelmatige helling maakt een draaipoort technisch lastiger.');
+      break;
+    default:
+      onbekend.push('de helling van de oprit');
+  }
+  var obs = a.obstakels || [];
+  if (obs.indexOf('boom') >= 0 || obs.indexOf('muur') >= 0 || obs.indexOf('kast') >= 0) swing.let.push('Vaste obstakels kunnen de draaicirkel blokkeren.');
+  if (obs.indexOf('leidingen') >= 0) slide.let.push('Nutsleidingen naast de doorgang kunnen de fundering van een schuifpoort bemoeilijken.');
+  var grootGesloten = a.poortvulling === 'gesloten';
+  if (a.wind === 'sterk' || a.wind === 'zeer') {
+    slide.score += 1;
+    slide.redenen.push('Een schuifpoort is doorgaans stabieler bij wind.');
+    if (grootGesloten) {
+      swing.score -= 3;
+      swing.let.push('Een grote gesloten draaivleugel vangt veel wind op een winderige locatie.');
+    } else {
+      swing.score -= 1;
+    }
+  } else if (adviesWeet(a.wind)) onbekend.push('de windgevoeligheid');
+  if (a.frequentie === 'intensief' || a.frequentie === 'meer15') {
+    slide.score += 1;
+    slide.redenen.push('Bij intensief gebruik biedt een schuifpoort een voorspelbare beweging.');
+  }
+  var ond = a.ondergrond || [];
+  if (['grind', 'zand', 'bladeren', 'modder', 'sneeuw', 'afwatering'].some(function (k) {
+    return ond.indexOf(k) >= 0;
+  })) slide.let.push('Een railpoort vraagt een schone, goed afgewaterde loopzone; grind, bladeren, modder of ijs kunnen ze hinderen. Een vrijdragende schuifpoort heeft geen rail in de doorgang.');
+  var pv = a.veiligheid || [];
+  if (pv.indexOf('parkeren') >= 0) {
+    swing.score -= 2;
+    slide.score += 1;
+    swing.let.push('Parkeren vlak achter de poort beperkt de draaicirkel.');
+  }
+  if (pv.indexOf('kinderen') >= 0 || pv.indexOf('drukkeweg') >= 0) {
+    swing.let.push('Voorzie veiligheidsdetectie waar kinderen spelen of bij een drukke weg.');
+    slide.let.push('Scherm de schuifzone langs de zijkant veilig af.');
+  }
+  if (a.stijl === 'klassiek' || a.stijl === 'landelijk') swing.score += 1;
+  if (a.stijl === 'modern' || a.stijl === 'minimalistisch') slide.score += 1;
+  var pr = a.prioriteiten || [];
+  if (pr.indexOf('ruimte') >= 0) slide.score += 1;
+  if (pr.indexOf('wind') >= 0) slide.score += 1;
+  if (pr.indexOf('investering') >= 0) swing.score += 1;
+  if (pr.indexOf('onderhoud') >= 0) swing.score += 1;
+  var conf = 'hoog';
+  if (onbekend.length >= 4) conf = 'beperkt';else if (onbekend.length >= 2) conf = 'gemiddeld';
+  if ((adviesWeet(a.ruimteNaast) || adviesWeet(a.ruimteAchter)) && conf === 'hoog') conf = 'gemiddeld';
+  return {
+    swing: swing,
+    slide: slide,
+    confidence: conf,
+    onbekend: onbekend
+  };
+}
+
+// Zet de beoordeling om in een leesbaar advies.
+function adviesResultaat(a) {
+  var b = beoordeelPoort(a);
+  var s = b.swing,
+    l = b.slide;
+  var sEff = s.uitgesloten ? -99 : s.score;
+  var lEff = l.uitgesloten ? -99 : l.score;
+  var diff = lEff - sEff;
+  var kop,
+    type,
+    zekerheid = b.confidence,
+    alternatief;
+  if (s.uitgesloten && l.uitgesloten) {
+    kop = 'Technische beoordeling aanbevolen';
+    type = 'beide';
+    zekerheid = 'beperkt';
+  } else if (b.onbekend.length >= 4) {
+    kop = 'Voorlopig advies: meerdere oplossingen mogelijk';
+    type = 'beide';
+    zekerheid = 'beperkt';
+  } else if (Math.abs(diff) <= 1 && !s.uitgesloten && !l.uitgesloten) {
+    kop = 'Beide oplossingen zijn technisch geschikt';
+    type = 'beide';
+  } else if (diff > 0) {
+    type = 'schuif';
+    kop = diff >= 4 ? 'Schuifpoort sterk aanbevolen' : diff >= 2 ? 'Schuifpoort aanbevolen' : 'Schuifpoort mogelijk, met aandachtspunten';
+  } else {
+    type = 'draai';
+    kop = -diff >= 4 ? 'Draaipoort sterk aanbevolen' : -diff >= 2 ? 'Draaipoort aanbevolen' : 'Draaipoort mogelijk, met aandachtspunten';
+  }
+  if (type === 'schuif') alternatief = s.uitgesloten ? 'Een draaipoort lijkt op basis van uw antwoorden minder aangewezen.' : 'Een draaipoort blijft mogelijk, maar vraagt in uw situatie extra aandacht.';
+  if (type === 'draai') alternatief = l.uitgesloten ? 'Een schuifpoort lijkt op basis van uw antwoorden minder aangewezen.' : 'Een schuifpoort blijft mogelijk, maar vraagt in uw situatie extra aandacht voor de zijruimte.';
+  // Vergelijkingstabel
+  function st(waarde, uitgesloten, onbekend) {
+    return {
+      draai: waarde.d,
+      schuif: waarde.s
+    };
+  }
+  var vergelijking = [{
+    label: 'Ruimte achter de poort',
+    draai: a.ruimteAchter === 'ruim' ? 'Gunstig' : a.ruimteAchter === 'nauwelijks' || a.ruimteAchter === 'parkeren' ? 'Aandachtspunt' : adviesWeet(a.ruimteAchter) ? 'Onbekend' : 'Mogelijk',
+    schuif: 'Gunstig'
+  }, {
+    label: 'Ruimte naast de poort',
+    draai: 'Gunstig',
+    schuif: a.ruimteNaast === 'beide' ? 'Gunstig' : a.ruimteNaast === 'geen' ? 'Waarschijnlijk ongeschikt' : adviesWeet(a.ruimteNaast) ? 'Onbekend' : 'Mogelijk'
+  }, {
+    label: 'Geschiktheid bij helling',
+    draai: a.helling === 'vlak' ? 'Gunstig' : a.helling === 'sterk' ? 'Aandachtspunt' : adviesWeet(a.helling) ? 'Onbekend' : 'Mogelijk',
+    schuif: a.helling && a.helling !== 'vlak' ? 'Gunstig' : 'Mogelijk'
+  }, {
+    label: 'Windgevoeligheid',
+    draai: a.wind === 'sterk' || a.wind === 'zeer' ? 'Aandachtspunt' : 'Mogelijk',
+    schuif: 'Gunstig'
+  }, {
+    label: 'Parkeercomfort',
+    draai: a.ruimteAchter === 'parkeren' ? 'Aandachtspunt' : 'Mogelijk',
+    schuif: 'Gunstig'
+  }, {
+    label: 'Onderhoud van de loopzone',
+    draai: 'Gunstig',
+    schuif: a.ondergrond && a.ondergrond.length ? 'Aandachtspunt' : 'Mogelijk'
+  }];
+  return {
+    kop: kop,
+    type: type,
+    zekerheid: zekerheid,
+    alternatief: alternatief,
+    redenen: (type === 'schuif' ? l.redenen : type === 'draai' ? s.redenen : l.redenen.concat(s.redenen)).slice(0, 6),
+    aandachtspunten: (type === 'schuif' ? l.let : type === 'draai' ? s.let : l.let.concat(s.let)).slice(0, 6),
+    vergelijking: vergelijking,
+    onbekend: b.onbekend
+  };
+}
+function AdviesIllustratie({
+  soort
+}) {
+  var stroke = 'var(--accent)',
+    licht = 'var(--line-on-light)';
+  var basis = {
+    width: '100%',
+    height: 120,
+    display: 'block'
+  };
+  if (soort === 'draaicirkel') return /*#__PURE__*/React.createElement("svg", {
+    viewBox: "0 0 200 90",
+    style: basis,
+    role: "img",
+    "aria-label": "Schets van de draaicirkel van een draaipoort achter de doorgang"
+  }, /*#__PURE__*/React.createElement("line", {
+    x1: "20",
+    y1: "15",
+    x2: "20",
+    y2: "75",
+    stroke: licht,
+    strokeWidth: "3"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "180",
+    y1: "15",
+    x2: "180",
+    y2: "75",
+    stroke: licht,
+    strokeWidth: "3"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M20 45 A60 60 0 0 1 80 20",
+    fill: "none",
+    stroke: stroke,
+    strokeWidth: "2",
+    strokeDasharray: "4 4"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M180 45 A60 60 0 0 0 120 20",
+    fill: "none",
+    stroke: stroke,
+    strokeWidth: "2",
+    strokeDasharray: "4 4"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "20",
+    y1: "45",
+    x2: "80",
+    y2: "20",
+    stroke: stroke,
+    strokeWidth: "3"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "180",
+    y1: "45",
+    x2: "120",
+    y2: "20",
+    stroke: stroke,
+    strokeWidth: "3"
+  }));
+  if (soort === 'schuif') return /*#__PURE__*/React.createElement("svg", {
+    viewBox: "0 0 200 90",
+    style: basis,
+    role: "img",
+    "aria-label": "Schets van een schuifpoort die naast de doorgang wegschuift"
+  }, /*#__PURE__*/React.createElement("line", {
+    x1: "70",
+    y1: "15",
+    x2: "70",
+    y2: "75",
+    stroke: licht,
+    strokeWidth: "3"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "130",
+    y1: "15",
+    x2: "130",
+    y2: "75",
+    stroke: licht,
+    strokeWidth: "3"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: "72",
+    y: "40",
+    width: "55",
+    height: "22",
+    fill: "none",
+    stroke: stroke,
+    strokeWidth: "3"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M127 51 h45",
+    stroke: stroke,
+    strokeWidth: "2",
+    strokeDasharray: "4 4"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M168 46 l6 5 -6 5",
+    fill: "none",
+    stroke: stroke,
+    strokeWidth: "2"
+  }));
+  if (soort === 'helling') return /*#__PURE__*/React.createElement("svg", {
+    viewBox: "0 0 200 90",
+    style: basis,
+    role: "img",
+    "aria-label": "Zijaanzicht van een hellende oprit"
+  }, /*#__PURE__*/React.createElement("line", {
+    x1: "15",
+    y1: "70",
+    x2: "120",
+    y2: "35",
+    stroke: licht,
+    strokeWidth: "3"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "120",
+    y1: "35",
+    x2: "185",
+    y2: "35",
+    stroke: licht,
+    strokeWidth: "3"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "120",
+    y1: "15",
+    x2: "120",
+    y2: "35",
+    stroke: stroke,
+    strokeWidth: "3"
+  }));
+  if (soort === 'wind') return /*#__PURE__*/React.createElement("svg", {
+    viewBox: "0 0 200 90",
+    style: basis,
+    role: "img",
+    "aria-label": "Wind tegen een gesloten poortvlak"
+  }, /*#__PURE__*/React.createElement("rect", {
+    x: "120",
+    y: "20",
+    width: "45",
+    height: "50",
+    fill: "none",
+    stroke: stroke,
+    strokeWidth: "3"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M30 35 h60 M30 50 h70 M30 65 h55",
+    stroke: licht,
+    strokeWidth: "2"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: "M84 30 l8 5 -8 5",
+    fill: "none",
+    stroke: stroke,
+    strokeWidth: "2"
+  }));
+  return null;
+}
+function PoortAdviesModal() {
+  var [open, setOpen] = React.useState(false);
+  var [stap, setStap] = React.useState(0);
+  var [antwoorden, setAntwoorden] = React.useState({});
+  var [toonWaarom, setToonWaarom] = React.useState(false);
+  var [klaar, setKlaar] = React.useState(false);
+  React.useEffect(function () {
+    var on = function () {
+      setOpen(true);
+      setStap(0);
+      setKlaar(false);
+    };
+    window.addEventListener('pl-advies-open', on);
+    return function () {
+      window.removeEventListener('pl-advies-open', on);
+    };
+  }, []);
+  React.useEffect(function () {
+    if (!open) return;
+    var esc = function (e) {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('keydown', esc);
+    document.body.style.overflow = 'hidden';
+    return function () {
+      document.removeEventListener('keydown', esc);
+      document.body.style.overflow = '';
+    };
+  }, [open]);
+  if (!open) return null;
+  var totaal = ADVIES_STAPPEN.length;
+  var huidige = ADVIES_STAPPEN[stap];
+  function kies(veld, waarde) {
+    setAntwoorden(function (vorig) {
+      var n = Object.assign({}, vorig);
+      if (veld.type === 'multi') {
+        var lijst = (n[veld.sleutel] || []).slice();
+        var i = lijst.indexOf(waarde);
+        if (i >= 0) lijst.splice(i, 1);else {
+          if (veld.max && lijst.length >= veld.max) return vorig;
+          if (waarde === 'geen') lijst = ['geen'];else lijst = lijst.filter(function (x) {
+            return x !== 'geen';
+          }).concat(waarde);
+        }
+        n[veld.sleutel] = lijst;
+      } else n[veld.sleutel] = waarde;
+      return n;
+    });
+  }
+  function actief(veld, waarde) {
+    return veld.type === 'multi' ? (antwoorden[veld.sleutel] || []).indexOf(waarde) >= 0 : antwoorden[veld.sleutel] === waarde;
+  }
+  var stapKlaar = huidige.velden.every(function (v) {
+    return v.type === 'multi' ? (antwoorden[v.sleutel] || []).length > 0 : !!antwoorden[v.sleutel];
+  });
+  var res = klaar ? adviesResultaat(antwoorden) : null;
+  var groen = 'var(--accent)';
+  var overlay = {
+    position: 'fixed',
+    inset: 0,
+    zIndex: 4000,
+    background: 'rgba(20,28,21,0.55)',
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    overflowY: 'auto',
+    padding: '3vh 16px'
+  };
+  var paneel = {
+    background: 'var(--surface-paper)',
+    borderRadius: 'var(--radius-lg, 16px)',
+    maxWidth: 720,
+    width: '100%',
+    margin: 'auto',
+    boxShadow: 'var(--shadow-lg)',
+    overflow: 'hidden'
+  };
+  var knopStijl = function (act) {
+    return {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 15,
+      textAlign: 'left',
+      padding: '14px 16px',
+      borderRadius: 'var(--radius-md)',
+      cursor: 'pointer',
+      border: '1.5px solid ' + (act ? groen : 'var(--line-on-light)'),
+      background: act ? 'rgba(138,106,60,0.08)' : 'var(--surface-card)',
+      color: 'var(--text-heading)',
+      transition: 'all var(--dur) var(--ease-out)'
+    };
+  };
+  var status = {
+    'Gunstig': groen,
+    'Mogelijk': 'var(--text-body)',
+    'Aandachtspunt': 'var(--corten-500, #b5651d)',
+    'Waarschijnlijk ongeschikt': 'var(--text-muted)',
+    'Onbekend': 'var(--text-muted)'
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    className: "pl-advies-overlay",
+    style: overlay,
+    onClick: function (e) {
+      if (e.target === e.currentTarget) setOpen(false);
+    },
+    role: "dialog",
+    "aria-modal": "true",
+    "aria-label": "Advieswizard draaipoort of schuifpoort"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pl-advies-panel",
+    style: paneel
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      padding: '18px 24px',
+      borderBottom: '1px solid var(--line-on-light-soft)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-label)',
+      fontSize: 11,
+      fontWeight: 600,
+      letterSpacing: '0.14em',
+      textTransform: 'uppercase',
+      color: 'var(--text-muted)'
+    }
+  }, "Poortkeuzetest"), /*#__PURE__*/React.createElement("button", {
+    onClick: function () {
+      setOpen(false);
+    },
+    "aria-label": "Sluiten",
+    style: {
+      background: 'none',
+      border: 0,
+      fontSize: 24,
+      lineHeight: 1,
+      cursor: 'pointer',
+      color: 'var(--text-muted)'
+    }
+  }, "×")), !klaar ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '22px 24px 26px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 4,
+      background: 'var(--line-on-light-soft)',
+      borderRadius: 999,
+      overflow: 'hidden',
+      marginBottom: 6
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: '100%',
+      width: Math.round(stap / totaal * 100) + '%',
+      background: groen,
+      transition: 'width var(--dur) var(--ease-out)'
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 12.5,
+      color: 'var(--text-muted)',
+      marginBottom: 16
+    }
+  }, "Stap ", stap + 1, " van ", totaal), /*#__PURE__*/React.createElement("h2", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 26,
+      lineHeight: 1.15,
+      color: 'var(--text-heading)',
+      margin: '0 0 6px'
+    }
+  }, huidige.titel), huidige.waarom && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: function () {
+      setToonWaarom(function (v) {
+        return !v;
+      });
+    },
+    style: {
+      background: 'none',
+      border: 0,
+      padding: 0,
+      cursor: 'pointer',
+      fontFamily: 'var(--font-sans)',
+      fontSize: 13,
+      color: groen,
+      textDecoration: 'underline'
+    }
+  }, "Waarom vragen we dit?"), toonWaarom && /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 14,
+      lineHeight: 1.6,
+      color: 'var(--text-muted)',
+      margin: '8px 0 0'
+    }
+  }, huidige.waarom)), huidige.illustratie && /*#__PURE__*/React.createElement("div", {
+    style: {
+      margin: '4px 0 18px',
+      padding: '10px',
+      background: 'var(--surface-card)',
+      borderRadius: 'var(--radius-md)',
+      border: '1px solid var(--line-on-light-soft)'
+    }
+  }, /*#__PURE__*/React.createElement(AdviesIllustratie, {
+    soort: huidige.illustratie
+  })), huidige.velden.map(function (veld) {
+    return /*#__PURE__*/React.createElement("div", {
+      key: veld.sleutel,
+      style: {
+        marginBottom: 18
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: 'var(--font-sans)',
+        fontSize: 15,
+        fontWeight: 600,
+        color: 'var(--text-heading)',
+        marginBottom: 10
+      }
+    }, veld.label, veld.type === 'multi' && /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontWeight: 400,
+        color: 'var(--text-muted)'
+      }
+    }, " (meerdere mogelijk)")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+        gap: 8
+      }
+    }, veld.opties.map(function (o) {
+      return /*#__PURE__*/React.createElement("button", {
+        key: o.w,
+        type: "button",
+        "aria-pressed": actief(veld, o.w),
+        onClick: function () {
+          kies(veld, o.w);
+        },
+        style: knopStijl(actief(veld, o.w))
+      }, o.l);
+    })));
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      gap: 12,
+      marginTop: 22
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: function () {
+      if (stap === 0) setOpen(false);else setStap(stap - 1);
+    },
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 15,
+      padding: '12px 20px',
+      borderRadius: 'var(--radius-md)',
+      cursor: 'pointer',
+      border: '1px solid var(--line-on-light)',
+      background: 'transparent',
+      color: 'var(--text-body)'
+    }
+  }, stap === 0 ? 'Annuleren' : 'Vorige'), stap < totaal - 1 ? /*#__PURE__*/React.createElement("button", {
+    disabled: !stapKlaar,
+    onClick: function () {
+      setStap(stap + 1);
+      setToonWaarom(false);
+    },
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 15,
+      fontWeight: 600,
+      padding: '12px 24px',
+      borderRadius: 'var(--radius-md)',
+      cursor: stapKlaar ? 'pointer' : 'not-allowed',
+      border: 0,
+      background: stapKlaar ? groen : 'var(--line-on-light)',
+      color: '#fff'
+    }
+  }, "Volgende") : /*#__PURE__*/React.createElement("button", {
+    disabled: !stapKlaar,
+    onClick: function () {
+      setKlaar(true);
+    },
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 15,
+      fontWeight: 600,
+      padding: '12px 24px',
+      borderRadius: 'var(--radius-md)',
+      cursor: stapKlaar ? 'pointer' : 'not-allowed',
+      border: 0,
+      background: stapKlaar ? groen : 'var(--line-on-light)',
+      color: '#fff'
+    }
+  }, "Toon mijn advies"))) : /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '24px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-label)',
+      fontSize: 11,
+      fontWeight: 600,
+      letterSpacing: '0.14em',
+      textTransform: 'uppercase',
+      color: 'var(--text-muted)'
+    }
+  }, "Uw advies"), /*#__PURE__*/React.createElement("h2", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 30,
+      lineHeight: 1.12,
+      color: 'var(--text-heading)',
+      margin: '6px 0 8px'
+    }
+  }, res.kop), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'inline-block',
+      fontFamily: 'var(--font-sans)',
+      fontSize: 13,
+      padding: '6px 12px',
+      borderRadius: 999,
+      background: 'var(--surface-card)',
+      border: '1px solid var(--line-on-light)',
+      color: 'var(--text-body)'
+    }
+  }, "Zekerheid van dit advies: ", res.zekerheid), res.onbekend.length > 0 && /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 13.5,
+      lineHeight: 1.6,
+      color: 'var(--text-muted)',
+      marginTop: 10
+    }
+  }, "De zekerheid is niet hoger omdat nog niet alles gekend is: ", res.onbekend.join(', '), "."), res.redenen.length > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 22
+    }
+  }, /*#__PURE__*/React.createElement("h3", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 16,
+      fontWeight: 600,
+      color: 'var(--text-heading)',
+      margin: '0 0 10px'
+    }
+  }, "Waarom dit advies?"), /*#__PURE__*/React.createElement("ul", {
+    style: {
+      margin: 0,
+      paddingLeft: 20
+    }
+  }, res.redenen.map(function (r, i) {
+    return /*#__PURE__*/React.createElement("li", {
+      key: i,
+      style: {
+        fontFamily: 'var(--font-sans)',
+        fontSize: 14.5,
+        lineHeight: 1.6,
+        color: 'var(--text-body)',
+        marginBottom: 4
+      }
+    }, r);
+  }))), res.aandachtspunten.length > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 20
+    }
+  }, /*#__PURE__*/React.createElement("h3", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 16,
+      fontWeight: 600,
+      color: 'var(--text-heading)',
+      margin: '0 0 10px'
+    }
+  }, "Aandachtspunten"), /*#__PURE__*/React.createElement("ul", {
+    style: {
+      margin: 0,
+      paddingLeft: 20
+    }
+  }, res.aandachtspunten.map(function (r, i) {
+    return /*#__PURE__*/React.createElement("li", {
+      key: i,
+      style: {
+        fontFamily: 'var(--font-sans)',
+        fontSize: 14.5,
+        lineHeight: 1.6,
+        color: 'var(--text-muted)',
+        marginBottom: 4
+      }
+    }, r);
+  }))), res.alternatief && /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 14.5,
+      lineHeight: 1.6,
+      color: 'var(--text-body)',
+      marginTop: 18,
+      padding: '14px 16px',
+      background: 'var(--surface-card)',
+      borderRadius: 'var(--radius-md)',
+      border: '1px solid var(--line-on-light-soft)'
+    }
+  }, res.alternatief), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 22
+    }
+  }, /*#__PURE__*/React.createElement("h3", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 16,
+      fontWeight: 600,
+      color: 'var(--text-heading)',
+      margin: '0 0 10px'
+    }
+  }, "Vergelijking voor uw situatie"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      overflowX: 'auto'
+    }
+  }, /*#__PURE__*/React.createElement("table", {
+    style: {
+      width: '100%',
+      borderCollapse: 'collapse',
+      fontFamily: 'var(--font-sans)',
+      fontSize: 13.5
+    }
+  }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", {
+    style: {
+      textAlign: 'left',
+      padding: '8px 6px',
+      borderBottom: '1px solid var(--line-on-light)',
+      color: 'var(--text-muted)',
+      fontWeight: 600
+    }
+  }, "Criterium"), /*#__PURE__*/React.createElement("th", {
+    style: {
+      textAlign: 'left',
+      padding: '8px 6px',
+      borderBottom: '1px solid var(--line-on-light)',
+      color: 'var(--text-muted)',
+      fontWeight: 600
+    }
+  }, "Draaipoort"), /*#__PURE__*/React.createElement("th", {
+    style: {
+      textAlign: 'left',
+      padding: '8px 6px',
+      borderBottom: '1px solid var(--line-on-light)',
+      color: 'var(--text-muted)',
+      fontWeight: 600
+    }
+  }, "Schuifpoort"))), /*#__PURE__*/React.createElement("tbody", null, res.vergelijking.map(function (rij, i) {
+    return /*#__PURE__*/React.createElement("tr", {
+      key: i
+    }, /*#__PURE__*/React.createElement("td", {
+      style: {
+        padding: '8px 6px',
+        borderBottom: '1px solid var(--line-on-light-soft)',
+        color: 'var(--text-body)'
+      }
+    }, rij.label), /*#__PURE__*/React.createElement("td", {
+      style: {
+        padding: '8px 6px',
+        borderBottom: '1px solid var(--line-on-light-soft)',
+        color: status[rij.draai],
+        fontWeight: 600
+      }
+    }, rij.draai), /*#__PURE__*/React.createElement("td", {
+      style: {
+        padding: '8px 6px',
+        borderBottom: '1px solid var(--line-on-light-soft)',
+        color: status[rij.schuif],
+        fontWeight: 600
+      }
+    }, rij.schuif));
+  }))))), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 12.5,
+      lineHeight: 1.6,
+      color: 'var(--text-muted)',
+      marginTop: 22,
+      paddingTop: 16,
+      borderTop: '1px solid var(--line-on-light-soft)'
+    }
+  }, "Dit digitale advies is gebaseerd op de door u ingevoerde informatie en is uitsluitend indicatief. Exacte afmetingen, fundering, windbelasting, terreinhelling, lokale voorschriften, veiligheid en technische uitvoerbaarheid moeten ter plaatse worden gecontroleerd door een specialist."), /*#__PURE__*/React.createElement("div", {
+    className: "pl-advies-acties",
+    style: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      gap: 10,
+      marginTop: 18
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: function () {
+      window.print();
+    },
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 14,
+      padding: '11px 18px',
+      borderRadius: 'var(--radius-md)',
+      cursor: 'pointer',
+      border: '1px solid var(--line-on-light)',
+      background: 'transparent',
+      color: 'var(--text-body)'
+    }
+  }, "Print mijn advies"), /*#__PURE__*/React.createElement("button", {
+    onClick: function () {
+      setKlaar(false);
+      setStap(0);
+    },
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 14,
+      padding: '11px 18px',
+      borderRadius: 'var(--radius-md)',
+      cursor: 'pointer',
+      border: '1px solid var(--line-on-light)',
+      background: 'transparent',
+      color: 'var(--text-body)'
+    }
+  }, "Antwoorden aanpassen"), /*#__PURE__*/React.createElement("button", {
+    onClick: function () {
+      setAntwoorden({});
+      setKlaar(false);
+      setStap(0);
+    },
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 14,
+      padding: '11px 18px',
+      borderRadius: 'var(--radius-md)',
+      cursor: 'pointer',
+      border: '1px solid var(--line-on-light)',
+      background: 'transparent',
+      color: 'var(--text-body)'
+    }
+  }, "Opnieuw starten"), /*#__PURE__*/React.createElement("button", {
+    onClick: function () {
+      setOpen(false);
+      window.dispatchEvent(new CustomEvent('pl-offerte-open'));
+    },
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 14,
+      fontWeight: 600,
+      padding: '11px 18px',
+      borderRadius: 'var(--radius-md)',
+      cursor: 'pointer',
+      border: 0,
+      background: groen,
+      color: '#fff'
+    }
+  }, "Vraag een technische opmeting aan")))));
+}
 Object.assign(window, {
   OfferteModal,
+  PoortAdviesModal,
   PaginaNL,
   PAGINAS,
   CategoriePagina,
