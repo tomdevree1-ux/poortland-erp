@@ -5335,73 +5335,69 @@ var CATEGORIEEN = {
     materiaalFotos: ['media/houten-poort.jpg', 'media/realisatie-hout-1.jpeg', 'media/staal-hout.jpg', 'media/realisatie-hout-2.jpeg', 'media/hero.jpg'],
     erpPoortType: 'hout',
     modellenPlat: [{
-      naam: "Custom Padoek massief DV",
-      foto: "media/hout/Custom%20Padoek%20massief%20DV.jpg",
-      alt: "Model Custom Padoek massief DV, houten poort van Poortland"
+      naam: "Custom Padoek",
+      foto: "media/hout/Custom%20Padoek%20.jpg",
+      alt: "Model Custom Padoek, houten poort van Poortland"
     }, {
-      naam: "Essen DV+EV",
-      foto: "media/hout/Essen%20DV%2BEV.jpg",
-      alt: "Model Essen DV+EV, houten poort van Poortland"
+      naam: "Custom Padoek",
+      foto: "media/hout/Custom%20Padoek.jpg",
+      alt: "Model Custom Padoek, houten poort van Poortland"
     }, {
-      naam: "Essen EV",
-      foto: "media/hout/Essen%20EV.jpg",
-      alt: "Model Essen EV, houten poort van Poortland"
+      naam: "Essen Padoek",
+      foto: "media/hout/Essen%20Padoek%20%20%20%20%20%20.jpg",
+      alt: "Model Essen Padoek, houten poort van Poortland"
     }, {
-      naam: "Essen EV+VH",
-      foto: "media/hout/Essen%20EV%2BVH.jpg",
-      alt: "Model Essen EV+VH, houten poort van Poortland"
+      naam: "Essen Padoek",
+      foto: "media/hout/Essen%20Padoek%20%20%20%20%20.jpg",
+      alt: "Model Essen Padoek, houten poort van Poortland"
     }, {
-      naam: "Essen EV+VH (2)",
-      foto: "media/hout/Essen%20EV%2BVH%20%282%29.jpg",
-      alt: "Model Essen EV+VH (2), houten poort van Poortland"
+      naam: "Essen Padoek",
+      foto: "media/hout/Essen%20Padoek%20%20%20%20.jpg",
+      alt: "Model Essen Padoek, houten poort van Poortland"
     }, {
-      naam: "Essen Front achterzijde Padouk",
-      foto: "media/hout/Essen%20Front%20achterzijde%20Padouk.jpg",
-      alt: "Model Essen Front achterzijde Padouk, houten poort van Poortland"
+      naam: "Essen Padoek",
+      foto: "media/hout/Essen%20Padoek%20%20%20.jpg",
+      alt: "Model Essen Padoek, houten poort van Poortland"
     }, {
-      naam: "Essen front padoek DV+VH",
-      foto: "media/hout/Essen%20front%20padoek%20DV%2BVH.jpg",
-      alt: "Model Essen front padoek DV+VH, houten poort van Poortland"
+      naam: "Essen Padoek",
+      foto: "media/hout/Essen%20Padoek%20%20.jpg",
+      alt: "Model Essen Padoek, houten poort van Poortland"
     }, {
-      naam: "Essen Padoek DV",
-      foto: "media/hout/Essen%20Padoek%20DV.jpg",
-      alt: "Model Essen Padoek DV, houten poort van Poortland"
+      naam: "Essen Padoek",
+      foto: "media/hout/Essen%20Padoek%20.jpg",
+      alt: "Model Essen Padoek, houten poort van Poortland"
     }, {
-      naam: "Hamburg DV",
-      foto: "media/hout/Hamburg%20DV.jpg",
-      alt: "Model Hamburg DV, houten poort van Poortland"
+      naam: "Essen Padoek",
+      foto: "media/hout/Essen%20Padoek.jpg",
+      alt: "Model Essen Padoek, houten poort van Poortland"
     }, {
-      naam: "Hamburg Padoek EV",
-      foto: "media/hout/Hamburg%20Padoek%20EV.jpg",
-      alt: "Model Hamburg Padoek EV, houten poort van Poortland"
+      naam: "Hamburg Padoek",
+      foto: "media/hout/Hamburg%20Padoek%20.jpg",
+      alt: "Model Hamburg Padoek, houten poort van Poortland"
     }, {
-      naam: "Keulen DV",
-      foto: "media/hout/Keulen%20DV.jpg",
-      alt: "Model Keulen DV, houten poort van Poortland"
+      naam: "Hamburg Padoek",
+      foto: "media/hout/Hamburg%20Padoek.jpg",
+      alt: "Model Hamburg Padoek, houten poort van Poortland"
     }, {
-      naam: "Keulen EV",
-      foto: "media/hout/Keulen%20EV.jpg",
-      alt: "Model Keulen EV, houten poort van Poortland"
+      naam: "Keulen",
+      foto: "media/hout/Keulen%20%20.jpg",
+      alt: "Model Keulen, houten poort van Poortland"
     }, {
-      naam: "Keulen Padoek DV",
-      foto: "media/hout/Keulen%20Padoek%20DV.jpg",
-      alt: "Model Keulen Padoek DV, houten poort van Poortland"
+      naam: "Keulen",
+      foto: "media/hout/Keulen%20.jpg",
+      alt: "Model Keulen, houten poort van Poortland"
     }, {
-      naam: "Massief Padoek custom achterzijde",
-      foto: "media/hout/Massief%20Padoek%20custom%20achterzijde.jpg",
-      alt: "Model Massief Padoek custom achterzijde, houten poort van Poortland"
+      naam: "Keulen",
+      foto: "media/hout/Keulen.jpg",
+      alt: "Model Keulen, houten poort van Poortland"
     }, {
-      naam: "Orinoco DV",
-      foto: "media/hout/Orinoco%20DV.jpg",
-      alt: "Model Orinoco DV, houten poort van Poortland"
+      naam: "Orinoco",
+      foto: "media/hout/Orinoco.jpg",
+      alt: "Model Orinoco, houten poort van Poortland"
     }, {
-      naam: "Orinoco EV",
-      foto: "media/hout/Orinoco%20EV.jpg",
-      alt: "Model Orinoco EV, houten poort van Poortland"
-    }, {
-      naam: "Orinoco Padoek DV+VH",
-      foto: "media/hout/Orinoco%20Padoek%20DV%2BVH.jpg",
-      alt: "Model Orinoco Padoek DV+VH, houten poort van Poortland"
+      naam: "Ornico",
+      foto: "media/hout/Ornico.jpg",
+      alt: "Model Ornico, houten poort van Poortland"
     }],
     productenTitel: 'Modellen in hout',
     producten: [{
@@ -5511,7 +5507,99 @@ var CATEGORIEEN = {
     heroLabel: 'Hout en metaal op maat',
     materiaalFotos: ['media/staal-hout.jpg', 'media/hero.jpg', 'media/realisatie-hout-1.jpeg', 'media/stalen-poort.jpg', 'media/realisatie-metaal-1.jpeg'],
     erpPoortType: 'hout_metaal',
-    modellenPlat: [],
+    modellenPlat: [{
+      naam: "Kwai afrormosia ESR",
+      foto: "media/combinatie/Kwai%20afrormosia%20ESR.jpeg",
+      alt: "Model Kwai afrormosia ESR, poort in hout en metaal van Poortland"
+    }, {
+      naam: "Kwai afrormosia verticaal ESR+VH",
+      foto: "media/combinatie/Kwai%20afrormosia%20verticaal%20ESR%2BVH.jpeg",
+      alt: "Model Kwai afrormosia verticaal ESR+VH, poort in hout en metaal van Poortland"
+    }, {
+      naam: "Kwai ceder DV",
+      foto: "media/combinatie/Kwai%20ceder%20DV.jpeg",
+      alt: "Model Kwai ceder DV, poort in hout en metaal van Poortland"
+    }, {
+      naam: "Kwai ceder DV ingeolied",
+      foto: "media/combinatie/Kwai%20ceder%20DV%20ingeolied.jpeg",
+      alt: "Model Kwai ceder DV ingeolied, poort in hout en metaal van Poortland"
+    }, {
+      naam: "Kwai ceder DV+VH",
+      foto: "media/combinatie/Kwai%20ceder%20DV%2BVH.jpeg",
+      alt: "Model Kwai ceder DV+VH, poort in hout en metaal van Poortland"
+    }, {
+      naam: "Kwai ceder ESR schuin",
+      foto: "media/combinatie/Kwai%20ceder%20ESR%20schuin.jpeg",
+      alt: "Model Kwai ceder ESR schuin, poort in hout en metaal van Poortland"
+    }, {
+      naam: "Kwai ceder ESR+EV",
+      foto: "media/combinatie/Kwai%20ceder%20ESR%2BEV.jpeg",
+      alt: "Model Kwai ceder ESR+EV, poort in hout en metaal van Poortland"
+    }, {
+      naam: "Kwai ceder ESR+VH",
+      foto: "media/combinatie/Kwai%20ceder%20ESR%2BVH.jpeg",
+      alt: "Model Kwai ceder ESR+VH, poort in hout en metaal van Poortland"
+    }, {
+      naam: "Kwai ceder ESR+VH (2)",
+      foto: "media/combinatie/Kwai%20ceder%20ESR%2BVH%20%282%29.jpeg",
+      alt: "Model Kwai ceder ESR+VH (2), poort in hout en metaal van Poortland"
+    }, {
+      naam: "Kwai ceder ESV",
+      foto: "media/combinatie/Kwai%20ceder%20ESV.jpeg",
+      alt: "Model Kwai ceder ESV, poort in hout en metaal van Poortland"
+    }, {
+      naam: "Kwai ceder ESV+EV",
+      foto: "media/combinatie/Kwai%20ceder%20ESV%2BEV.jpeg",
+      alt: "Model Kwai ceder ESV+EV, poort in hout en metaal van Poortland"
+    }, {
+      naam: "Kwai ceder ESV+VH",
+      foto: "media/combinatie/Kwai%20ceder%20ESV%2BVH.jpeg",
+      alt: "Model Kwai ceder ESV+VH, poort in hout en metaal van Poortland"
+    }, {
+      naam: "Kwai ceder EV",
+      foto: "media/combinatie/Kwai%20ceder%20EV.jpeg",
+      alt: "Model Kwai ceder EV, poort in hout en metaal van Poortland"
+    }, {
+      naam: "Kwai ceder hangende ESV",
+      foto: "media/combinatie/Kwai%20ceder%20hangende%20ESV.jpeg",
+      alt: "Model Kwai ceder hangende ESV, poort in hout en metaal van Poortland"
+    }, {
+      naam: "Kwai ceder hangende ESV (2)",
+      foto: "media/combinatie/Kwai%20ceder%20hangende%20ESV%20%282%29.jpeg",
+      alt: "Model Kwai ceder hangende ESV (2), poort in hout en metaal van Poortland"
+    }, {
+      naam: "Kwai ceder inleg DV",
+      foto: "media/combinatie/Kwai%20ceder%20inleg%20DV.jpeg",
+      alt: "Model Kwai ceder inleg DV, poort in hout en metaal van Poortland"
+    }, {
+      naam: "Kwai ceder inleg ESR",
+      foto: "media/combinatie/Kwai%20ceder%20inleg%20ESR.jpeg",
+      alt: "Model Kwai ceder inleg ESR, poort in hout en metaal van Poortland"
+    }, {
+      naam: "Kwai ceder VH",
+      foto: "media/combinatie/Kwai%20ceder%20VH.jpeg",
+      alt: "Model Kwai ceder VH, poort in hout en metaal van Poortland"
+    }, {
+      naam: "Kwai ligna 70-120",
+      foto: "media/combinatie/Kwai%20ligna%2070-120.jpeg",
+      alt: "Model Kwai ligna 70-120, poort in hout en metaal van Poortland"
+    }, {
+      naam: "Kwai wood 1-side padouk vertical 70mm",
+      foto: "media/combinatie/Kwai%20wood%201-side%20padouk%20vertical%2070mm.jpeg",
+      alt: "Model Kwai wood 1-side padouk vertical 70mm, poort in hout en metaal van Poortland"
+    }, {
+      naam: "Kwai wood 1-side padouk vertical 70mm (2)",
+      foto: "media/combinatie/Kwai%20wood%201-side%20padouk%20vertical%2070mm%20%282%29.jpeg",
+      alt: "Model Kwai wood 1-side padouk vertical 70mm (2), poort in hout en metaal van Poortland"
+    }, {
+      naam: "Tigris wood 30-40-30 padouk",
+      foto: "media/combinatie/Tigris%20wood%2030-40-30%20padouk.jpeg",
+      alt: "Model Tigris wood 30-40-30 padouk, poort in hout en metaal van Poortland"
+    }, {
+      naam: "Tigris wood padoek 70mm",
+      foto: "media/combinatie/Tigris%20wood%20padoek%2070mm.jpeg",
+      alt: "Model Tigris wood padoek 70mm, poort in hout en metaal van Poortland"
+    }],
     productenTitel: 'Combinaties in hout en metaal',
     producten: [{
       titel: 'Warmte van hout',
