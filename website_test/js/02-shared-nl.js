@@ -3315,13 +3315,9 @@ function CategoriePagina({
     variant: "ghost",
     dark: true,
     arrow: true,
-    onClick: () => {
-      const el = document.getElementById('modellen');
-      if (el) el.scrollIntoView({
-        behavior: 'smooth'
-      });
-    }
-  }, "Bekijk de modellen")), /*#__PURE__*/React.createElement("div", {
+    as: "button",
+    onClick: () => window.dispatchEvent(new CustomEvent('pl-advies-open'))
+  }, "Doe de poortkeuzetest")), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 26,
