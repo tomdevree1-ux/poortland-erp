@@ -386,6 +386,7 @@ body {
   .pl-split > div{ padding-left: 0 !important; padding-right: 0 !important; }
   .pl-atelierbeeld{ aspect-ratio: 3 / 2 !important; min-height: 0 !important; margin: 0 0 32px !important; }
   .pl-cards{ grid-template-columns: 1fr !important; }
+  .pl-cards3{ grid-template-columns: 1fr !important; }
   .pl-cards4{ grid-template-columns: 1fr 1fr !important; }
   .pl-comp{ grid-template-columns: 1fr !important; }
   .pl-kwal{ grid-template-columns: 1fr !important; }
@@ -394,6 +395,15 @@ body {
   .pl-mobcta{ display: flex !important; }
   .pl-galpijl{ display: none !important; }
   #root h1{ font-size: 40px !important; }
+  /* Modellengalerij: geen scroll in scroll op touch, gewoon paginascroll. */
+  .pl-modelscroll{ max-height: none !important; overflow: visible !important; padding-right: 0 !important; margin-right: 0 !important; }
+  /* Stijltabs: een zijwaarts veegbare rij in plaats van wrappen. */
+  .pl-modeltabs{ flex-wrap: nowrap !important; overflow-x: auto; justify-content: flex-start !important; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .pl-modeltabs::-webkit-scrollbar{ display: none; }
+  .pl-modeltabs button{ flex: 0 0 auto !important; white-space: nowrap; }
+  /* Advieswizard: volledig scherm van onderaan (bottom sheet). */
+  .pl-advies-overlay{ padding: 0 !important; align-items: stretch !important; }
+  .pl-advies-panel{ max-width: 100% !important; min-height: 100%; border-radius: 0 !important; margin: 0 !important; display: flex; flex-direction: column; }
 }
 @media (prefers-reduced-motion: reduce){
   .pl-prod-card:hover img{ transform: none !important; }

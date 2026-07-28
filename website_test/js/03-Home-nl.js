@@ -215,18 +215,24 @@ function HomeNL({
       productKey: 'houten'
     })
   }, "Alle poorten"))), /*#__PURE__*/React.createElement("div", {
+    className: "pl-cards3",
     style: {
       display: 'grid',
       gridTemplateColumns: 'repeat(3, 1fr)',
-      gap: 18
+      gap: 18,
+      alignItems: 'stretch'
     }
   }, routes.map(([route, naam, sub, img], i) => /*#__PURE__*/React.createElement(Reveal, {
     key: route,
-    delay: i * 80
+    delay: i * 80,
+    style: {
+      display: 'flex'
+    }
   }, /*#__PURE__*/React.createElement("button", {
     onClick: () => onNav(route),
     style: {
       width: '100%',
+      height: '100%',
       textAlign: 'left',
       background: 'none',
       border: 0,
@@ -235,6 +241,9 @@ function HomeNL({
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
       borderRadius: 'var(--radius-md)',
       overflow: 'hidden',
       border: '1px solid var(--line-on-dark-soft)'
@@ -279,7 +288,10 @@ function HomeNL({
   }, naam)), /*#__PURE__*/React.createElement("div", {
     style: {
       padding: '18px 18px 22px',
-      background: 'var(--forest-850)'
+      background: 'var(--forest-850)',
+      flex: 1,
+      display: 'flex',
+      flexDirection: 'column'
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {

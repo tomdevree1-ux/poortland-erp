@@ -3468,6 +3468,7 @@ function CategoriePagina({
   }, d.productenGroepen && /*#__PURE__*/React.createElement("div", {
     role: "tablist",
     "aria-label": d.productenTitel,
+    className: "pl-modeltabs",
     style: {
       display: 'flex',
       flexWrap: 'wrap',
