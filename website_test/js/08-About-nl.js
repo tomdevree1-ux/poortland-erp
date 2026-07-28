@@ -146,6 +146,7 @@ function AboutNL({
     titel: "Hoe een Poortland poort ontstaat.",
     intro: "Geen import, maar maatwerk onder één dak. Van de eerste tekening tot de laatste afwerking blijft elke stap in eigen handen."
   })), /*#__PURE__*/React.createElement("div", {
+    className: "pl-grid3",
     style: {
       display: 'grid',
       gridTemplateColumns: 'repeat(3, 1fr)',
@@ -179,6 +180,7 @@ function AboutNL({
       margin: 0
     }
   }, d))))), /*#__PURE__*/React.createElement("div", {
+    className: "pl-grid4",
     style: {
       display: 'grid',
       gridTemplateColumns: 'repeat(4, 1fr)',

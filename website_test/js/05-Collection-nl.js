@@ -198,6 +198,7 @@ function CollectionNL({
       fontSize: 'inherit'
     }
   }, "Toon alles")) : /*#__PURE__*/React.createElement("div", {
+    className: "pl-grid3",
     style: {
       display: 'grid',
       gridTemplateColumns: 'repeat(3, 1fr)',
@@ -217,6 +218,7 @@ function CollectionNL({
       marginBottom: 26
     }
   }, OVERKAPPINGEN.length, " realisaties"), /*#__PURE__*/React.createElement("div", {
+    className: "pl-grid3",
     style: {
       display: 'grid',
       gridTemplateColumns: 'repeat(3, 1fr)',

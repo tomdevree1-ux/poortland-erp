@@ -733,6 +733,7 @@ function HomeNL({
     titel: "Helder advies voor uw keuze.",
     max: "16ch"
   }))), /*#__PURE__*/React.createElement("div", {
+    className: "pl-grid3",
     style: {
       display: 'grid',
       gridTemplateColumns: 'repeat(3, 1fr)',

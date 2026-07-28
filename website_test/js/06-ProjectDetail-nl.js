@@ -261,6 +261,7 @@ function ProjectDetailNL({
       marginBottom: 28
     }
   }, "Meer uit het atelier")), /*#__PURE__*/React.createElement("div", {
+    className: "pl-grid3",
     style: {
       display: 'grid',
       gridTemplateColumns: 'repeat(3, 1fr)',

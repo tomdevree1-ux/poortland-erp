@@ -219,6 +219,7 @@ function ProductNL({
     titel: "Waarom dit type.",
     max: "14ch"
   })), /*#__PURE__*/React.createElement("div", {
+    className: "pl-grid2",
     style: {
       display: 'grid',
       gridTemplateColumns: 'repeat(2, 1fr)',
@@ -337,6 +338,7 @@ function ProductNL({
     titel: "Eén type, vele beelden.",
     max: "16ch"
   })), /*#__PURE__*/React.createElement("div", {
+    className: "pl-grid3",
     style: {
       display: 'grid',
       gridTemplateColumns: 'repeat(3, 1fr)',
@@ -397,6 +399,7 @@ function ProductNL({
     arrow: true,
     onClick: () => onNav('werkwijze')
   }, "Volledige werkwijze"))), /*#__PURE__*/React.createElement("div", {
+    className: "pl-grid4",
     style: {
       display: 'grid',
       gridTemplateColumns: 'repeat(4, 1fr)',
@@ -468,6 +471,7 @@ function ProductNL({
     dark: true,
     onClick: () => onNav('metalen')
   }, "Alle modellen"))), /*#__PURE__*/React.createElement("div", {
+    className: "pl-grid3",
     style: {
       display: 'grid',
       gridTemplateColumns: 'repeat(3, 1fr)',
