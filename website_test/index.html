@@ -362,6 +362,10 @@ body {
 .pl-hscroll::-webkit-scrollbar{ height: 8px; }
 .pl-hscroll::-webkit-scrollbar-thumb{ background: var(--line-on-dark); border-radius: 999px; }
 .pl-hscroll::-webkit-scrollbar-track{ background: transparent; }
+.pl-modelscroll{ scrollbar-width: thin; scrollbar-color: var(--accent) transparent; -webkit-overflow-scrolling: touch; scroll-behavior: smooth; }
+.pl-modelscroll::-webkit-scrollbar{ width: 8px; }
+.pl-modelscroll::-webkit-scrollbar-thumb{ background: var(--accent); border-radius: 999px; }
+.pl-modelscroll::-webkit-scrollbar-track{ background: var(--surface-paper-2); border-radius: 999px; }
 .pl-galpijl:hover{ border-color: var(--accent) !important; }
 #root input:focus, #root textarea:focus, #root select:focus, #root input:focus-visible, #root textarea:focus-visible, #root select:focus-visible { outline: none !important; border-color: var(--accent) !important; box-shadow: 0 0 0 3px rgba(138,106,60,0.16) !important; }
 .pl-tlc{ position: relative; max-width: 980px; margin: 0 auto; }

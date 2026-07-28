@@ -3417,137 +3417,7 @@ function CategoriePagina({
       lineHeight: 1.6,
       color: 'var(--text-muted)'
     }
-  }, v.tekst))))))), /*#__PURE__*/React.createElement("section", {
-    style: {
-      background: 'var(--surface-ground)',
-      color: 'var(--text-on-dark)',
-      padding: '90px 0'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      maxWidth: 1320,
-      margin: '0 auto',
-      padding: '0 44px'
-    }
-  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("div", {
-    style: {
-      maxWidth: 640
-    }
-  }, /*#__PURE__*/React.createElement(SEyebrow, {
-    dark: true,
-    style: {
-      marginBottom: 16
-    }
-  }, "Stijl en afwerking"), /*#__PURE__*/React.createElement("h2", {
-    style: {
-      fontFamily: 'var(--font-display)',
-      fontWeight: 500,
-      fontSize: 42,
-      color: 'var(--stone-100)',
-      margin: 0,
-      lineHeight: 1.08,
-      letterSpacing: '-0.01em'
-    }
-  }, "Een poort die past bij uw woning"), /*#__PURE__*/React.createElement("p", {
-    style: {
-      fontFamily: 'var(--font-sans)',
-      fontSize: 17,
-      lineHeight: 1.7,
-      color: 'var(--stone-300)',
-      maxWidth: '52ch',
-      margin: '20px 0 4px'
-    }
-  }, d.materiaalTekst || CAT_MATERIAAL_TEKST), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: 'flex',
-      flexWrap: 'wrap',
-      gap: 10,
-      marginTop: 22
-    }
-  }, chips.map(c => /*#__PURE__*/React.createElement(CatChip, {
-    key: c,
-    label: c
-  })))))), /*#__PURE__*/React.createElement(Reveal, {
-    delay: 80
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      position: 'relative',
-      maxWidth: 1320,
-      margin: '40px auto 0',
-      padding: '0 44px'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    ref: galRef,
-    className: "pl-hscroll",
-    style: {
-      display: 'flex',
-      gap: 16,
-      overflowX: 'auto',
-      scrollSnapType: 'x mandatory',
-      paddingBottom: 14
-    }
-  }, (d.materiaalFotos || []).map((src, i) => /*#__PURE__*/React.createElement("div", {
-    key: i,
-    style: {
-      flex: '0 0 auto',
-      width: 380,
-      maxWidth: '82vw',
-      aspectRatio: '4 / 3',
-      borderRadius: 8,
-      overflow: 'hidden',
-      scrollSnapAlign: 'start'
-    }
-  }, /*#__PURE__*/React.createElement("img", {
-    src: src,
-    loading: "lazy",
-    alt: d.eyebrow + ' voorbeeld ' + (i + 1),
-    style: {
-      width: '100%',
-      height: '100%',
-      objectFit: 'cover',
-      display: 'block'
-    }
-  })))), /*#__PURE__*/React.createElement("button", {
-    className: "pl-galpijl",
-    onClick: () => scrollGal(-1),
-    "aria-label": "Vorige fotos",
-    style: {
-      position: 'absolute',
-      left: 30,
-      top: 'calc(50% - 7px)',
-      transform: 'translateY(-50%)',
-      width: 46,
-      height: 46,
-      borderRadius: '50%',
-      border: '1px solid var(--line-on-light-soft)',
-      background: 'var(--surface-paper)',
-      color: 'var(--text-heading)',
-      cursor: 'pointer',
-      fontSize: 22,
-      lineHeight: 1,
-      boxShadow: '0 4px 14px rgba(20,28,21,0.28)'
-    }
-  }, "‹"), /*#__PURE__*/React.createElement("button", {
-    className: "pl-galpijl",
-    onClick: () => scrollGal(1),
-    "aria-label": "Volgende fotos",
-    style: {
-      position: 'absolute',
-      right: 30,
-      top: 'calc(50% - 7px)',
-      transform: 'translateY(-50%)',
-      width: 46,
-      height: 46,
-      borderRadius: '50%',
-      border: '1px solid var(--line-on-light-soft)',
-      background: 'var(--surface-paper)',
-      color: 'var(--text-heading)',
-      cursor: 'pointer',
-      fontSize: 22,
-      lineHeight: 1,
-      boxShadow: '0 4px 14px rgba(20,28,21,0.28)'
-    }
-  }, "›")))), d.aluminiumBlok && /*#__PURE__*/React.createElement("section", {
+  }, v.tekst))))))), d.aluminiumBlok && /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper)',
       padding: '72px 44px 10px'
@@ -3771,6 +3641,14 @@ function CategoriePagina({
       }
     }, chip);
   })))) : null, /*#__PURE__*/React.createElement("div", {
+    className: "pl-modelscroll",
+    style: {
+      maxHeight: 660,
+      overflowY: 'auto',
+      paddingRight: 10,
+      marginRight: -6
+    }
+  }, /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
@@ -3843,7 +3721,7 @@ function CategoriePagina({
       marginTop: 10,
       textAlign: 'center'
     }
-  }, t.naam) : null)))))) : /*#__PURE__*/React.createElement("div", {
+  }, t.naam) : null))))))) : /*#__PURE__*/React.createElement("div", {
     className: "pl-cards",
     style: {
       display: 'grid',
