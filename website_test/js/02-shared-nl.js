@@ -3126,7 +3126,8 @@ function CategoriePagina({
       cache: 'no-store'
     }).then(r => r.ok ? r.json() : null).then(j => {
       if (!actief || !j || !j.fotos) return;
-      setErpFotos(j.fotos.filter(f => f && f.poortType === d.erpPoortType && f.modelNaam && f.url));
+      // Materiaal moet kloppen met deze pagina; stijl en naam sturen de plaatsing.
+      setErpFotos(j.fotos.filter(f => f && f.poortType === d.erpPoortType && f.url));
     }).catch(() => {/* stil falen: de catalogus blijft gewoon staan */});
     return () => {
       actief = false;
@@ -3135,30 +3136,56 @@ function CategoriePagina({
   const modelGroepen = React.useMemo(() => {
     const basis = d.productenGroepen || [];
     if (!erpFotos.length) return basis;
+    // Tolerante vergelijking: kleine letters, 'sier' weg, enkel letters en cijfers.
+    // Zo matcht 'Klassiek met sierpunten' met 'Klassiek met punten' enzovoort.
+    const nrm = s => String(s || '').toLowerCase().replace(/sier/g, '').replace(/[^a-z0-9]/g, '');
     const kopie = basis.map(g => ({
       tab: g.tab,
       types: (g.types || []).slice()
     }));
+    const eersteGevuld = kopie.findIndex(g => (g.types || []).some(t => t.foto));
     erpFotos.forEach(f => {
       const naam = String(f.modelNaam || '').trim();
-      const doel = naam.toLowerCase();
-      for (let gi = 0; gi < kopie.length; gi++) {
-        const g = kopie[gi];
+      const stijl = nrm(f.poortStijl);
+      const nieuw = {
+        naam: naam,
+        foto: f.url,
+        alt: f.alt || (naam ? 'Realisatie van model ' + naam + ' door Poortland' : 'Realisatie van Poortland'),
+        erp: true
+      };
+      // 1. Plaats in de tab die met de stijl overeenkomt.
+      let doelTab = stijl ? kopie.findIndex(g => nrm(g.tab) === stijl) : -1;
+      if (doelTab >= 0) {
+        const g = kopie[doelTab];
         let laatste = -1;
-        for (let i = 0; i < g.types.length; i++) {
-          const b = String(g.types[i].naam || '').toLowerCase();
-          if (b === doel || b.indexOf(doel + ' ') === 0) laatste = i;
+        if (naam) {
+          const dn = naam.toLowerCase();
+          for (let i = 0; i < g.types.length; i++) {
+            const b = String(g.types[i].naam || '').toLowerCase();
+            if (b === dn || b.indexOf(dn + ' ') === 0) laatste = i;
+          }
         }
-        if (laatste >= 0) {
-          g.types.splice(laatste + 1, 0, {
-            naam: naam,
-            foto: f.url,
-            alt: f.alt || 'Realisatie van model ' + naam + ' door Poortland',
-            erp: true
-          });
-          return;
+        if (laatste >= 0) g.types.splice(laatste + 1, 0, nieuw);else g.types.push(nieuw);
+        return;
+      }
+      // 2. Geen stijlmatch: plaats naast een gelijknamig model, ongeacht de tab.
+      if (naam) {
+        const dn = naam.toLowerCase();
+        for (let gi = 0; gi < kopie.length; gi++) {
+          const g = kopie[gi];
+          let laatste = -1;
+          for (let i = 0; i < g.types.length; i++) {
+            const b = String(g.types[i].naam || '').toLowerCase();
+            if (b === dn || b.indexOf(dn + ' ') === 0) laatste = i;
+          }
+          if (laatste >= 0) {
+            g.types.splice(laatste + 1, 0, nieuw);
+            return;
+          }
         }
       }
+      // 3. Laatste redmiddel: toon de foto in de eerste gevulde tab zodat hij niet verdwijnt.
+      if (eersteGevuld >= 0) kopie[eersteGevuld].types.push(nieuw);
     });
     return kopie;
   }, [d, erpFotos]);

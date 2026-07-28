@@ -218,8 +218,10 @@ public class WebsiteMedia : BasisEntiteit
     public string? ProductSoort { get; set; }
     public string? PoortType { get; set; }
     public string? PoortUitvoering { get; set; }
-    // Modelnaam zoals in de modellentabs op de site (bv. Mississipi); de website
-    // hangt de gepubliceerde foto naast dat model in de juiste tab.
+    // De drie parameters waarmee de website een poortfoto plaatst:
+    // PoortType is het materiaal (hout, metaal of de combinatie), PoortStijl is de
+    // stijltab (bv. Klassiek met sierpunten) en ModelNaam is de modelnaam (bv. Brenta).
+    public string? PoortStijl { get; set; }
     public string? ModelNaam { get; set; }
     public int Volgnummer { get; set; }
     public WebsiteContentStatus Status { get; set; } = WebsiteContentStatus.Concept;

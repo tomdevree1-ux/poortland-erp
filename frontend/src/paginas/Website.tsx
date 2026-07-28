@@ -45,7 +45,7 @@ function FotoTab() {
   const ververs = () => { zetFout(undefined); qc.invalidateQueries({ queryKey: ['media'] }) }
 
   const [uploadOpen, zetUploadOpen] = useState(false)
-  const leegUpload = { bestand: null as File | null, titel: '', productSoort: '', poortType: '', poortUitvoering: '', modelNaam: '' }
+  const leegUpload = { bestand: null as File | null, titel: '', productSoort: '', poortType: '', poortUitvoering: '', poortStijl: '', modelNaam: '' }
   const [uploadVorm, zetUploadVorm] = useState(leegUpload)
   function openUpload() { zetUploadVorm(leegUpload); zetUploadOpen(true) }
   const upload = useMutation({
@@ -59,6 +59,7 @@ function FotoTab() {
       if (v.productSoort === 'poort') {
         form.append('poortType', v.poortType)
         form.append('poortUitvoering', v.poortUitvoering)
+        if (v.poortStijl.trim()) form.append('poortStijl', v.poortStijl.trim())
         if (v.modelNaam.trim()) form.append('modelNaam', v.modelNaam.trim())
       }
       return api.formulier<Media>('/website/media', form)
@@ -84,14 +85,14 @@ function FotoTab() {
 
   const [bewerkFoto, zetBewerkFoto] = useState<Media | null>(null)
   const [fotoVorm, zetFotoVorm] = useState<{ titel: string; altTekst: string
-    productSoort: string; poortType: string; poortUitvoering: string; modelNaam: string
+    productSoort: string; poortType: string; poortUitvoering: string; poortStijl: string; modelNaam: string
     personenInBeeld: boolean; toestemmingBevestigd: boolean } | null>(null)
   function openBewerk(m: Media) {
     zetBewerkFoto(m)
     zetFotoVorm({
       titel: m.titel, altTekst: m.altTekst ?? '',
       productSoort: m.productSoort ?? '', poortType: m.poortType ?? '',
-      poortUitvoering: m.poortUitvoering ?? '', modelNaam: m.modelNaam ?? '',
+      poortUitvoering: m.poortUitvoering ?? '', poortStijl: m.poortStijl ?? '', modelNaam: m.modelNaam ?? '',
       personenInBeeld: m.personenInBeeld, toestemmingBevestigd: m.toestemmingBevestigd
     })
   }
@@ -100,7 +101,7 @@ function FotoTab() {
       titel: fotoVorm!.titel, altTekst: fotoVorm!.altTekst,
       productSoort: fotoVorm!.productSoort || null,
       poortType: fotoVorm!.poortType, poortUitvoering: fotoVorm!.poortUitvoering,
-      modelNaam: fotoVorm!.modelNaam,
+      poortStijl: fotoVorm!.poortStijl, modelNaam: fotoVorm!.modelNaam,
       personenInBeeld: fotoVorm!.personenInBeeld, toestemmingBevestigd: fotoVorm!.toestemmingBevestigd
     }),
     onSuccess: () => { ververs(); zetBewerkFoto(null) },
@@ -110,7 +111,7 @@ function FotoTab() {
   return (
     <>
       <div className="mb-4 flex items-center justify-between gap-6">
-        <p className="text-sm text-inkt-muted">Gepubliceerde foto's verschijnen op de site in de modellentabs van hun poorttype: vul het model in (bv. Mississipi) en de foto hangt naast dat model in de juiste tab. EXIF gegevens worden automatisch gestript.</p>
+        <p className="text-sm text-inkt-muted">Gepubliceerde poortfoto's verschijnen op de site via drie parameters: materiaal (poorttype), stijl (de tab, bv. Klassiek met sierpunten) en model (de naam, bv. Brenta). Zo landt de foto in de juiste tab op de juiste plaats. EXIF gegevens worden automatisch gestript.</p>
         <Knop variant="primair" className="shrink-0 whitespace-nowrap" onClick={openUpload}>Foto uploaden</Knop>
       </div>
       {fout && <div className="mb-4"><Melding soort="fout">{fout}</Melding></div>}
@@ -216,8 +217,12 @@ function FotoTab() {
             </div>
           )}
           {uploadVorm.productSoort === 'poort' && (
-            <Invoer label="Model" optioneel placeholder="Zoals op de site, bv. Mississipi of Kwai"
-              value={uploadVorm.modelNaam} onChange={e => zetUploadVorm({ ...uploadVorm, modelNaam: e.target.value })} />
+            <div className="grid grid-cols-2 gap-4">
+              <Invoer label="Stijl" optioneel placeholder="De tab op de site, bv. Klassiek met sierpunten"
+                value={uploadVorm.poortStijl} onChange={e => zetUploadVorm({ ...uploadVorm, poortStijl: e.target.value })} />
+              <Invoer label="Model" optioneel placeholder="De naam, bv. Brenta"
+                value={uploadVorm.modelNaam} onChange={e => zetUploadVorm({ ...uploadVorm, modelNaam: e.target.value })} />
+            </div>
           )}
           <div className="flex justify-end gap-2">
             <Knop type="button" variant="ghost" onClick={() => zetUploadOpen(false)}>Annuleren</Knop>
@@ -259,8 +264,12 @@ function FotoTab() {
               </div>
             )}
             {fotoVorm.productSoort === 'poort' && (
-              <Invoer label="Model" optioneel placeholder="Zoals op de site, bv. Mississipi of Kwai"
-                value={fotoVorm.modelNaam} onChange={e => zetFotoVorm({ ...fotoVorm, modelNaam: e.target.value })} />
+              <div className="grid grid-cols-2 gap-4">
+                <Invoer label="Stijl" optioneel placeholder="De tab op de site, bv. Klassiek met sierpunten"
+                  value={fotoVorm.poortStijl} onChange={e => zetFotoVorm({ ...fotoVorm, poortStijl: e.target.value })} />
+                <Invoer label="Model" optioneel placeholder="De naam, bv. Brenta"
+                  value={fotoVorm.modelNaam} onChange={e => zetFotoVorm({ ...fotoVorm, modelNaam: e.target.value })} />
+              </div>
             )}
             <Selectievak checked={fotoVorm.personenInBeeld} onChange={v => zetFotoVorm({ ...fotoVorm, personenInBeeld: v })}>
               Personen in beeld

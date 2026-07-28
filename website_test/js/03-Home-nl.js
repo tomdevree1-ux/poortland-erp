@@ -24,7 +24,7 @@ function HomeNL({
     ADVIES
   } = window;
   const uitgelicht = PROJECTEN.filter(p => p.uitgelicht).slice(0, 3);
-  const routes = [['houten', 'Houten poorten', 'Warm en tijdloos', 'media/houten-poort.jpg'], ['aluminium', 'Aluminium poorten', 'Strak en onderhoudsarm', 'media/aluminium-poort.jpg'], ['staalhout', 'Combinatie staal en hout', 'Kracht en warmte', 'media/staal-hout.jpg']];
+  const routes = [['houten', 'Houten poorten', 'Warm en tijdloos', 'media/houten-poort.jpg'], ['metalen', 'Metalen poorten', 'Strak en onderhoudsarm', 'media/aluminium-poort.jpg'], ['combinatie', 'Combinatie metaal en hout', 'Kracht en warmte', 'media/staal-hout.jpg']];
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-ground)',
@@ -220,13 +220,11 @@ function HomeNL({
       gridTemplateColumns: 'repeat(3, 1fr)',
       gap: 18
     }
-  }, routes.map(([key, naam, sub, img], i) => /*#__PURE__*/React.createElement(Reveal, {
-    key: key,
+  }, routes.map(([route, naam, sub, img], i) => /*#__PURE__*/React.createElement(Reveal, {
+    key: route,
     delay: i * 80
   }, /*#__PURE__*/React.createElement("button", {
-    onClick: () => onNav('product', {
-      productKey: key
-    }),
+    onClick: () => onNav(route),
     style: {
       width: '100%',
       textAlign: 'left',

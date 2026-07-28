@@ -17,7 +17,7 @@ public class WebsiteController(PoortlandDbContext db, ClaimsContext claims,
 {
     public record MediaWijziging(string? Titel, string? AltTekst, string? Categorie, int? Volgnummer,
         bool? PersonenInBeeld, bool? ToestemmingBevestigd,
-        string? ProductSoort, string? PoortType, string? PoortUitvoering, string? ModelNaam);
+        string? ProductSoort, string? PoortType, string? PoortUitvoering, string? PoortStijl, string? ModelNaam);
     public record PopupInvoer(string Titel, string BodyTekst, DateOnly ActiefVan, DateOnly ActiefTot);
 
     [HttpGet("media")]
@@ -39,7 +39,7 @@ public class WebsiteController(PoortlandDbContext db, ClaimsContext claims,
             }
             catch { /* voorbeeld blijft leeg en de kaart toont een plaatshouder */ }
             return (object)new { m.Id, m.Titel, m.AltTekst, m.Categorie, m.Volgnummer, m.Status,
-                m.ProductSoort, m.PoortType, m.PoortUitvoering, m.ModelNaam,
+                m.ProductSoort, m.PoortType, m.PoortUitvoering, m.PoortStijl, m.ModelNaam,
                 m.Breedte, m.Hoogte, m.PersonenInBeeld, m.ToestemmingBevestigd, m.GepubliceerdOp, voorbeeld };
         }));
         return Ok(resultaat);
@@ -50,11 +50,12 @@ public class WebsiteController(PoortlandDbContext db, ClaimsContext claims,
     [RequestSizeLimit(20 * 1024 * 1024)]
     public async Task<IActionResult> Upload([FromForm] IFormFile bestand, [FromForm] string titel,
         [FromForm] string? categorie, [FromForm] string? productSoort,
-        [FromForm] string? poortType, [FromForm] string? poortUitvoering, [FromForm] string? modelNaam)
+        [FromForm] string? poortType, [FromForm] string? poortUitvoering,
+        [FromForm] string? poortStijl, [FromForm] string? modelNaam)
     {
         await using var stream = bestand.OpenReadStream();
         var media = await service.Upload(stream, bestand.FileName, bestand.ContentType, titel,
-            categorie, productSoort, poortType, poortUitvoering, modelNaam);
+            categorie, productSoort, poortType, poortUitvoering, poortStijl, modelNaam);
         return Ok(media);
     }
 
@@ -73,8 +74,9 @@ public class WebsiteController(PoortlandDbContext db, ClaimsContext claims,
         if (invoer.ProductSoort is not null) media.ProductSoort = invoer.ProductSoort;
         if (invoer.PoortType is not null) media.PoortType = invoer.PoortType == "" ? null : invoer.PoortType;
         if (invoer.PoortUitvoering is not null) media.PoortUitvoering = invoer.PoortUitvoering == "" ? null : invoer.PoortUitvoering;
+        if (invoer.PoortStijl is not null) media.PoortStijl = invoer.PoortStijl == "" ? null : invoer.PoortStijl.Trim();
         if (invoer.ModelNaam is not null) media.ModelNaam = invoer.ModelNaam == "" ? null : invoer.ModelNaam.Trim();
-        if (media.ProductSoort == "overkapping") { media.PoortType = null; media.PoortUitvoering = null; media.ModelNaam = null; }
+        if (media.ProductSoort == "overkapping") { media.PoortType = null; media.PoortUitvoering = null; media.PoortStijl = null; media.ModelNaam = null; }
         await db.SaveChangesAsync();
         if (media.Status == WebsiteContentStatus.Gepubliceerd) await service.HerbouwContentJson();
         return Ok(media);
