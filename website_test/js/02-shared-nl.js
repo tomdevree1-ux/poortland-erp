@@ -3738,7 +3738,7 @@ function CategoriePagina({
     "aria-expanded": aluOpen,
     style: {
       display: 'flex',
-      alignItems: 'flex-start',
+      alignItems: 'flex-end',
       justifyContent: 'space-between',
       gap: 24,
       width: '100%',
@@ -3770,7 +3770,7 @@ function CategoriePagina({
     "aria-hidden": "true",
     style: {
       flex: '0 0 auto',
-      marginTop: 6,
+      marginBottom: 6,
       fontSize: 30,
       lineHeight: 1,
       color: 'var(--accent)',
