@@ -3190,8 +3190,38 @@ function CategoriePagina({
     });
     return kopie;
   }, [d, erpFotos]);
+  // Platte modellen (houten en combinatie): geen tabs, enkel filterknoppen.
+  const platBasis = d.modellenPlat && d.modellenPlat.length ? d.modellenPlat : null;
+  const platLijst = React.useMemo(() => {
+    if (!platBasis) return null;
+    const lijst = platBasis.slice();
+    erpFotos.forEach(f => {
+      const naam = String(f.modelNaam || '').trim();
+      const nieuw = {
+        naam: naam,
+        foto: f.url,
+        alt: f.alt || (naam ? 'Realisatie van model ' + naam + ' door Poortland' : 'Realisatie van Poortland'),
+        erp: true
+      };
+      if (naam) {
+        const dn = naam.toLowerCase();
+        let laatste = -1;
+        for (let i = 0; i < lijst.length; i++) {
+          const b = String(lijst[i].naam || '').toLowerCase();
+          if (b === dn || b.indexOf(dn + ' ') === 0) laatste = i;
+        }
+        if (laatste >= 0) {
+          lijst.splice(laatste + 1, 0, nieuw);
+          return;
+        }
+      }
+      lijst.push(nieuw);
+    });
+    return lijst;
+  }, [d, erpFotos]);
+  const heeftModellen = !!d.productenGroepen || !!platBasis;
   const modelGroep = modelGroepen[modelTab] || {};
-  const modelTypes = modelGroep.types || [];
+  const modelTypes = platBasis ? platLijst || [] : modelGroep.types || [];
   const modelKaart = modelBasisKaart(modelTypes.filter(t => t.naam).map(t => t.naam));
   const modelChips = Object.keys(modelKaart).map(k => modelKaart[k]).filter((v, i, a) => a.indexOf(v) === i).sort((a, b) => a.localeCompare(b, 'nl'));
   const modelZichtbaar = modelType === 'Alle' ? modelTypes : modelTypes.filter(t => modelKaart[t.naam] === modelType);
@@ -3430,12 +3460,12 @@ function CategoriePagina({
     eyebrow: "Modellen",
     titel: d.productenTitel || 'Modellen en stijlen',
     intro: d.productenIntro || 'Van strak en modern tot klassiek en landelijk, telkens volledig op maat gemaakt.'
-  })), d.productenGroepen ? /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("div", {
+  })), heeftModellen ? /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("div", {
     style: {
       maxWidth: 1000,
       margin: '46px auto 0'
     }
-  }, /*#__PURE__*/React.createElement("div", {
+  }, d.productenGroepen && /*#__PURE__*/React.createElement("div", {
     role: "tablist",
     "aria-label": d.productenTitel,
     style: {
@@ -5304,6 +5334,7 @@ var CATEGORIEEN = {
     heroLabel: 'Natuurlijk maatwerk',
     materiaalFotos: ['media/houten-poort.jpg', 'media/realisatie-hout-1.jpeg', 'media/staal-hout.jpg', 'media/realisatie-hout-2.jpeg', 'media/hero.jpg'],
     erpPoortType: 'hout',
+    modellenPlat: [],
     productenTitel: 'Modellen in hout',
     producten: [{
       titel: 'Tijdloos massief hout',
@@ -5412,6 +5443,7 @@ var CATEGORIEEN = {
     heroLabel: 'Hout en metaal op maat',
     materiaalFotos: ['media/staal-hout.jpg', 'media/hero.jpg', 'media/realisatie-hout-1.jpeg', 'media/stalen-poort.jpg', 'media/realisatie-metaal-1.jpeg'],
     erpPoortType: 'hout_metaal',
+    modellenPlat: [],
     productenTitel: 'Combinaties in hout en metaal',
     producten: [{
       titel: 'Warmte van hout',
