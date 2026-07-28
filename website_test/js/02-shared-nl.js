@@ -4314,8 +4314,121 @@ var CATEGORIEEN = {
     productenGroepen: [{
       tab: "Aluminium",
       types: [{
-        naam: '',
-        foto: ''
+        naam: "Arras",
+        foto: "media/metaal/Aluminium/Arras.jpg",
+        alt: "Model Arras, aluminium poort van Poortland"
+      }, {
+        naam: "Azur",
+        foto: "media/metaal/Aluminium/Azur%20.jpg",
+        alt: "Model Azur, aluminium poort van Poortland"
+      }, {
+        naam: "Azur",
+        foto: "media/metaal/Aluminium/Azur.jpg",
+        alt: "Model Azur, aluminium poort van Poortland"
+      }, {
+        naam: "Beaulieu",
+        foto: "media/metaal/Aluminium/Beaulieu%20.jpg",
+        alt: "Model Beaulieu, aluminium poort van Poortland"
+      }, {
+        naam: "Beaulieu",
+        foto: "media/metaal/Aluminium/Beaulieu.jpg",
+        alt: "Model Beaulieu, aluminium poort van Poortland"
+      }, {
+        naam: "Besancon",
+        foto: "media/metaal/Aluminium/Besancon.jpg",
+        alt: "Model Besancon, aluminium poort van Poortland"
+      }, {
+        naam: "Biarritz",
+        foto: "media/metaal/Aluminium/Biarritz%20%20%20.jpg",
+        alt: "Model Biarritz, aluminium poort van Poortland"
+      }, {
+        naam: "Biarritz",
+        foto: "media/metaal/Aluminium/Biarritz%20%20.jpg",
+        alt: "Model Biarritz, aluminium poort van Poortland"
+      }, {
+        naam: "Biarritz",
+        foto: "media/metaal/Aluminium/Biarritz%20.jpg",
+        alt: "Model Biarritz, aluminium poort van Poortland"
+      }, {
+        naam: "Biarritz",
+        foto: "media/metaal/Aluminium/Biarritz.jpg",
+        alt: "Model Biarritz, aluminium poort van Poortland"
+      }, {
+        naam: "Calais",
+        foto: "media/metaal/Aluminium/Calais.jpg",
+        alt: "Model Calais, aluminium poort van Poortland"
+      }, {
+        naam: "Carcasonne",
+        foto: "media/metaal/Aluminium/Carcasonne%20.jpg",
+        alt: "Model Carcasonne, aluminium poort van Poortland"
+      }, {
+        naam: "Carcasonne",
+        foto: "media/metaal/Aluminium/Carcasonne.jpg",
+        alt: "Model Carcasonne, aluminium poort van Poortland"
+      }, {
+        naam: "Carpentras",
+        foto: "media/metaal/Aluminium/Carpentras.jpg",
+        alt: "Model Carpentras, aluminium poort van Poortland"
+      }, {
+        naam: "Cavaillon",
+        foto: "media/metaal/Aluminium/Cavaillon%20%20.jpg",
+        alt: "Model Cavaillon, aluminium poort van Poortland"
+      }, {
+        naam: "Cavaillon",
+        foto: "media/metaal/Aluminium/Cavaillon%20.jpg",
+        alt: "Model Cavaillon, aluminium poort van Poortland"
+      }, {
+        naam: "Cavaillon",
+        foto: "media/metaal/Aluminium/Cavaillon.jpg",
+        alt: "Model Cavaillon, aluminium poort van Poortland"
+      }, {
+        naam: "Cluses",
+        foto: "media/metaal/Aluminium/Cluses.jpg",
+        alt: "Model Cluses, aluminium poort van Poortland"
+      }, {
+        naam: "Colmar",
+        foto: "media/metaal/Aluminium/Colmar.jpg",
+        alt: "Model Colmar, aluminium poort van Poortland"
+      }, {
+        naam: "Fontaine",
+        foto: "media/metaal/Aluminium/Fontaine.jpg",
+        alt: "Model Fontaine, aluminium poort van Poortland"
+      }, {
+        naam: "Nancy",
+        foto: "media/metaal/Aluminium/Nancy.jpg",
+        alt: "Model Nancy, aluminium poort van Poortland"
+      }, {
+        naam: "Nimes",
+        foto: "media/metaal/Aluminium/Nimes.jpg",
+        alt: "Model Nimes, aluminium poort van Poortland"
+      }, {
+        naam: "Orinoco",
+        foto: "media/metaal/Aluminium/Orinoco%20.jpg",
+        alt: "Model Orinoco, aluminium poort van Poortland"
+      }, {
+        naam: "Orinoco",
+        foto: "media/metaal/Aluminium/Orinoco.jpg",
+        alt: "Model Orinoco, aluminium poort van Poortland"
+      }, {
+        naam: "Rochefort",
+        foto: "media/metaal/Aluminium/Rochefort%20%20.jpg",
+        alt: "Model Rochefort, aluminium poort van Poortland"
+      }, {
+        naam: "Rochefort",
+        foto: "media/metaal/Aluminium/Rochefort%20.jpg",
+        alt: "Model Rochefort, aluminium poort van Poortland"
+      }, {
+        naam: "Rochefort",
+        foto: "media/metaal/Aluminium/Rochefort.%20.jpg",
+        alt: "Model Rochefort, aluminium poort van Poortland"
+      }, {
+        naam: "Rochefort",
+        foto: "media/metaal/Aluminium/Rochefort.jpg",
+        alt: "Model Rochefort, aluminium poort van Poortland"
+      }, {
+        naam: "Valence",
+        foto: "media/metaal/Aluminium/Valence.jpg",
+        alt: "Model Valence, aluminium poort van Poortland"
       }]
     }, {
       tab: "Modern",
