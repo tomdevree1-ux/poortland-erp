@@ -5334,7 +5334,75 @@ var CATEGORIEEN = {
     heroLabel: 'Natuurlijk maatwerk',
     materiaalFotos: ['media/houten-poort.jpg', 'media/realisatie-hout-1.jpeg', 'media/staal-hout.jpg', 'media/realisatie-hout-2.jpeg', 'media/hero.jpg'],
     erpPoortType: 'hout',
-    modellenPlat: [],
+    modellenPlat: [{
+      naam: "Custom Padoek massief DV",
+      foto: "media/hout/Custom%20Padoek%20massief%20DV.jpg",
+      alt: "Model Custom Padoek massief DV, houten poort van Poortland"
+    }, {
+      naam: "Essen DV+EV",
+      foto: "media/hout/Essen%20DV%2BEV.jpg",
+      alt: "Model Essen DV+EV, houten poort van Poortland"
+    }, {
+      naam: "Essen EV",
+      foto: "media/hout/Essen%20EV.jpg",
+      alt: "Model Essen EV, houten poort van Poortland"
+    }, {
+      naam: "Essen EV+VH",
+      foto: "media/hout/Essen%20EV%2BVH.jpg",
+      alt: "Model Essen EV+VH, houten poort van Poortland"
+    }, {
+      naam: "Essen EV+VH (2)",
+      foto: "media/hout/Essen%20EV%2BVH%20%282%29.jpg",
+      alt: "Model Essen EV+VH (2), houten poort van Poortland"
+    }, {
+      naam: "Essen Front achterzijde Padouk",
+      foto: "media/hout/Essen%20Front%20achterzijde%20Padouk.jpg",
+      alt: "Model Essen Front achterzijde Padouk, houten poort van Poortland"
+    }, {
+      naam: "Essen front padoek DV+VH",
+      foto: "media/hout/Essen%20front%20padoek%20DV%2BVH.jpg",
+      alt: "Model Essen front padoek DV+VH, houten poort van Poortland"
+    }, {
+      naam: "Essen Padoek DV",
+      foto: "media/hout/Essen%20Padoek%20DV.jpg",
+      alt: "Model Essen Padoek DV, houten poort van Poortland"
+    }, {
+      naam: "Hamburg DV",
+      foto: "media/hout/Hamburg%20DV.jpg",
+      alt: "Model Hamburg DV, houten poort van Poortland"
+    }, {
+      naam: "Hamburg Padoek EV",
+      foto: "media/hout/Hamburg%20Padoek%20EV.jpg",
+      alt: "Model Hamburg Padoek EV, houten poort van Poortland"
+    }, {
+      naam: "Keulen DV",
+      foto: "media/hout/Keulen%20DV.jpg",
+      alt: "Model Keulen DV, houten poort van Poortland"
+    }, {
+      naam: "Keulen EV",
+      foto: "media/hout/Keulen%20EV.jpg",
+      alt: "Model Keulen EV, houten poort van Poortland"
+    }, {
+      naam: "Keulen Padoek DV",
+      foto: "media/hout/Keulen%20Padoek%20DV.jpg",
+      alt: "Model Keulen Padoek DV, houten poort van Poortland"
+    }, {
+      naam: "Massief Padoek custom achterzijde",
+      foto: "media/hout/Massief%20Padoek%20custom%20achterzijde.jpg",
+      alt: "Model Massief Padoek custom achterzijde, houten poort van Poortland"
+    }, {
+      naam: "Orinoco DV",
+      foto: "media/hout/Orinoco%20DV.jpg",
+      alt: "Model Orinoco DV, houten poort van Poortland"
+    }, {
+      naam: "Orinoco EV",
+      foto: "media/hout/Orinoco%20EV.jpg",
+      alt: "Model Orinoco EV, houten poort van Poortland"
+    }, {
+      naam: "Orinoco Padoek DV+VH",
+      foto: "media/hout/Orinoco%20Padoek%20DV%2BVH.jpg",
+      alt: "Model Orinoco Padoek DV+VH, houten poort van Poortland"
+    }],
     productenTitel: 'Modellen in hout',
     producten: [{
       titel: 'Tijdloos massief hout',
