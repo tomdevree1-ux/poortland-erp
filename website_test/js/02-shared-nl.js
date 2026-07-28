@@ -3115,6 +3115,7 @@ function CategoriePagina({
   });
   const [modelType, setModelType] = React.useState('Alle');
   const [modelFilterOpen, setModelFilterOpen] = React.useState(false);
+  const [aluOpen, setAluOpen] = React.useState(false);
   // Gepubliceerde ERP foto's van dit poorttype met een modelnaam hangen
   // automatisch naast dat model in de juiste tab (TS-17, realisaties).
   const [erpFotos, setErpFotos] = React.useState([]);
@@ -3732,10 +3733,26 @@ function CategoriePagina({
       border: '1px solid var(--line-on-light-soft)',
       borderTop: '3px solid var(--accent)',
       borderRadius: 'var(--radius-md)',
-      padding: '42px 40px',
+      padding: '30px 40px',
       boxShadow: 'var(--shadow-lg)'
     }
-  }, /*#__PURE__*/React.createElement(SEyebrow, {
+  }, /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    onClick: () => setAluOpen(v => !v),
+    "aria-expanded": aluOpen,
+    style: {
+      display: 'flex',
+      alignItems: 'flex-start',
+      justifyContent: 'space-between',
+      gap: 24,
+      width: '100%',
+      background: 'none',
+      border: 0,
+      padding: 0,
+      cursor: 'pointer',
+      textAlign: 'left'
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(SEyebrow, {
     style: {
       marginBottom: 14
     }
@@ -3747,13 +3764,35 @@ function CategoriePagina({
       lineHeight: 1.15,
       letterSpacing: '-0.01em',
       color: 'var(--text-heading)',
-      margin: '0 0 18px'
+      margin: 0
     }
   }, d.aluminiumBlok.titel, d.aluminiumBlok.titel2 ? /*#__PURE__*/React.createElement("span", {
     style: {
       display: 'block'
     }
-  }, d.aluminiumBlok.titel2) : null), d.aluminiumBlok.alinea.map((a, i) => /*#__PURE__*/React.createElement("p", {
+  }, d.aluminiumBlok.titel2) : null)), /*#__PURE__*/React.createElement("span", {
+    "aria-hidden": "true",
+    style: {
+      flex: '0 0 auto',
+      marginTop: 6,
+      fontSize: 30,
+      lineHeight: 1,
+      color: 'var(--accent)',
+      transition: 'transform var(--dur) var(--ease-out)',
+      transform: aluOpen ? 'rotate(180deg)' : 'none'
+    }
+  }, "▾")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      overflow: 'hidden',
+      maxHeight: aluOpen ? 900 : 0,
+      opacity: aluOpen ? 1 : 0,
+      transition: 'max-height 460ms var(--ease-out), opacity 340ms var(--ease-out)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      paddingTop: 20
+    }
+  }, d.aluminiumBlok.alinea.map((a, i) => /*#__PURE__*/React.createElement("p", {
     key: i,
     style: {
       fontFamily: 'var(--font-sans)',
@@ -3798,7 +3837,7 @@ function CategoriePagina({
       color: 'var(--text-muted)',
       marginTop: 4
     }
-  }, tekst)))))))), /*#__PURE__*/React.createElement("section", {
+  }, tekst)))))))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper)',
       padding: '20px 44px 90px',
