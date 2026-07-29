@@ -37,6 +37,7 @@ function HomeNL({
       margin: '0 auto'
     }
   }, /*#__PURE__*/React.createElement("div", {
+    className: "pl-herohome",
     style: {
       display: 'grid',
       gridTemplateColumns: '1.05fr 0.95fr',
@@ -115,7 +116,8 @@ function HomeNL({
       marginTop: 7
     }
   }, l)))))), /*#__PURE__*/React.createElement(Reveal, {
-    delay: 80
+    delay: 80,
+    className: "pl-hero-media"
   }, /*#__PURE__*/React.createElement("div", {
     style: {
       borderRadius: 8,

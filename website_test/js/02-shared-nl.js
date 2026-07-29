@@ -77,7 +77,8 @@ function Reveal({
   children,
   delay = 0,
   y = 18,
-  style
+  style,
+  className
 }) {
   const ref = React.useRef(null);
   const [shown, setShown] = React.useState(!!window.__PRINT__);
@@ -109,6 +110,7 @@ function Reveal({
   }, []);
   return /*#__PURE__*/React.createElement("div", {
     ref: ref,
+    className: className,
     style: {
       opacity: shown ? 1 : 0,
       transform: shown ? 'none' : `translateY(${y}px)`,
@@ -1062,7 +1064,8 @@ function ClaimBalk({
       gridTemplateColumns: `repeat(${claims.length}, 1fr)`,
       borderTop: `1px solid ${line}`,
       borderBottom: `1px solid ${line}`
-    }
+    },
+    className: "pl-claimbalk"
   }, claims.map((c, i) => /*#__PURE__*/React.createElement("div", {
     key: c,
     style: {

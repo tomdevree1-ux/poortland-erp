@@ -390,6 +390,13 @@ body {
   .pl-cards4{ grid-template-columns: 1fr 1fr !important; }
   .pl-grid2, .pl-grid3{ grid-template-columns: 1fr !important; }
   .pl-grid4{ grid-template-columns: 1fr 1fr !important; }
+  /* Homepagina hero: enkel tekst op mobiel, de fotokolom weg. */
+  .pl-herohome{ grid-template-columns: 1fr !important; padding-bottom: 32px !important; }
+  .pl-hero-media{ display: none !important; }
+  /* Claimbalk: de drie troeven onder elkaar in plaats van naast elkaar. */
+  .pl-claimbalk{ grid-template-columns: 1fr !important; }
+  .pl-claimbalk > div{ border-left: 0 !important; padding-top: 13px !important; padding-bottom: 13px !important; }
+  .pl-claimbalk > div + div{ border-top: 1px solid var(--line-on-dark-soft); }
   .pl-comp{ grid-template-columns: 1fr !important; }
   .pl-kwal{ grid-template-columns: 1fr !important; }
   .pl-proces{ grid-template-columns: 1fr !important; gap: 4px !important; }
