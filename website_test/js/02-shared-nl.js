@@ -1104,6 +1104,7 @@ function FAQ({
   const body = dark ? 'var(--stone-300)' : 'var(--text-body)';
   return /*#__PURE__*/React.createElement("div", null, items.map(([q, a], i) => {
     const isOpen = open === i;
+    const prijsVraag = /^wat kost/i.test(q);
     return /*#__PURE__*/React.createElement("div", {
       key: i,
       style: {
@@ -1145,7 +1146,7 @@ function FAQ({
     }, "+")), /*#__PURE__*/React.createElement("div", {
       style: {
         overflow: 'hidden',
-        maxHeight: isOpen ? 240 : 0,
+        maxHeight: isOpen ? prijsVraag ? 360 : 240 : 0,
         transition: 'max-height 380ms var(--ease-out)'
       }
     }, /*#__PURE__*/React.createElement("p", {
@@ -1154,10 +1155,32 @@ function FAQ({
         fontSize: 15.5,
         lineHeight: 1.7,
         color: body,
-        margin: '0 0 24px',
+        margin: '0 0 18px',
         maxWidth: '62ch'
       }
-    }, a)));
+    }, a), prijsVraag && /*#__PURE__*/React.createElement("button", {
+      type: "button",
+      onClick: () => window.dispatchEvent(new CustomEvent('pl-offerte-open')),
+      style: {
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 8,
+        marginBottom: 24,
+        cursor: 'pointer',
+        fontFamily: 'var(--font-label)',
+        fontSize: 12,
+        fontWeight: 600,
+        letterSpacing: '0.1em',
+        textTransform: 'uppercase',
+        padding: '12px 20px',
+        borderRadius: 'var(--radius-md)',
+        border: 0,
+        background: 'var(--accent)',
+        color: '#fff'
+      }
+    }, "Vraag een offerte aan ", /*#__PURE__*/React.createElement("span", {
+      "aria-hidden": "true"
+    }, "↗"))));
   }));
 }
 
@@ -3119,6 +3142,9 @@ function CategoriePagina({
   const [modelType, setModelType] = React.useState('Alle');
   const [modelFilterOpen, setModelFilterOpen] = React.useState(false);
   const [aluOpen, setAluOpen] = React.useState(false);
+  // Stapsgewijs tonen (best practice op mobiel en desktop) in plaats van eindeloos scrollen.
+  const MODEL_STAP = 9;
+  const [modelLimiet, setModelLimiet] = React.useState(MODEL_STAP);
   // Gepubliceerde ERP foto's van dit poorttype met een modelnaam hangen
   // automatisch naast dat model in de juiste tab (TS-17, realisaties).
   const [erpFotos, setErpFotos] = React.useState([]);
@@ -3487,6 +3513,7 @@ function CategoriePagina({
     onClick: () => {
       setModelTab(i);
       setModelType('Alle');
+      setModelLimiet(MODEL_STAP);
     },
     style: {
       fontFamily: 'var(--font-sans)',
@@ -3526,6 +3553,7 @@ function CategoriePagina({
       const open = !modelFilterOpen;
       setModelFilterOpen(open);
       if (!open) setModelType('Alle');
+      setModelLimiet(MODEL_STAP);
     },
     style: {
       display: 'inline-flex',
@@ -3573,7 +3601,10 @@ function CategoriePagina({
       key: chip,
       type: "button",
       "aria-pressed": actief,
-      onClick: () => setModelType(chip),
+      onClick: () => {
+        setModelType(chip);
+        setModelLimiet(MODEL_STAP);
+      },
       style: {
         fontFamily: 'var(--font-label)',
         fontSize: 11,
@@ -3589,21 +3620,13 @@ function CategoriePagina({
         border: '1px solid ' + (actief ? 'var(--accent)' : 'var(--line-on-light)')
       }
     }, chip);
-  })))) : null, /*#__PURE__*/React.createElement("div", {
-    className: "pl-modelscroll",
-    style: {
-      maxHeight: 660,
-      overflowY: 'auto',
-      paddingRight: 10,
-      marginRight: -6
-    }
-  }, /*#__PURE__*/React.createElement("div", {
+  })))) : null, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
       gap: 18
     }
-  }, modelZichtbaar.map((t, i) => /*#__PURE__*/React.createElement("div", {
+  }, modelZichtbaar.slice(0, modelLimiet).map((t, i) => /*#__PURE__*/React.createElement("div", {
     key: i,
     style: {
       display: 'flex',
@@ -3670,7 +3693,29 @@ function CategoriePagina({
       marginTop: 10,
       textAlign: 'center'
     }
-  }, t.naam) : null))))))) : /*#__PURE__*/React.createElement("div", {
+  }, t.naam) : null))), modelZichtbaar.length > modelLimiet && /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      justifyContent: 'center',
+      marginTop: 26
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    onClick: () => setModelLimiet(n => n + MODEL_STAP),
+    style: {
+      fontFamily: 'var(--font-label)',
+      fontSize: 12,
+      fontWeight: 600,
+      letterSpacing: '0.12em',
+      textTransform: 'uppercase',
+      padding: '13px 26px',
+      borderRadius: 999,
+      cursor: 'pointer',
+      background: 'transparent',
+      color: 'var(--text-heading)',
+      border: '1px solid var(--line-on-light)'
+    }
+  }, "Toon meer (", modelZichtbaar.length - modelLimiet, ")")))))) : /*#__PURE__*/React.createElement("div", {
     className: "pl-cards",
     style: {
       display: 'grid',
