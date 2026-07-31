@@ -208,7 +208,7 @@ function HomeNL({
   }, /*#__PURE__*/React.createElement(SectieKop, {
     dark: true,
     eyebrow: "Wat wij maken",
-    titel: "Poorten, hekwerken en automatisatie.",
+    titel: "Poorten, overkappingen en automatisaties.",
     max: "16ch"
   }), /*#__PURE__*/React.createElement(HButton, {
     variant: "secondary",
