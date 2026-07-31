@@ -1220,7 +1220,7 @@ function CTASectie({
       maxWidth: '46ch',
       margin: '0 auto 34px'
     }
-  }, "Wilt u een poort of hekwerk dat past bij uw woning en jarenlang vertrouwen geeft. Plan een adviesgesprek of bezoek de showroom."), /*#__PURE__*/React.createElement("div", {
+  }, "Wilt u een poort of overkapping dat past bij uw woning en jarenlang vertrouwen geeft. Plan een adviesgesprek of bezoek de showroom."), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 16,
@@ -6239,7 +6239,7 @@ function GarantieNL({
     if (window.scrollTo) window.scrollTo(0, 0);
   }, []);
   const faac = [['5 jaar', 'Hydraulische FAAC aandrijvingen'], ['3 jaar', 'FAAC schuifpoortmotoren'], ['2 jaar', 'Elektromechanische FAAC aandrijvingen'], ['2 jaar', 'Elektronische toebehoren']];
-  const kwaliteit = [['Snel geholpen met ruilmotoren', 'Bij een defect aan een motor hoeft u niet onnodig lang op een herstelling te wachten. Poortland werkt met een systeem van ruilmotoren. Waar nodig vervangen we de motor onmiddellijk door een geschikt exemplaar, zodat uw poort zo snel mogelijk opnieuw werkt.'], ['Duurzame materialen', 'Voor de montage gebruiken wij uitsluitend bouten, schroeven en scharnieren in roestvrij staal. Zo beperken we slijtage en corrosie en verhogen we de levensduur van uw poort of hekwerk.'], ['Volledige afwerking na plaatsing', 'Onze dienstverlening stopt niet bij de installatie. Na de plaatsing zorgen wij voor een nette en volledige afwerking. Waar nodig werken we de bestrating opnieuw aan en ruimen we de werf zorgvuldig op.']];
+  const kwaliteit = [['Snel geholpen met ruilmotoren', 'Bij een defect aan een motor hoeft u niet onnodig lang op een herstelling te wachten. Poortland werkt met een systeem van ruilmotoren. Waar nodig vervangen we de motor onmiddellijk door een geschikt exemplaar, zodat uw poort zo snel mogelijk opnieuw werkt.'], ['Duurzame materialen', 'Voor de montage gebruiken wij uitsluitend bouten, schroeven en scharnieren in roestvrij staal. Zo beperken we slijtage en corrosie en verhogen we de levensduur van uw poort of overkapping.'], ['Volledige afwerking na plaatsing', 'Onze dienstverlening stopt niet bij de installatie. Na de plaatsing zorgen wij voor een nette en volledige afwerking. Waar nodig werken we de bestrating opnieuw aan en ruimen we de werf zorgvuldig op.']];
   const [tab, setTab] = React.useState(0);
   const corrosie = [{
     titel: 'Metalliseren',
@@ -6363,7 +6363,7 @@ function GarantieNL({
       color: 'var(--text-body)',
       margin: 0
     }
-  }, "Op de lakkwaliteit van onze poorten en hekwerken bieden wij een effectieve garantie van 10 jaar die haar volledige waarde behoudt. De waarde van de garantie vermindert tijdens deze periode dus niet jaarlijks."), /*#__PURE__*/React.createElement("p", {
+  }, "Op de lakkwaliteit van onze poorten en overkappingen bieden wij een effectieve garantie van 10 jaar die haar volledige waarde behoudt. De waarde van de garantie vermindert tijdens deze periode dus niet jaarlijks."), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 16.5,
@@ -6405,7 +6405,7 @@ function GarantieNL({
       maxWidth: '68ch',
       margin: 0
     }
-  }, "Om een lange levensduur te verzekeren worden alle hekwerken en poorten van Poortland tegen roest behandeld. Hiervoor gebruiken wij twee technieken, namelijk thermisch verzinken en metalliseren. Daarna worden de hekwerken en poorten met twee lagen gepoederlakt.")), /*#__PURE__*/React.createElement(Reveal, {
+  }, "Om een lange levensduur te verzekeren worden alle overkappingen en poorten van Poortland tegen roest behandeld. Hiervoor gebruiken wij twee technieken, namelijk thermisch verzinken en metalliseren. Daarna worden de overkappingen en poorten met twee lagen gepoederlakt.")), /*#__PURE__*/React.createElement(Reveal, {
     delay: 80
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -6878,7 +6878,7 @@ function OverOnsNL({
     label: 'In eigen beheer'
   }];
   const mijlpalen = [['1999', 'De start van Poortland NV', 'Poortland NV gaat van start. We nemen materiaal, materieel en ervaren vakmensen over van een stopgezette zaak en zetten de dienstverlening zonder onderbreking verder. Een volledig nieuw bedrijf met een eigen visie, los van het verleden.'], ['2000', 'Eigen transport en plaatsing', 'Een eerste grote investering: een vrachtwagen met hydraulische kraan en een laadbak van 9 meter. Zo plaatsen we ook grotere poorten volledig in eigen beheer.'], ['2001–2003', 'Een sterker atelier', 'Nieuwe las- en bewerkingsmachines, van halfautomaat en TIG tot profielwals, lintzaag en freesmachine. Meer capaciteit, meer precisie en een fijnere afwerking.'], ['2004', 'Meer hefkracht', 'Een krachtiger kraanvoertuig heft 750 kilogram op 10 meter afstand, zodat ook grotere en zwaardere poorten vlot geplaatst worden.'], ['2005', 'Eigen gebouwen en FAAC', 'We kopen de gehuurde gebouwen en terreinen, samen zo\'n 3.000 m². Tegelijk breiden we de samenwerking uit met FAAC, een wereldspeler in professionele poortautomatisering.'], ['2006', 'Ontwerpen met CAD', 'Een professioneel CAD-programma doet zijn intrede. Complexe projecten worden vooraf tot in detail uitgetekend, met nauwkeurige productietekeningen voor het atelier.'], ['Vanaf 2007', 'Van staal naar aluminium', 'Geleidelijk verschuift het accent van staal naar aluminium, voor onderhoudsgemak en corrosiebestendigheid. Waar staal begin de jaren 2000 nog overheerste, is die verhouding vandaag omgekeerd. Toch blijft Poortland een van de weinige Belgische makers van klassieke sierpoorten, van landelijke stijl tot kasteelpoort.'], ['Doorlopend', 'Blijven vernieuwen', 'De atelieruitrusting wordt voortdurend vernieuwd waar nodig, zodat kwaliteit en afwerking mee blijven evolueren.'], ['2024', 'Laserlassen', 'Een laserlasser levert veel fijnere lasnaden op: een strakkere, mooiere afwerking met nauwelijks zichtbare lassen en veel minder nabewerking.'], ['2026', 'Nieuwe kraanwagen', 'Een nieuwe Euro 6 vrachtwagen met een kraan tot 11,5 meter en een mobiele werkunit. Nauwkeuriger plaatsen, ook op moeilijk bereikbare werven, en lichter werk voor het team.']];
-  const beheer = [['Eigen productie', 'Poortland beschikt over een eigen atelier in Mechelen. Alle poorten en hekwerken worden er door ervaren vakmensen gemaakt, met voortdurende aandacht voor kwaliteit en afwerking.'], ['Eigen plaatsingsdienst', 'Poortland heeft een eigen plaatsingsteam en professioneel transport en plaatsingsmaterieel. Zo zetten wij onder meer een telescopische kraan in die tot 1.500 kilogram heft op 10 meter afstand. Elke poort wordt veilig en duurzaam geplaatst.'], ['Eigen techniekers', 'Onze eigen techniekers verzorgen de automatisatie van de poorten. Zij staan ook in voor technische ondersteuning, onderhoud en naverkoop.'], ['Afwerking van de werf', 'Na de plaatsing werken wij de werf netjes af. Waar nodig herstellen wij de bestrating en ruimen wij de volledige werkzone op.']];
+  const beheer = [['Eigen productie', 'Poortland beschikt over een eigen atelier in Mechelen. Alle poorten en overkappingen worden er door ervaren vakmensen gemaakt, met voortdurende aandacht voor kwaliteit en afwerking.'], ['Eigen plaatsingsdienst', 'Poortland heeft een eigen plaatsingsteam en professioneel transport en plaatsingsmaterieel. Zo zetten wij onder meer een telescopische kraan in die tot 1.500 kilogram heft op 10 meter afstand. Elke poort wordt veilig en duurzaam geplaatst.'], ['Eigen techniekers', 'Onze eigen techniekers verzorgen de automatisatie van de poorten. Zij staan ook in voor technische ondersteuning, onderhoud en naverkoop.'], ['Afwerking van de werf', 'Na de plaatsing werken wij de werf netjes af. Waar nodig herstellen wij de bestrating en ruimen wij de volledige werkzone op.']];
   const kwaliteit = [['Sterke constructie', 'Poortland verwerkt staal, aluminium en inox. Voor stalen constructies gebruiken wij dikwandig staal, afhankelijk van de toepassing en de constructie van 2 tot 5 millimeter.'], ['Roestvrije bevestiging', 'Bouten, schroeven en scharnieren voert Poortland uit in roestvrij staal, zodat de bevestiging betrouwbaar blijft.'], ['Kwaliteitsgerichte leveranciers', 'Poortland kiest leveranciers op de verhouding tussen kwaliteit en prijs, niet enkel op de laagste aankoopprijs.']];
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("nav", {
     "aria-label": "Kruimelpad",
@@ -6947,7 +6947,7 @@ function OverOnsNL({
       maxWidth: '48ch',
       margin: '24px 0 30px'
     }
-  }, "Poortland NV werd opgericht in 1999. Van bij de start werkt het bedrijf met mensen die jarenlange ervaring hebben in het maken en plaatsen van poorten. Ondertussen realiseerde Poortland meer dan 3.000 poorten en hekwerken. U rekent daardoor op ruime ervaring, bewezen vakmanschap en een professionele dienstverlening."), /*#__PURE__*/React.createElement("div", {
+  }, "Poortland NV werd opgericht in 1999. Van bij de start werkt het bedrijf met mensen die jarenlange ervaring hebben in het maken en plaatsen van poorten. Ondertussen realiseerde Poortland meer dan 3.000 poorten en overkappingen. U rekent daardoor op ruime ervaring, bewezen vakmanschap en een professionele dienstverlening."), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 16,
