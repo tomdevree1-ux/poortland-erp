@@ -1711,8 +1711,8 @@ var PAGINAS = {
       route: 'contact'
     },
     cta2: {
-      label: 'Bekijk realisaties',
-      route: 'realisaties'
+      label: 'Bekijk onze modellen',
+      route: 'metalen'
     },
     secties: [{
       h2: 'Tuinpoorten op maat voor elke woning',
@@ -1810,8 +1810,8 @@ var PAGINAS = {
       route: 'contact'
     },
     cta2: {
-      label: 'Bekijk realisaties',
-      route: 'realisaties'
+      label: 'Bekijk onze modellen',
+      route: 'metalen'
     },
     secties: [{
       h2: 'De sterkte van metaal, de uitstraling van hout',

@@ -210,11 +210,7 @@ function HomeNL({
     eyebrow: "Wat wij maken",
     titel: "Poorten, overkappingen en automatisaties.",
     max: "16ch"
-  }), /*#__PURE__*/React.createElement(HButton, {
-    variant: "secondary",
-    dark: true,
-    onClick: () => onNav('metalen')
-  }, "Alle poorten"))), /*#__PURE__*/React.createElement("div", {
+  }))), /*#__PURE__*/React.createElement("div", {
     className: "pl-cards3",
     style: {
       display: 'grid',
