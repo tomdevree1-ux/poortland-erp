@@ -7918,6 +7918,218 @@ function AutomatiseringNL({
     dark: true
   }));
 }
+function OnderhoudNL({
+  onNav
+}) {
+  const offerte = () => window.dispatchEvent(new CustomEvent('pl-offerte-open', {
+    detail: {
+      service: 'onderhoud'
+    }
+  }));
+  React.useEffect(() => {
+    document.title = 'Onderhoud van poorten | Poortland Mechelen';
+    if (window.scrollTo) window.scrollTo(0, 0);
+  }, []);
+  const nazicht = [['Motor en aandrijving', 'Wij controleren de werking, de kracht en de eindposities van draai-, schuif- en garagepoortmotoren.'], ['Scharnieren en geleiders', 'Nazicht en smering van de bewegende delen zodat uw poort soepel en stil blijft lopen.'], ['Veiligheidsdetectie', 'Test van de fotocellen en de obstakelbeveiliging, zodat de poort veilig stopt wanneer nodig.'], ['Bediening en zenders', 'Controle van de afstandsbediening, parlofonie en videofonie, met vervanging van zwakke batterijen.'], ['Afstelling', 'Bijregelen van snelheid, kracht en sluitpunt voor een betrouwbare werking, ook in koud weer.']];
+  const zorg = [['Herstellingen en nazorg', 'Werkt uw poort niet meer zoals het hoort? Onze eigen dienst na verkoop herstelt poorten en aandrijvingen en vervangt versleten onderdelen door kwaliteitsmateriaal.'], ['Onderhoudscontract', 'Met een onderhoudscontract plannen wij het jaarlijkse nazicht automatisch in, bij voorkeur voor de winter. Zo blijft uw poort betrouwbaar en behoudt u de garantie.'], ['Wanneer onderhoud aanvragen?', 'Wij raden een nazicht aan zodra u meer weerstand, geluid of haperingen merkt, en sowieso een keer per jaar. Vraag gerust vrijblijvend advies.']];
+  const Punt = ({
+    titel,
+    tekst
+  }) => /*#__PURE__*/React.createElement("div", {
+    style: {
+      borderTop: '2px solid var(--accent)',
+      paddingTop: 14,
+      marginBottom: 22
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 16,
+      fontWeight: 600,
+      color: 'var(--text-heading)'
+    }
+  }, titel), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 14.5,
+      lineHeight: 1.6,
+      color: 'var(--text-muted)',
+      marginTop: 5
+    }
+  }, tekst));
+  const Foto = ({
+    src,
+    alt
+  }) => /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'relative',
+      borderRadius: 'var(--radius-md)',
+      overflow: 'hidden',
+      border: '1px solid var(--line-on-light-soft)',
+      boxShadow: 'var(--shadow-lg)',
+      aspectRatio: '4 / 3',
+      background: 'var(--surface-paper-2)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: 'var(--font-label)',
+      fontSize: 11,
+      fontWeight: 600,
+      letterSpacing: '0.14em',
+      textTransform: 'uppercase',
+      color: 'var(--text-muted)',
+      padding: '0 16px',
+      textAlign: 'center'
+    }
+  }, alt), /*#__PURE__*/React.createElement("img", {
+    src: src,
+    alt: alt,
+    loading: "lazy",
+    onError: e => {
+      e.currentTarget.style.display = 'none';
+    },
+    style: {
+      position: 'absolute',
+      inset: 0,
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+      display: 'block'
+    }
+  }));
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-ground)',
+      color: 'var(--text-on-dark)',
+      padding: '84px 44px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 1320,
+      margin: '0 auto'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(SEyebrow, {
+    dark: true,
+    style: {
+      marginBottom: 20
+    }
+  }, "Onderhoud"), /*#__PURE__*/React.createElement("h1", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontWeight: 500,
+      fontSize: 58,
+      lineHeight: 1.04,
+      letterSpacing: '-0.01em',
+      color: 'var(--stone-100)',
+      margin: 0
+    }
+  }, "Onderhoud van poorten"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 18,
+      lineHeight: 1.6,
+      color: 'var(--stone-300)',
+      maxWidth: '48ch',
+      margin: '24px 0 32px'
+    }
+  }, "Een poort die dagelijks opengaat verdient af en toe een nazicht. Met regelmatig onderhoud blijft ze veilig, soepel en betrouwbaar, jaar na jaar."), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 16,
+      flexWrap: 'wrap'
+    }
+  }, /*#__PURE__*/React.createElement(SButton, {
+    variant: "primary",
+    arrow: true,
+    as: "button",
+    onClick: offerte
+  }, "Vraag onderhoud aan"), /*#__PURE__*/React.createElement(SButton, {
+    variant: "ghost",
+    dark: true,
+    arrow: true,
+    onClick: () => onNav('automatisering')
+  }, "Automatiseer uw poort"))))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-paper)',
+      padding: '64px 44px 20px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 900,
+      margin: '0 auto'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 17,
+      lineHeight: 1.75,
+      color: 'var(--text-body)',
+      margin: 0
+    }
+  }, "Poortland heeft een eigen dienst na verkoop met vakkundige techniekers. Wij onderhouden en herstellen zowel automatische als handbediende poorten, ook wanneer ze niet door ons geplaatst zijn. Bij een nazicht controleren wij de volledige installatie, van de motor tot de veiligheidsdetectie, en stellen wij bij waar nodig. Zo verlengt u de levensduur van uw poort en voorkomt u onverwachte storingen.")))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-paper)',
+      padding: '40px 44px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pl-split",
+    style: {
+      maxWidth: 1200,
+      margin: '0 auto',
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: 56,
+      alignItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(Foto, {
+    src: "media/automatisering-1.jpg",
+    alt: "Technieker van Poortland bij een geautomatiseerde poort"
+  })), /*#__PURE__*/React.createElement(Reveal, {
+    delay: 80
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(SEyebrow, {
+    style: {
+      marginBottom: 16
+    }
+  }, "Wat een nazicht omvat"), nazicht.map(([t, tk]) => /*#__PURE__*/React.createElement(Punt, {
+    key: t,
+    titel: t,
+    tekst: tk
+  })))))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-paper)',
+      padding: '20px 44px 84px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "pl-split",
+    style: {
+      maxWidth: 1200,
+      margin: '0 auto',
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: 56,
+      alignItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(SEyebrow, {
+    style: {
+      marginBottom: 16
+    }
+  }, "Herstellingen en nazorg"), zorg.map(([t, tk]) => /*#__PURE__*/React.createElement(Punt, {
+    key: t,
+    titel: t,
+    tekst: tk
+  })))), /*#__PURE__*/React.createElement(Reveal, {
+    delay: 80
+  }, /*#__PURE__*/React.createElement(Foto, {
+    src: "media/realisatie-metaal-1.jpeg",
+    alt: "Verzorgd afgewerkte metalen poort van Poortland"
+  })))), /*#__PURE__*/React.createElement(CTASectie, {
+    onNav: onNav,
+    dark: true
+  }));
+}
 
 /* =========================================================================
    Advieswizard draaipoort of schuifpoort. Puur informatief: geen leadverplichting,
@@ -9218,6 +9430,7 @@ Object.assign(window, {
   VoorwaardenNL,
   GarantieNL,
   AutomatiseringNL,
+  OnderhoudNL,
   PrivacyNL,
   CookieNL,
   OverOnsNL,

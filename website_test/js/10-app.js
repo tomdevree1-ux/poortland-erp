@@ -241,9 +241,8 @@ function App() {
       });
       break;
     case 'onderhoud':
-      Screen = /*#__PURE__*/React.createElement(window.PaginaNL, {
-        onNav: onNav,
-        content: window.PAGINAS['onderhoud']
+      Screen = /*#__PURE__*/React.createElement(window.OnderhoudNL, {
+        onNav: onNav
       });
       break;
     case 'garantie':
