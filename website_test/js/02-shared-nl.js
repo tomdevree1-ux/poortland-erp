@@ -3143,7 +3143,8 @@ function CategoriePagina({
   const [modelFilterOpen, setModelFilterOpen] = React.useState(false);
   const [aluOpen, setAluOpen] = React.useState(false);
   // Stapsgewijs tonen (best practice op mobiel en desktop) in plaats van eindeloos scrollen.
-  const MODEL_STAP = 9;
+  // 8 per keer vult de rijen netjes op elke breedte (deelt door 4, 2 en 1 kolom).
+  const MODEL_STAP = 8;
   const [modelLimiet, setModelLimiet] = React.useState(MODEL_STAP);
   // Gepubliceerde ERP foto's van dit poorttype met een modelnaam hangen
   // automatisch naast dat model in de juiste tab (TS-17, realisaties).
