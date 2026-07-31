@@ -108,10 +108,11 @@ const SLUGS = {
   privacy: '/privacybeleid/',
   cookie: '/cookiebeleid/'
 };
-function padVoorRoute(route, productKey) {
-  if (route === 'product') return '/poorten/' + (productKey || 'houten') + '/';
+function padVoorRoute(route) {
   return SLUGS[route] || '/';
 }
+// De oude productpagina's onder /poorten/ zijn verwijderd; wie er nog op landt
+// via een oude link wordt door de server doorverwezen naar de categoriepagina.
 function routeUitPad(pad) {
   if (!pad || pad === '/') return {
     route: 'home'
@@ -122,11 +123,6 @@ function routeUitPad(pad) {
       route: r
     };
   }
-  const m = p.match(/^\/poorten\/([a-z0-9-]+)\/$/);
-  if (m) return {
-    route: 'product',
-    productKey: m[1]
-  };
   return {
     route: 'home'
   };
@@ -159,11 +155,9 @@ function App() {
     return () => document.removeEventListener('click', onDocClick);
   }, []);
   const onNav = (r, payload) => {
-    const key = payload && payload.productKey;
-    if (key) setProductKey(key);
     if (r === 'contact') setContactType(payload && payload.type ? payload.type : null);
     setRoute(r);
-    const pad = padVoorRoute(r, key || productKey);
+    const pad = padVoorRoute(r);
     if (window.location.pathname !== pad) window.history.pushState({}, '', pad);
     if (scrollRef.current) scrollRef.current.scrollTo({
       top: 0,
@@ -176,7 +170,6 @@ function App() {
     const onPop = () => {
       const doel = routeUitPad(window.location.pathname);
       setRoute(doel.route);
-      if (doel.productKey) setProductKey(doel.productKey);
       if (scrollRef.current) scrollRef.current.scrollTo({
         top: 0,
         behavior: 'auto'
@@ -188,12 +181,6 @@ function App() {
   const navRoute = route;
   let Screen;
   switch (route) {
-    case 'product':
-      Screen = /*#__PURE__*/React.createElement(window.ProductNL, {
-        onNav: onNav,
-        productKey: productKey
-      });
-      break;
     case 'werkwijze':
       Screen = /*#__PURE__*/React.createElement(window.ProcessNL, {
         onNav: onNav

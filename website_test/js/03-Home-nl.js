@@ -213,9 +213,7 @@ function HomeNL({
   }), /*#__PURE__*/React.createElement(HButton, {
     variant: "secondary",
     dark: true,
-    onClick: () => onNav('product', {
-      productKey: 'houten'
-    })
+    onClick: () => onNav('metalen')
   }, "Alle poorten"))), /*#__PURE__*/React.createElement("div", {
     className: "pl-cards3",
     style: {

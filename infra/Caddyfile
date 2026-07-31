@@ -38,6 +38,16 @@
 		-Server
 	}
 
+	# 301 doorverwijzingen van de verwijderde losse productpagina's onder /poorten/.
+	@prod_houten path /poorten/houten /poorten/houten/
+	redir @prod_houten /houten-poorten/ permanent
+	@prod_metalen path /poorten/metalen /poorten/metalen/
+	redir @prod_metalen /metalen-poorten/ permanent
+	@prod_aluminium path /poorten/aluminium /poorten/aluminium/
+	redir @prod_aluminium /metalen-poorten/ permanent
+	@prod_combi path /poorten/combinatie-hout-metaal /poorten/combinatie-hout-metaal/
+	redir @prod_combi /combinatie-staal-hout/ permanent
+
 	# 301 doorverwijzingen van de oude poortland.be slugs (slugtabel 2026-07-24).
 	@oud_over path /waarom-poortland /waarom-poortland/
 	redir @oud_over /over-ons/ permanent
