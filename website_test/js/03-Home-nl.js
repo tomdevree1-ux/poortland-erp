@@ -24,6 +24,33 @@ function HomeNL({
     ADVIES
   } = window;
   const uitgelicht = PROJECTEN.filter(p => p.uitgelicht).slice(0, 3);
+  // Bannermix: 10 foto's uit de modelmappen hout, metaal en combinatie, om beurten
+  // en willekeurig gekozen zodat de band gevarieerd oogt.
+  const bannerFotos = React.useMemo(() => {
+    const cat = window.CATEGORIEEN || {};
+    const shuf = a => {
+      a = a.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const t = a[i];
+        a[i] = a[j];
+        a[j] = t;
+      }
+      return a;
+    };
+    const uit = (bron, mat) => shuf((bron || []).filter(t => t && t.foto).map(t => ({
+      src: t.foto,
+      label: mat + (t.naam ? ' · ' + t.naam : '')
+    })));
+    const metaalTypes = (cat.metalen && cat.metalen.productenGroepen || []).reduce((acc, g) => acc.concat(g.types || []), []);
+    const bronnen = [uit(metaalTypes, 'Metaal'), uit(cat.houten && cat.houten.modellenPlat, 'Hout'), uit(cat.combinatie && cat.combinatie.modellenPlat, 'Combinatie')].filter(a => a.length);
+    const mix = [];
+    for (let i = 0; mix.length < 10 && bronnen.some(a => a.length); i++) {
+      const a = bronnen[i % bronnen.length];
+      if (a.length) mix.push(a.shift());
+    }
+    return mix;
+  }, []);
   const routes = [['houten', 'Houten poorten', 'Warm en tijdloos', 'media/houten-poort.jpg'], ['metalen', 'Metalen poorten', 'Strak en onderhoudsarm', 'media/aluminium-poort.jpg'], ['combinatie', 'Combinatie metaal en hout', 'Kracht en warmte', 'media/staal-hout.jpg']];
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("section", {
     style: {
@@ -335,22 +362,7 @@ function HomeNL({
     onClick: () => onNav('metalen')
   }, "Alle modellen"))), /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(window.FotoBanner, {
     onNav: onNav,
-    fotos: [{
-      src: 'media/realisatie-metaal-1.jpeg',
-      label: 'Smeedijzer · landelijke woning'
-    }, {
-      src: 'media/realisatie-hout-2.jpeg',
-      label: 'Hout · moderne woning'
-    }, {
-      src: 'media/realisatie-alu-1.jpeg',
-      label: 'Aluminium · schuifpoort'
-    }, {
-      src: 'media/realisatie-metaal-2.jpeg',
-      label: 'Smeedijzer · draaipoort'
-    }, {
-      src: 'media/realisatie-hout-1.jpeg',
-      label: 'Hout · schuifpoort'
-    }]
+    fotos: bannerFotos
   })))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-ground)',
