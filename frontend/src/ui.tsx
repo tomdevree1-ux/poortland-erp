@@ -252,14 +252,24 @@ export function LegeStaat({ titel, tekst, actie }: { titel: string; tekst: strin
 
 export function Modaal({ open, titel, children, onSluit }:
   { open: boolean; titel: string; children: ReactNode; onSluit: () => void }) {
+  // Elk pop-upvenster sluit met Esc (globale luisteraar, niet afhankelijk van focus)
+  // en met het sluitkruisje. Klikken op de achtergrond sluit ook.
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onSluit() }
+    document.addEventListener('keydown', onKey)
+    document.body.style.overflow = 'hidden'
+    return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = '' }
+  }, [open, onSluit])
   if (!open) return null
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-forest-950/50 p-4"
-      onClick={onSluit} onKeyDown={e => e.key === 'Escape' && onSluit()}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-forest-950/50 p-4" onClick={onSluit}>
       <div role="dialog" aria-modal="true" aria-label={titel}
-        className="w-full max-w-lg rounded-card border border-inkt/10 bg-vlak-surface p-6 shadow-xl"
+        className="relative w-full max-w-lg rounded-card border border-inkt/10 bg-vlak-surface p-6 shadow-xl"
         onClick={e => e.stopPropagation()}>
-        <h2 className="mb-4 font-display text-2xl font-medium text-inkt">{titel}</h2>
+        <button type="button" onClick={onSluit} aria-label="Sluiten"
+          className="focusring absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-control text-xl leading-none text-inkt-muted hover:bg-inkt/[.06] hover:text-inkt">×</button>
+        <h2 className="mb-4 pr-9 font-display text-2xl font-medium text-inkt">{titel}</h2>
         {children}
       </div>
     </div>

@@ -145,6 +145,14 @@ het bestaande indexfundament en staan gepland vóór de datasets groot worden.
 - Geen alternatieve interactiepatronen toevoegen tenzij Poortland er
   uitdrukkelijk om vraagt.
 
+**7. Pop-upvensters sluiten (bindend, vraag Poortland 2026-08-03)**
+
+- Elk pop-upvenster (modal, bevestiging, waarschuwing, bewerkvenster) sluit met de
+  Escape toets, met een zichtbare sluitknop en met een klik op de achtergrond.
+- De Escape afhandeling hangt aan een globale luisteraar (document), niet aan de
+  overlay zelf, want die heeft geen focus. Dit zit centraal in de gedeelde Modaal
+  component (`ui.tsx`); bouw geen losse overlays die deze regel omzeilen.
+
 ## Huisstijlafspraak interface
 
 **Nooit native browseropmaak voor interface elementen**, vastgelegd op vraag van
