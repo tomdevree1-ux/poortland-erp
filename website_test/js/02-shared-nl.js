@@ -5378,7 +5378,7 @@ var CATEGORIEEN = {
     eyebrow: 'Houten poorten',
     h1: 'Houten poorten op maat',
     introKort: 'Warm, natuurlijk en vol karakter. Poortland maakt houten poorten in duurzame hardhoutsoorten, volledig op maat en met oog voor detail.',
-    heroBeeld: 'media/hero.jpg',
+    heroBeeld: 'media/hout/Custom%20Padoek.jpg',
     heroLabel: 'Natuurlijk maatwerk',
     materiaalFotos: ['media/houten-poort.jpg', 'media/realisatie-hout-1.jpeg', 'media/staal-hout.jpg', 'media/realisatie-hout-2.jpeg', 'media/hero.jpg'],
     erpPoortType: 'hout',
