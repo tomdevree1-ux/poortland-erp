@@ -8101,6 +8101,29 @@ function OnderhoudNL({
   })))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper)',
+      padding: '10px 44px 20px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 14,
+      justifyContent: 'center',
+      flexWrap: 'wrap',
+      maxWidth: 1200,
+      margin: '0 auto'
+    }
+  }, /*#__PURE__*/React.createElement(SButton, {
+    variant: "primary",
+    arrow: true,
+    as: "button",
+    onClick: offerte
+  }, "Vraag onderhoud aan"), /*#__PURE__*/React.createElement(SButton, {
+    variant: "secondary",
+    arrow: true,
+    onClick: () => onNav('contact')
+  }, "Neem contact op met onze experts"))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-paper)',
       padding: '20px 44px 84px'
     }
   }, /*#__PURE__*/React.createElement("div", {
