@@ -1146,8 +1146,17 @@ function FAQ({
     }, "+")), /*#__PURE__*/React.createElement("div", {
       style: {
         overflow: 'hidden',
-        maxHeight: isOpen ? prijsVraag ? 360 : 240 : 0,
+        maxHeight: isOpen ? prijsVraag ? 320 : 240 : 0,
         transition: 'max-height 380ms var(--ease-out)'
+      }
+    }, prijsVraag ? /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        gap: 28,
+        alignItems: 'flex-start',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        margin: '0 0 24px'
       }
     }, /*#__PURE__*/React.createElement("p", {
       style: {
@@ -1155,17 +1164,19 @@ function FAQ({
         fontSize: 15.5,
         lineHeight: 1.7,
         color: body,
-        margin: '0 0 18px',
-        maxWidth: '62ch'
+        margin: 0,
+        flex: '1 1 320px',
+        maxWidth: '52ch'
       }
-    }, a), prijsVraag && /*#__PURE__*/React.createElement("button", {
+    }, a), /*#__PURE__*/React.createElement("button", {
       type: "button",
       onClick: () => window.dispatchEvent(new CustomEvent('pl-offerte-open')),
       style: {
         display: 'inline-flex',
         alignItems: 'center',
         gap: 8,
-        marginBottom: 24,
+        flex: '0 0 auto',
+        marginTop: 2,
         cursor: 'pointer',
         fontFamily: 'var(--font-label)',
         fontSize: 12,
@@ -1180,7 +1191,16 @@ function FAQ({
       }
     }, "Vraag een offerte aan ", /*#__PURE__*/React.createElement("span", {
       "aria-hidden": "true"
-    }, "↗"))));
+    }, "↗"))) : /*#__PURE__*/React.createElement("p", {
+      style: {
+        fontFamily: 'var(--font-sans)',
+        fontSize: 15.5,
+        lineHeight: 1.7,
+        color: body,
+        margin: '0 0 24px',
+        maxWidth: '62ch'
+      }
+    }, a)));
   }));
 }
 
