@@ -3818,7 +3818,7 @@ function CategoriePagina({
     "aria-expanded": aluOpen,
     style: {
       display: 'flex',
-      alignItems: 'flex-end',
+      alignItems: 'center',
       justifyContent: 'space-between',
       gap: 24,
       width: '100%',
@@ -3847,17 +3847,39 @@ function CategoriePagina({
       display: 'block'
     }
   }, d.aluminiumBlok.titel2) : null)), /*#__PURE__*/React.createElement("span", {
-    "aria-hidden": "true",
     style: {
       flex: '0 0 auto',
-      marginBottom: 6,
-      fontSize: 30,
-      lineHeight: 1,
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: 12
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: 'var(--font-label)',
+      fontSize: 11,
+      fontWeight: 600,
+      letterSpacing: '0.14em',
+      textTransform: 'uppercase',
       color: 'var(--accent)',
+      whiteSpace: 'nowrap'
+    }
+  }, aluOpen ? 'Sluiten' : 'Lees meer'), /*#__PURE__*/React.createElement("span", {
+    "aria-hidden": "true",
+    style: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: 42,
+      height: 42,
+      borderRadius: '50%',
+      border: '1px solid var(--line-on-light)',
+      color: 'var(--accent)',
+      fontSize: 15,
+      lineHeight: 1,
       transition: 'transform var(--dur) var(--ease-out)',
       transform: aluOpen ? 'rotate(180deg)' : 'none'
     }
-  }, "▾")), /*#__PURE__*/React.createElement("div", {
+  }, "▾"))), /*#__PURE__*/React.createElement("div", {
     style: {
       overflow: 'hidden',
       maxHeight: aluOpen ? 900 : 0,
@@ -5554,6 +5576,9 @@ var CATEGORIEEN = {
     heroBeeld: 'media/staal-hout.jpg',
     heroLabel: 'Hout en metaal op maat',
     materiaalFotos: ['media/staal-hout.jpg', 'media/hero.jpg', 'media/realisatie-hout-1.jpeg', 'media/stalen-poort.jpg', 'media/realisatie-metaal-1.jpeg'],
+    automatisering: Object.assign({}, CAT_AUTO, {
+      beeld: 'media/staal-hout.jpg'
+    }),
     erpPoortType: 'hout_metaal',
     modellenPlat: [{
       naam: "Kwai afrormosia ESR",
