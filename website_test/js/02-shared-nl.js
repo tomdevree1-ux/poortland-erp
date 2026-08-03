@@ -6259,7 +6259,7 @@ function GarantieNL({
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      maxWidth: 900,
+      maxWidth: 1320,
       margin: '0 auto'
     }
   }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(SEyebrow, {
@@ -6309,7 +6309,7 @@ function GarantieNL({
   }, /*#__PURE__*/React.createElement("div", {
     className: "pl-split",
     style: {
-      maxWidth: 1160,
+      maxWidth: 1320,
       margin: '0 auto',
       display: 'grid',
       gridTemplateColumns: '0.72fr 1.28fr',
@@ -6380,7 +6380,7 @@ function GarantieNL({
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      maxWidth: 1000,
+      maxWidth: 1320,
       margin: '0 auto'
     }
   }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(SEyebrow, {
@@ -6517,7 +6517,7 @@ function GarantieNL({
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      maxWidth: 1160,
+      maxWidth: 1320,
       margin: '0 auto'
     }
   }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(SectieKop, {
@@ -6580,7 +6580,7 @@ function GarantieNL({
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      maxWidth: 1160,
+      maxWidth: 1320,
       margin: '0 auto'
     }
   }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(SectieKop, {
@@ -7855,7 +7855,7 @@ function AutomatiseringNL({
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      maxWidth: 900,
+      maxWidth: 1320,
       margin: '0 auto'
     }
   }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("p", {
@@ -7864,7 +7864,8 @@ function AutomatiseringNL({
       fontSize: 17,
       lineHeight: 1.75,
       color: 'var(--text-body)',
-      margin: 0
+      margin: 0,
+      maxWidth: '72ch'
     }
   }, "Poortland beschikt over twee vakkundige techniekers niveau A2 elektromechanica die uw poorten voorzien van automatische opening en sluiting op afstand, voor draaipoorten, schuifpoorten en garagepoorten. Zij installeren ook hoogwaardige installaties voor parlofonie en videofonie. Poortland werkt uitsluitend met kwalitatieve materialen die een lange levensduur garanderen, omdat een geautomatiseerde poort uw comfort hoort te verhogen. Ook het automatiseren van garagepoorten behoort tot het werkterrein van onze techniekers. Hieronder een overzicht van onze samenwerking met verschillende fabrikanten.")))), /*#__PURE__*/React.createElement("section", {
     style: {
@@ -7874,7 +7875,7 @@ function AutomatiseringNL({
   }, /*#__PURE__*/React.createElement("div", {
     className: "pl-split",
     style: {
-      maxWidth: 1200,
+      maxWidth: 1320,
       margin: '0 auto',
       display: 'grid',
       gridTemplateColumns: '1fr 1fr',
@@ -7898,7 +7899,7 @@ function AutomatiseringNL({
   }, /*#__PURE__*/React.createElement("div", {
     className: "pl-split",
     style: {
-      maxWidth: 1200,
+      maxWidth: 1320,
       margin: '0 auto',
       display: 'grid',
       gridTemplateColumns: '1fr 1fr',
@@ -8059,7 +8060,7 @@ function OnderhoudNL({
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      maxWidth: 900,
+      maxWidth: 1320,
       margin: '0 auto'
     }
   }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("p", {
@@ -8068,7 +8069,8 @@ function OnderhoudNL({
       fontSize: 17,
       lineHeight: 1.75,
       color: 'var(--text-body)',
-      margin: 0
+      margin: 0,
+      maxWidth: '72ch'
     }
   }, "Poortland heeft een eigen dienst na verkoop met vakkundige techniekers. Wij onderhouden en herstellen zowel automatische als handbediende poorten, ook wanneer ze niet door ons geplaatst zijn. Bij een nazicht controleren wij de volledige installatie, van de motor tot de veiligheidsdetectie, en stellen wij bij waar nodig. Zo verlengt u de levensduur van uw poort en voorkomt u onverwachte storingen.")))), /*#__PURE__*/React.createElement("section", {
     style: {
@@ -8078,7 +8080,7 @@ function OnderhoudNL({
   }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("div", {
     className: "pl-grid3",
     style: {
-      maxWidth: 1000,
+      maxWidth: 1320,
       margin: '0 auto',
       display: 'grid',
       gridTemplateColumns: 'repeat(3, 1fr)',
@@ -8126,7 +8128,7 @@ function OnderhoudNL({
   }, /*#__PURE__*/React.createElement("div", {
     className: "pl-split",
     style: {
-      maxWidth: 1200,
+      maxWidth: 1320,
       margin: '0 auto',
       display: 'grid',
       gridTemplateColumns: '1fr 1fr',
@@ -8157,7 +8159,7 @@ function OnderhoudNL({
       gap: 14,
       justifyContent: 'center',
       flexWrap: 'wrap',
-      maxWidth: 1200,
+      maxWidth: 1320,
       margin: '0 auto'
     }
   }, /*#__PURE__*/React.createElement(SButton, {
@@ -8177,7 +8179,7 @@ function OnderhoudNL({
   }, /*#__PURE__*/React.createElement("div", {
     className: "pl-split",
     style: {
-      maxWidth: 1200,
+      maxWidth: 1320,
       margin: '0 auto',
       display: 'grid',
       gridTemplateColumns: '1fr 1fr',
