@@ -1612,7 +1612,7 @@ function PaginaNL({
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      maxWidth: 920,
+      maxWidth: 1320,
       margin: '0 auto'
     }
   }, secties.map((s, i) => /*#__PURE__*/React.createElement(Reveal, {
