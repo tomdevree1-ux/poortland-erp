@@ -8073,6 +8073,54 @@ function OnderhoudNL({
   }, "Poortland heeft een eigen dienst na verkoop met vakkundige techniekers. Wij onderhouden en herstellen zowel automatische als handbediende poorten, ook wanneer ze niet door ons geplaatst zijn. Bij een nazicht controleren wij de volledige installatie, van de motor tot de veiligheidsdetectie, en stellen wij bij waar nodig. Zo verlengt u de levensduur van uw poort en voorkomt u onverwachte storingen.")))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper)',
+      padding: '20px 44px 20px'
+    }
+  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("div", {
+    className: "pl-grid3",
+    style: {
+      maxWidth: 1000,
+      margin: '0 auto',
+      display: 'grid',
+      gridTemplateColumns: 'repeat(3, 1fr)',
+      gap: 1,
+      background: 'var(--line-on-light-soft)',
+      border: '1px solid var(--line-on-light-soft)',
+      borderRadius: 'var(--radius-md)',
+      overflow: 'hidden'
+    }
+  }, [['20+', 'Controlepunten', 'Van motor tot veiligheidsdetectie.'], ['±2 uur', 'Volledig onderhoud', 'Controle, smering en afstelling in één afspraak.'], ['1× per jaar', 'Aanbevolen nazicht', 'Voor een veilige en betrouwbare werking.']].map(([cijfer, label, tekst]) => /*#__PURE__*/React.createElement("div", {
+    key: label,
+    style: {
+      background: 'var(--surface-card)',
+      padding: '30px 28px',
+      textAlign: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-display)',
+      fontSize: 40,
+      lineHeight: 1,
+      color: 'var(--accent)'
+    }
+  }, cijfer), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 15.5,
+      fontWeight: 600,
+      color: 'var(--text-heading)',
+      marginTop: 12
+    }
+  }, label), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 14,
+      lineHeight: 1.55,
+      color: 'var(--text-muted)',
+      marginTop: 6
+    }
+  }, tekst)))))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-paper)',
       padding: '40px 44px'
     }
   }, /*#__PURE__*/React.createElement("div", {
