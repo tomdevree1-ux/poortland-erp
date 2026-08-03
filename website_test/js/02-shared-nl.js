@@ -3806,11 +3806,9 @@ function CategoriePagina({
   }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("div", {
     style: {
       background: 'var(--surface-card)',
-      border: '1px solid var(--line-on-light-soft)',
-      borderTop: '3px solid var(--accent)',
-      borderRadius: 'var(--radius-md)',
-      padding: '30px 40px',
-      boxShadow: 'var(--shadow-lg)'
+      border: '1px solid var(--line-on-light)',
+      borderRadius: 'var(--radius-lg, 16px)',
+      padding: '34px 40px'
     }
   }, /*#__PURE__*/React.createElement("button", {
     type: "button",
