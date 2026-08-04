@@ -13,8 +13,21 @@ serverlogs of Cloudflare vereist.
 - llms.txt met samenvatting, aanbod, kerncijfers en belangrijkste pagina's.
 - sitemap.xml met de 15 pagina's (bestond al, ongewijzigd).
 - noscript-fallback met kerninhoud (bedrijf, aanbod, kerncijfers, contact) voor crawlers zonder JavaScript.
-- Titel, meta description, canonical, Open Graph en viewport waren al in orde.
+- Titel, Open Graph en viewport waren al in orde; titel loopt per pagina mee.
+- Canonical en og:url worden nu per pagina bijgewerkt (JavaScript). Voordien wees
+  elke subpagina naar de homepage als canonical, waardoor Google alleen de
+  homepage zou indexeren. Opgelost.
 - Meertalige site (NL, FR, EN, DE) met Nederlands als terugval.
+
+## Kleine resterende punten (binnen de huidige architectuur)
+
+- **Meta description loopt nog niet per pagina mee.** Alle routes tonen de
+  homepage-description in de statische head. Geen rankingfactor, wel bepalend
+  voor de klik. Kan later per route bijgewerkt worden zoals nu al met canonical
+  gebeurt. Lage prioriteit.
+- **Titel en description in andere talen.** Bij taalwissel blijft de paginatitel
+  Nederlands. Hangt samen met het punt "één URL voor vier talen" hieronder; niet
+  apart op te lossen zonder per-taal URLs.
 
 ## Bij livegang doen (heeft GSC, echt domein, logs of Cloudflare nodig)
 
