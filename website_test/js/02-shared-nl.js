@@ -585,7 +585,7 @@ function MobileNav({
       fontSize: 26,
       color: 'var(--text-heading)'
     }
-  }, /*#__PURE__*/React.createElement("span", null, item.label), /*#__PURE__*/React.createElement("span", {
+  }, /*#__PURE__*/React.createElement("span", null, t(item.label)), /*#__PURE__*/React.createElement("span", {
     style: {
       fontSize: 26,
       color: 'var(--accent)',
@@ -615,18 +615,18 @@ function MobileNav({
       fontSize: 21,
       color: 'var(--text-heading)'
     }
-  }, k.label), /*#__PURE__*/React.createElement("div", {
+  }, t(k.label)), /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 14.5,
       color: 'var(--text-muted)',
       marginTop: 2
     }
-  }, k.desc))))) : /*#__PURE__*/React.createElement("button", {
+  }, t(k.desc)))))) : /*#__PURE__*/React.createElement("button", {
     key: item.label,
     onClick: () => go(item.route),
     style: bigItem
-  }, item.label)), /*#__PURE__*/React.createElement("div", {
+  }, t(item.label))), /*#__PURE__*/React.createElement("div", {
     style: {
       padding: '26px 22px 0'
     }
@@ -647,7 +647,7 @@ function MobileNav({
       fontWeight: 600,
       cursor: 'pointer'
     }
-  }, "Vraag een offerte aan"), /*#__PURE__*/React.createElement("a", {
+  }, t('Vraag een offerte aan')), /*#__PURE__*/React.createElement("a", {
     href: "tel:+3215432111",
     style: {
       display: 'block',
@@ -659,7 +659,7 @@ function MobileNav({
       color: 'var(--text-heading)',
       textDecoration: 'none'
     }
-  }, "Bel ons: 015 43 21 11")))));
+  }, t('Bel ons: 015 43 21 11'))))));
 }
 function Nav(props) {
   if (useIsMobile(880)) return /*#__PURE__*/React.createElement(MobileNav, {
@@ -2162,7 +2162,7 @@ function OfferteModal({
     }
   }, /*#__PURE__*/React.createElement("label", {
     style: labelSt
-  }, p.label, p.required ? /*#__PURE__*/React.createElement("span", {
+  }, t(p.label), p.required ? /*#__PURE__*/React.createElement("span", {
     style: {
       color: 'var(--accent)'
     }
@@ -2170,7 +2170,7 @@ function OfferteModal({
     type: p.type || 'text',
     inputMode: p.inputMode,
     value: data[p.name] || '',
-    placeholder: p.placeholder,
+    placeholder: t(p.placeholder),
     onChange: e => set(p.name, e.target.value),
     style: Object.assign({}, inputSt, {
       borderColor: errors[p.name] ? 'var(--accent-rust)' : 'var(--line-on-light)'
@@ -2185,10 +2185,10 @@ function OfferteModal({
     }
   }, /*#__PURE__*/React.createElement("label", {
     style: labelSt
-  }, p.label), /*#__PURE__*/React.createElement("textarea", {
+  }, t(p.label)), /*#__PURE__*/React.createElement("textarea", {
     rows: p.rows || 4,
     value: data[p.name] || '',
-    placeholder: p.placeholder,
+    placeholder: t(p.placeholder),
     onChange: e => set(p.name, e.target.value),
     style: Object.assign({}, inputSt, {
       minHeight: 96,
@@ -2204,7 +2204,7 @@ function OfferteModal({
     }
   }, /*#__PURE__*/React.createElement("label", {
     style: labelSt
-  }, p.label), /*#__PURE__*/React.createElement("div", {
+  }, t(p.label)), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fit, minmax(' + (p.min || 190) + 'px, 1fr))',
@@ -2234,7 +2234,7 @@ function OfferteModal({
       style: {
         display: 'block'
       }
-    }, val), sub ? /*#__PURE__*/React.createElement("span", {
+    }, t(val)), sub ? /*#__PURE__*/React.createElement("span", {
       style: {
         display: 'block',
         fontFamily: 'var(--font-sans)',
@@ -2243,7 +2243,7 @@ function OfferteModal({
         color: 'var(--text-muted)',
         marginTop: 3
       }
-    }, sub) : null);
+    }, t(sub)) : null);
   })));
   const verzend = () => {
     const req = {
@@ -2398,7 +2398,7 @@ function OfferteModal({
       textTransform: 'uppercase',
       color: 'var(--accent)'
     }
-  }, step <= 3 ? 'Stap ' + stapNr + ' van 3' : 'Klaar'), /*#__PURE__*/React.createElement("button", {
+  }, step <= 3 ? t('Stap') + ' ' + stapNr + ' ' + t('van 3') : t('Klaar')), /*#__PURE__*/React.createElement("button", {
     onClick: close,
     "aria-label": "Sluiten",
     style: {
@@ -2418,20 +2418,20 @@ function OfferteModal({
     }
   }, step === 1 ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", {
     style: titelSt
-  }, "Waarvoor wenst u een offerte aan te vragen?"), /*#__PURE__*/React.createElement("p", {
+  }, t('Waarvoor wenst u een offerte aan te vragen?')), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 15.5,
       color: 'var(--text-muted)',
       margin: '10px 0 22px'
     }
-  }, "Kies hieronder waarvoor u ons wil contacteren."), /*#__PURE__*/React.createElement("div", {
+  }, t('Kies hieronder waarvoor u ons wil contacteren.')), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
       gap: 14
     }
-  }, [['poorten', 'Poorten', 'Nieuwe poort op maat'], ['overkappingen', 'Overkapping', 'Terras, carport of pergola'], ['automatisering', 'Automatisering', 'Bestaande poort automatiseren'], ['onderhoud', 'Onderhoud', 'Nazorg en herstelling']].map(([k, t, d, uit]) => uit ? /*#__PURE__*/React.createElement("div", {
+  }, [['poorten', 'Poorten', 'Nieuwe poort op maat'], ['overkappingen', 'Overkapping', 'Terras, carport of pergola'], ['automatisering', 'Automatisering', 'Bestaande poort automatiseren'], ['onderhoud', 'Onderhoud', 'Nazorg en herstelling']].map(([k, lbl, d, uit]) => uit ? /*#__PURE__*/React.createElement("div", {
     key: k,
     "aria-disabled": "true",
     style: {
@@ -2458,14 +2458,14 @@ function OfferteModal({
       borderRadius: 999,
       whiteSpace: 'nowrap'
     }
-  }, "Binnenkort online"), /*#__PURE__*/React.createElement("div", {
+  }, t('Binnenkort online')), /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-display)',
       fontSize: 22,
       color: 'var(--text-muted)',
       opacity: 0.75
     }
-  }, t), /*#__PURE__*/React.createElement("div", {
+  }, t(lbl)), /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 13.5,
@@ -2473,7 +2473,7 @@ function OfferteModal({
       marginTop: 5,
       opacity: 0.75
     }
-  }, d)) : /*#__PURE__*/React.createElement("button", {
+  }, t(d))) : /*#__PURE__*/React.createElement("button", {
     key: k,
     onClick: () => kies(k),
     style: {
@@ -2499,16 +2499,16 @@ function OfferteModal({
       fontSize: 22,
       color: 'var(--text-heading)'
     }
-  }, t), /*#__PURE__*/React.createElement("div", {
+  }, t(lbl)), /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 13.5,
       color: 'var(--text-muted)',
       marginTop: 5
     }
-  }, d))))) : null, step === 2 && service === 'poorten' ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", {
+  }, t(d)))))) : null, step === 2 && service === 'poorten' ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", {
     style: titelSt
-  }, "Offerte voor een poort"), /*#__PURE__*/React.createElement("div", {
+  }, t('Offerte voor een poort')), /*#__PURE__*/React.createElement("div", {
     style: {
       height: 18
     }
@@ -2540,7 +2540,7 @@ function OfferteModal({
     placeholder: 'Bijvoorbeeld: bestaande situatie, gewenste kleur, timing, enz.'
   })) : null, step === 2 && service === 'overkappingen' ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", {
     style: titelSt
-  }, "Offerte voor een overkapping"), /*#__PURE__*/React.createElement("div", {
+  }, t('Offerte voor een overkapping')), /*#__PURE__*/React.createElement("div", {
     style: {
       height: 18
     }
@@ -2551,7 +2551,7 @@ function OfferteModal({
     }
   }, /*#__PURE__*/React.createElement("label", {
     style: labelSt
-  }, "Uitvoering"), /*#__PURE__*/React.createElement("div", {
+  }, t('Uitvoering')), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
@@ -2625,7 +2625,7 @@ function OfferteModal({
         color: 'var(--text-heading)',
         marginTop: 10
       }
-    }, naam), /*#__PURE__*/React.createElement("span", {
+    }, t(naam)), /*#__PURE__*/React.createElement("span", {
       style: {
         display: 'block',
         fontFamily: 'var(--font-sans)',
@@ -2633,7 +2633,7 @@ function OfferteModal({
         color: 'var(--text-muted)',
         marginTop: 3
       }
-    }, sub));
+    }, t(sub)));
   }))), Field({
     label: 'Lengte in cm',
     name: 'lengte',
@@ -2668,7 +2668,7 @@ function OfferteModal({
     placeholder: 'Bijvoorbeeld: gewenste kleur, materiaal, plaatsing, bestaande situatie, enz.'
   })) : null, step === 2 && service === 'automatisering' ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", {
     style: titelSt
-  }, "Offerte voor automatisering van een bestaande poort"), /*#__PURE__*/React.createElement("p", {
+  }, t('Offerte voor automatisering van een bestaande poort')), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 15,
@@ -2676,7 +2676,7 @@ function OfferteModal({
       color: 'var(--text-body)',
       margin: '12px 0 20px'
     }
-  }, "U wenst een bestaande poort te laten automatiseren. Vul hieronder zoveel mogelijk gegevens in over uw poort. We nemen daarna contact met u op voor verdere informatie."), Area({
+  }, t('U wenst een bestaande poort te laten automatiseren. Vul hieronder zoveel mogelijk gegevens in over uw poort. We nemen daarna contact met u op voor verdere informatie.')), Area({
     label: 'Gegevens van uw poort',
     name: 'autoBeschrijving',
     rows: 3,
@@ -2691,7 +2691,7 @@ function OfferteModal({
     placeholder: 'Bijvoorbeeld: afmetingen, leeftijd van de poort, bestaande motor, problemen, gewenste bediening, enz.'
   })) : null, step === 2 && service === 'onderhoud' ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", {
     style: titelSt
-  }, "Onderhoud aanvragen"), /*#__PURE__*/React.createElement("div", {
+  }, t('Onderhoud aanvragen')), /*#__PURE__*/React.createElement("div", {
     style: {
       background: 'rgba(138,106,60,0.08)',
       borderLeft: '3px solid var(--accent)',
@@ -2702,7 +2702,7 @@ function OfferteModal({
       lineHeight: 1.55,
       color: 'var(--text-body)'
     }
-  }, "Onderhoud aan automatisering is enkel mogelijk bij geautomatiseerde poorten. Heeft u een manuele poort zonder motor, dan is een onderhoud niet van toepassing."), Field({
+  }, t('Onderhoud aan automatisering is enkel mogelijk bij geautomatiseerde poorten. Heeft u een manuele poort zonder motor, dan is een onderhoud niet van toepassing.')), Field({
     label: 'Bouwjaar van de poort indien gekend',
     name: 'bouwjaar',
     placeholder: 'Bijvoorbeeld: 2018',
@@ -2717,20 +2717,20 @@ function OfferteModal({
     placeholder: 'Bijvoorbeeld: poort opent moeilijk, afstandsbediening werkt niet, jaarlijks onderhoud, lawaai, storing, enz.'
   })) : null, step === 3 ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", {
     style: titelSt
-  }, "Uw gegevens"), /*#__PURE__*/React.createElement("p", {
+  }, t('Uw gegevens')), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 15,
       color: 'var(--text-muted)',
       margin: '10px 0 22px'
     }
-  }, "Laat hieronder uw gegevens achter. We contacteren u zo snel mogelijk om uw aanvraag te bespreken."), /*#__PURE__*/React.createElement("div", {
+  }, t('Laat hieronder uw gegevens achter. We contacteren u zo snel mogelijk om uw aanvraag te bespreken.')), /*#__PURE__*/React.createElement("div", {
     style: {
       marginBottom: 20
     }
   }, /*#__PURE__*/React.createElement("label", {
     style: labelSt
-  }, "Type klant"), /*#__PURE__*/React.createElement("div", {
+  }, t('Type klant')), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 6,
@@ -2755,7 +2755,7 @@ function OfferteModal({
       background: (data.klantType || 'particulier') === tk ? 'var(--accent)' : 'transparent',
       color: (data.klantType || 'particulier') === tk ? '#fff' : 'var(--text-body)'
     }
-  }, tk === 'particulier' ? 'Particulier' : 'Bedrijf')))), data.klantType === 'bedrijf' ? /*#__PURE__*/React.createElement("div", {
+  }, tk === 'particulier' ? t('Particulier') : t('Bedrijf'))))), data.klantType === 'bedrijf' ? /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
       gridTemplateColumns: '1fr 1fr',
@@ -2824,7 +2824,7 @@ function OfferteModal({
     }
   }, /*#__PURE__*/React.createElement("label", {
     style: labelSt
-  }, "Gewenste timing"), /*#__PURE__*/React.createElement("div", {
+  }, t('Gewenste timing')), /*#__PURE__*/React.createElement("div", {
     style: {
       position: 'relative'
     }
@@ -2843,27 +2843,27 @@ function OfferteModal({
     })
   }, /*#__PURE__*/React.createElement("option", {
     value: ""
-  }, "Maak een keuze"), /*#__PURE__*/React.createElement("option", {
+  }, t('Maak een keuze')), /*#__PURE__*/React.createElement("option", {
     value: "Zo snel mogelijk"
-  }, "Zo snel mogelijk"), /*#__PURE__*/React.createElement("option", {
+  }, t('Zo snel mogelijk')), /*#__PURE__*/React.createElement("option", {
     value: "Binnen drie maanden"
-  }, "Binnen drie maanden"), /*#__PURE__*/React.createElement("option", {
+  }, t('Binnen drie maanden')), /*#__PURE__*/React.createElement("option", {
     value: "Binnen zes maanden"
-  }, "Binnen zes maanden"), /*#__PURE__*/React.createElement("option", {
+  }, t('Binnen zes maanden')), /*#__PURE__*/React.createElement("option", {
     value: "Nog in oriëntatie"
-  }, "Nog in oriëntatie")))), /*#__PURE__*/React.createElement("div", {
+  }, t('Nog in oriëntatie'))))), /*#__PURE__*/React.createElement("div", {
     style: {
       marginBottom: 4
     }
   }, /*#__PURE__*/React.createElement("label", {
     style: labelSt
-  }, "Foto's toevoegen ", /*#__PURE__*/React.createElement("span", {
+  }, t("Foto's toevoegen"), " ", /*#__PURE__*/React.createElement("span", {
     style: {
       color: 'var(--text-muted)',
       fontWeight: 400,
       fontSize: 13.5
     }
-  }, "(optioneel, max 5)")), /*#__PURE__*/React.createElement("label", {
+  }, t('(optioneel, max 5)'))), /*#__PURE__*/React.createElement("label", {
     style: {
       display: 'flex',
       alignItems: 'center',
@@ -2881,7 +2881,7 @@ function OfferteModal({
       fontSize: 15,
       color: fotos.length ? 'var(--text-body)' : 'var(--text-muted)'
     }
-  }, fotos.length ? fotos.length + " bestand(en) geselecteerd" : "Sleep of kies foto's van de plek"), /*#__PURE__*/React.createElement("span", {
+  }, fotos.length ? fotos.length + " " + t('bestand(en) geselecteerd') : t("Sleep of kies foto's van de plek")), /*#__PURE__*/React.createElement("span", {
     style: {
       fontFamily: 'var(--font-label)',
       fontSize: 10.5,
@@ -2891,7 +2891,7 @@ function OfferteModal({
       color: 'var(--accent)',
       flex: '0 0 auto'
     }
-  }, "Kies bestand ↗"), /*#__PURE__*/React.createElement("input", {
+  }, t('Kies bestand'), " ↗"), /*#__PURE__*/React.createElement("input", {
     type: "file",
     accept: "image/*",
     multiple: true,
@@ -2919,7 +2919,7 @@ function OfferteModal({
     }
   }, "✓"), /*#__PURE__*/React.createElement("h2", {
     style: titelSt
-  }, "Bedankt voor uw aanvraag"), /*#__PURE__*/React.createElement("p", {
+  }, t('Bedankt voor uw aanvraag')), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 16,
@@ -2928,7 +2928,7 @@ function OfferteModal({
       maxWidth: '46ch',
       margin: '14px auto 0'
     }
-  }, "We hebben uw offerteaanvraag goed ontvangen. We nemen zo snel mogelijk contact met u op om uw aanvraag verder te bespreken.")) : null), fout ? /*#__PURE__*/React.createElement("div", {
+  }, t('We hebben uw offerteaanvraag goed ontvangen. We nemen zo snel mogelijk contact met u op om uw aanvraag verder te bespreken.'))) : null), fout ? /*#__PURE__*/React.createElement("div", {
     style: {
       flex: '0 0 auto',
       padding: '12px 24px',
@@ -2951,25 +2951,25 @@ function OfferteModal({
   }, /*#__PURE__*/React.createElement("div", null, step === 2 ? /*#__PURE__*/React.createElement("button", {
     onClick: () => setStep(1),
     style: terugSt
-  }, "Terug") : null, step === 3 ? /*#__PURE__*/React.createElement("button", {
+  }, t('Terug')) : null, step === 3 ? /*#__PURE__*/React.createElement("button", {
     onClick: () => setStep(2),
     style: terugSt
-  }, "Terug") : null), /*#__PURE__*/React.createElement("div", null, step === 1 ? /*#__PURE__*/React.createElement("button", {
+  }, t('Terug')) : null), /*#__PURE__*/React.createElement("div", null, step === 1 ? /*#__PURE__*/React.createElement("button", {
     onClick: close,
     style: terugSt
-  }, "Annuleren") : null, step === 2 ? /*#__PURE__*/React.createElement("button", {
+  }, t('Annuleren')) : null, step === 2 ? /*#__PURE__*/React.createElement("button", {
     onClick: () => setStep(3),
     style: primair
-  }, "Volgende") : null, step === 3 ? /*#__PURE__*/React.createElement("button", {
+  }, t('Volgende')) : null, step === 3 ? /*#__PURE__*/React.createElement("button", {
     onClick: verzend,
     disabled: bezig,
     style: bezig ? Object.assign({}, primair, {
       opacity: 0.6
     }) : primair
-  }, bezig ? 'Bezig met verzenden' : 'Aanvraag verzenden') : null, step === 4 ? /*#__PURE__*/React.createElement("button", {
+  }, bezig ? t('Bezig met verzenden') : t('Aanvraag verzenden')) : null, step === 4 ? /*#__PURE__*/React.createElement("button", {
     onClick: closeReset,
     style: primair
-  }, "Sluiten") : null))));
+  }, t('Sluiten')) : null))));
 }
 
 /* ---- Premium categoriepagina (Metalen, Houten, Combinatie) ---- */
@@ -9106,7 +9106,7 @@ function PoortAdviesModal() {
       textTransform: 'uppercase',
       color: 'var(--text-muted)'
     }
-  }, "Poortkeuzetest"), /*#__PURE__*/React.createElement("button", {
+  }, t('Poortkeuzetest')), /*#__PURE__*/React.createElement("button", {
     onClick: function () {
       setOpen(false);
     },
@@ -9145,7 +9145,7 @@ function PoortAdviesModal() {
       color: 'var(--text-muted)',
       marginBottom: 16
     }
-  }, "Stap ", stap + 1, " van ", totaal), /*#__PURE__*/React.createElement("h2", {
+  }, t('Stap'), " ", stap + 1, " ", t('van'), " ", totaal), /*#__PURE__*/React.createElement("h2", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
@@ -9154,7 +9154,7 @@ function PoortAdviesModal() {
       color: 'var(--text-heading)',
       margin: '0 0 6px'
     }
-  }, huidige.titel), stap === 0 ? /*#__PURE__*/React.createElement("p", {
+  }, t(huidige.titel)), stap === 0 ? /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 15,
@@ -9162,7 +9162,7 @@ function PoortAdviesModal() {
       color: 'var(--text-muted)',
       margin: '4px 0 20px'
     }
-  }, "Deze korte test onderbouwt of een draaipoort of een schuifpoort het best bij uw situatie past. Aan de hand van uw oprit, de beschikbare ruimte en uw voorkeuren krijgt u een onderbouwd advies. Volledig vrijblijvend en zonder gegevens achter te laten.") : huidige.waarom && /*#__PURE__*/React.createElement("div", {
+  }, t('Deze korte test onderbouwt of een draaipoort of een schuifpoort het best bij uw situatie past. Aan de hand van uw oprit, de beschikbare ruimte en uw voorkeuren krijgt u een onderbouwd advies. Volledig vrijblijvend en zonder gegevens achter te laten.')) : huidige.waarom && /*#__PURE__*/React.createElement("div", {
     style: {
       marginBottom: 16
     }
@@ -9182,7 +9182,7 @@ function PoortAdviesModal() {
       color: groen,
       textDecoration: 'underline'
     }
-  }, "Waarom vragen we dit?"), toonWaarom && /*#__PURE__*/React.createElement("p", {
+  }, t('Waarom vragen we dit?')), toonWaarom && /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 14,
@@ -9190,7 +9190,7 @@ function PoortAdviesModal() {
       color: 'var(--text-muted)',
       margin: '8px 0 0'
     }
-  }, huidige.waarom)), huidige.illustratie && /*#__PURE__*/React.createElement("div", {
+  }, t(huidige.waarom))), huidige.illustratie && /*#__PURE__*/React.createElement("div", {
     style: {
       margin: '4px 0 18px',
       padding: '10px',
@@ -9214,12 +9214,12 @@ function PoortAdviesModal() {
         color: 'var(--text-heading)',
         marginBottom: 10
       }
-    }, veld.label, veld.type === 'multi' && /*#__PURE__*/React.createElement("span", {
+    }, t(veld.label), veld.type === 'multi' && /*#__PURE__*/React.createElement("span", {
       style: {
         fontWeight: 400,
         color: 'var(--text-muted)'
       }
-    }, " (meerdere mogelijk)")), /*#__PURE__*/React.createElement("div", {
+    }, " ", t('(meerdere mogelijk)'))), /*#__PURE__*/React.createElement("div", {
       style: {
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
@@ -9234,7 +9234,7 @@ function PoortAdviesModal() {
           kies(veld, o.w);
         },
         style: knopStijl(actief(veld, o.w))
-      }, o.l);
+      }, t(o.l));
     })));
   }), /*#__PURE__*/React.createElement("div", {
     style: {
@@ -9257,7 +9257,7 @@ function PoortAdviesModal() {
       background: 'transparent',
       color: 'var(--text-body)'
     }
-  }, stap === 0 ? 'Annuleren' : 'Vorige'), stap < totaal - 1 ? /*#__PURE__*/React.createElement("button", {
+  }, stap === 0 ? t('Annuleren') : t('Vorige')), stap < totaal - 1 ? /*#__PURE__*/React.createElement("button", {
     disabled: !stapKlaar,
     onClick: function () {
       setStap(stap + 1);
@@ -9274,7 +9274,7 @@ function PoortAdviesModal() {
       background: stapKlaar ? groen : 'var(--line-on-light)',
       color: '#fff'
     }
-  }, "Volgende") : /*#__PURE__*/React.createElement("button", {
+  }, t('Volgende')) : /*#__PURE__*/React.createElement("button", {
     disabled: !stapKlaar,
     onClick: function () {
       setKlaar(true);
@@ -9290,7 +9290,7 @@ function PoortAdviesModal() {
       background: stapKlaar ? groen : 'var(--line-on-light)',
       color: '#fff'
     }
-  }, "Toon mijn advies"))) : /*#__PURE__*/React.createElement("div", {
+  }, t('Toon mijn advies')))) : /*#__PURE__*/React.createElement("div", {
     style: {
       padding: '24px'
     }
@@ -9303,7 +9303,7 @@ function PoortAdviesModal() {
       textTransform: 'uppercase',
       color: 'var(--text-muted)'
     }
-  }, "Uw advies"), /*#__PURE__*/React.createElement("h2", {
+  }, t('Uw advies')), /*#__PURE__*/React.createElement("h2", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
@@ -9312,7 +9312,7 @@ function PoortAdviesModal() {
       color: 'var(--text-heading)',
       margin: '6px 0 8px'
     }
-  }, res.kop), /*#__PURE__*/React.createElement("div", {
+  }, t(res.kop)), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'inline-block',
       fontFamily: 'var(--font-sans)',
@@ -9323,7 +9323,7 @@ function PoortAdviesModal() {
       border: '1px solid var(--line-on-light)',
       color: 'var(--text-body)'
     }
-  }, "Zekerheid van dit advies: ", res.zekerheid), res.onbekend.length > 0 && /*#__PURE__*/React.createElement("p", {
+  }, t('Zekerheid van dit advies:'), " ", t(res.zekerheid)), res.onbekend.length > 0 && /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 13.5,
@@ -9331,7 +9331,7 @@ function PoortAdviesModal() {
       color: 'var(--text-muted)',
       marginTop: 10
     }
-  }, "De zekerheid is niet hoger omdat nog niet alles gekend is: ", res.onbekend.join(', '), "."), res.redenen.length > 0 && /*#__PURE__*/React.createElement("div", {
+  }, t('De zekerheid is niet hoger omdat nog niet alles gekend is:'), " ", res.onbekend.join(', '), "."), res.redenen.length > 0 && /*#__PURE__*/React.createElement("div", {
     style: {
       marginTop: 22
     }
@@ -9343,7 +9343,7 @@ function PoortAdviesModal() {
       color: 'var(--text-heading)',
       margin: '0 0 10px'
     }
-  }, "Waarom dit advies?"), /*#__PURE__*/React.createElement("ul", {
+  }, t('Waarom dit advies?')), /*#__PURE__*/React.createElement("ul", {
     style: {
       margin: 0,
       paddingLeft: 20
@@ -9358,7 +9358,7 @@ function PoortAdviesModal() {
         color: 'var(--text-body)',
         marginBottom: 4
       }
-    }, r);
+    }, t(r));
   }))), res.aandachtspunten.length > 0 && /*#__PURE__*/React.createElement("div", {
     style: {
       marginTop: 20
@@ -9371,7 +9371,7 @@ function PoortAdviesModal() {
       color: 'var(--text-heading)',
       margin: '0 0 10px'
     }
-  }, "Aandachtspunten"), /*#__PURE__*/React.createElement("ul", {
+  }, t('Aandachtspunten')), /*#__PURE__*/React.createElement("ul", {
     style: {
       margin: 0,
       paddingLeft: 20
@@ -9386,7 +9386,7 @@ function PoortAdviesModal() {
         color: 'var(--text-muted)',
         marginBottom: 4
       }
-    }, r);
+    }, t(r));
   }))), res.alternatief && /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
@@ -9399,7 +9399,7 @@ function PoortAdviesModal() {
       borderRadius: 'var(--radius-md)',
       border: '1px solid var(--line-on-light-soft)'
     }
-  }, res.alternatief), /*#__PURE__*/React.createElement("div", {
+  }, t(res.alternatief)), /*#__PURE__*/React.createElement("div", {
     style: {
       marginTop: 22
     }
@@ -9411,7 +9411,7 @@ function PoortAdviesModal() {
       color: 'var(--text-heading)',
       margin: '0 0 10px'
     }
-  }, "Vergelijking voor uw situatie"), /*#__PURE__*/React.createElement("div", {
+  }, t('Vergelijking voor uw situatie')), /*#__PURE__*/React.createElement("div", {
     style: {
       overflowX: 'auto'
     }
@@ -9430,7 +9430,7 @@ function PoortAdviesModal() {
       color: 'var(--text-muted)',
       fontWeight: 600
     }
-  }, "Criterium"), /*#__PURE__*/React.createElement("th", {
+  }, t('Criterium')), /*#__PURE__*/React.createElement("th", {
     style: {
       textAlign: 'left',
       padding: '8px 6px',
@@ -9438,7 +9438,7 @@ function PoortAdviesModal() {
       color: 'var(--text-muted)',
       fontWeight: 600
     }
-  }, "Draaipoort"), /*#__PURE__*/React.createElement("th", {
+  }, t('Draaipoort')), /*#__PURE__*/React.createElement("th", {
     style: {
       textAlign: 'left',
       padding: '8px 6px',
@@ -9446,7 +9446,7 @@ function PoortAdviesModal() {
       color: 'var(--text-muted)',
       fontWeight: 600
     }
-  }, "Schuifpoort"))), /*#__PURE__*/React.createElement("tbody", null, res.vergelijking.map(function (rij, i) {
+  }, t('Schuifpoort')))), /*#__PURE__*/React.createElement("tbody", null, res.vergelijking.map(function (rij, i) {
     return /*#__PURE__*/React.createElement("tr", {
       key: i
     }, /*#__PURE__*/React.createElement("td", {
@@ -9455,21 +9455,21 @@ function PoortAdviesModal() {
         borderBottom: '1px solid var(--line-on-light-soft)',
         color: 'var(--text-body)'
       }
-    }, rij.label), /*#__PURE__*/React.createElement("td", {
+    }, t(rij.label)), /*#__PURE__*/React.createElement("td", {
       style: {
         padding: '8px 6px',
         borderBottom: '1px solid var(--line-on-light-soft)',
         color: status[rij.draai],
         fontWeight: 600
       }
-    }, rij.draai), /*#__PURE__*/React.createElement("td", {
+    }, t(rij.draai)), /*#__PURE__*/React.createElement("td", {
       style: {
         padding: '8px 6px',
         borderBottom: '1px solid var(--line-on-light-soft)',
         color: status[rij.schuif],
         fontWeight: 600
       }
-    }, rij.schuif));
+    }, t(rij.schuif)));
   }))))), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
@@ -9480,7 +9480,7 @@ function PoortAdviesModal() {
       paddingTop: 16,
       borderTop: '1px solid var(--line-on-light-soft)'
     }
-  }, "Dit digitale advies is gebaseerd op de door u ingevoerde informatie en is uitsluitend indicatief. Exacte afmetingen, fundering, windbelasting, terreinhelling, lokale voorschriften, veiligheid en technische uitvoerbaarheid moeten ter plaatse worden gecontroleerd door een specialist."), /*#__PURE__*/React.createElement("div", {
+  }, t('Dit digitale advies is gebaseerd op de door u ingevoerde informatie en is uitsluitend indicatief. Exacte afmetingen, fundering, windbelasting, terreinhelling, lokale voorschriften, veiligheid en technische uitvoerbaarheid moeten ter plaatse worden gecontroleerd door een specialist.')), /*#__PURE__*/React.createElement("div", {
     className: "pl-advies-acties",
     style: {
       display: 'flex',
@@ -9502,7 +9502,7 @@ function PoortAdviesModal() {
       background: 'transparent',
       color: 'var(--text-body)'
     }
-  }, "Print mijn advies"), /*#__PURE__*/React.createElement("button", {
+  }, t('Print mijn advies')), /*#__PURE__*/React.createElement("button", {
     onClick: function () {
       setKlaar(false);
       setStap(0);
@@ -9517,7 +9517,7 @@ function PoortAdviesModal() {
       background: 'transparent',
       color: 'var(--text-body)'
     }
-  }, "Antwoorden aanpassen"), /*#__PURE__*/React.createElement("button", {
+  }, t('Antwoorden aanpassen')), /*#__PURE__*/React.createElement("button", {
     onClick: function () {
       setAntwoorden({});
       setKlaar(false);
@@ -9533,7 +9533,7 @@ function PoortAdviesModal() {
       background: 'transparent',
       color: 'var(--text-body)'
     }
-  }, "Opnieuw starten"), /*#__PURE__*/React.createElement("button", {
+  }, t('Opnieuw starten')), /*#__PURE__*/React.createElement("button", {
     onClick: function () {
       setOpen(false);
       window.dispatchEvent(new CustomEvent('pl-offerte-open'));
@@ -9549,7 +9549,7 @@ function PoortAdviesModal() {
       background: groen,
       color: '#fff'
     }
-  }, "Vraag een technische opmeting aan")))));
+  }, t('Vraag een technische opmeting aan'))))));
 }
 Object.assign(window, {
   OfferteModal,
