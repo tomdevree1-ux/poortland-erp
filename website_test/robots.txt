@@ -1,0 +1,41 @@
+# robots.txt voor poortland.be
+# Zoekmachines en AI-assistenten mogen deze site lezen en citeren.
+# Regels staan per bot herhaald: een bot leest enkel het blok dat het best bij
+# zijn naam past, niet ook dat van User-agent: *.
+# Laatst nagekeken: 2026-08-04
+
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# Klassieke zoekmachines
+User-agent: Bingbot
+User-agent: DuckDuckBot
+User-agent: YandexBot
+Allow: /
+Disallow: /api/
+
+# AI-assistenten: weergave in de resultaten en ophalen na een klik
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: Applebot
+Allow: /
+Disallow: /api/
+
+# Trainingsdata. Poortland laat dit toe: een model dat onze tekst niet mag lezen
+# citeert ons ook nooit. Wilt u dit weigeren, vervang dan Allow door Disallow.
+User-agent: GPTBot
+User-agent: ClaudeBot
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: CCBot
+User-agent: cohere-ai
+User-agent: Meta-ExternalAgent
+Allow: /
+Disallow: /api/
+
+Sitemap: https://poortland.be/sitemap.xml

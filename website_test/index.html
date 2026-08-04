@@ -8,9 +8,52 @@
      root laden en niet vanaf het subpad. -->
 <base href="/" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />
 <title>Poortland — Architecturale poorten en hekwerken op maat</title>
 <meta name="description" content="Poortland ontwerpt, maakt en plaatst handgemaakte poorten en hekwerken op maat. Belgisch vakmanschap, duurzame materialen en een sterke service na verkoop." />
 <link rel="canonical" href="https://poortland.be/" />
+<!-- Gestructureerde data (schema.org, JSON-LD). Bewust statisch in de server-HTML,
+     zodat ook systemen die geen JavaScript uitvoeren (veel AI-crawlers) Poortland
+     als organisatie herkennen. Eén blok per site, met een vaste @id die overal
+     gelijk blijft. sameAs later aanvullen met echte profielen (zie SEO-GEO to-do). -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "LocalBusiness",
+      "@id": "https://poortland.be/#organization",
+      "name": "Poortland",
+      "legalName": "Poortland NV",
+      "url": "https://poortland.be/",
+      "logo": "https://poortland.be/assets/mono-on-light.png",
+      "image": "https://poortland.be/media/og-share.jpg",
+      "email": "info@poortland.be",
+      "telephone": "+3215432111",
+      "vatID": "BE0464838351",
+      "foundingDate": "1999",
+      "description": "Poortland ontwerpt, maakt en plaatst handgemaakte poorten en overkappingen op maat in staal, aluminium, hout en combinaties. Belgisch vakmanschap in eigen atelier sinds 1999, met eigen plaatsing, automatisatie en service na verkoop.",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Hombeeksesteenweg 164-166",
+        "postalCode": "2800",
+        "addressLocality": "Mechelen",
+        "addressCountry": "BE"
+      },
+      "areaServed": { "@type": "Country", "name": "Belgium" },
+      "knowsLanguage": ["nl", "fr", "en", "de"]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://poortland.be/#website",
+      "url": "https://poortland.be/",
+      "name": "Poortland",
+      "publisher": { "@id": "https://poortland.be/#organization" },
+      "inLanguage": ["nl-BE", "fr-BE", "en", "de"]
+    }
+  ]
+}
+</script>
 <!-- Deelkaart voor WhatsApp, Facebook en dergelijke (Open Graph). De adressen zijn
      absoluut en wijzen naar het productiedomein. Op de teststand verschijnt de foto
      pas zodra de site op poortland.be live staat. -->
@@ -442,6 +485,35 @@ body {
 </head>
 <body>
   <div id="root"></div>
+  <!-- Statische terugval voor crawlers en bezoekers zonder JavaScript. De echte
+       site wordt door React opgebouwd; systemen die geen JavaScript uitvoeren
+       (waaronder veel AI-crawlers) lezen hieronder de kerninhoud in gewone HTML. -->
+  <noscript>
+    <main style="max-width:820px;margin:0 auto;padding:32px 20px;font-family:sans-serif;line-height:1.6;color:#141C15">
+      <h1>Poortland — handgemaakte poorten en overkappingen op maat</h1>
+      <p>Poortland ontwerpt, maakt en plaatst handgemaakte toegangspoorten en overkappingen op maat. Alles gebeurt in eigen atelier in Mechelen: van het eerste ontwerp en de opmeting tot de plaatsing, de automatisatie en de service na verkoop. Wij werken met staal, aluminium en hout, afzonderlijk of gecombineerd, als draaipoort of schuifpoort.</p>
+      <h2>Ons aanbod</h2>
+      <ul>
+        <li><a href="/metalen-poorten/">Metalen poorten</a>: staal en aluminium, strak afgewerkt en gemaakt voor jarenlang gebruik.</li>
+        <li><a href="/houten-poorten/">Houten poorten</a>: duurzame hardhoutsoorten zoals Padouk en Iroko, warm en op maat.</li>
+        <li><a href="/combinatie-staal-hout/">Combinatie hout en metaal</a>: de kracht van metaal met de warmte van hout.</li>
+        <li><a href="/overkappingen/">Aluminium overkappingen</a>: terrasoverkappingen op maat, aanbouw of vrijstaand.</li>
+        <li><a href="/automatisering/">Automatisering</a>: nieuwe en bestaande poorten met FAAC aandrijvingen.</li>
+        <li><a href="/onderhoud/">Onderhoud</a>: eigen dienst na verkoop voor nazicht en herstellingen.</li>
+        <li><a href="/garantie/">Garantie</a> · <a href="/over-ons/">Over ons</a> · <a href="/faq/">Veelgestelde vragen</a> · <a href="/contact/">Contact</a></li>
+      </ul>
+      <h2>Kerncijfers</h2>
+      <ul>
+        <li>Opgericht in 1999, meer dan 3.000 poorten en overkappingen geplaatst.</li>
+        <li>10 jaar garantie op lakkwaliteit en roestvorming.</li>
+        <li>Roestbescherming met thermisch verzinken en metalliseren, daarna twee lagen poederlak.</li>
+        <li>Zes dagen per week bereikbaar. Alles in eigen beheer: ontwerp, productie, plaatsing en service.</li>
+      </ul>
+      <h2>Contact</h2>
+      <p>Poortland NV, Hombeeksesteenweg 164-166, 2800 Mechelen. Telefoon +32 (0)15 432 111. E-mail info@poortland.be. Open op afspraak, maandag tot zaterdag.</p>
+      <p>Deze website werkt het best met JavaScript ingeschakeld.</p>
+    </main>
+  </noscript>
   <script src="vendor/react.production.min.js"></script>
   <script src="vendor/react-dom.production.min.js"></script>
   <script src="_ds_bundle.js"></script>
