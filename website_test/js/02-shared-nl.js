@@ -1588,7 +1588,7 @@ function PaginaNL({
     style: {
       marginBottom: 20
     }
-  }, c.eyebrow), /*#__PURE__*/React.createElement("h1", {
+  }, t(c.eyebrow)), /*#__PURE__*/React.createElement("h1", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
@@ -1598,7 +1598,7 @@ function PaginaNL({
       color: 'var(--stone-100)',
       margin: 0
     }
-  }, c.h1), c.intro && /*#__PURE__*/React.createElement("p", {
+  }, t(c.h1)), c.intro && /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 18,
@@ -1607,7 +1607,7 @@ function PaginaNL({
       maxWidth: '48ch',
       margin: '24px 0 32px'
     }
-  }, c.intro), /*#__PURE__*/React.createElement("div", {
+  }, t(c.intro)), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 16,
@@ -1617,12 +1617,12 @@ function PaginaNL({
     variant: "primary",
     arrow: true,
     onClick: () => onNav(c.cta && c.cta.route || 'contact', c.cta && c.cta.params)
-  }, c.cta && c.cta.label || 'Vraag een offerte aan'), c.cta2 && /*#__PURE__*/React.createElement(SButton, {
+  }, t(c.cta && c.cta.label || 'Vraag een offerte aan')), c.cta2 && /*#__PURE__*/React.createElement(SButton, {
     variant: "ghost",
     dark: true,
     arrow: true,
     onClick: () => onNav(c.cta2.route)
-  }, c.cta2.label))), c.beeld && /*#__PURE__*/React.createElement(Reveal, {
+  }, t(c.cta2.label)))), c.beeld && /*#__PURE__*/React.createElement(Reveal, {
     delay: 80
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -1666,7 +1666,7 @@ function PaginaNL({
       margin: '0 0 12px',
       letterSpacing: '-0.01em'
     }
-  }, s.h2), s.tekst && /*#__PURE__*/React.createElement("p", {
+  }, t(s.h2)), s.tekst && /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 16.5,
@@ -1675,7 +1675,7 @@ function PaginaNL({
       margin: 0,
       maxWidth: '64ch'
     }
-  }, s.tekst), s.faq && s.faq.map((qa, j) => /*#__PURE__*/React.createElement("div", {
+  }, t(s.tekst)), s.faq && s.faq.map((qa, j) => /*#__PURE__*/React.createElement("div", {
     key: j,
     style: {
       marginTop: 18,
@@ -1689,7 +1689,7 @@ function PaginaNL({
       fontWeight: 600,
       color: 'var(--text-heading)'
     }
-  }, qa.q), /*#__PURE__*/React.createElement("p", {
+  }, t(qa.q)), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 15.5,
@@ -1698,7 +1698,7 @@ function PaginaNL({
       margin: '5px 0 0',
       maxWidth: '64ch'
     }
-  }, qa.a))), s.kaarten && /*#__PURE__*/React.createElement("div", {
+  }, t(qa.a)))), s.kaarten && /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
       gridTemplateColumns: 'repeat(' + s.kaarten.length + ', 1fr)',
@@ -1741,14 +1741,14 @@ function PaginaNL({
       fontSize: 21,
       color: 'var(--text-heading)'
     }
-  }, k.titel), /*#__PURE__*/React.createElement("div", {
+  }, t(k.titel)), /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 13.5,
       color: 'var(--text-muted)',
       marginTop: 5
     }
-  }, k.tekst, " ", /*#__PURE__*/React.createElement("span", {
+  }, t(k.tekst), " ", /*#__PURE__*/React.createElement("span", {
     style: {
       color: 'var(--accent)'
     }
@@ -6957,7 +6957,7 @@ function OverOnsNL({
   }, /*#__PURE__*/React.createElement("button", {
     onClick: () => onNav('home'),
     style: bc
-  }, "Home"), /*#__PURE__*/React.createElement("span", {
+  }, t('Home')), /*#__PURE__*/React.createElement("span", {
     style: {
       margin: '0 9px',
       color: 'var(--line-on-light)'
@@ -6966,7 +6966,7 @@ function OverOnsNL({
     style: {
       color: 'var(--text-heading)'
     }
-  }, "Over ons"))), /*#__PURE__*/React.createElement("section", {
+  }, t('Over ons')))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-ground)',
       color: 'var(--text-on-dark)',
@@ -6987,7 +6987,7 @@ function OverOnsNL({
     style: {
       marginBottom: 20
     }
-  }, "Over Poortland NV"), /*#__PURE__*/React.createElement("h1", {
+  }, t('Over Poortland NV')), /*#__PURE__*/React.createElement("h1", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
@@ -6997,7 +6997,7 @@ function OverOnsNL({
       color: 'var(--stone-100)',
       margin: 0
     }
-  }, "Vakmanschap in eigen beheer, sinds 1999"), /*#__PURE__*/React.createElement("p", {
+  }, t('Vakmanschap in eigen beheer, sinds 1999')), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 18,
@@ -7006,7 +7006,7 @@ function OverOnsNL({
       maxWidth: '48ch',
       margin: '24px 0 30px'
     }
-  }, "Poortland NV werd opgericht in 1999. Van bij de start werkt het bedrijf met mensen die jarenlange ervaring hebben in het maken en plaatsen van poorten. Ondertussen realiseerde Poortland meer dan 3.000 poorten en overkappingen. U rekent daardoor op ruime ervaring, bewezen vakmanschap en een professionele dienstverlening."), /*#__PURE__*/React.createElement("div", {
+  }, t('Poortland NV werd opgericht in 1999. Van bij de start werkt het bedrijf met mensen die jarenlange ervaring hebben in het maken en plaatsen van poorten. Ondertussen realiseerde Poortland meer dan 3.000 poorten en overkappingen. U rekent daardoor op ruime ervaring, bewezen vakmanschap en een professionele dienstverlening.')), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 16,
@@ -7017,12 +7017,12 @@ function OverOnsNL({
     arrow: true,
     as: "button",
     onClick: offerte
-  }, "Vraag een vrijblijvende offerte aan"), /*#__PURE__*/React.createElement(SButton, {
+  }, t('Vraag een vrijblijvende offerte aan')), /*#__PURE__*/React.createElement(SButton, {
     variant: "ghost",
     dark: true,
     arrow: true,
     onClick: () => onNav('metalen')
-  }, "Bekijk onze poorten"))), /*#__PURE__*/React.createElement(Reveal, {
+  }, t('Bekijk onze poorten')))), /*#__PURE__*/React.createElement(Reveal, {
     delay: 80
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -7073,7 +7073,7 @@ function OverOnsNL({
   }, s.teller ? /*#__PURE__*/React.createElement(Teller, {
     eind: s.teller,
     suffix: s.suffix
-  }) : s.getal), /*#__PURE__*/React.createElement("div", {
+  }) : t(s.getal)), /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 13.5,
@@ -7081,7 +7081,7 @@ function OverOnsNL({
       color: 'var(--text-muted)',
       marginTop: 8
     }
-  }, s.label)))))), /*#__PURE__*/React.createElement("section", {
+  }, t(s.label))))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-ground)',
       color: 'var(--text-on-dark)',
@@ -7119,7 +7119,7 @@ function OverOnsNL({
       color: 'var(--accent)',
       marginBottom: 6
     }
-  }, m[0]), /*#__PURE__*/React.createElement("h3", {
+  }, t(m[0])), /*#__PURE__*/React.createElement("h3", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
@@ -7128,7 +7128,7 @@ function OverOnsNL({
       margin: '0 0 8px',
       lineHeight: 1.2
     }
-  }, m[1]), /*#__PURE__*/React.createElement("p", {
+  }, t(m[1])), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 15,
@@ -7136,7 +7136,7 @@ function OverOnsNL({
       color: 'var(--stone-300)',
       margin: 0
     }
-  }, m[2]))))))), /*#__PURE__*/React.createElement("section", {
+  }, t(m[2])))))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper)',
       padding: '90px 44px'
@@ -7177,14 +7177,14 @@ function OverOnsNL({
       color: 'var(--text-heading)',
       marginBottom: 8
     }
-  }, b[0]), /*#__PURE__*/React.createElement("div", {
+  }, t(b[0])), /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 14.5,
       lineHeight: 1.6,
       color: 'var(--text-muted)'
     }
-  }, b[1]))))))), /*#__PURE__*/React.createElement("section", {
+  }, t(b[1])))))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-ground)',
       color: 'var(--text-on-dark)',
@@ -7205,7 +7205,7 @@ function OverOnsNL({
     style: {
       marginBottom: 16
     }
-  }, "Bereikbaarheid en naverkoop"), /*#__PURE__*/React.createElement("h2", {
+  }, t('Bereikbaarheid en naverkoop')), /*#__PURE__*/React.createElement("h2", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
@@ -7215,7 +7215,7 @@ function OverOnsNL({
       lineHeight: 1.1,
       letterSpacing: '-0.01em'
     }
-  }, "Zes dagen per week bereikbaar"), /*#__PURE__*/React.createElement("p", {
+  }, t('Zes dagen per week bereikbaar')), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 16.5,
@@ -7224,7 +7224,7 @@ function OverOnsNL({
       maxWidth: '48ch',
       margin: '18px 0 24px'
     }
-  }, "Poortland is zes dagen per week open en bereikbaar. Ook tijdens vakantieperiodes blijft het bedrijf operationeel. Zo rekent u steeds op een snelle en betrouwbare naverkoopdienst."), /*#__PURE__*/React.createElement("div", {
+  }, t('Poortland is zes dagen per week open en bereikbaar. Ook tijdens vakantieperiodes blijft het bedrijf operationeel. Zo rekent u steeds op een snelle en betrouwbare naverkoopdienst.')), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 8,
@@ -7247,7 +7247,7 @@ function OverOnsNL({
       color: i < 6 ? '#fff' : 'var(--text-on-dark-muted)',
       border: '1px solid ' + (i < 6 ? 'var(--accent)' : 'var(--line-on-dark)')
     }
-  }, d)))), /*#__PURE__*/React.createElement(Reveal, {
+  }, t(d))))), /*#__PURE__*/React.createElement(Reveal, {
     delay: 80
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -7281,7 +7281,7 @@ function OverOnsNL({
     style: {
       marginBottom: 16
     }
-  }, "Duidelijk en transparant"), /*#__PURE__*/React.createElement("h2", {
+  }, t('Duidelijk en transparant')), /*#__PURE__*/React.createElement("h2", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
@@ -7292,7 +7292,7 @@ function OverOnsNL({
       lineHeight: 1.08,
       letterSpacing: '-0.01em'
     }
-  }, "Een vaste prijs, zonder verrassingen"), /*#__PURE__*/React.createElement("p", {
+  }, t('Een vaste prijs, zonder verrassingen')), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 17,
@@ -7301,7 +7301,7 @@ function OverOnsNL({
       maxWidth: '58ch',
       margin: '20px auto 8px'
     }
-  }, "Poortland vermeldt in elke offerte een duidelijke totaalprijs waarin alles is inbegrepen. U wordt achteraf niet verrast door onverwachte kosten."), /*#__PURE__*/React.createElement("p", {
+  }, t('Poortland vermeldt in elke offerte een duidelijke totaalprijs waarin alles is inbegrepen. U wordt achteraf niet verrast door onverwachte kosten.')), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 17,
@@ -7310,7 +7310,7 @@ function OverOnsNL({
       maxWidth: '58ch',
       margin: '0 auto 30px'
     }
-  }, "Wilt u eerst zien wat wij maken? Vraag gerust referentieadressen op en bekijk reeds geplaatste poorten om de kwaliteit zelf te beoordelen."), /*#__PURE__*/React.createElement("div", {
+  }, t('Wilt u eerst zien wat wij maken? Vraag gerust referentieadressen op en bekijk reeds geplaatste poorten om de kwaliteit zelf te beoordelen.')), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 14,
@@ -7323,12 +7323,12 @@ function OverOnsNL({
     arrow: true,
     as: "button",
     onClick: offerte
-  }, "Vraag een vrijblijvende offerte aan"), /*#__PURE__*/React.createElement(SButton, {
+  }, t('Vraag een vrijblijvende offerte aan')), /*#__PURE__*/React.createElement(SButton, {
     variant: "secondary",
     size: "lg",
     arrow: true,
     onClick: () => onNav('metalen')
-  }, "Ontdek onze poorten"))))), /*#__PURE__*/React.createElement("section", {
+  }, t('Ontdek onze poorten')))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-ground)',
       color: 'var(--text-on-dark)',
@@ -7368,7 +7368,7 @@ function OverOnsNL({
       color: 'var(--stone-100)',
       marginBottom: 8
     }
-  }, "Duurzame poederlak"), /*#__PURE__*/React.createElement("div", {
+  }, t('Duurzame poederlak')), /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 14.5,
@@ -7376,7 +7376,7 @@ function OverOnsNL({
       color: 'var(--stone-300)',
       marginBottom: 18
     }
-  }, "Elke poort krijgt twee lagen poederlak. Een grondlaag in epoxy voor een sterke hechting en een afwerklaag in polyester die UV bestendig is en zorgt voor een duurzame afwerking."), /*#__PURE__*/React.createElement("div", {
+  }, t('Elke poort krijgt twee lagen poederlak. Een grondlaag in epoxy voor een sterke hechting en een afwerklaag in polyester die UV bestendig is en zorgt voor een duurzame afwerking.')), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       flexDirection: 'column',
@@ -7461,14 +7461,14 @@ function OverOnsNL({
       fontWeight: 600,
       color: 'var(--stone-100)'
     }
-  }, r[1]), /*#__PURE__*/React.createElement("span", {
+  }, t(r[1])), /*#__PURE__*/React.createElement("span", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 12,
       color: 'var(--text-on-dark-muted)',
       marginLeft: 'auto'
     }
-  }, r[2]))))))), /*#__PURE__*/React.createElement("div", {
+  }, t(r[2])))))))), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       flexDirection: 'column',
@@ -7491,14 +7491,14 @@ function OverOnsNL({
       color: 'var(--stone-100)',
       marginBottom: 8
     }
-  }, k[0]), /*#__PURE__*/React.createElement("div", {
+  }, t(k[0])), /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 14.5,
       lineHeight: 1.65,
       color: 'var(--stone-300)'
     }
-  }, k[1])))))))), /*#__PURE__*/React.createElement(CTASectie, {
+  }, t(k[1]))))))))), /*#__PURE__*/React.createElement(CTASectie, {
     onNav: onNav,
     dark: true
   }), /*#__PURE__*/React.createElement("button", {

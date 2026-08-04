@@ -5,6 +5,7 @@ const {
   Input: CoInput,
   Eyebrow: CoEyebrow
 } = window.PoortlandDesignSystem_6dcc8b;
+const t = window.plT;
 function VeldLabel({
   children
 }) {
@@ -17,7 +18,7 @@ function VeldLabel({
       letterSpacing: '0.16em',
       color: 'var(--text-on-dark-muted)'
     }
-  }, children);
+  }, t(children));
 }
 function Select({
   label,
@@ -64,7 +65,7 @@ function Select({
       color: '#141C15',
       background: '#FAF6EE'
     }
-  }, o.label))), /*#__PURE__*/React.createElement("span", {
+  }, t(o.label)))), /*#__PURE__*/React.createElement("span", {
     "aria-hidden": "true",
     style: {
       position: 'absolute',
@@ -147,7 +148,7 @@ function ContactNL({
     style: {
       marginBottom: 20
     }
-  }, "Plan een adviesgesprek"), /*#__PURE__*/React.createElement("h1", {
+  }, t('Plan een adviesgesprek')), /*#__PURE__*/React.createElement("h1", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
@@ -157,7 +158,7 @@ function ContactNL({
       lineHeight: 1.03,
       letterSpacing: '-0.01em'
     }
-  }, "Bespreek uw project."), /*#__PURE__*/React.createElement("p", {
+  }, t('Bespreek uw project.')), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 16.5,
@@ -166,7 +167,7 @@ function ContactNL({
       maxWidth: '42ch',
       marginTop: 22
     }
-  }, "Vertel kort waarnaar u op zoek bent. Heeft u al een bepaalde stijl of materiaalkeuze in gedachten? Voeg zeker de gewenste afmetingen toe en upload enkele foto's als u die beschikbaar heeft.", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("br", null), "Wij nemen persoonlijk contact op en plannen een adviesgesprek met plaatsbezoek en opmeting."), /*#__PURE__*/React.createElement("div", {
+  }, t("Vertel kort waarnaar u op zoek bent. Heeft u al een bepaalde stijl of materiaalkeuze in gedachten? Voeg zeker de gewenste afmetingen toe en upload enkele foto's als u die beschikbaar heeft."), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("br", null), t('Wij nemen persoonlijk contact op en plannen een adviesgesprek met plaatsbezoek en opmeting.')), /*#__PURE__*/React.createElement("div", {
     style: {
       marginTop: 42,
       display: 'flex',
@@ -185,14 +186,14 @@ function ContactNL({
       color: 'var(--accent)',
       marginBottom: 6
     }
-  }, k), /*#__PURE__*/React.createElement("div", {
+  }, t(k)), /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 15,
       color: 'var(--stone-200)',
       whiteSpace: 'pre-line'
     }
-  }, v))))), /*#__PURE__*/React.createElement(Reveal, {
+  }, t(v)))))), /*#__PURE__*/React.createElement(Reveal, {
     delay: 90
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -222,7 +223,7 @@ function ContactNL({
     style: {
       marginBottom: 14
     }
-  }, "Bedankt voor uw aanvraag"), /*#__PURE__*/React.createElement("h2", {
+  }, t('Bedankt voor uw aanvraag')), /*#__PURE__*/React.createElement("h2", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
@@ -231,7 +232,7 @@ function ContactNL({
       margin: 0,
       lineHeight: 1.1
     }
-  }, "Uw aanvraag is in behandeling."), /*#__PURE__*/React.createElement("p", {
+  }, t('Uw aanvraag is in behandeling.')), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 15.5,
@@ -240,7 +241,7 @@ function ContactNL({
       marginTop: 14,
       maxWidth: '40ch'
     }
-  }, "Wij nemen binnen twee werkdagen persoonlijk contact op om uw adviesgesprek en plaatsbezoek in te plannen. De volgende stap is een rustige opmeting bij u ter plaatse."), /*#__PURE__*/React.createElement("div", {
+  }, t('Wij nemen binnen twee werkdagen persoonlijk contact op om uw adviesgesprek en plaatsbezoek in te plannen. De volgende stap is een rustige opmeting bij u ter plaatse.')), /*#__PURE__*/React.createElement("div", {
     style: {
       marginTop: 28,
       display: 'flex',
@@ -251,7 +252,7 @@ function ContactNL({
     variant: "primary",
     arrow: true,
     onClick: () => onNav('metalen')
-  }, "Bekijk onze modellen"), /*#__PURE__*/React.createElement(CoButton, {
+  }, t('Bekijk onze modellen')), /*#__PURE__*/React.createElement(CoButton, {
     variant: "secondary",
     dark: true,
     onClick: () => {
@@ -262,7 +263,7 @@ function ContactNL({
       setTiming('');
       setFout('');
     }
-  }, "Nieuwe aanvraag"))) : /*#__PURE__*/React.createElement("form", {
+  }, t('Nieuwe aanvraag')))) : /*#__PURE__*/React.createElement("form", {
     noValidate: true,
     onSubmit: e => {
       e.preventDefault();
@@ -318,14 +319,14 @@ function ContactNL({
       color: 'var(--accent)',
       marginBottom: 12
     }
-  }, "Type aanvraag ", /*#__PURE__*/React.createElement("span", {
+  }, t('Type aanvraag'), " ", /*#__PURE__*/React.createElement("span", {
     style: {
       textTransform: 'none',
       letterSpacing: 0,
       color: 'var(--text-on-dark-muted)',
       fontWeight: 400
     }
-  }, "(meerdere mogelijk)")), /*#__PURE__*/React.createElement("div", {
+  }, t('(meerdere mogelijk)'))), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       flexWrap: 'nowrap',
@@ -350,7 +351,7 @@ function ContactNL({
         color: aan ? '#fff' : 'var(--stone-200)',
         border: '1px solid ' + (aan ? 'var(--accent)' : 'var(--line-on-dark)')
       }
-    }, o.label);
+    }, t(o.label));
   }))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("label", {
     style: {
       display: 'block',
@@ -362,7 +363,7 @@ function ContactNL({
       color: 'var(--accent)',
       marginBottom: 12
     }
-  }, "Type klant"), /*#__PURE__*/React.createElement("div", {
+  }, t('Type klant')), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 4,
@@ -370,10 +371,10 @@ function ContactNL({
       borderRadius: 'var(--radius-sm)',
       border: '1px solid var(--line-on-dark)'
     }
-  }, ['particulier', 'bedrijf'].map(t => /*#__PURE__*/React.createElement("button", {
+  }, ['particulier', 'bedrijf'].map(kt => /*#__PURE__*/React.createElement("button", {
     type: "button",
-    key: t,
-    onClick: () => setKlantType(t),
+    key: kt,
+    onClick: () => setKlantType(kt),
     style: {
       flex: 1,
       padding: '10px 12px',
@@ -384,23 +385,23 @@ function ContactNL({
       fontSize: 15,
       fontWeight: 600,
       transition: 'all var(--dur) var(--ease-out)',
-      background: klantType === t ? 'var(--accent)' : 'transparent',
-      color: klantType === t ? '#fff' : 'var(--stone-200)'
+      background: klantType === kt ? 'var(--accent)' : 'transparent',
+      color: klantType === kt ? '#fff' : 'var(--stone-200)'
     }
-  }, t === 'particulier' ? 'Particulier' : 'Bedrijf')))), klantType === 'bedrijf' ? /*#__PURE__*/React.createElement("div", {
+  }, kt === 'particulier' ? t('Particulier') : t('Bedrijf'))))), klantType === 'bedrijf' ? /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
       gridTemplateColumns: '1fr 1fr',
       gap: 24
     }
   }, /*#__PURE__*/React.createElement(CoInput, {
-    label: "Bedrijfsnaam",
+    label: t('Bedrijfsnaam'),
     name: "bedrijfsnaam",
     dark: true,
-    placeholder: "Uw bedrijfsnaam",
+    placeholder: t('Uw bedrijfsnaam'),
     required: true
   }), /*#__PURE__*/React.createElement(CoInput, {
-    label: "Btw nummer",
+    label: t('Btw nummer'),
     name: "btwNummer",
     dark: true,
     placeholder: "BE 0123 456 789",
@@ -412,16 +413,16 @@ function ContactNL({
       gap: 24
     }
   }, /*#__PURE__*/React.createElement(CoInput, {
-    label: "Voornaam",
+    label: t('Voornaam'),
     name: "voornaam",
     dark: true,
-    placeholder: "Uw voornaam",
+    placeholder: t('Uw voornaam'),
     required: true
   }), /*#__PURE__*/React.createElement(CoInput, {
-    label: "Naam",
+    label: t('Naam'),
     name: "naam",
     dark: true,
-    placeholder: "Uw naam",
+    placeholder: t('Uw naam'),
     required: true
   })), /*#__PURE__*/React.createElement("div", {
     style: {
@@ -430,29 +431,29 @@ function ContactNL({
       gap: 24
     }
   }, /*#__PURE__*/React.createElement(CoInput, {
-    label: "Email",
+    label: t('Email'),
     name: "email",
     dark: true,
     type: "email",
     placeholder: "u@voorbeeld.be",
     required: true
   }), /*#__PURE__*/React.createElement(CoInput, {
-    label: "Telefoon",
+    label: t('Telefoon'),
     name: "telefoon",
     dark: true,
     type: "tel",
     placeholder: "+32 ..."
   })), /*#__PURE__*/React.createElement(CoInput, {
-    label: "Straat en huisnummer",
+    label: t('Straat en huisnummer'),
     name: "straat",
     dark: true,
-    placeholder: "bv. Dorpsstraat 12"
+    placeholder: t('bv. Dorpsstraat 12')
   }), /*#__PURE__*/React.createElement(CoInput, {
-    label: "Omschrijving van uw project",
+    label: t('Omschrijving van uw project'),
     name: "vraag",
     dark: true,
     as: "textarea",
-    placeholder: "De opening is ongeveer 4 meter, een schuifpoort voor de oprit ..."
+    placeholder: t('De opening is ongeveer 4 meter, een schuifpoort voor de oprit ...')
   }), /*#__PURE__*/React.createElement(Select, {
     label: "Gewenste timing",
     value: timing,
@@ -481,7 +482,7 @@ function ContactNL({
       fontSize: 14,
       color: bestand ? 'var(--stone-200)' : 'var(--text-on-dark-faint)'
     }
-  }, bestand || 'Sleep een foto van de plek of het schetsontwerp hierheen'), /*#__PURE__*/React.createElement("span", {
+  }, bestand || t('Sleep een foto van de plek of het schetsontwerp hierheen')), /*#__PURE__*/React.createElement("span", {
     style: {
       fontFamily: 'var(--font-label)',
       fontSize: 10.5,
@@ -491,12 +492,12 @@ function ContactNL({
       color: 'var(--accent)',
       flex: '0 0 auto'
     }
-  }, "Kies bestand ↗"), /*#__PURE__*/React.createElement("input", {
+  }, t('Kies bestand'), " ↗"), /*#__PURE__*/React.createElement("input", {
     type: "file",
     name: "fotos",
     accept: "image/*",
     multiple: true,
-    onChange: e => setBestand(e.target.files && e.target.files.length ? `${e.target.files.length} bestand(en) geselecteerd` : ''),
+    onChange: e => setBestand(e.target.files && e.target.files.length ? `${e.target.files.length} ${t('bestand(en) geselecteerd')}` : ''),
     style: {
       display: 'none'
     }
@@ -542,7 +543,7 @@ function ContactNL({
       lineHeight: 1.55,
       color: 'var(--stone-300)'
     }
-  }, "Ik ga akkoord met de verwerking van mijn gegevens om mijn aanvraag te behandelen, volgens het privacybeleid.")), fout ? /*#__PURE__*/React.createElement("div", {
+  }, t('Ik ga akkoord met de verwerking van mijn gegevens om mijn aanvraag te behandelen, volgens het privacybeleid.'))), fout ? /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 13.5,
@@ -563,13 +564,13 @@ function ContactNL({
       fontSize: 12,
       color: 'var(--text-on-dark-faint)'
     }
-  }, "Vrijblijvend · antwoord binnen twee werkdagen"), /*#__PURE__*/React.createElement(CoButton, {
+  }, t('Vrijblijvend · antwoord binnen twee werkdagen')), /*#__PURE__*/React.createElement(CoButton, {
     variant: "primary",
     arrow: true,
     as: "button",
     type: "submit",
     disabled: !akkoord || bezig
-  }, bezig ? 'Bezig met verzenden' : 'Verstuur aanvraag'))))))));
+  }, bezig ? t('Bezig met verzenden') : t('Verstuur aanvraag')))))))));
 }
 window.ContactNL = ContactNL;
 })();
