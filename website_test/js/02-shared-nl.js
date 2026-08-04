@@ -8,6 +8,34 @@ const {
   Eyebrow: SEyebrow
 } = window.PoortlandDesignSystem_6dcc8b;
 
+/* ===== Vertaalmotor (i18n). Nederlands is de brontaal en de terugval: een nog
+   niet vertaalde tekst toont gewoon het Nederlands, zodat de site nooit half
+   leeg staat. Vertalingen staan in window.PL_I18N per taal, met de Nederlandse
+   tekst als sleutel. t(nl) geeft de vertaling voor de actieve taal terug. ===== */
+window.PL_I18N = window.PL_I18N || {
+  FR: {},
+  EN: {},
+  DE: {}
+};
+window.PL_TAAL = window.PL_TAAL || 'NL';
+try {
+  var _opgTaal = localStorage.getItem('pl_taal');
+  if (_opgTaal) window.PL_TAAL = _opgTaal;
+} catch (e) {}
+window.plZetTaal = function (l) {
+  window.PL_TAAL = l || 'NL';
+  try {
+    localStorage.setItem('pl_taal', window.PL_TAAL);
+  } catch (e) {}
+  if (document.documentElement) document.documentElement.lang = window.PL_TAAL.toLowerCase();
+};
+function t(s) {
+  if (s == null || window.PL_TAAL === 'NL') return s;
+  var d = window.PL_I18N[window.PL_TAAL];
+  return d && d[s] != null ? d[s] : s;
+}
+window.plT = t;
+
 /* ---- Veldvalidatie in huisstijl: geen browserballonnen ----
    plToonVeldfouten(form): toont foutregels in de huisstijl onder de velden,
    schuift het eerste foute veld in beeld en geeft het een subtiele
@@ -699,7 +727,7 @@ function DesktopNav({
     style: {
       marginBottom: 12
     }
-  }, key === 'service' ? 'Service en nazorg' : 'Over Poortland'), /*#__PURE__*/React.createElement("div", null, items.map(([k, label, desc]) => /*#__PURE__*/React.createElement("button", {
+  }, key === 'service' ? t('Service en nazorg') : t('Over Poortland')), /*#__PURE__*/React.createElement("div", null, items.map(([k, label, desc]) => /*#__PURE__*/React.createElement("button", {
     key: k,
     onClick: () => {
       onNav(k);
@@ -732,7 +760,7 @@ function DesktopNav({
       fontSize: 23,
       color: 'var(--text-heading)'
     }
-  }, label), /*#__PURE__*/React.createElement("span", {
+  }, t(label)), /*#__PURE__*/React.createElement("span", {
     style: {
       display: 'block',
       fontFamily: 'var(--font-sans)',
@@ -740,7 +768,7 @@ function DesktopNav({
       color: 'var(--text-on-dark-muted)',
       marginTop: 1
     }
-  }, desc)), /*#__PURE__*/React.createElement("span", {
+  }, t(desc))), /*#__PURE__*/React.createElement("span", {
     style: {
       color: 'var(--accent)',
       fontSize: 20
@@ -808,7 +836,7 @@ function DesktopNav({
       alignItems: 'center',
       gap: 6
     }
-  }, "Poorten ", /*#__PURE__*/React.createElement(Caret, {
+  }, t('Poorten'), " ", /*#__PURE__*/React.createElement(Caret, {
     open: openMenu === 'poorten'
   })), /*#__PURE__*/React.createElement("button", {
     onMouseEnter: () => setOpenMenu(null),
@@ -817,7 +845,7 @@ function DesktopNav({
       setOpenMenu(null);
     },
     style: linkStyle(route === 'overkappingen')
-  }, "Overkappingen"), /*#__PURE__*/React.createElement("button", {
+  }, t('Overkappingen')), /*#__PURE__*/React.createElement("button", {
     onMouseEnter: () => setOpenMenu('service'),
     onClick: () => setOpenMenu(v => v === 'service' ? null : 'service'),
     "aria-expanded": openMenu === 'service',
@@ -827,7 +855,7 @@ function DesktopNav({
       alignItems: 'center',
       gap: 6
     }
-  }, "Service ", /*#__PURE__*/React.createElement(Caret, {
+  }, t('Service'), " ", /*#__PURE__*/React.createElement(Caret, {
     open: openMenu === 'service'
   })), /*#__PURE__*/React.createElement("button", {
     onMouseEnter: () => setOpenMenu('over'),
@@ -839,7 +867,7 @@ function DesktopNav({
       alignItems: 'center',
       gap: 6
     }
-  }, "Over ", /*#__PURE__*/React.createElement(Caret, {
+  }, t('Over'), " ", /*#__PURE__*/React.createElement(Caret, {
     open: openMenu === 'over'
   })), /*#__PURE__*/React.createElement("span", {
     style: {
@@ -856,7 +884,7 @@ function DesktopNav({
       window.dispatchEvent(new CustomEvent('pl-offerte-open'));
       setOpenMenu(null);
     }
-  }, "Vraag een offerte aan"), /*#__PURE__*/React.createElement("button", {
+  }, t('Vraag een offerte aan')), /*#__PURE__*/React.createElement("button", {
     onClick: () => {
       onNav('contact');
       setOpenMenu(null);
@@ -883,7 +911,7 @@ function DesktopNav({
       e.currentTarget.style.background = 'none';
       e.currentTarget.style.color = 'var(--text-heading)';
     }
-  }, "Contact"), /*#__PURE__*/React.createElement(TaalWisselaar, {
+  }, t('Contact')), /*#__PURE__*/React.createElement(TaalWisselaar, {
     lang: lang,
     onLang: onLang,
     dark: true
@@ -916,7 +944,7 @@ function DesktopNav({
     style: {
       marginBottom: 10
     }
-  }, "Poorten op maat"), POORTEN.map(([key, label, desc, img, sub]) => {
+  }, t('Poorten op maat')), POORTEN.map(([key, label, desc, img, sub]) => {
     const on = hoverPoort === key;
     return /*#__PURE__*/React.createElement("button", {
       key: key,
@@ -947,7 +975,7 @@ function DesktopNav({
         color: on ? 'var(--text-heading)' : 'var(--stone-200)',
         transition: 'padding-left var(--dur) var(--ease-out), color var(--dur) var(--ease-out)'
       }
-    }, /*#__PURE__*/React.createElement("span", null, label, sub ? /*#__PURE__*/React.createElement("span", {
+    }, /*#__PURE__*/React.createElement("span", null, t(label), sub ? /*#__PURE__*/React.createElement("span", {
       style: {
         fontFamily: 'var(--font-sans)',
         fontSize: 13,
@@ -955,7 +983,7 @@ function DesktopNav({
         marginLeft: 9,
         whiteSpace: 'nowrap'
       }
-    }, sub) : null), /*#__PURE__*/React.createElement("span", {
+    }, t(sub)) : null), /*#__PURE__*/React.createElement("span", {
       style: {
         fontFamily: 'var(--font-sans)',
         fontSize: 13,
@@ -965,7 +993,7 @@ function DesktopNav({
         transition: 'opacity var(--dur) var(--ease-out)',
         whiteSpace: 'nowrap'
       }
-    }, "Bekijk ↗"));
+    }, t('Bekijk'), " ↗"));
   })), /*#__PURE__*/React.createElement("button", {
     onClick: () => {
       onNav(actPoort[0]);
@@ -1032,23 +1060,10 @@ function DesktopNav({
 }
 
 /* ---- Taalbanner voor versies in voorbereiding ---- */
-function TaalBanner({
-  lang
-}) {
-  if (lang === 'NL') return null;
-  return /*#__PURE__*/React.createElement("div", {
-    style: {
-      background: 'var(--bronze-500)',
-      color: 'var(--forest-950)',
-      fontFamily: 'var(--font-label)',
-      fontSize: 11,
-      fontWeight: 600,
-      letterSpacing: '0.1em',
-      textTransform: 'uppercase',
-      textAlign: 'center',
-      padding: '9px 20px'
-    }
-  }, "Deze taalversie is in voorbereiding · u bekijkt de Nederlandse versie");
+function TaalBanner() {
+  // De vertaling gebeurt nu rechtstreeks; niet vertaalde teksten vallen terug op
+  // het Nederlands. Geen aparte banner meer nodig.
+  return null;
 }
 
 /* ---- Vertrouwensbalk ---- */

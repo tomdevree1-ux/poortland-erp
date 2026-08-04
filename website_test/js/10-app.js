@@ -132,7 +132,14 @@ function App() {
   const [route, setRoute] = React.useState(startRoute.route);
   const [productKey, setProductKey] = React.useState(startRoute.productKey || 'houten');
   const [contactType, setContactType] = React.useState(null);
-  const [lang, setLang] = React.useState('NL');
+  const [lang, setLang] = React.useState(window.PL_TAAL || 'NL');
+  const kiesTaal = l => {
+    if (window.plZetTaal) window.plZetTaal(l);
+    setLang(l);
+  };
+  React.useEffect(() => {
+    if (window.plZetTaal) window.plZetTaal(lang);
+  }, []);
   const [lightbox, setLightbox] = React.useState(null);
   const scrollRef = React.useRef(null);
 
@@ -275,7 +282,7 @@ function App() {
     route: navRoute,
     onNav: onNav,
     lang: lang,
-    onLang: setLang
+    onLang: kiesTaal
   }), /*#__PURE__*/React.createElement("main", {
     key: routeKey,
     className: "pl-page",
@@ -283,7 +290,7 @@ function App() {
   }, Screen), /*#__PURE__*/React.createElement(Footer, {
     onNav: onNav,
     lang: lang,
-    onLang: setLang
+    onLang: kiesTaal
   }), /*#__PURE__*/React.createElement(window.OfferteModal, null), /*#__PURE__*/React.createElement(window.PoortAdviesModal, null), /*#__PURE__*/React.createElement(Lightbox, {
     src: lightbox && lightbox.src,
     alt: lightbox && lightbox.alt,
