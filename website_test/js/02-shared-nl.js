@@ -1105,7 +1105,7 @@ function ClaimBalk({
       lineHeight: 1.4,
       color: fg
     }
-  }, c))));
+  }, t(c)))));
 }
 
 /* ---- FAQ accordeon ---- */
@@ -1148,7 +1148,7 @@ function FAQ({
         color: head,
         lineHeight: 1.2
       }
-    }, q), /*#__PURE__*/React.createElement("span", {
+    }, t(q)), /*#__PURE__*/React.createElement("span", {
       "aria-hidden": "true",
       style: {
         color: 'var(--accent)',
@@ -1183,7 +1183,7 @@ function FAQ({
         flex: '1 1 320px',
         maxWidth: '52ch'
       }
-    }, a), /*#__PURE__*/React.createElement("button", {
+    }, t(a)), /*#__PURE__*/React.createElement("button", {
       type: "button",
       onClick: () => window.dispatchEvent(new CustomEvent('pl-offerte-open')),
       style: {
@@ -1204,7 +1204,7 @@ function FAQ({
         background: 'var(--accent)',
         color: '#fff'
       }
-    }, "Vraag een offerte aan ", /*#__PURE__*/React.createElement("span", {
+    }, t('Vraag een offerte aan'), " ", /*#__PURE__*/React.createElement("span", {
       "aria-hidden": "true"
     }, "↗"))) : /*#__PURE__*/React.createElement("p", {
       style: {
@@ -1215,7 +1215,7 @@ function FAQ({
         margin: '0 0 24px',
         maxWidth: '62ch'
       }
-    }, a)));
+    }, t(a))));
   }));
 }
 
@@ -1235,7 +1235,7 @@ function CTASectie({
     style: {
       marginBottom: 18
     }
-  }, "Bespreek uw project"), /*#__PURE__*/React.createElement("h2", {
+  }, t('Bespreek uw project')), /*#__PURE__*/React.createElement("h2", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
@@ -1246,7 +1246,7 @@ function CTASectie({
       lineHeight: 1.06,
       letterSpacing: '-0.01em'
     }
-  }, "Bespreek uw project met Poortland."), /*#__PURE__*/React.createElement("p", {
+  }, t('Bespreek uw project met Poortland.')), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 17,
@@ -1255,7 +1255,7 @@ function CTASectie({
       maxWidth: '46ch',
       margin: '0 auto 34px'
     }
-  }, "Wilt u een poort of overkapping dat past bij uw woning en jarenlang vertrouwen geeft. Plan een adviesgesprek of bezoek de showroom."), /*#__PURE__*/React.createElement("div", {
+  }, t('Wilt u een poort of overkapping dat past bij uw woning en jarenlang vertrouwen geeft. Plan een adviesgesprek of bezoek de showroom.')), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 16,
@@ -1267,13 +1267,13 @@ function CTASectie({
     size: "lg",
     arrow: true,
     onClick: () => onNav('contact')
-  }, "Plan een adviesgesprek"), /*#__PURE__*/React.createElement(SButton, {
+  }, t('Plan een adviesgesprek')), /*#__PURE__*/React.createElement(SButton, {
     variant: "secondary",
     size: "lg",
     dark: dark,
     arrow: true,
     onClick: () => window.dispatchEvent(new CustomEvent('pl-offerte-open'))
-  }, "Vraag uw offerte aan"))));
+  }, t('Vraag uw offerte aan')))));
 }
 
 /* ---- Footer ---- */
@@ -1460,7 +1460,7 @@ function SectieKop({
     style: {
       marginBottom: 16
     }
-  }, eyebrow), /*#__PURE__*/React.createElement("h2", {
+  }, t(eyebrow)), /*#__PURE__*/React.createElement("h2", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
@@ -1471,7 +1471,7 @@ function SectieKop({
       lineHeight: 1.08,
       maxWidth: align === 'left' ? max : undefined
     }
-  }, titel), intro && /*#__PURE__*/React.createElement("p", {
+  }, t(titel)), intro && /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 16.5,
@@ -1482,7 +1482,7 @@ function SectieKop({
       marginLeft: align === 'center' ? 'auto' : 0,
       marginRight: align === 'center' ? 'auto' : 0
     }
-  }, intro));
+  }, t(intro)));
 }
 
 /* ---- Doorlopende fotobanner (marquee) ---- */
