@@ -185,6 +185,18 @@ function App() {
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
   }, []);
+
+  // Canonical en og:url per pagina bijwerken. De head bevat één statische
+  // canonical naar de homepage; zonder deze stap zou elke subpagina zichzelf
+  // als kopie van de homepage aanmelden en zou Google alleen de homepage
+  // indexeren. Googlebot voert JavaScript uit en leest deze bijgewerkte waarde.
+  React.useEffect(() => {
+    const url = 'https://poortland.be' + padVoorRoute(route);
+    const can = document.querySelector('link[rel="canonical"]');
+    if (can) can.setAttribute('href', url);
+    const og = document.querySelector('meta[property="og:url"]');
+    if (og) og.setAttribute('content', url);
+  }, [route]);
   const navRoute = route;
   let Screen;
   switch (route) {
