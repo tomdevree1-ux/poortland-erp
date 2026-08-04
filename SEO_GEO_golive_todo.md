@@ -73,6 +73,47 @@ curl -s -o /dev/null -w "%{http_code}\n" -A "GPTBot" https://poortland.be/
 - Meten: in hoeveel antwoorden Poortland genoemd wordt en welke concurrenten wel.
 - Nulmeting vastleggen bij livegang, daarna maandelijks herhalen.
 
+## De feedbackloop (hoofdstuk 11) — wekelijks volhouden na livegang
+
+Een rapport toont cijfers en verandert niets; een loop draait rond. Het verschil
+zit in stap 5: een week later nakijken of de wijziging is doorgevoerd en wat ze
+opleverde. Alle gegevens zijn gratis (Search Console + analysepakket + eigen
+technische controle). Houd het klein: hoogstens drie acties per week.
+
+### De vijf stappen (elke week)
+1. **Meten** — zoekdata uit Search Console, gedrag uit het analysepakket, en een technische controle van de belangrijkste pagina's. Elke meting als momentopname bewaren.
+2. **Verklaren** — welke pagina bewoog, en welke wijziging ging daar 7 tot 14 dagen aan vooraf? Hiervoor dient het gebeurtenissenlogboek (zie hieronder).
+3. **Voorstellen** — hoogstens drie acties, elk met een reden. Niets te doen mag ook.
+4. **Wijzigen** — uitvoeren blijft mensenwerk, met een goedkeuringsstap. Niet automatisch publiceren.
+5. **Nakijken** — 7 dagen later de cijfers van de betrokken pagina naast die van ervoor leggen. Ook "geen effect" wordt genoteerd. Dit is de stap die iedereen overslaat.
+
+### Wat je meet, in drie lagen
+- Zichtbaarheid: vertoningen, klikken, klikfrequentie, gemiddelde positie, zoekopdrachten per pagina (Search Console).
+- Gedrag: sessies per kanaal, paginaweergaven, interactie, doelbereik (analysepakket).
+- Techniek en GEO: HTTPS, titel/description, één H1, JSON-LD, laadgedrag, AI-crawlertoegang, bereikbaarheid (eigen controlescript, ~200 regels — eenmalig te bouwen).
+
+### Actielijst met vier statussen (één tekstbestand volstaat)
+- **open**: voorgesteld, nog niet uitgevoerd — vervalt na 3 weken.
+- **uitgevoerd**: staat live met datum — na 7 dagen nameten.
+- **gemeten**: effect nagekeken en genoteerd — blijft als geschiedenis, ook bij geen effect.
+- **vervallen**: 3 weken niet opgepakt of achterhaald — zichtbaar afsluiten, niet stil schrappen.
+
+### Ritme
+- **Wekelijks** (± halfuur): stap 0 = vorige acties nakijken, dan meten en max. 3 nieuwe acties.
+- **Maandelijks**: citatietest (zie punt 6 hierboven) + concurrentieblok (Google Ads Transparency Center, Meta Ad Library, Google Trends, 1- en 2-sterrenreviews van concurrenten).
+- **Per kwartaal**: externe profielen naast de site leggen (naam, adres, telefoon gelijk trekken).
+- **Voordeel voor Poortland**: het gebeurtenissenlogboek is er al — de Git-historie van deze repo is precies dat. Elke wijziging staat met datum vast.
+
+### Vier regels die de loop eerlijk houden
+- Signaalsterkte gaat voor actiedrang: bij weinig verkeer is weekruis geen signaal. Technische fouten wel meteen herstellen.
+- Alleen handelen bij volledige zekerheid; twijfel wordt gerapporteerd, niet uitgevoerd.
+- Elke ronde begint bij de actielijst, niet bij de nieuwe cijfers.
+- De loop zelf maandelijks vereenvoudigen: wat nooit tot een handeling leidde, mag weg.
+
+Uitbesteden loont alleen bij honderden pagina's, als er geen ontwikkelaar in huis
+is, of als niemand het wekelijkse ritme volhoudt. Nooit uitbesteden: de beslissing
+wat gemeten wordt en welke drempel een handeling rechtvaardigt.
+
 ## Groter aandachtspunt: JavaScript-rendering en per-taal URLs
 
 De marketingsite is een client-side React-app: de server levert een lege schil
