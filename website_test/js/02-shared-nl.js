@@ -1334,7 +1334,7 @@ function Footer({
       lineHeight: 1.7,
       margin: '0 0 20px'
     }
-  }, "Handgemaakte toegangspoorten, overkappingen en automatisatie op maat. Ontworpen, gemaakt en geplaatst in België."), /*#__PURE__*/React.createElement(TaalWisselaar, {
+  }, t('Handgemaakte toegangspoorten, overkappingen en automatisatie op maat. Ontworpen, gemaakt en geplaatst in België.')), /*#__PURE__*/React.createElement(TaalWisselaar, {
     lang: lang,
     onLang: onLang,
     dark: true
@@ -1359,7 +1359,7 @@ function Footer({
       fontSize: 11.5,
       color: 'var(--text-on-dark-faint)'
     }
-  }, /*#__PURE__*/React.createElement("span", null, "© 2026 Poortland — Handgemaakt in België sinds 1999"), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("span", null, t('© 2026 Poortland — Handgemaakt in België sinds 1999')), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 22,
@@ -1375,7 +1375,7 @@ function Footer({
       fontFamily: 'inherit',
       fontSize: 'inherit'
     }
-  }, "Algemene voorwaarden"), /*#__PURE__*/React.createElement("button", {
+  }, t('Algemene voorwaarden')), /*#__PURE__*/React.createElement("button", {
     onClick: () => onNav('privacy'),
     style: {
       background: 'none',
@@ -1385,7 +1385,7 @@ function Footer({
       fontFamily: 'inherit',
       fontSize: 'inherit'
     }
-  }, "Privacybeleid"), /*#__PURE__*/React.createElement("button", {
+  }, t('Privacybeleid')), /*#__PURE__*/React.createElement("button", {
     onClick: () => onNav('cookie'),
     style: {
       background: 'none',
@@ -1395,7 +1395,7 @@ function Footer({
       fontFamily: 'inherit',
       fontSize: 'inherit'
     }
-  }, "Cookiebeleid"), /*#__PURE__*/React.createElement("span", null, "BTW BE 0464 838 351")))));
+  }, t('Cookiebeleid')), /*#__PURE__*/React.createElement("span", null, "BTW BE 0464 838 351")))));
 }
 function FooterKol({
   title,
@@ -1407,7 +1407,7 @@ function FooterKol({
     style: {
       marginBottom: 16
     }
-  }, title), /*#__PURE__*/React.createElement("ul", {
+  }, t(title)), /*#__PURE__*/React.createElement("ul", {
     style: {
       listStyle: 'none',
       margin: 0,
@@ -1437,7 +1437,7 @@ function FooterKol({
     onMouseLeave: e => {
       e.currentTarget.style.color = 'var(--stone-300)';
     }
-  }, label)))));
+  }, typeof label === 'string' ? t(label) : label)))));
 }
 
 /* ---- Sectiekop ---- */

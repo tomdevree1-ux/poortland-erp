@@ -33,7 +33,15 @@ window.PL_I18N = {
     'Ons atelier in Mechelen': 'Notre atelier à Malines',
     'Onze waarborgen': 'Nos garanties',
     'Veelgestelde vragen': 'Questions fréquentes',
-    '(staal, metaal en aluminium)': '(acier, métal et aluminium)'
+    '(staal, metaal en aluminium)': '(acier, métal et aluminium)',
+    'Service en info': 'Service et infos',
+    'Atelier en showroom': 'Atelier et showroom',
+    'Open op afspraak': 'Ouvert sur rendez-vous',
+    'Handgemaakte toegangspoorten, overkappingen en automatisatie op maat. Ontworpen, gemaakt en geplaatst in België.': 'Portails, abris et automatisation sur mesure et faits main. Conçus, fabriqués et posés en Belgique.',
+    '© 2026 Poortland — Handgemaakt in België sinds 1999': '© 2026 Poortland — Fait main en Belgique depuis 1999',
+    'Algemene voorwaarden': 'Conditions générales',
+    'Privacybeleid': 'Politique de confidentialité',
+    'Cookiebeleid': 'Politique en matière de cookies'
   },
   EN: {
     'Poorten': 'Gates',
@@ -62,7 +70,15 @@ window.PL_I18N = {
     'Ons atelier in Mechelen': 'Our workshop in Mechelen',
     'Onze waarborgen': 'Our guarantees',
     'Veelgestelde vragen': 'Frequently asked questions',
-    '(staal, metaal en aluminium)': '(steel, metal and aluminium)'
+    '(staal, metaal en aluminium)': '(steel, metal and aluminium)',
+    'Service en info': 'Service and info',
+    'Atelier en showroom': 'Workshop and showroom',
+    'Open op afspraak': 'Open by appointment',
+    'Handgemaakte toegangspoorten, overkappingen en automatisatie op maat. Ontworpen, gemaakt en geplaatst in België.': 'Handmade access gates, canopies and automation, made to measure. Designed, made and installed in Belgium.',
+    '© 2026 Poortland — Handgemaakt in België sinds 1999': '© 2026 Poortland — Handmade in Belgium since 1999',
+    'Algemene voorwaarden': 'Terms and conditions',
+    'Privacybeleid': 'Privacy policy',
+    'Cookiebeleid': 'Cookie policy'
   },
   DE: {
     'Poorten': 'Tore',
@@ -91,7 +107,15 @@ window.PL_I18N = {
     'Ons atelier in Mechelen': 'Unsere Werkstatt in Mechelen',
     'Onze waarborgen': 'Unsere Garantien',
     'Veelgestelde vragen': 'Häufige Fragen',
-    '(staal, metaal en aluminium)': '(Stahl, Metall und Aluminium)'
+    '(staal, metaal en aluminium)': '(Stahl, Metall und Aluminium)',
+    'Service en info': 'Service und Infos',
+    'Atelier en showroom': 'Werkstatt und Showroom',
+    'Open op afspraak': 'Geöffnet nach Vereinbarung',
+    'Handgemaakte toegangspoorten, overkappingen en automatisatie op maat. Ontworpen, gemaakt en geplaatst in België.': 'Handgefertigte Tore, Überdachungen und Automatisierung nach Maß. Entworfen, gefertigt und montiert in Belgien.',
+    '© 2026 Poortland — Handgemaakt in België sinds 1999': '© 2026 Poortland — Handgefertigt in Belgien seit 1999',
+    'Algemene voorwaarden': 'Allgemeine Geschäftsbedingungen',
+    'Privacybeleid': 'Datenschutzerklärung',
+    'Cookiebeleid': 'Cookie-Richtlinie'
   }
 };
 
