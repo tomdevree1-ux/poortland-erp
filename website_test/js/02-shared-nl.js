@@ -5895,7 +5895,7 @@ function OverkappingenNL({
   }];
   const traject = ['Een goede overkapping begint met de juiste keuzes. Hoe groot mag de constructie worden? Welke dakbedekking past bij de gewenste lichtinval? Is een open terras voldoende, of wilt u ook bescherming tegen wind?', 'Poortland bekijkt samen met u de mogelijkheden, meet de situatie nauwkeurig op en werkt een voorstel uit dat past bij uw woning en budget. Vervolgens zorgt ons eigen team voor een zorgvuldige plaatsing en een nette oplevering.'];
   const keuzes = [['Aanbouw of vrijstaand', 'Laat de overkapping aansluiten op uw gevel of kies voor een vrijstaande constructie elders in de tuin.'], ['Glas of polycarbonaat', 'Kies de dakbedekking op basis van de gewenste uitstraling, lichtinval en het gekozen model.'], ['Open of afsluitbaar', 'Voeg glazen schuifwanden, zijwanden of screens toe voor meer beschutting, privacy en comfort.'], ['Verlichting', "Geïntegreerde ledstrips of inbouwspots zorgen 's avonds voor functioneel en sfeervol licht."]];
-  const alinea = (t, i, donker) => /*#__PURE__*/React.createElement("p", {
+  const alinea = (tekst, i, donker) => /*#__PURE__*/React.createElement("p", {
     key: i,
     style: {
       fontFamily: 'var(--font-sans)',
@@ -5904,7 +5904,7 @@ function OverkappingenNL({
       color: donker ? 'var(--stone-300)' : 'var(--text-body)',
       margin: i ? '14px 0 0' : 0
     }
-  }, t);
+  }, t(tekst));
   const fotoBlok = (src, label) => /*#__PURE__*/React.createElement("div", {
     style: {
       position: 'relative',
@@ -5938,7 +5938,7 @@ function OverkappingenNL({
       textTransform: 'uppercase',
       color: 'var(--text-heading)'
     }
-  }, label));
+  }, t(label)));
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-ground)',
@@ -5960,7 +5960,7 @@ function OverkappingenNL({
     style: {
       marginBottom: 20
     }
-  }, "Aluminium overkappingen"), /*#__PURE__*/React.createElement("h1", {
+  }, t('Aluminium overkappingen')), /*#__PURE__*/React.createElement("h1", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
@@ -5970,7 +5970,7 @@ function OverkappingenNL({
       color: 'var(--stone-100)',
       margin: 0
     }
-  }, "Meer buitenleven, in elk seizoen"), /*#__PURE__*/React.createElement("p", {
+  }, t('Meer buitenleven, in elk seizoen')), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 18.5,
@@ -5979,7 +5979,7 @@ function OverkappingenNL({
       maxWidth: '46ch',
       margin: '24px 0 32px'
     }
-  }, "Met een aluminium overkapping geniet u langer van uw terras. Poortland stemt het ontwerp, de afmetingen en de afwerking zorgvuldig af op uw woning en uw manier van leven."), /*#__PURE__*/React.createElement("div", {
+  }, t('Met een aluminium overkapping geniet u langer van uw terras. Poortland stemt het ontwerp, de afmetingen en de afwerking zorgvuldig af op uw woning en uw manier van leven.')), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 16,
@@ -5989,20 +5989,20 @@ function OverkappingenNL({
     variant: "primary",
     arrow: true,
     onClick: () => window.dispatchEvent(new CustomEvent('pl-offerte-open'))
-  }, "Vraag een offerte aan"), /*#__PURE__*/React.createElement(SButton, {
+  }, t('Vraag een offerte aan')), /*#__PURE__*/React.createElement(SButton, {
     variant: "ghost",
     dark: true,
     arrow: true,
     onClick: () => onNav('contact')
-  }, "Plan een adviesgesprek")), /*#__PURE__*/React.createElement("div", {
+  }, t('Plan een adviesgesprek'))), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 26,
       flexWrap: 'wrap',
       marginTop: 30
     }
-  }, ['Aluminium maatwerk', 'Eigen plaatsing', 'Advies en opmeting'].map(t => /*#__PURE__*/React.createElement("div", {
-    key: t,
+  }, ['Aluminium maatwerk', 'Eigen plaatsing', 'Advies en opmeting'].map(tr => /*#__PURE__*/React.createElement("div", {
+    key: tr,
     style: {
       display: 'flex',
       alignItems: 'center',
@@ -6019,7 +6019,7 @@ function OverkappingenNL({
       fontSize: 14,
       color: 'var(--stone-200)'
     }
-  }, t))))), /*#__PURE__*/React.createElement(Reveal, {
+  }, t(tr)))))), /*#__PURE__*/React.createElement(Reveal, {
     delay: 80
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -6051,7 +6051,7 @@ function OverkappingenNL({
       textTransform: 'uppercase',
       color: 'var(--text-heading)'
     }
-  }, "Terrasoverkapping op maat"))))), /*#__PURE__*/React.createElement("section", {
+  }, t('Terrasoverkapping op maat')))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper-2)',
       borderTop: '1px solid var(--line-on-light-soft)',
@@ -6094,7 +6094,7 @@ function OverkappingenNL({
       color: 'var(--text-muted)',
       marginTop: 10
     }
-  }, l)))))), /*#__PURE__*/React.createElement("div", {
+  }, t(l))))))), /*#__PURE__*/React.createElement("div", {
     ref: sectieRef
   }, secties.map((s, i) => {
     const donker = i % 2 === 1;
@@ -6103,7 +6103,7 @@ function OverkappingenNL({
       style: {
         marginBottom: 14
       }
-    }, s.eyebrow), /*#__PURE__*/React.createElement("h2", {
+    }, t(s.eyebrow)), /*#__PURE__*/React.createElement("h2", {
       style: {
         fontFamily: 'var(--font-display)',
         fontWeight: 500,
@@ -6113,7 +6113,7 @@ function OverkappingenNL({
         color: donker ? 'var(--stone-100)' : 'var(--text-heading)',
         margin: '0 0 16px'
       }
-    }, s.h2), s.alinea.map((t, j) => alinea(t, j, donker)), s.lijst && /*#__PURE__*/React.createElement("ul", {
+    }, t(s.h2)), s.alinea.map((al, j) => alinea(al, j, donker)), s.lijst && /*#__PURE__*/React.createElement("ul", {
       style: {
         margin: '16px 0 0',
         padding: 0,
@@ -6138,7 +6138,7 @@ function OverkappingenNL({
         color: 'var(--accent)',
         flex: '0 0 auto'
       }
-    }, "—"), /*#__PURE__*/React.createElement("span", null, li)))), s.slot && alinea(s.slot, 1, donker));
+    }, "—"), /*#__PURE__*/React.createElement("span", null, t(li))))), s.slot && alinea(s.slot, 1, donker));
     return /*#__PURE__*/React.createElement("section", {
       key: i,
       style: {
@@ -6177,7 +6177,7 @@ function OverkappingenNL({
     style: {
       marginTop: 20
     }
-  }, traject.map((t, j) => /*#__PURE__*/React.createElement("p", {
+  }, traject.map((txt, j) => /*#__PURE__*/React.createElement("p", {
     key: j,
     style: {
       fontFamily: 'var(--font-sans)',
@@ -6187,7 +6187,7 @@ function OverkappingenNL({
       margin: j ? '14px auto 0' : '0 auto',
       maxWidth: '60ch'
     }
-  }, t)))))), /*#__PURE__*/React.createElement("section", {
+  }, t(txt))))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--forest-900)',
       padding: '90px 44px',
@@ -6230,14 +6230,14 @@ function OverkappingenNL({
       marginBottom: 9,
       lineHeight: 1.15
     }
-  }, titel), /*#__PURE__*/React.createElement("div", {
+  }, t(titel)), /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 14.5,
       lineHeight: 1.65,
       color: 'var(--text-on-dark-muted)'
     }
-  }, tekst))))))), /*#__PURE__*/React.createElement("section", {
+  }, t(tekst)))))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-deep)',
       padding: '96px 44px',
@@ -6248,7 +6248,7 @@ function OverkappingenNL({
     style: {
       marginBottom: 18
     }
-  }, "Overkappingen op maat"), /*#__PURE__*/React.createElement("h2", {
+  }, t('Overkappingen op maat')), /*#__PURE__*/React.createElement("h2", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
@@ -6259,7 +6259,7 @@ function OverkappingenNL({
       lineHeight: 1.06,
       letterSpacing: '-0.01em'
     }
-  }, "Maak van uw terras een plek voor elk seizoen"), /*#__PURE__*/React.createElement("p", {
+  }, t('Maak van uw terras een plek voor elk seizoen')), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 17,
@@ -6268,7 +6268,7 @@ function OverkappingenNL({
       maxWidth: '52ch',
       margin: '0 auto 34px'
     }
-  }, "Benieuwd welke overkapping het best bij uw woning past? Bespreek uw wensen met Poortland. We begeleiden u van de eerste ideeën en de opmeting tot de uiteindelijke plaatsing."), /*#__PURE__*/React.createElement("div", {
+  }, t('Benieuwd welke overkapping het best bij uw woning past? Bespreek uw wensen met Poortland. We begeleiden u van de eerste ideeën en de opmeting tot de uiteindelijke plaatsing.')), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 16,
@@ -6280,13 +6280,13 @@ function OverkappingenNL({
     size: "lg",
     arrow: true,
     onClick: () => onNav('contact')
-  }, "Plan een adviesgesprek"), /*#__PURE__*/React.createElement(SButton, {
+  }, t('Plan een adviesgesprek')), /*#__PURE__*/React.createElement(SButton, {
     variant: "secondary",
     size: "lg",
     dark: true,
     arrow: true,
     onClick: offerte
-  }, "Vraag uw offerte aan")))));
+  }, t('Vraag uw offerte aan'))))));
 }
 
 /* ---- Garantie en kwaliteit ---- */
@@ -6325,7 +6325,7 @@ function GarantieNL({
     style: {
       marginBottom: 18
     }
-  }, "Garantie en service"), /*#__PURE__*/React.createElement("h1", {
+  }, t('Garantie en service')), /*#__PURE__*/React.createElement("h1", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
@@ -6335,7 +6335,7 @@ function GarantieNL({
       color: 'var(--stone-100)',
       margin: 0
     }
-  }, "Garantie en kwaliteit"), /*#__PURE__*/React.createElement("p", {
+  }, t('Garantie en kwaliteit')), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 18,
@@ -6344,7 +6344,7 @@ function GarantieNL({
       maxWidth: '58ch',
       margin: '22px 0 32px'
     }
-  }, "Bij Poortland kiezen we voor duidelijke garanties, duurzame materialen en een professionele plaatsing. Zo weet u vooraf precies waarop u kunt rekenen."), /*#__PURE__*/React.createElement("div", {
+  }, t('Bij Poortland kiezen we voor duidelijke garanties, duurzame materialen en een professionele plaatsing. Zo weet u vooraf precies waarop u kunt rekenen.')), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 16,
@@ -6354,12 +6354,12 @@ function GarantieNL({
     variant: "primary",
     arrow: true,
     onClick: () => window.dispatchEvent(new CustomEvent('pl-offerte-open'))
-  }, "Vraag een offerte aan"), /*#__PURE__*/React.createElement(SButton, {
+  }, t('Vraag een offerte aan')), /*#__PURE__*/React.createElement(SButton, {
     variant: "ghost",
     dark: true,
     arrow: true,
     onClick: () => onNav('voorwaarden')
-  }, "Bekijk verkoopsvoorwaarden"))))), /*#__PURE__*/React.createElement("section", {
+  }, t('Bekijk verkoopsvoorwaarden')))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper)',
       padding: '90px 44px'
@@ -6398,13 +6398,13 @@ function GarantieNL({
       color: 'var(--text-muted)',
       marginTop: 10
     }
-  }, "jaar garantie"))), /*#__PURE__*/React.createElement(Reveal, {
+  }, t('jaar garantie')))), /*#__PURE__*/React.createElement(Reveal, {
     delay: 80
   }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(SEyebrow, {
     style: {
       marginBottom: 12
     }
-  }, "Lakkwaliteit en roestvorming"), /*#__PURE__*/React.createElement("h2", {
+  }, t('Lakkwaliteit en roestvorming')), /*#__PURE__*/React.createElement("h2", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
@@ -6414,7 +6414,7 @@ function GarantieNL({
       color: 'var(--text-heading)',
       margin: '0 0 16px'
     }
-  }, "10 jaar garantie op lakkwaliteit en roestvorming"), /*#__PURE__*/React.createElement("p", {
+  }, t('10 jaar garantie op lakkwaliteit en roestvorming')), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 16.5,
@@ -6422,7 +6422,7 @@ function GarantieNL({
       color: 'var(--text-body)',
       margin: 0
     }
-  }, "Op de lakkwaliteit van onze poorten en overkappingen bieden wij een effectieve garantie van 10 jaar die haar volledige waarde behoudt. De waarde van de garantie vermindert tijdens deze periode dus niet jaarlijks."), /*#__PURE__*/React.createElement("p", {
+  }, t('Op de lakkwaliteit van onze poorten en overkappingen bieden wij een effectieve garantie van 10 jaar die haar volledige waarde behoudt. De waarde van de garantie vermindert tijdens deze periode dus niet jaarlijks.')), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 16.5,
@@ -6430,7 +6430,7 @@ function GarantieNL({
       color: 'var(--text-body)',
       margin: '14px 0 0'
     }
-  }, "Wij vinden transparantie belangrijk. Daarom raden we aan om bij de keuze van een leverancier niet alleen naar de duur van de garantie te kijken, maar ook naar de concrete voorwaarden, de ervaring van het bedrijf en de continuïteit van de onderneming."))))), /*#__PURE__*/React.createElement("section", {
+  }, t('Wij vinden transparantie belangrijk. Daarom raden we aan om bij de keuze van een leverancier niet alleen naar de duur van de garantie te kijken, maar ook naar de concrete voorwaarden, de ervaring van het bedrijf en de continuïteit van de onderneming.')))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper-2)',
       padding: '90px 44px',
@@ -6445,7 +6445,7 @@ function GarantieNL({
     style: {
       marginBottom: 12
     }
-  }, "Roestbescherming"), /*#__PURE__*/React.createElement("h2", {
+  }, t('Roestbescherming')), /*#__PURE__*/React.createElement("h2", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
@@ -6455,7 +6455,7 @@ function GarantieNL({
       color: 'var(--text-heading)',
       margin: '0 0 16px'
     }
-  }, "Anti corrosie behandeling"), /*#__PURE__*/React.createElement("p", {
+  }, t('Anti corrosie behandeling')), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 16.5,
@@ -6464,7 +6464,7 @@ function GarantieNL({
       maxWidth: '68ch',
       margin: 0
     }
-  }, "Om een lange levensduur te verzekeren worden alle overkappingen en poorten van Poortland tegen roest behandeld. Hiervoor gebruiken wij twee technieken, namelijk thermisch verzinken en metalliseren. Daarna worden de overkappingen en poorten met twee lagen gepoederlakt.")), /*#__PURE__*/React.createElement(Reveal, {
+  }, t('Om een lange levensduur te verzekeren worden alle overkappingen en poorten van Poortland tegen roest behandeld. Hiervoor gebruiken wij twee technieken, namelijk thermisch verzinken en metalliseren. Daarna worden de overkappingen en poorten met twee lagen gepoederlakt.'))), /*#__PURE__*/React.createElement(Reveal, {
     delay: 80
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -6497,7 +6497,7 @@ function GarantieNL({
       background: tab === i ? 'var(--surface-card)' : 'transparent',
       color: tab === i ? 'var(--text-heading)' : 'var(--text-muted)'
     }
-  }, c.titel))), /*#__PURE__*/React.createElement("div", {
+  }, t(c.titel)))), /*#__PURE__*/React.createElement("div", {
     role: "tabpanel",
     style: {
       background: 'var(--surface-card)',
@@ -6522,7 +6522,7 @@ function GarantieNL({
       margin: '0 0 14px',
       lineHeight: 1.2
     }
-  }, corrosie[tab].titel), /*#__PURE__*/React.createElement("p", {
+  }, t(corrosie[tab].titel)), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 15.5,
@@ -6530,7 +6530,7 @@ function GarantieNL({
       color: 'var(--text-body)',
       margin: 0
     }
-  }, corrosie[tab].tekst)), /*#__PURE__*/React.createElement("div", {
+  }, t(corrosie[tab].tekst))), /*#__PURE__*/React.createElement("div", {
     style: {
       position: 'relative',
       aspectRatio: '4 / 3',
@@ -6553,7 +6553,7 @@ function GarantieNL({
       padding: '0 16px',
       textAlign: 'center'
     }
-  }, "Foto ", corrosie[tab].titel.toLowerCase()), /*#__PURE__*/React.createElement("img", {
+  }, t('Foto'), " ", t(corrosie[tab].titel).toLowerCase()), /*#__PURE__*/React.createElement("img", {
     src: corrosie[tab].foto,
     alt: corrosie[tab].titel,
     loading: "lazy",
@@ -6611,7 +6611,7 @@ function GarantieNL({
       color: 'var(--accent)',
       lineHeight: 1
     }
-  }, jaar), /*#__PURE__*/React.createElement("div", {
+  }, t(jaar)), /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 14.5,
@@ -6619,7 +6619,7 @@ function GarantieNL({
       color: 'var(--text-on-dark-muted)',
       marginTop: 10
     }
-  }, wat))))), /*#__PURE__*/React.createElement(Reveal, {
+  }, t(wat)))))), /*#__PURE__*/React.createElement(Reveal, {
     delay: 80
   }, /*#__PURE__*/React.createElement("p", {
     style: {
@@ -6631,7 +6631,7 @@ function GarantieNL({
       maxWidth: '60ch',
       margin: '30px auto 0'
     }
-  }, "Daarnaast kunt u kiezen uit verschillende onderhoudscontracten, afgestemd op uw installatie en gebruik.")))), /*#__PURE__*/React.createElement("section", {
+  }, t('Daarnaast kunt u kiezen uit verschillende onderhoudscontracten, afgestemd op uw installatie en gebruik.'))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper)',
       padding: '90px 44px'
@@ -6673,7 +6673,7 @@ function GarantieNL({
       margin: '0 0 10px',
       lineHeight: 1.2
     }
-  }, titel), /*#__PURE__*/React.createElement("p", {
+  }, t(titel)), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 15,
@@ -6681,7 +6681,7 @@ function GarantieNL({
       color: 'var(--text-muted)',
       margin: 0
     }
-  }, tekst))))))), /*#__PURE__*/React.createElement("section", {
+  }, t(tekst)))))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-deep)',
       padding: '90px 44px',
@@ -6692,7 +6692,7 @@ function GarantieNL({
     style: {
       marginBottom: 18
     }
-  }, "Verkoopsvoorwaarden"), /*#__PURE__*/React.createElement("h2", {
+  }, t('Verkoopsvoorwaarden')), /*#__PURE__*/React.createElement("h2", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
@@ -6703,7 +6703,7 @@ function GarantieNL({
       lineHeight: 1.08,
       letterSpacing: '-0.01em'
     }
-  }, "De volledige voorwaarden op een rij"), /*#__PURE__*/React.createElement("p", {
+  }, t('De volledige voorwaarden op een rij')), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 17,
@@ -6712,12 +6712,12 @@ function GarantieNL({
       maxWidth: '56ch',
       margin: '0 auto 32px'
     }
-  }, "De volledige garantievoorwaarden en verkoopsvoorwaarden vindt u terug in onze algemene verkoopsvoorwaarden."), /*#__PURE__*/React.createElement(SButton, {
+  }, t('De volledige garantievoorwaarden en verkoopsvoorwaarden vindt u terug in onze algemene verkoopsvoorwaarden.')), /*#__PURE__*/React.createElement(SButton, {
     variant: "primary",
     size: "lg",
     arrow: true,
     onClick: () => onNav('voorwaarden')
-  }, "Bekijk onze verkoopsvoorwaarden"))));
+  }, t('Bekijk onze verkoopsvoorwaarden')))));
 }
 
 /* ---- Algemene voorwaarden (verkoopsvoorwaarden 2022) ---- */
@@ -7794,7 +7794,7 @@ function AutomatiseringNL({
       color: 'var(--accent)',
       marginBottom: 12
     }
-  }, titel), /*#__PURE__*/React.createElement("div", {
+  }, t(titel)), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       flexWrap: 'wrap',
@@ -7839,7 +7839,7 @@ function AutomatiseringNL({
       padding: '0 16px',
       textAlign: 'center'
     }
-  }, alt), /*#__PURE__*/React.createElement("img", {
+  }, t(alt)), /*#__PURE__*/React.createElement("img", {
     src: src,
     alt: alt,
     loading: "lazy",
@@ -7871,7 +7871,7 @@ function AutomatiseringNL({
     style: {
       marginBottom: 20
     }
-  }, "Automatisering"), /*#__PURE__*/React.createElement("h1", {
+  }, t('Automatisering')), /*#__PURE__*/React.createElement("h1", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
@@ -7881,7 +7881,7 @@ function AutomatiseringNL({
       color: 'var(--stone-100)',
       margin: 0
     }
-  }, "Automatisering van poorten"), /*#__PURE__*/React.createElement("p", {
+  }, t('Automatisering van poorten')), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 18,
@@ -7890,7 +7890,7 @@ function AutomatiseringNL({
       maxWidth: '48ch',
       margin: '24px 0 32px'
     }
-  }, "Open en sluit uw poort comfortabel met een druk op de knop of op afstand. Poortland automatiseert nieuwe en bestaande poorten."), /*#__PURE__*/React.createElement("div", {
+  }, t('Open en sluit uw poort comfortabel met een druk op de knop of op afstand. Poortland automatiseert nieuwe en bestaande poorten.')), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 16,
@@ -7901,12 +7901,12 @@ function AutomatiseringNL({
     arrow: true,
     as: "button",
     onClick: offerte
-  }, "Vraag een offerte aan"), /*#__PURE__*/React.createElement(SButton, {
+  }, t('Vraag een offerte aan')), /*#__PURE__*/React.createElement(SButton, {
     variant: "ghost",
     dark: true,
     arrow: true,
     onClick: () => onNav('onderhoud')
-  }, "Plan onderhoud"))))), /*#__PURE__*/React.createElement("section", {
+  }, t('Plan onderhoud')))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper)',
       padding: '64px 44px 20px'
@@ -7925,7 +7925,7 @@ function AutomatiseringNL({
       margin: 0,
       maxWidth: '72ch'
     }
-  }, "Poortland beschikt over twee vakkundige techniekers niveau A2 elektromechanica die uw poorten voorzien van automatische opening en sluiting op afstand, voor draaipoorten, schuifpoorten en garagepoorten. Zij installeren ook hoogwaardige installaties voor parlofonie en videofonie. Poortland werkt uitsluitend met kwalitatieve materialen die een lange levensduur garanderen, omdat een geautomatiseerde poort uw comfort hoort te verhogen. Ook het automatiseren van garagepoorten behoort tot het werkterrein van onze techniekers. Hieronder een overzicht van onze samenwerking met verschillende fabrikanten.")))), /*#__PURE__*/React.createElement("section", {
+  }, t('Poortland beschikt over twee vakkundige techniekers niveau A2 elektromechanica die uw poorten voorzien van automatische opening en sluiting op afstand, voor draaipoorten, schuifpoorten en garagepoorten. Zij installeren ook hoogwaardige installaties voor parlofonie en videofonie. Poortland werkt uitsluitend met kwalitatieve materialen die een lange levensduur garanderen, omdat een geautomatiseerde poort uw comfort hoort te verhogen. Ook het automatiseren van garagepoorten behoort tot het werkterrein van onze techniekers. Hieronder een overzicht van onze samenwerking met verschillende fabrikanten.'))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper)',
       padding: '40px 44px'
@@ -8008,7 +8008,7 @@ function OnderhoudNL({
       fontWeight: 600,
       color: 'var(--text-heading)'
     }
-  }, titel), /*#__PURE__*/React.createElement("div", {
+  }, t(titel)), /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 14.5,
@@ -8016,7 +8016,7 @@ function OnderhoudNL({
       color: 'var(--text-muted)',
       marginTop: 5
     }
-  }, tekst));
+  }, t(tekst)));
   const Foto = ({
     src,
     alt
@@ -8044,7 +8044,7 @@ function OnderhoudNL({
       padding: '0 16px',
       textAlign: 'center'
     }
-  }, alt), /*#__PURE__*/React.createElement("img", {
+  }, t(alt)), /*#__PURE__*/React.createElement("img", {
     src: src,
     alt: alt,
     loading: "lazy",
@@ -8076,7 +8076,7 @@ function OnderhoudNL({
     style: {
       marginBottom: 20
     }
-  }, "Onderhoud"), /*#__PURE__*/React.createElement("h1", {
+  }, t('Onderhoud')), /*#__PURE__*/React.createElement("h1", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
@@ -8086,7 +8086,7 @@ function OnderhoudNL({
       color: 'var(--stone-100)',
       margin: 0
     }
-  }, "Onderhoud van poorten"), /*#__PURE__*/React.createElement("p", {
+  }, t('Onderhoud van poorten')), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 18,
@@ -8095,7 +8095,7 @@ function OnderhoudNL({
       maxWidth: '48ch',
       margin: '24px 0 32px'
     }
-  }, "Een poort die dagelijks opengaat verdient af en toe een nazicht. Met regelmatig onderhoud blijft ze veilig, soepel en betrouwbaar, jaar na jaar."), /*#__PURE__*/React.createElement("div", {
+  }, t('Een poort die dagelijks opengaat verdient af en toe een nazicht. Met regelmatig onderhoud blijft ze veilig, soepel en betrouwbaar, jaar na jaar.')), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 16,
@@ -8106,12 +8106,12 @@ function OnderhoudNL({
     arrow: true,
     as: "button",
     onClick: offerte
-  }, "Vraag onderhoud aan"), /*#__PURE__*/React.createElement(SButton, {
+  }, t('Vraag onderhoud aan')), /*#__PURE__*/React.createElement(SButton, {
     variant: "ghost",
     dark: true,
     arrow: true,
     onClick: () => onNav('automatisering')
-  }, "Automatiseer uw poort"))))), /*#__PURE__*/React.createElement("section", {
+  }, t('Automatiseer uw poort')))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper)',
       padding: '64px 44px 20px'
@@ -8130,7 +8130,7 @@ function OnderhoudNL({
       margin: 0,
       maxWidth: '72ch'
     }
-  }, "Poortland heeft een eigen dienst na verkoop met vakkundige techniekers. Wij onderhouden en herstellen zowel automatische als handbediende poorten, ook wanneer ze niet door ons geplaatst zijn. Bij een nazicht controleren wij de volledige installatie, van de motor tot de veiligheidsdetectie, en stellen wij bij waar nodig. Zo verlengt u de levensduur van uw poort en voorkomt u onverwachte storingen.")))), /*#__PURE__*/React.createElement("section", {
+  }, t('Poortland heeft een eigen dienst na verkoop met vakkundige techniekers. Wij onderhouden en herstellen zowel automatische als handbediende poorten, ook wanneer ze niet door ons geplaatst zijn. Bij een nazicht controleren wij de volledige installatie, van de motor tot de veiligheidsdetectie, en stellen wij bij waar nodig. Zo verlengt u de levensduur van uw poort en voorkomt u onverwachte storingen.'))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper)',
       padding: '20px 44px 20px'
@@ -8162,7 +8162,7 @@ function OnderhoudNL({
       lineHeight: 1,
       color: 'var(--accent)'
     }
-  }, cijfer), /*#__PURE__*/React.createElement("div", {
+  }, t(cijfer)), /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 15.5,
@@ -8170,7 +8170,7 @@ function OnderhoudNL({
       color: 'var(--text-heading)',
       marginTop: 12
     }
-  }, label), /*#__PURE__*/React.createElement("div", {
+  }, t(label)), /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 14,
@@ -8178,7 +8178,7 @@ function OnderhoudNL({
       color: 'var(--text-muted)',
       marginTop: 6
     }
-  }, tekst)))))), /*#__PURE__*/React.createElement("section", {
+  }, t(tekst))))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper)',
       padding: '40px 44px'
@@ -8202,9 +8202,9 @@ function OnderhoudNL({
     style: {
       marginBottom: 16
     }
-  }, "Wat een nazicht omvat"), nazicht.map(([t, tk]) => /*#__PURE__*/React.createElement(Punt, {
-    key: t,
-    titel: t,
+  }, t('Wat een nazicht omvat')), nazicht.map(([nt, tk]) => /*#__PURE__*/React.createElement(Punt, {
+    key: nt,
+    titel: nt,
     tekst: tk
   })))))), /*#__PURE__*/React.createElement("section", {
     style: {
@@ -8225,11 +8225,11 @@ function OnderhoudNL({
     arrow: true,
     as: "button",
     onClick: offerte
-  }, "Vraag onderhoud aan"), /*#__PURE__*/React.createElement(SButton, {
+  }, t('Vraag onderhoud aan')), /*#__PURE__*/React.createElement(SButton, {
     variant: "secondary",
     arrow: true,
     onClick: () => onNav('contact')
-  }, "Neem contact op met onze experts"))), /*#__PURE__*/React.createElement("section", {
+  }, t('Neem contact op met onze experts')))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper)',
       padding: '20px 44px 84px'
@@ -8248,9 +8248,9 @@ function OnderhoudNL({
     style: {
       marginBottom: 16
     }
-  }, "Herstellingen en nazorg"), zorg.map(([t, tk]) => /*#__PURE__*/React.createElement(Punt, {
-    key: t,
-    titel: t,
+  }, t('Herstellingen en nazorg')), zorg.map(([zt, tk]) => /*#__PURE__*/React.createElement(Punt, {
+    key: zt,
+    titel: zt,
     tekst: tk
   })))), /*#__PURE__*/React.createElement(Reveal, {
     delay: 80
