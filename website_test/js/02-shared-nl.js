@@ -3335,7 +3335,7 @@ function CategoriePagina({
   }, /*#__PURE__*/React.createElement("button", {
     onClick: () => onNav('home'),
     style: bc
-  }, "Home"), /*#__PURE__*/React.createElement("span", {
+  }, t('Home')), /*#__PURE__*/React.createElement("span", {
     style: {
       margin: '0 9px',
       color: 'var(--line-on-light)'
@@ -3345,7 +3345,7 @@ function CategoriePagina({
       ...bc,
       cursor: 'default'
     }
-  }, "Poorten"), /*#__PURE__*/React.createElement("span", {
+  }, t('Poorten')), /*#__PURE__*/React.createElement("span", {
     style: {
       margin: '0 9px',
       color: 'var(--line-on-light)'
@@ -3354,7 +3354,7 @@ function CategoriePagina({
     style: {
       color: 'var(--text-heading)'
     }
-  }, d.eyebrow))), /*#__PURE__*/React.createElement("section", {
+  }, t(d.eyebrow)))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-ground)',
       color: 'var(--text-on-dark)',
@@ -3375,7 +3375,7 @@ function CategoriePagina({
     style: {
       marginBottom: 20
     }
-  }, d.eyebrow, " op maat"), /*#__PURE__*/React.createElement("h1", {
+  }, t(d.eyebrow), " ", t('op maat')), /*#__PURE__*/React.createElement("h1", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
@@ -3385,7 +3385,7 @@ function CategoriePagina({
       color: 'var(--stone-100)',
       margin: 0
     }
-  }, d.h1), /*#__PURE__*/React.createElement("p", {
+  }, t(d.h1)), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 18.5,
@@ -3394,7 +3394,7 @@ function CategoriePagina({
       maxWidth: '46ch',
       margin: '24px 0 30px'
     }
-  }, d.introKort), /*#__PURE__*/React.createElement("div", {
+  }, t(d.introKort)), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 16,
@@ -3406,20 +3406,20 @@ function CategoriePagina({
     arrow: true,
     as: "button",
     onClick: offerte
-  }, "Vraag een offerte aan"), /*#__PURE__*/React.createElement(SButton, {
+  }, t('Vraag een offerte aan')), /*#__PURE__*/React.createElement(SButton, {
     variant: "ghost",
     dark: true,
     arrow: true,
     as: "button",
     onClick: () => window.dispatchEvent(new CustomEvent('pl-advies-open'))
-  }, "Doe de poortkeuzetest")), /*#__PURE__*/React.createElement("div", {
+  }, t('Doe de poortkeuzetest'))), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 26,
       flexWrap: 'wrap'
     }
-  }, troeven.map(t => /*#__PURE__*/React.createElement("div", {
-    key: t,
+  }, troeven.map(tr => /*#__PURE__*/React.createElement("div", {
+    key: tr,
     style: {
       display: 'flex',
       alignItems: 'center',
@@ -3431,7 +3431,7 @@ function CategoriePagina({
       fontSize: 14,
       color: 'var(--stone-200)'
     }
-  }, t))))), /*#__PURE__*/React.createElement(Reveal, {
+  }, t(tr)))))), /*#__PURE__*/React.createElement(Reveal, {
     delay: 80
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -3465,7 +3465,7 @@ function CategoriePagina({
       textTransform: 'uppercase',
       color: 'var(--text-heading)'
     }
-  }, d.heroLabel || 'Volledig op maat'))))), /*#__PURE__*/React.createElement("section", {
+  }, t(d.heroLabel || 'Volledig op maat')))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper)',
       padding: '68px 44px'
@@ -3502,14 +3502,14 @@ function CategoriePagina({
       color: 'var(--text-heading)',
       margin: '16px 0 7px'
     }
-  }, v.titel), /*#__PURE__*/React.createElement("div", {
+  }, t(v.titel)), /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 14.5,
       lineHeight: 1.6,
       color: 'var(--text-muted)'
     }
-  }, v.tekst))))))), /*#__PURE__*/React.createElement("section", {
+  }, t(v.tekst)))))))), /*#__PURE__*/React.createElement("section", {
     id: "modellen",
     style: {
       background: 'var(--surface-paper)',
@@ -3565,7 +3565,7 @@ function CategoriePagina({
       background: modelTab === i ? 'var(--surface-card)' : 'transparent',
       color: modelTab === i ? 'var(--text-heading)' : 'var(--text-muted)'
     }
-  }, g.tab))), /*#__PURE__*/React.createElement("div", {
+  }, t(g.tab)))), /*#__PURE__*/React.createElement("div", {
     role: "tabpanel",
     style: {
       background: 'var(--surface-card)',
@@ -3608,7 +3608,7 @@ function CategoriePagina({
       color: modelFilterOpen ? 'var(--accent)' : 'var(--text-muted)',
       border: '1px solid ' + (modelFilterOpen ? 'var(--accent)' : 'var(--line-on-light)')
     }
-  }, "Filter op model", /*#__PURE__*/React.createElement("span", {
+  }, t('Filter op model'), /*#__PURE__*/React.createElement("span", {
     "aria-hidden": "true",
     style: {
       display: 'inline-block',
@@ -3655,7 +3655,7 @@ function CategoriePagina({
         color: actief ? '#fff' : 'var(--text-body)',
         border: '1px solid ' + (actief ? 'var(--accent)' : 'var(--line-on-light)')
       }
-    }, chip);
+    }, t(chip));
   })))) : null, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
@@ -3691,7 +3691,7 @@ function CategoriePagina({
       padding: '0 12px',
       textAlign: 'center'
     }
-  }, t.naam || 'Type'), t.foto ? /*#__PURE__*/React.createElement("img", {
+  }, t.naam || window.plT('Type')), t.foto ? /*#__PURE__*/React.createElement("img", {
     src: t.foto,
     alt: t.alt || t.naam || 'Metalen poort',
     loading: "lazy",
@@ -3720,7 +3720,7 @@ function CategoriePagina({
       textTransform: 'uppercase',
       color: 'var(--text-heading)'
     }
-  }, "Realisatie") : null), t.naam ? /*#__PURE__*/React.createElement("div", {
+  }, window.plT('Realisatie')) : null), t.naam ? /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 15,
@@ -3751,7 +3751,7 @@ function CategoriePagina({
       color: 'var(--text-heading)',
       border: '1px solid var(--line-on-light)'
     }
-  }, "Toon meer (", modelZichtbaar.length - modelLimiet, ")")))))) : /*#__PURE__*/React.createElement("div", {
+  }, t('Toon meer'), " (", modelZichtbaar.length - modelLimiet, ")")))))) : /*#__PURE__*/React.createElement("div", {
     className: "pl-cards",
     style: {
       display: 'grid',
@@ -3809,7 +3809,7 @@ function CategoriePagina({
       color: 'var(--text-heading)',
       lineHeight: 1.15
     }
-  }, p.titel), /*#__PURE__*/React.createElement("div", {
+  }, t(p.titel)), /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 14,
@@ -3818,7 +3818,7 @@ function CategoriePagina({
       marginTop: 8,
       flex: 1
     }
-  }, p.tekst), /*#__PURE__*/React.createElement("div", {
+  }, t(p.tekst)), /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-label)',
       fontSize: 11,
@@ -3828,7 +3828,7 @@ function CategoriePagina({
       color: 'var(--accent)',
       marginTop: 16
     }
-  }, "Ontdek deze stijl →")))))))), d.aluminiumBlok && /*#__PURE__*/React.createElement("section", {
+  }, t('Ontdek deze stijl'), " →")))))))), d.aluminiumBlok && /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper)',
       padding: '10px 44px 20px'
@@ -3865,7 +3865,7 @@ function CategoriePagina({
     style: {
       marginBottom: 14
     }
-  }, d.aluminiumBlok.eyebrow), /*#__PURE__*/React.createElement("h2", {
+  }, t(d.aluminiumBlok.eyebrow)), /*#__PURE__*/React.createElement("h2", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
@@ -3875,11 +3875,11 @@ function CategoriePagina({
       color: 'var(--text-heading)',
       margin: 0
     }
-  }, d.aluminiumBlok.titel, d.aluminiumBlok.titel2 ? /*#__PURE__*/React.createElement("span", {
+  }, t(d.aluminiumBlok.titel), d.aluminiumBlok.titel2 ? /*#__PURE__*/React.createElement("span", {
     style: {
       display: 'block'
     }
-  }, d.aluminiumBlok.titel2) : null)), /*#__PURE__*/React.createElement("span", {
+  }, t(d.aluminiumBlok.titel2)) : null)), /*#__PURE__*/React.createElement("span", {
     style: {
       flex: '0 0 auto',
       display: 'inline-flex',
@@ -3896,7 +3896,7 @@ function CategoriePagina({
       color: 'var(--accent)',
       whiteSpace: 'nowrap'
     }
-  }, aluOpen ? 'Sluiten' : 'Lees meer'), /*#__PURE__*/React.createElement("span", {
+  }, aluOpen ? t('Sluiten') : t('Lees meer')), /*#__PURE__*/React.createElement("span", {
     "aria-hidden": "true",
     style: {
       display: 'inline-flex',
@@ -3932,7 +3932,7 @@ function CategoriePagina({
       color: 'var(--text-body)',
       margin: i ? '12px 0 0' : 0
     }
-  }, a)), /*#__PURE__*/React.createElement("div", {
+  }, t(a))), /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 15.5,
@@ -3940,7 +3940,7 @@ function CategoriePagina({
       color: 'var(--text-heading)',
       margin: '26px 0 16px'
     }
-  }, d.aluminiumBlok.puntenKop), /*#__PURE__*/React.createElement("div", {
+  }, t(d.aluminiumBlok.puntenKop)), /*#__PURE__*/React.createElement("div", {
     className: "pl-cards",
     style: {
       display: 'grid',
@@ -3960,7 +3960,7 @@ function CategoriePagina({
       fontWeight: 600,
       color: 'var(--text-heading)'
     }
-  }, titel), /*#__PURE__*/React.createElement("div", {
+  }, t(titel)), /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 14,
@@ -3968,7 +3968,7 @@ function CategoriePagina({
       color: 'var(--text-muted)',
       marginTop: 4
     }
-  }, tekst)))))))))), /*#__PURE__*/React.createElement("section", {
+  }, t(tekst))))))))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper)',
       padding: '20px 44px 90px',
@@ -4012,7 +4012,7 @@ function CategoriePagina({
       color: 'var(--text-heading)',
       marginBottom: 16
     }
-  }, tp.titel), /*#__PURE__*/React.createElement("div", {
+  }, t(tp.titel)), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       flexDirection: 'column',
@@ -4038,7 +4038,7 @@ function CategoriePagina({
       lineHeight: 1.55,
       color: 'var(--text-body)'
     }
-  }, pt)))))))), /*#__PURE__*/React.createElement("div", {
+  }, t(pt))))))))), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 14,
@@ -4051,11 +4051,11 @@ function CategoriePagina({
     arrow: true,
     as: "button",
     onClick: () => window.dispatchEvent(new CustomEvent('pl-advies-open'))
-  }, "Doe de poortkeuzetest"), /*#__PURE__*/React.createElement(SButton, {
+  }, t('Doe de poortkeuzetest')), /*#__PURE__*/React.createElement(SButton, {
     variant: "secondary",
     arrow: true,
     onClick: () => onNav('contact')
-  }, "Laat u adviseren")))), /*#__PURE__*/React.createElement("section", {
+  }, t('Laat u adviseren'))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--forest-900)',
       color: 'var(--text-on-dark)',
@@ -4076,7 +4076,7 @@ function CategoriePagina({
     style: {
       marginBottom: 16
     }
-  }, "Automatisering"), /*#__PURE__*/React.createElement("h2", {
+  }, t('Automatisering')), /*#__PURE__*/React.createElement("h2", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
@@ -4086,7 +4086,7 @@ function CategoriePagina({
       lineHeight: 1.1,
       letterSpacing: '-0.01em'
     }
-  }, auto.titel), /*#__PURE__*/React.createElement("p", {
+  }, t(auto.titel)), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 16.5,
@@ -4095,7 +4095,7 @@ function CategoriePagina({
       maxWidth: '50ch',
       margin: '20px 0 26px'
     }
-  }, auto.tekst), /*#__PURE__*/React.createElement("div", {
+  }, t(auto.tekst)), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
       gridTemplateColumns: '1fr 1fr',
@@ -4116,12 +4116,12 @@ function CategoriePagina({
       lineHeight: 1.45,
       color: 'var(--stone-200)'
     }
-  }, v)))), /*#__PURE__*/React.createElement(SButton, {
+  }, t(v))))), /*#__PURE__*/React.createElement(SButton, {
     variant: "ghost",
     dark: true,
     arrow: true,
     onClick: () => onNav('automatisering')
-  }, "Ontdek poortautomatisering")), /*#__PURE__*/React.createElement(Reveal, {
+  }, t('Ontdek poortautomatisering'))), /*#__PURE__*/React.createElement(Reveal, {
     delay: 80
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -4204,7 +4204,7 @@ function CategoriePagina({
       margin: '18px 0 6px',
       lineHeight: 1.2
     }
-  }, s.titel), /*#__PURE__*/React.createElement("p", {
+  }, t(s.titel)), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 14.5,
@@ -4212,7 +4212,7 @@ function CategoriePagina({
       color: 'var(--text-muted)',
       margin: 0
     }
-  }, s.tekst))))))), /*#__PURE__*/React.createElement("section", {
+  }, t(s.tekst)))))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper)',
       padding: '90px 44px'
@@ -4248,7 +4248,7 @@ function CategoriePagina({
     style: {
       marginBottom: 16
     }
-  }, "Kwaliteit en duurzaamheid"), /*#__PURE__*/React.createElement("h2", {
+  }, t('Kwaliteit en duurzaamheid')), /*#__PURE__*/React.createElement("h2", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
@@ -4258,7 +4258,7 @@ function CategoriePagina({
       lineHeight: 1.1,
       letterSpacing: '-0.01em'
     }
-  }, d.kwaliteit && d.kwaliteit.titel || 'Gemaakt om jaren mee te gaan'), /*#__PURE__*/React.createElement("p", {
+  }, t(d.kwaliteit && d.kwaliteit.titel || 'Gemaakt om jaren mee te gaan')), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 16.5,
@@ -4267,7 +4267,7 @@ function CategoriePagina({
       maxWidth: '52ch',
       margin: '18px 0 26px'
     }
-  }, d.kwaliteit && d.kwaliteit.intro), /*#__PURE__*/React.createElement("div", {
+  }, t(d.kwaliteit && d.kwaliteit.intro)), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
       gridTemplateColumns: '1fr 1fr',
@@ -4286,7 +4286,7 @@ function CategoriePagina({
       fontWeight: 600,
       color: 'var(--text-heading)'
     }
-  }, k.titel), /*#__PURE__*/React.createElement("div", {
+  }, t(k.titel)), /*#__PURE__*/React.createElement("div", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 13.5,
@@ -4294,7 +4294,7 @@ function CategoriePagina({
       color: 'var(--text-muted)',
       marginTop: 4
     }
-  }, k.tekst)))), /*#__PURE__*/React.createElement("div", {
+  }, t(k.tekst))))), /*#__PURE__*/React.createElement("div", {
     style: {
       marginTop: 32
     }
@@ -4306,11 +4306,11 @@ function CategoriePagina({
       color: 'var(--text-body)',
       margin: '0 0 14px'
     }
-  }, "Bekijk ook onze garantiepagina voor meer informatie over onze garanties en de anti corrosie behandeling."), /*#__PURE__*/React.createElement(SButton, {
+  }, t('Bekijk ook onze garantiepagina voor meer informatie over onze garanties en de anti corrosie behandeling.')), /*#__PURE__*/React.createElement(SButton, {
     variant: "secondary",
     arrow: true,
     onClick: () => onNav('garantie')
-  }, "Bekijk onze garantie"))))), /*#__PURE__*/React.createElement("section", {
+  }, t('Bekijk onze garantie')))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-ground)',
       color: 'var(--text-on-dark)',
@@ -4363,7 +4363,7 @@ function CategoriePagina({
       margin: 0,
       letterSpacing: '-0.005em'
     }
-  }, "“", d.testimonial && d.testimonial.quote, "”"), /*#__PURE__*/React.createElement("div", {
+  }, "“", t(d.testimonial && d.testimonial.quote), "”"), /*#__PURE__*/React.createElement("div", {
     style: {
       marginTop: 24,
       fontFamily: 'var(--font-sans)'
@@ -4380,7 +4380,7 @@ function CategoriePagina({
       color: 'var(--text-on-dark-muted)',
       marginTop: 3
     }
-  }, d.testimonial && d.testimonial.gemeente, " · ", d.testimonial && d.testimonial.project))))), /*#__PURE__*/React.createElement("section", {
+  }, d.testimonial && d.testimonial.gemeente, " · ", t(d.testimonial && d.testimonial.project)))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper)',
       padding: '90px 44px'
@@ -4428,7 +4428,7 @@ function CategoriePagina({
       textTransform: 'uppercase',
       boxShadow: '0 6px 20px rgba(20,28,21,0.28)'
     }
-  }, "Vraag een offerte aan"));
+  }, t('Vraag een offerte aan')));
 }
 
 /* materiaalFotos is de fotolijst per poorttype voor de horizontale scroll. Later te beheren vanuit het ERP of CRM. */
@@ -7526,7 +7526,7 @@ function OverOnsNL({
       textTransform: 'uppercase',
       boxShadow: '0 6px 20px rgba(20,28,21,0.28)'
     }
-  }, "Vraag een offerte aan"));
+  }, t('Vraag een offerte aan')));
 }
 
 /* ---- Gedeelde beleidpagina (privacy en cookies) in de huisstijl ---- */
