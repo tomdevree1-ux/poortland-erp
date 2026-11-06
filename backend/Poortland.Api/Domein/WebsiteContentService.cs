@@ -16,8 +16,6 @@ public class WebsiteContentService(PoortlandDbContext db, ClaimsContext claims, 
 {
     const string BucketOrigineel = "website_origineel";
     const string BucketPubliek = "website_publiek";
-    static readonly string[] ToegelatenTypes = ["image/jpeg", "image/png", "image/webp", "image/heic"];
-    const int MaxBytes = 15 * 1024 * 1024;
 
     static readonly string[] ProductSoorten = ["poort", "overkapping"];
     static readonly string[] PoortTypes = ["hout", "metaal", "hout_metaal"];
@@ -27,7 +25,7 @@ public class WebsiteContentService(PoortlandDbContext db, ClaimsContext claims, 
         string titel, string? categorie, string? productSoort, string? poortType, string? poortUitvoering,
         string? poortStijl = null, string? modelNaam = null)
     {
-        if (!ToegelatenTypes.Contains(contentType))
+        if (!Websitebeeld.ToegelatenTypes.Contains(contentType))
             throw new DomeinFout("Toegelaten formaten: jpeg, png, webp of heic.");
         if (productSoort is null || !ProductSoorten.Contains(productSoort))
             throw new DomeinFout("Kies of de foto een poort of een overkapping toont.");
@@ -41,15 +39,11 @@ public class WebsiteContentService(PoortlandDbContext db, ClaimsContext claims, 
         else { poortType = null; poortUitvoering = null; }
         using var geheugen = new MemoryStream();
         await bestand.CopyToAsync(geheugen);
-        if (geheugen.Length > MaxBytes) throw new DomeinFout("Maximaal 15 MB per foto.");
+        if (geheugen.Length > Websitebeeld.MaxBytes) throw new DomeinFout("Maximaal 15 MB per foto.");
         var origineel = geheugen.ToArray();
 
         // EXIF en alle metadata strippen inclusief gps (TS-17 sectie 5, TS-03).
-        using var beeld = Image.Load(origineel);
-        beeld.Mutate(b => b.AutoOrient());
-        beeld.Metadata.ExifProfile = null;
-        beeld.Metadata.XmpProfile = null;
-        beeld.Metadata.IptcProfile = null;
+        using var beeld = Websitebeeld.Open(origineel);
 
         var id = Guid.NewGuid();
         var extensie = Path.GetExtension(bestandsnaam);
@@ -57,8 +51,8 @@ public class WebsiteContentService(PoortlandDbContext db, ClaimsContext claims, 
         var padOrigineel = $"{id}/origineel{extensie}";
         await opslag.Upload(BucketOrigineel, padOrigineel, origineel, contentType);
 
-        var web = await MaakAfgeleide(beeld, 1600);
-        var thumb = await MaakAfgeleide(beeld, 400);
+        var web = await Websitebeeld.Afgeleide(beeld, 1600);
+        var thumb = await Websitebeeld.Afgeleide(beeld, 400);
         await opslag.Upload(BucketOrigineel, $"{id}/web.webp", web.bytes, "image/webp");
         await opslag.Upload(BucketOrigineel, $"{id}/thumb.webp", thumb.bytes, "image/webp");
 
@@ -76,18 +70,6 @@ public class WebsiteContentService(PoortlandDbContext db, ClaimsContext claims, 
         db.WebsiteMedias.Add(media);
         await db.SaveChangesAsync();
         return media;
-    }
-
-    static async Task<(byte[] bytes, int breedte, int hoogte)> MaakAfgeleide(Image bron, int maxBreedte)
-    {
-        using var kopie = bron.Clone(b =>
-        {
-            if (bron.Width > maxBreedte)
-                b.Resize(maxBreedte, 0);
-        });
-        using var uit = new MemoryStream();
-        await kopie.SaveAsync(uit, new WebpEncoder { Quality = 80 });
-        return (uit.ToArray(), kopie.Width, kopie.Height);
     }
 
     public async Task<WebsiteMedia> Publiceer(Guid id)
@@ -216,8 +198,49 @@ public class WebsiteContentService(PoortlandDbContext db, ClaimsContext claims, 
             sleutel = $"{popupRij.Id}:{popupRij.GewijzigdOp.ToUnixTimeSeconds()}",
             titel = popupRij.Titel, body = popupRij.BodyTekst, van = popupRij.ActiefVan, tot = popupRij.ActiefTot
         };
+        // Koopjes uit voorraad: zichtbaar of verkocht met label. De foto's staan
+        // al publiek, de zichtbaarheid wordt hier bepaald (migratie 0046).
+        var koopjeRijen = await db.Koopjes.AsNoTracking()
+            .Where(k => k.VerwijderdOp == null
+                && (k.Status == KoopjeStatus.Zichtbaar || k.Status == KoopjeStatus.Verkocht))
+            .OrderBy(k => k.Volgnummer)
+            .Select(k => new
+            {
+                k.Id, k.Materiaal, k.Model, k.Ral, k.BreedteCm, k.HoogteCm, k.ExtraInfo, k.PrijsInclBtw,
+                verkocht = k.Status == KoopjeStatus.Verkocht,
+                fotos = k.Fotos.Where(f => f.VerwijderdOp == null && f.BestandPadWeb != null)
+                    .OrderBy(f => f.Volgnummer)
+                    .Select(f => new { f.BestandPadWeb, f.BestandPadThumb, f.AltTekst, f.Breedte, f.Hoogte })
+                    .ToList()
+            })
+            .ToListAsync();
+        var koopjes = koopjeRijen.Select(k => new
+        {
+            id = k.Id, materiaal = k.Materiaal, model = k.Model, ral = k.Ral,
+            breedte = k.BreedteCm, hoogte = k.HoogteCm, extra = k.ExtraInfo,
+            prijs = k.PrijsInclBtw, verkocht = k.verkocht,
+            fotos = k.fotos.Select(f => new
+            {
+                url = opslag.PubliekeUrl(BucketPubliek, f.BestandPadWeb!),
+                thumb = opslag.PubliekeUrl(BucketPubliek, f.BestandPadThumb ?? f.BestandPadWeb!),
+                alt = f.AltTekst, breedte = f.Breedte, hoogte = f.Hoogte
+            }).ToList()
+        }).ToList();
+
+        var vacatureRijen = await db.Vacatures.AsNoTracking()
+            .Where(v => v.VerwijderdOp == null && v.Status == VacatureStatus.Zichtbaar)
+            .OrderBy(v => v.Volgnummer)
+            .Select(v => new { v.Id, v.Titel, v.Intro, v.Blokken })
+            .ToListAsync();
+        var vacatures = vacatureRijen.Select(v => new
+        {
+            id = v.Id, titel = v.Titel, intro = v.Intro,
+            blokken = JsonSerializer.Deserialize<JsonElement>(string.IsNullOrWhiteSpace(v.Blokken) ? "[]" : v.Blokken)
+        }).ToList();
+
         // 1 dag: een bezoeker ziet dezelfde banner hoogstens 1 keer per dag.
-        var inhoud = new { versie = DateTimeOffset.UtcNow.ToUnixTimeSeconds(), popup, popupFrequentieDagen = 1, fotos };
+        var inhoud = new { versie = DateTimeOffset.UtcNow.ToUnixTimeSeconds(), popup, popupFrequentieDagen = 1,
+            fotos, koopjes, vacatures };
         var json = JsonSerializer.SerializeToUtf8Bytes(inhoud,
             new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
         // Geen cache op content.json zodat intrekken en publiceren meteen doorkomen.

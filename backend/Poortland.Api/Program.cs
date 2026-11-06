@@ -65,7 +65,10 @@ builder.Services.AddScoped<InstellingenService>();
 builder.Services.AddScoped<OfferteService>();
 builder.Services.AddScoped<LeadService>();
 builder.Services.AddScoped<WebsiteContentService>();
+builder.Services.AddScoped<KoopjeService>();
+builder.Services.AddScoped<VacatureService>();
 builder.Services.AddSingleton<OffertePdfService>();
+builder.Services.AddSingleton<WerkbonPdfService>();
 builder.Services.AddHttpClient<SupabaseOpslag>();
 builder.Services.AddHttpClient<SupabaseAdmin>();
 builder.Services.AddHttpClient<TurnstileValidator>();
@@ -80,8 +83,16 @@ builder.Services.AddHttpClient();
 builder.Services.AddHostedService<DagelijkseTaken>();
 
 builder.Services.AddControllers(o => o.Filters.Add<Poortland.Api.FoutFilter>())
-    .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(
-        new System.Text.Json.Serialization.JsonStringEnumConverter(System.Text.Json.JsonNamingPolicy.CamelCase)));
+    .AddJsonOptions(o =>
+    {
+        // Verdediging in de breedte: EF koppelt na het bewaren navigatie-eigenschappen
+        // terug (bv. offerte.Project dat weer naar de offerte verwijst). Zonder dit
+        // gooit de serializer een objectcyclus en krijgt de client een lege 500,
+        // terwijl de rij al is weggeschreven. Cycli negeren lost dit overal op.
+        o.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        o.JsonSerializerOptions.Converters.Add(
+            new System.Text.Json.Serialization.JsonStringEnumConverter(System.Text.Json.JsonNamingPolicy.CamelCase));
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 var corsOrigins = config.GetSection("Cors:Origins").Get<string[]>();

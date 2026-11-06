@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
+// Bouwmarker om de Docker-laagcache te doorbreken: v14 koopjes en vacatures op de website (2026-10-15).
 namespace Poortland.Api.Data;
 
 public class PoortlandDbContext(DbContextOptions<PoortlandDbContext> opties) : DbContext(opties)
@@ -12,6 +13,11 @@ public class PoortlandDbContext(DbContextOptions<PoortlandDbContext> opties) : D
     public DbSet<Contactmoment> Contactmomenten => Set<Contactmoment>();
     public DbSet<Lead> Leads => Set<Lead>();
     public DbSet<LeadBijlage> LeadBijlagen => Set<LeadBijlage>();
+    public DbSet<Fotobericht> Fotoberichten => Set<Fotobericht>();
+    public DbSet<Koopje> Koopjes => Set<Koopje>();
+    public DbSet<KoopjeFoto> KoopjeFotos => Set<KoopjeFoto>();
+    public DbSet<Vacature> Vacatures => Set<Vacature>();
+    public DbSet<FotoberichtBijlage> FotoberichtBijlagen => Set<FotoberichtBijlage>();
     public DbSet<Project> Projecten => Set<Project>();
     public DbSet<Artikel> Artikelen => Set<Artikel>();
     public DbSet<Offerte> Offertes => Set<Offerte>();
@@ -37,6 +43,53 @@ public class PoortlandDbContext(DbContextOptions<PoortlandDbContext> opties) : D
     public DbSet<Factuurvoorstel> Factuurvoorstellen => Set<Factuurvoorstel>();
     public DbSet<Factuurvoorstelregel> Factuurvoorstelregels => Set<Factuurvoorstelregel>();
 
+    // Identiteit (request.jwt.claims) TRANSACTIONEEL op de schrijfverbinding zetten,
+    // vlak voor ELKE save. We openen desnoods een eigen transactie zodat set_config
+    // (LOCAL) gegarandeerd op exact de verbinding en transactie van de save staat.
+    // Zonder dit kan een pooled verbinding de eerder gezette identiteit kwijt zijn en
+    // weigert RLS de actie (42501, "onvoldoende rechten"), ook al kloppen de rechten.
+    // De ClaimsContext is dezelfde instantie die de middleware invult, dus we hebben
+    // de HttpContext hier niet nodig (die is bij het schrijven niet altijd beschikbaar).
+    // De middleware zet hier de identiteit (request.jwt.claims-JSON) rechtstreeks op
+    // DEZE context-instantie. Middleware en controller delen dezelfde scoped context,
+    // dus dit is met zekerheid beschikbaar bij het schrijven. Geen omweg via DI of
+    // HttpContext, die bij het schrijven een lege waarde konden geven.
+    public string? IdentiteitJson { get; set; }
+
+    // Primair de ambient waarde (stroomt mee met het verzoek), anders de contextwaarde.
+    string? HuidigeIdentiteit => Poortland.Api.Auth.Identiteit.Json.Value ?? IdentiteitJson;
+
+    public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken ct = default)
+    {
+        var json = HuidigeIdentiteit;
+        if (string.IsNullOrEmpty(json)) return await base.SaveChangesAsync(acceptAllChangesOnSuccess, ct);
+        var eigenTx = Database.CurrentTransaction is null ? await Database.BeginTransactionAsync(ct) : null;
+        try
+        {
+            await Database.ExecuteSqlAsync(
+                $"select set_config('request.jwt.claims', {json}, true)", ct);
+            var aantal = await base.SaveChangesAsync(acceptAllChangesOnSuccess, ct);
+            if (eigenTx is not null) await eigenTx.CommitAsync(ct);
+            return aantal;
+        }
+        finally { if (eigenTx is not null) await eigenTx.DisposeAsync(); }
+    }
+
+    public override int SaveChanges(bool acceptAllChangesOnSuccess)
+    {
+        var json = HuidigeIdentiteit;
+        if (string.IsNullOrEmpty(json)) return base.SaveChanges(acceptAllChangesOnSuccess);
+        var eigenTx = Database.CurrentTransaction is null ? Database.BeginTransaction() : null;
+        try
+        {
+            Database.ExecuteSql($"select set_config('request.jwt.claims', {json}, true)");
+            var aantal = base.SaveChanges(acceptAllChangesOnSuccess);
+            eigenTx?.Commit();
+            return aantal;
+        }
+        finally { eigenTx?.Dispose(); }
+    }
+
     public static NpgsqlDataSource MaakDataSource(string connectionString)
     {
         var b = new NpgsqlDataSourceBuilder(connectionString);
@@ -46,6 +99,10 @@ public class PoortlandDbContext(DbContextOptions<PoortlandDbContext> opties) : D
         b.MapEnum<LeadKanaal>("lead_kanaal");
         b.MapEnum<LeadStatus>("lead_status");
         b.MapEnum<OfferteStatus>("offerte_status");
+        b.MapEnum<OfferteSoort>("offerte_soort");
+        b.MapEnum<FotoberichtStatus>("fotobericht_status");
+        b.MapEnum<KoopjeStatus>("koopje_status");
+        b.MapEnum<VacatureStatus>("vacature_status");
         b.MapEnum<OrderStatus>("order_status");
         b.MapEnum<BtwTarief>("btw_tarief");
         b.MapEnum<OpvolgtaakStatus>("opvolgtaak_status");
@@ -73,6 +130,10 @@ public class PoortlandDbContext(DbContextOptions<PoortlandDbContext> opties) : D
         model.HasPostgresEnum<LeadKanaal>("lead_kanaal");
         model.HasPostgresEnum<LeadStatus>("lead_status");
         model.HasPostgresEnum<OfferteStatus>("offerte_status");
+        model.HasPostgresEnum<OfferteSoort>("offerte_soort");
+        model.HasPostgresEnum<FotoberichtStatus>("fotobericht_status");
+        model.HasPostgresEnum<KoopjeStatus>("koopje_status");
+        model.HasPostgresEnum<VacatureStatus>("vacature_status");
         model.HasPostgresEnum<OrderStatus>("order_status");
         model.HasPostgresEnum<BtwTarief>("btw_tarief");
         model.HasPostgresEnum<OpvolgtaakStatus>("opvolgtaak_status");
@@ -101,11 +162,28 @@ public class PoortlandDbContext(DbContextOptions<PoortlandDbContext> opties) : D
         model.Entity<Lead>().Property(l => l.WizardGegevens).HasColumnType("jsonb");
         model.Entity<Lead>().HasMany(l => l.Bijlagen).WithOne().HasForeignKey(b => b.LeadId);
         model.Entity<LeadBijlage>().ToTable("lead_bijlage");
+        model.Entity<Fotobericht>().ToTable("fotobericht");
+        model.Entity<Fotobericht>().HasMany(f => f.Bijlagen).WithOne().HasForeignKey(b => b.FotoberichtId);
+        model.Entity<FotoberichtBijlage>().ToTable("fotobericht_bijlage");
+        model.Entity<Koopje>().ToTable("koopje");
+        model.Entity<Koopje>().HasMany(k => k.Fotos).WithOne().HasForeignKey(f => f.KoopjeId);
+        model.Entity<KoopjeFoto>().ToTable("koopje_foto");
+        model.Entity<Vacature>().ToTable("vacature");
+        model.Entity<Vacature>().Property(v => v.Blokken).HasColumnType("jsonb");
         model.Entity<Project>().ToTable("project");
         model.Entity<Project>().HasOne(p => p.Klant).WithMany().HasForeignKey(p => p.KlantId);
         model.Entity<Project>().Property(p => p.Nummer).ValueGeneratedOnAdd();
         model.Entity<Project>().HasMany(p => p.Offertes).WithOne(o => o.Project).HasForeignKey(o => o.ProjectId);
         model.Entity<Artikel>().ToTable("artikel");
+        // De kolomnamen uit migratie 0048 expliciet vastleggen. De snake case
+        // conventie weet niet wat ze met een cijfer in Categorie1 moet doen, en
+        // StdMaten zou std_maten of stdmaten kunnen worden.
+        model.Entity<Artikel>().Property(a => a.Categorie1).HasColumnName("categorie1");
+        model.Entity<Artikel>().Property(a => a.Categorie2).HasColumnName("categorie2");
+        model.Entity<Artikel>().Property(a => a.StdMaten).HasColumnName("std_maten");
+        model.Entity<Artikel>().Property(a => a.LeverancierNummer).HasColumnName("leverancier_nummer");
+        model.Entity<Artikel>().Property(a => a.PoortlandId).HasColumnName("poortland_id");
+        model.Entity<Artikel>().Property(a => a.PrijsOntbreekt).HasColumnName("prijs_ontbreekt");
         model.Entity<Offerte>().ToTable("offerte");
         model.Entity<Offerte>().HasMany(o => o.Regels).WithOne().HasForeignKey(r => r.OfferteId);
         model.Entity<Offerteregel>().ToTable("offerteregel");

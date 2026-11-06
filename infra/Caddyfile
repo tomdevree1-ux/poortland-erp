@@ -7,6 +7,8 @@
 		X-Content-Type-Options "nosniff"
 		X-Frame-Options "DENY"
 		Referrer-Policy "strict-origin-when-cross-origin"
+		# Het beheerplatform hoort nooit in zoekmachines, ook niet in productie.
+		X-Robots-Tag "noindex, nofollow"
 		-Server
 	}
 	handle /api/* {
@@ -15,11 +17,31 @@
 	handle /gezond {
 		reverse_proxy api:5000
 	}
+	# Publiek uploadportaal (foto-opvraag): ook bereikbaar op het beheerdomein,
+	# zodat de link werkt met of zonder www. Noindex, geen persoonsgegevens in de URL.
+	@upload path /upload /upload/*
+	handle @upload {
+		root * /srv-site
+		header X-Robots-Tag "noindex, nofollow, noarchive"
+		header Cache-Control "no-cache"
+		rewrite * /upload/index.html
+		file_server
+	}
+	# Gehashte assets apart afhandelen, ZONDER terugval op index.html. Een
+	# browser die na een uitrol nog een verdwenen bundel opvraagt moet een nette
+	# 404 krijgen. Viel dat terug op index.html, dan kreeg hij html waar hij
+	# javascript verwachtte en brak de app met de melding dat text/html geen
+	# geldig javascript MIME type is.
+	handle /assets/* {
+		root * /srv
+		header Cache-Control "public, max-age=31536000, immutable"
+		file_server
+	}
 	handle {
 		root * /srv
-		# Gehashte assets veranderen nooit: agressief cachen zodat een herlading niets opnieuw hoeft te halen.
-		@assets path /assets/*
-		header @assets Cache-Control "public, max-age=31536000, immutable"
+		# De index nooit cachen: anders houdt de browser na een uitrol een oude
+		# index vast die naar verdwenen bundels wijst.
+		header Cache-Control "no-cache"
 		try_files {path} /index.html
 		file_server
 	}
@@ -35,8 +57,18 @@
 		X-Content-Type-Options "nosniff"
 		X-Frame-Options "SAMEORIGIN"
 		Referrer-Policy "strict-origin-when-cross-origin"
+		# Op de testomgeving zet rol_uit.sh ROBOTS_TAG op "noindex, nofollow";
+		# in productie blijft de standaard "all" gelden zodat Google mag indexeren.
+		X-Robots-Tag "{$ROBOTS_TAG:all}"
 		-Server
 	}
+
+	# Pad zonder slash naar de nette variant met slash (een adres per pagina).
+	@geen_slash path_regexp ^/(metalen-poorten|houten-poorten|combinatie-staal-hout|overkappingen|werkwijze|over-ons|automatisering|onderhoud|garantie|faq|contact|algemene-voorwaarden|privacybeleid|cookiebeleid)$
+	redir @geen_slash {http.request.uri.path}/ permanent
+	# Het pad /offerte bestaat niet als pagina; wie het typt of deelt komt op contact uit.
+	@offerte path /offerte /offerte/
+	redir @offerte /contact/ permanent
 
 	# 301 doorverwijzingen van de verwijderde losse productpagina's onder /poorten/.
 	@prod_houten path /poorten/houten /poorten/houten/
@@ -57,18 +89,54 @@
 	redir @oud_aluminium /metalen-poorten/ permanent
 	@oud_prijs path /prijsaanvraag /prijsaanvraag/
 	redir @oud_prijs /contact/ permanent
-	@oud_koopjes path /koopjes /koopjes/
-	redir @oud_koopjes / permanent
+	# /koopjes was vroeger een omleiding naar de homepagina. Sinds 2026-10-15
+	# bestaat de pagina echt, dus die omleiding is weg. /koopjes zonder
+	# slash gaat netjes naar de versie met slash.
+	@koopjes_zonder_slash path /koopjes
+	redir @koopjes_zonder_slash /koopjes/ permanent
 	@oud_folders path /folders /folders/
 	redir @oud_folders / permanent
+	# De oude vacaturepagina heet nu /jobs/.
 	@oud_vacatures path /vacatures /vacatures/
-	redir @oud_vacatures /contact/ permanent
+	redir @oud_vacatures /jobs/ permanent
+	@jobs_zonder_slash path /jobs
+	redir @jobs_zonder_slash /jobs/ permanent
 	redir /wp-content/uploads/Verkoopsvoorwaarden_2022_NL.pdf /algemene-voorwaarden/ permanent
 	redir /wp-content/uploads/Privacy-policy.pdf /privacybeleid/ permanent
 	redir /wp-content/uploads/Cookie-policy.pdf /cookiebeleid/ permanent
 
 	handle /api/* {
 		reverse_proxy api:5000
+	}
+	# Vaste publieke fotopagina (nieuwsbrief, mailhandtekening, qr). Geen token,
+	# wel noindex: we willen ze niet in de zoekresultaten, enkel via een link.
+	@fotos_site path /fotos /fotos/*
+	handle @fotos_site {
+		root * /srv-site
+		header X-Robots-Tag "noindex, nofollow, noarchive"
+		header Cache-Control "no-cache"
+		rewrite * /fotos/index.html
+		file_server
+	}
+	# Publiek uploadportaal (foto-opvraag via unieke link, noindex).
+	@upload_site path /upload /upload/*
+	handle @upload_site {
+		root * /srv-site
+		header X-Robots-Tag "noindex, nofollow, noarchive"
+		header Cache-Control "no-cache"
+		rewrite * /upload/index.html
+		file_server
+	}
+	# Verborgen offertecalculator (prototype). Losse zelfstandige pagina op een
+	# eigen slug die nergens in de navigatie, sitemap of robots staat. Extra
+	# afgeschermd met een noindex header zodat zoekmachines ze nooit tonen.
+	@calc path /calculator /calculator/
+	handle @calc {
+		root * /srv-site
+		header X-Robots-Tag "noindex, nofollow, noarchive"
+		header Cache-Control "no-cache"
+		rewrite * /calculator/index.html
+		file_server
 	}
 	# Foto's apart afhandelen: een ontbrekend mediabestand geeft nu een echte 404
 	# in plaats van terug te vallen op index.html. Anders cachet de browser die
@@ -85,7 +153,24 @@
 		# door zonder een oude versie te tonen.
 		@site path / *.html *.js
 		header @site Cache-Control "no-cache"
-		try_files {path} /index.html
-		file_server
+		# Alleen de echte paginas vallen terug op de app; al de rest geeft een
+		# echte 404 in plaats van een soft 404 met de homepage (audit 2026-08-11).
+		@paginas path_regexp ^/(|metalen-poorten/|houten-poorten/|combinatie-staal-hout/|overkappingen/|werkwijze/|over-ons/|automatisering/|onderhoud/|garantie/|faq/|plaatsing-poorten/|koopjes/|jobs/|contact/|algemene-voorwaarden/|privacybeleid/|cookiebeleid/)$
+		handle @paginas {
+			# Eerst de voorgebouwde index met eigen kop per route (bouw_website.mjs)
+			try_files {path}index.html /index.html
+			file_server
+		}
+		@bestaand file
+		handle @bestaand {
+			file_server
+		}
+		handle {
+			header X-Robots-Tag "noindex"
+			rewrite * /index.html
+			file_server {
+				status 404
+			}
+		}
 	}
 }

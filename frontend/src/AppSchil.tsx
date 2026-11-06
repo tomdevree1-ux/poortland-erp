@@ -1,18 +1,19 @@
-import { Suspense, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { Link, Outlet, useNavigate, useRouter, useRouterState } from '@tanstack/react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { clsx } from 'clsx'
-import { ArrowLeft, Bell, CalendarDays, FolderOpen, HardHat, Users, Inbox, ListTodo, Globe, Receipt, Settings, LogOut, Wrench } from 'lucide-react'
+import { ArrowLeft, Bell, CalendarDays, FolderOpen, HardHat, Users, Images, Inbox, ListTodo, Globe, Menu, Package, Receipt, Settings, LogOut, Wrench, X } from 'lucide-react'
 import type { NotificatieRij } from './lib/types'
 import { supabase } from './lib/supabase'
 import { api } from './lib/api'
-import { persoon } from './lib/formaat'
+import { persoon, relatieveTijd } from './lib/formaat'
 
 /* Het vaste skelet uit de huisstijlgids blad 07: bosgroene sidebar (236),
    sticky topbar en het werkvlak op warm perkament. */
 
 const navItems = [
   { naar: '/leads', label: 'Leads', icoon: Inbox },
+  { naar: '/fotoberichten', label: 'Fotoberichten', icoon: Images },
   { naar: '/dossiers', label: 'Dossiers', icoon: FolderOpen },
   { naar: '/klanten', label: 'Klanten', icoon: Users },
   { naar: '/werkschema', label: 'Werkschema', icoon: ListTodo },
@@ -20,6 +21,7 @@ const navItems = [
   { naar: '/veld', label: 'Veld', icoon: HardHat },
   { naar: '/service', label: 'Service', icoon: Wrench },
   { naar: '/facturatie', label: 'Facturatie', icoon: Receipt, rollen: ['boekhouding', 'verkoop', 'beheerder'] },
+  { naar: '/artikelen', label: 'Artikelen', icoon: Package },
   { naar: '/website', label: 'Website', icoon: Globe, rollen: ['verkoop', 'beheerder'] },
   { naar: '/beheer', label: 'Beheer', icoon: Settings, rollen: ['beheerder'] }
 ]
@@ -34,6 +36,17 @@ export default function AppSchil() {
     staleTime: 5 * 60 * 1000
   })
   const rollen = mij?.rollen ?? []
+
+  // Mobiel: de zijbalk wordt een uitschuifpaneel dat opent via de hamburger
+  // in de topbar en vanzelf sluit bij elke navigatie (audit 2026-08-11, K2).
+  const [zijbalkOpen, zetZijbalkOpen] = useState(false)
+  useEffect(() => { zetZijbalkOpen(false) }, [pad])
+  useEffect(() => {
+    if (!zijbalkOpen) return
+    const opToets = (e: KeyboardEvent) => { if (e.key === 'Escape') zetZijbalkOpen(false) }
+    document.addEventListener('keydown', opToets)
+    return () => document.removeEventListener('keydown', opToets)
+  }, [zijbalkOpen])
 
   // Notificatiebel: gereedmeldingen en toewijzingen, elke minuut ververst.
   const qc = useQueryClient()
@@ -54,10 +67,18 @@ export default function AppSchil() {
   function openMelding(n: NotificatieRij) {
     if (!n.gelezenOp) markeerGelezen.mutate(n.id)
     zetBelOpen(false)
-    if (n.entiteitType === 'project' && n.entiteitId)
+    if (!n.entiteitId) return
+    // Elke notificatiesoort opent het bijbehorende scherm.
+    if (n.entiteitType === 'project')
       navigeer({ to: '/dossiers/$projectId', params: { projectId: n.entiteitId } })
-    else if (n.entiteitType === 'offerte' && n.entiteitId)
+    else if (n.entiteitType === 'offerte')
       navigeer({ to: '/offertes/$offerteId', params: { offerteId: n.entiteitId } })
+    else if (n.entiteitType === 'lead')
+      navigeer({ to: '/leads/$leadId', params: { leadId: n.entiteitId } })
+    else if (n.entiteitType === 'klant')
+      navigeer({ to: '/klanten/$klantId', params: { klantId: n.entiteitId } })
+    else if (n.entiteitType === 'fotobericht')
+      navigeer({ to: '/fotoberichten' })
   }
 
   async function uitloggen() {
@@ -67,7 +88,16 @@ export default function AppSchil() {
 
   return (
     <div className="flex min-h-screen">
-      <aside className="fixed inset-y-0 left-0 flex w-[236px] flex-col border-r border-bronze-500/45 bg-vlak-sunken text-inkt">
+      {/* Achtergrond achter het uitschuifpaneel op mobiel */}
+      {zijbalkOpen && (
+        <button type="button" aria-label="Menu sluiten" onClick={() => zetZijbalkOpen(false)}
+          className="fixed inset-0 z-40 bg-forest-950/50 lg:hidden" />
+      )}
+      <aside className={clsx(
+        'fixed inset-y-0 left-0 z-50 w-[236px] flex-col border-r border-bronze-500/45 bg-vlak-sunken text-inkt',
+        'transition-transform lg:flex lg:translate-x-0',
+        zijbalkOpen ? 'flex translate-x-0' : 'hidden -translate-x-full lg:flex'
+      )}>
         <div className="flex items-center gap-3 px-5 py-5">
           <span className="flex h-9 w-9 items-center justify-center border-[1.4px] border-inkt/60 font-display text-xl">P</span>
           <div>
@@ -102,14 +132,18 @@ export default function AppSchil() {
           </button>
         </div>
       </aside>
-      <div className="ml-[236px] flex-1">
-        <header className="sticky top-0 z-40 flex h-[56px] items-center justify-between border-b border-inkt/[.07] bg-vlak-canvas/90 px-8 backdrop-blur">
-          <div className="flex items-center gap-4">
+      <div className="flex-1 lg:ml-[236px]">
+        <header className="sticky top-0 z-30 flex h-[56px] items-center justify-between border-b border-inkt/[.07] bg-vlak-canvas/90 px-4 backdrop-blur lg:px-8">
+          <div className="flex items-center gap-2 lg:gap-4">
+            <button type="button" onClick={() => zetZijbalkOpen(o => !o)} aria-label="Menu openen" aria-expanded={zijbalkOpen}
+              className="focusring flex h-8 w-8 items-center justify-center rounded-control text-inkt-muted transition hover:text-inkt lg:hidden">
+              {zijbalkOpen ? <X size={18} /> : <Menu size={18} />}
+            </button>
             <button type="button" onClick={() => router.history.back()}
               className="focusring flex items-center gap-1.5 rounded-control px-2 py-1 text-xs font-semibold text-inkt-muted transition hover:text-inkt">
               <ArrowLeft size={15} strokeWidth={2} /> Terug
             </button>
-            <div className="text-2xs font-bold uppercase tracking-[0.26em] text-bronze-600">Operations · overzicht</div>
+            <div className="hidden text-2xs font-bold uppercase tracking-[0.26em] text-bronze-600 md:block">Operations · overzicht</div>
           </div>
           <div className="flex items-center gap-4">
             <div className="relative">
@@ -123,7 +157,7 @@ export default function AppSchil() {
                 )}
               </button>
               {belOpen && (
-                <div className="absolute right-0 top-10 z-50 w-96 rounded-card border border-inkt/10 bg-vlak-surface shadow-lg">
+                <div className="absolute right-0 top-10 z-50 w-[min(24rem,calc(100vw-2rem))] rounded-card border border-inkt/10 bg-vlak-surface shadow-lg">
                   <div className="flex items-center justify-between border-b border-inkt/[.07] px-4 py-2.5">
                     <span className="text-xs font-bold uppercase tracking-[0.14em] text-inkt-muted">Notificaties</span>
                     {(meldingen?.ongelezen ?? 0) > 0 && (
@@ -140,18 +174,23 @@ export default function AppSchil() {
                           !n.gelezenOp && 'bg-bronze-500/[.05]')}>
                         <div className={clsx('leading-snug', !n.gelezenOp ? 'font-semibold text-inkt' : 'text-inkt-body')}>{n.titel}</div>
                         {n.boodschap && <div className="mt-0.5 text-xs leading-snug text-inkt-muted">{n.boodschap}</div>}
+                        <div className="mt-1 text-xs text-inkt-faint">{relatieveTijd(n.aangemaaktOp)}</div>
                       </button>
                     )))}
                   </div>
                 </div>
               )}
             </div>
-            <div className="cijfers text-xs text-inkt-muted">
+            <div className="cijfers hidden text-xs text-inkt-muted sm:block">
               KW {Math.ceil((new Date().getMonth() + 1) / 3)} · {new Date().getFullYear()}
             </div>
           </div>
         </header>
-        <main className="mx-auto max-w-[1120px] px-8 py-8">
+        {/* Volle breedte: de lijsten met leads, artikelen en dossiers hebben
+            veel kolommen en een harde grens van 1120 liet rechts een brede
+            lege strook staan. Een ruime bovengrens houdt de leesbaarheid op
+            een heel breed scherm intact. */}
+        <main className="mx-auto w-full max-w-[1800px] px-6 py-8 xl:px-10">
           <Suspense fallback={<div className="py-16 text-center text-sm text-inkt-faint">Laden…</div>}>
             <Outlet />
           </Suspense>

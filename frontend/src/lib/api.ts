@@ -32,8 +32,31 @@ async function verzoek<T>(pad: string, init?: RequestInit): Promise<T> {
   return antwoord.json() as Promise<T>
 }
 
+// Bestanden (pdf's) downloaden met het token mee: een gewone <a href> stuurt
+// geen Authorization header en botst op een 401.
+async function download(pad: string) {
+  const { data } = await supabase.auth.getSession()
+  const token = data.session?.access_token
+  const antwoord = await fetch(`/api/v1${pad}`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {}
+  })
+  if (!antwoord.ok) throw new ApiFout(antwoord.status, `Download mislukt (${antwoord.status}).`)
+  const blob = await antwoord.blob()
+  const naam = antwoord.headers.get('Content-Disposition')
+    ?.match(/filename\*?=(?:UTF-8'')?"?([^";]+)/i)?.[1]
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = naam ? decodeURIComponent(naam) : 'document.pdf'
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+  setTimeout(() => URL.revokeObjectURL(url), 60_000)
+}
+
 export const api = {
   get: <T>(pad: string) => verzoek<T>(pad),
+  download,
   post: <T>(pad: string, body?: unknown) =>
     verzoek<T>(pad, { method: 'POST', body: body === undefined ? undefined : JSON.stringify(body) }),
   patch: <T>(pad: string, body: unknown) =>

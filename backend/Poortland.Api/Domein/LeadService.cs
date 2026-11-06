@@ -101,6 +101,12 @@ public class LeadService(PoortlandDbContext db, ClaimsContext claims)
         lead.Status = LeadStatus.Omgezet;
         lead.OmgezetProjectId = project.Id;
         lead.KlantId = klant.Id;
+        // Contactpersonen van de lead reizen mee naar de klant: een koppeling, geen
+        // kopie, zodat beide fiches dezelfde bron tonen (feedback 2026-08-06).
+        var personen = await db.Contactpersonen
+            .Where(c => c.LeadId == lead.Id && c.KlantId == null && c.VerwijderdOp == null)
+            .ToListAsync();
+        foreach (var p in personen) p.KlantId = klant.Id;
         await db.SaveChangesAsync();
         await transactie.CommitAsync();
         return (lead, project);

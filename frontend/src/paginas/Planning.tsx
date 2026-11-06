@@ -9,9 +9,11 @@ import { Invoer, Knop, Melding, Modaal, PaginaKop, Selecteer, Selectievak, Tekst
 /* TS-08: de centrale planning per week. De planner plant fases in met een
    medewerker of ploeg; iedereen leest mee (FR-010). */
 
+// Eén generieke fase plaatsing: meerdere plaatsingen plan je in als
+// meerdere items met deze fase (zelfde lijn als de werkbonnen).
 export const faseTekst: Record<string, string> = {
   voorbereiding: 'Voorbereiding', draadafsluiting: 'Draadafsluiting',
-  plaatsing1: 'Plaatsing 1', plaatsing2: 'Plaatsing 2', automatisering: 'Automatisering'
+  plaatsing: 'Plaatsing', automatisering: 'Automatisering'
 }
 const faseOpties = Object.entries(faseTekst) as [Projectfase, string][]
 const statusKleur: Record<string, string> = {

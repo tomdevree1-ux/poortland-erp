@@ -4,6 +4,8 @@ const {
   Button: WeButton,
   Eyebrow: WeEyebrow
 } = window.PoortlandDesignSystem_6dcc8b;
+// De vertaalmotor, zoals in de andere paginabestanden.
+const t = window.plT;
 function ProcessNL({
   onNav
 }) {
@@ -40,7 +42,7 @@ function ProcessNL({
     style: {
       marginBottom: 20
     }
-  }, "Werkwijze"), /*#__PURE__*/React.createElement("h1", {
+  }, t("Werkwijze")), /*#__PURE__*/React.createElement("h1", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
@@ -50,12 +52,12 @@ function ProcessNL({
       lineHeight: 1.02,
       letterSpacing: '-0.01em'
     }
-  }, "Van eerste advies tot ", /*#__PURE__*/React.createElement("span", {
+  }, t("Van eerste advies tot"), " ", /*#__PURE__*/React.createElement("span", {
     style: {
       fontStyle: 'italic',
       color: 'var(--accent)'
     }
-  }, "perfecte"), " plaatsing."), /*#__PURE__*/React.createElement("p", {
+  }, t("perfecte")), t(" plaatsing.")), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 18,
@@ -64,7 +66,7 @@ function ProcessNL({
       maxWidth: '48ch',
       marginTop: 24
     }
-  }, "Een poort op maat vraagt meer dan een mooie tekening. Daarom start elk project met persoonlijk advies, een plaatsbezoek en een nauwkeurige opmeting. Daarna volgt een voorstel dat rekening houdt met stijl, gebruik, veiligheid en afwerking.")), /*#__PURE__*/React.createElement(Reveal, {
+  }, t("Een poort op maat vraagt meer dan een mooie tekening. Daarom start elk project met een vrijblijvende prijsraming, gevolgd door persoonlijk advies, een plaatsbezoek en een nauwkeurige opmeting. Daarna volgt een voorstel dat rekening houdt met stijl, gebruik, veiligheid en afwerking."))), /*#__PURE__*/React.createElement(Reveal, {
     delay: 90
   }, /*#__PURE__*/React.createElement(GateImage, {
     tone: "corten",
@@ -82,7 +84,7 @@ function ProcessNL({
       maxWidth: 1000,
       margin: '0 auto'
     }
-  }, WERKWIJZE.map(([n, t, d], i) => /*#__PURE__*/React.createElement(Reveal, {
+  }, WERKWIJZE.map(([n, stapTitel, stapTekst], i) => /*#__PURE__*/React.createElement(Reveal, {
     key: n,
     delay: i % 2 * 70
   }, /*#__PURE__*/React.createElement("div", {
@@ -102,7 +104,7 @@ function ProcessNL({
       color: 'var(--accent)',
       lineHeight: 0.9
     }
-  }, n), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h3", {
+  }, n), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
@@ -110,7 +112,7 @@ function ProcessNL({
       color: 'var(--text-heading)',
       margin: 0
     }
-  }, t), /*#__PURE__*/React.createElement("p", {
+  }, t(stapTitel)), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 16,
@@ -119,7 +121,7 @@ function ProcessNL({
       margin: '12px 0 0',
       maxWidth: '62ch'
     }
-  }, d))))))), /*#__PURE__*/React.createElement("section", {
+  }, t(stapTekst)))))))), /*#__PURE__*/React.createElement("section", {
     style: {
       padding: '40px 44px 90px'
     }
@@ -152,15 +154,15 @@ function ProcessNL({
       fontSize: 11,
       letterSpacing: '0.18em',
       textTransform: 'uppercase',
-      color: 'var(--accent)',
+      color: 'var(--accent-label, var(--accent))',
       marginTop: 10
     }
-  }, "weken gemiddeld")), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(WeEyebrow, {
+  }, t("weken gemiddeld"))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(WeEyebrow, {
     dark: true,
     style: {
       marginBottom: 12
     }
-  }, "Wat u mag verwachten"), /*#__PURE__*/React.createElement("p", {
+  }, t("Wat u mag verwachten")), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 16.5,
@@ -169,7 +171,7 @@ function ProcessNL({
       margin: 0,
       maxWidth: '52ch'
     }
-  }, "Er is altijd een plaatsbezoek en een adviesgesprek met opmeting. Het traject van eerste contact tot plaatsing duurt gemiddeld zes tot acht weken. Wij bevestigen een realistische planning bij het voorstel, en houden u onderweg op de hoogte.")))))), /*#__PURE__*/React.createElement("section", {
+  }, t("U ontvangt eerst een vrijblijvende prijsraming. Daarna volgt een plaatsbezoek en een adviesgesprek met opmeting. Het traject van eerste contact tot plaatsing duurt gemiddeld zes tot acht weken. Wij bevestigen een realistische planning bij het voorstel en houden u onderweg op de hoogte."))))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--forest-900)',
       padding: '84px 44px',
@@ -186,18 +188,18 @@ function ProcessNL({
       margin: '0 auto 28px',
       lineHeight: 1.25
     }
-  }, "“Een poort op maat begint bij luisteren. Pas daarna pakken wij het potlood.”"), /*#__PURE__*/React.createElement(WeEyebrow, {
+  }, t("“Een poort op maat begint bij luisteren. Pas daarna pakken wij het potlood.”")), /*#__PURE__*/React.createElement(WeEyebrow, {
     dark: true,
     tone: "muted",
     style: {
       marginBottom: 34
     }
-  }, "Het team van Poortland · Gent"), /*#__PURE__*/React.createElement(WeButton, {
+  }, t("Het team van Poortland · Gent")), /*#__PURE__*/React.createElement(WeButton, {
     variant: "primary",
     size: "lg",
     arrow: true,
-    onClick: () => onNav('contact')
-  }, "Plan een adviesgesprek"))), /*#__PURE__*/React.createElement(CTASectie, {
+    onClick: () => window.dispatchEvent(new CustomEvent('pl-offerte-open'))
+  }, t("Vraag een prijsraming aan")))), /*#__PURE__*/React.createElement(CTASectie, {
     onNav: onNav,
     dark: false
   }));

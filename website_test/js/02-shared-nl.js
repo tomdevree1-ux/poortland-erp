@@ -28,6 +28,8 @@ window.plZetTaal = function (l) {
     localStorage.setItem('pl_taal', window.PL_TAAL);
   } catch (e) {}
   if (document.documentElement) document.documentElement.lang = window.PL_TAAL.toLowerCase();
+  var _skip = document.querySelector('.pl-skip');
+  if (_skip && window.plT) _skip.textContent = window.plT('Naar de inhoud');
 };
 function t(s) {
   if (s == null || window.PL_TAAL === 'NL') return s;
@@ -267,6 +269,18 @@ function TaalWisselaar({
   dark = true
 }) {
   const [open, setOpen] = React.useState(false);
+  const sluitTimer = React.useRef(null);
+  const openNu = () => {
+    if (sluitTimer.current) clearTimeout(sluitTimer.current);
+    setOpen(true);
+  };
+  const sluitStraks = () => {
+    if (sluitTimer.current) clearTimeout(sluitTimer.current);
+    sluitTimer.current = setTimeout(() => setOpen(false), 450);
+  };
+  React.useEffect(() => () => {
+    if (sluitTimer.current) clearTimeout(sluitTimer.current);
+  }, []);
   React.useEffect(() => {
     if (!open) return;
     const onKey = e => {
@@ -279,8 +293,8 @@ function TaalWisselaar({
   const faint = dark ? 'var(--text-on-dark-muted)' : 'var(--text-muted)';
   const active = dark ? 'var(--stone-100)' : 'var(--text-heading)';
   return /*#__PURE__*/React.createElement("div", {
-    onMouseEnter: () => setOpen(true),
-    onMouseLeave: () => setOpen(false),
+    onMouseEnter: openNu,
+    onMouseLeave: sluitStraks,
     style: {
       position: 'relative',
       display: 'inline-block'
@@ -296,7 +310,7 @@ function TaalWisselaar({
       background: 'none',
       border: 0,
       cursor: 'pointer',
-      padding: '5px 7px',
+      padding: '12px 10px',
       fontFamily: 'var(--font-label)',
       fontSize: 11,
       fontWeight: 600,
@@ -306,7 +320,7 @@ function TaalWisselaar({
   }, lang, /*#__PURE__*/React.createElement("span", {
     "aria-hidden": "true",
     style: {
-      fontSize: 8,
+      fontSize: 10,
       color: faint,
       transform: open ? 'rotate(180deg)' : 'none',
       transition: 'transform var(--dur) var(--ease-out)',
@@ -374,20 +388,27 @@ var MENU = [{
     route: 'metalen',
     desc: 'Sterk en strak'
   }, {
-    label: 'Houten poorten',
-    route: 'houten',
-    desc: 'Warm en tijdloos'
-  }, {
     label: 'Combinatie hout en metaal',
     route: 'combinatie',
     desc: 'Stevig en warm'
+  }, {
+    label: 'Massief houten poorten',
+    route: 'houten',
+    desc: 'Warm en tijdloos'
   }]
 }, {
   label: 'Overkappingen',
   route: 'overkappingen'
 }, {
+  label: 'Koopjes',
+  route: 'koopjes'
+}, {
   label: 'Service',
   kinderen: [{
+    label: 'Plaatsing',
+    route: 'plaatsing',
+    desc: 'Funderingen, rails en palen'
+  }, {
     label: 'Automatisering',
     route: 'automatisering',
     desc: 'Automatische poorten'
@@ -410,6 +431,10 @@ var MENU = [{
     label: 'FAQ',
     route: 'faq',
     desc: 'Veelgestelde vragen'
+  }, {
+    label: 'Jobs',
+    route: 'jobs',
+    desc: 'Werken bij Poortland'
   }]
 }, {
   label: 'Contact',
@@ -421,6 +446,13 @@ function MobileNav({
   _forceOpen
 }) {
   const [open, setOpen] = React.useState(!!_forceOpen);
+  // Escape sluit het menu (toegankelijkheid, audit 2026-08-11 G3)
+  React.useEffect(() => {
+    if (!open) return;
+    const opToets = e => { if (e.key === 'Escape') setOpen(false); };
+    document.addEventListener('keydown', opToets);
+    return () => document.removeEventListener('keydown', opToets);
+  }, [open]);
   const [exp, setExp] = React.useState('Poorten');
   React.useEffect(() => {
     if (!open) return;
@@ -452,8 +484,10 @@ function MobileNav({
       position: 'sticky',
       top: 0,
       zIndex: 60,
-      background: 'rgba(247,243,235,0.97)',
-      backdropFilter: 'blur(12px)',
+      background: 'rgba(247,243,235,0.985)',
+      // Geen backdrop filter hier: dat maakt de kop het referentiekader voor
+      // position fixed waardoor het menupaneel (inset 0) afgeknipt werd op de
+      // hoogte van de kop en het mobiele menu onzichtbaar bleef.
       borderBottom: '1px solid var(--line-on-dark-soft)'
     }
   }, /*#__PURE__*/React.createElement("div", {
@@ -465,6 +499,7 @@ function MobileNav({
     }
   }, /*#__PURE__*/React.createElement("button", {
     onClick: () => go('home'),
+    "aria-label": "Naar de homepagina",
     style: {
       display: 'flex',
       alignItems: 'center',
@@ -490,6 +525,7 @@ function MobileNav({
   }, "Poortland")), /*#__PURE__*/React.createElement("button", {
     onClick: () => setOpen(true),
     "aria-label": "Menu openen",
+    "aria-expanded": open,
     style: {
       display: 'flex',
       flexDirection: 'column',
@@ -647,7 +683,7 @@ function MobileNav({
       fontWeight: 600,
       cursor: 'pointer'
     }
-  }, t('Vraag een offerte aan')), /*#__PURE__*/React.createElement("a", {
+  }, t('Vraag een prijsraming aan')), /*#__PURE__*/React.createElement("a", {
     href: "tel:+3215432111",
     style: {
       display: 'block',
@@ -662,7 +698,7 @@ function MobileNav({
   }, t('Bel ons: 015 43 21 11'))))));
 }
 function Nav(props) {
-  if (useIsMobile(880)) return /*#__PURE__*/React.createElement(MobileNav, {
+  if (useIsMobile(1120)) return /*#__PURE__*/React.createElement(MobileNav, {
     route: props.route,
     onNav: props.onNav
   });
@@ -686,10 +722,10 @@ function DesktopNav({
   }, []);
   const fg = 'var(--stone-200)';
   const faint = 'var(--text-on-dark-muted)';
-  const POORTEN = [['metalen', 'Metalen poorten', 'Sterk en strak', 'media/stalen-poort.jpg', '(staal, metaal en aluminium)'], ['houten', 'Houten poorten', 'Warm en tijdloos', 'media/houten-poort.jpg'], ['combinatie', 'Combinatie hout en metaal', 'Stevig en warm', 'media/staal-hout.jpg']];
+  const POORTEN = [['metalen', 'Metalen poorten', 'Sterk en strak', 'media/stalen-poort.jpg', '(staal, metaal en aluminium)'], ['combinatie', 'Combinatie hout en metaal', 'Stevig en warm', 'media/staal-hout.jpg'], ['houten', 'Massief houten poorten', 'Warm en tijdloos', 'media/houten-poort.jpg']];
   const actPoort = POORTEN.find(p => p[0] === activePoort) || POORTEN[0];
-  const SERVICE = [['automatisering', 'Automatisering', 'Automatische poorten'], ['onderhoud', 'Onderhoud', 'Nazorg en herstellingen']];
-  const OVER = [['atelier', 'Over ons', 'Ons atelier in Mechelen'], ['garantie', 'Garantie', 'Onze waarborgen'], ['faq', 'FAQ', 'Veelgestelde vragen']];
+  const SERVICE = [['plaatsing', 'Plaatsing', 'Funderingen, rails en palen'], ['automatisering', 'Automatisering', 'Automatische poorten'], ['onderhoud', 'Onderhoud', 'Nazorg en herstellingen']];
+  const OVER = [['atelier', 'Over ons', 'Ons atelier in Mechelen'], ['garantie', 'Garantie', 'Onze waarborgen'], ['faq', 'FAQ', 'Veelgestelde vragen'], ['jobs', 'Jobs', 'Werken bij Poortland']];
   const linkStyle = active => ({
     background: 'none',
     border: 0,
@@ -714,9 +750,9 @@ function DesktopNav({
       display: 'inline-block'
     }
   }, "▾");
-  const poortenActive = ['metalen', 'houten', 'combinatie'].indexOf(route) >= 0 || openMenu === 'poorten';
-  const serviceActive = ['service', 'automatisering', 'onderhoud'].indexOf(route) >= 0 || openMenu === 'service';
-  const overActive = ['atelier', 'garantie', 'faq'].indexOf(route) >= 0 || openMenu === 'over';
+  const poortenActive = ['metalen', 'combinatie', 'houten'].indexOf(route) >= 0 || openMenu === 'poorten';
+  const serviceActive = ['service', 'plaatsing', 'automatisering', 'onderhoud'].indexOf(route) >= 0 || openMenu === 'service';
+  const overActive = ['atelier', 'garantie', 'faq', 'jobs'].indexOf(route) >= 0 || openMenu === 'over';
   const simpleMenu = (key, items) => /*#__PURE__*/React.createElement("div", {
     style: {
       maxWidth: 560
@@ -846,6 +882,13 @@ function DesktopNav({
     },
     style: linkStyle(route === 'overkappingen')
   }, t('Overkappingen')), /*#__PURE__*/React.createElement("button", {
+    onMouseEnter: () => setOpenMenu(null),
+    onClick: () => {
+      onNav('koopjes');
+      setOpenMenu(null);
+    },
+    style: linkStyle(route === 'koopjes')
+  }, t('Koopjes')), /*#__PURE__*/React.createElement("button", {
     onMouseEnter: () => setOpenMenu('service'),
     onClick: () => setOpenMenu(v => v === 'service' ? null : 'service'),
     "aria-expanded": openMenu === 'service',
@@ -884,7 +927,7 @@ function DesktopNav({
       window.dispatchEvent(new CustomEvent('pl-offerte-open'));
       setOpenMenu(null);
     }
-  }, t('Vraag een offerte aan')), /*#__PURE__*/React.createElement("button", {
+  }, t('Vraag een prijsraming aan')), /*#__PURE__*/React.createElement("button", {
     onClick: () => {
       onNav('contact');
       setOpenMenu(null);
@@ -918,7 +961,7 @@ function DesktopNav({
   }))), /*#__PURE__*/React.createElement("div", {
     style: {
       overflow: 'hidden',
-      maxHeight: openMenu === 'poorten' ? 470 : openMenu ? 340 : 0,
+      maxHeight: openMenu === 'poorten' ? 470 : openMenu ? 430 : 0,
       transition: 'max-height 360ms var(--ease-out)',
       borderTop: openMenu ? '1px solid var(--line-on-dark-soft)' : '1px solid transparent',
       borderBottom: openMenu ? '1px solid var(--line-on-light-soft)' : 'none',
@@ -1204,7 +1247,7 @@ function FAQ({
         background: 'var(--accent)',
         color: '#fff'
       }
-    }, t('Vraag een offerte aan'), " ", /*#__PURE__*/React.createElement("span", {
+    }, t('Vraag een prijsraming aan'), " ", /*#__PURE__*/React.createElement("span", {
       "aria-hidden": "true"
     }, "↗"))) : /*#__PURE__*/React.createElement("p", {
       style: {
@@ -1255,7 +1298,7 @@ function CTASectie({
       maxWidth: '46ch',
       margin: '0 auto 34px'
     }
-  }, t('Wilt u een poort of overkapping dat past bij uw woning en jarenlang vertrouwen geeft. Plan een adviesgesprek of bezoek de showroom.')), /*#__PURE__*/React.createElement("div", {
+  }, t('Wilt u een poort of overkapping die past bij uw woning en jarenlang vertrouwen geeft? Vraag een vrijblijvende prijsraming aan; daarna bekijken wij samen alle mogelijkheden.')), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 16,
@@ -1265,18 +1308,49 @@ function CTASectie({
   }, /*#__PURE__*/React.createElement(SButton, {
     variant: "primary",
     size: "lg",
-    arrow: true,
-    onClick: () => onNav('contact')
-  }, t('Plan een adviesgesprek')), /*#__PURE__*/React.createElement(SButton, {
-    variant: "secondary",
-    size: "lg",
     dark: dark,
     arrow: true,
     onClick: () => window.dispatchEvent(new CustomEvent('pl-offerte-open'))
-  }, t('Vraag uw offerte aan')))));
+  }, t('Vraag uw prijsraming aan')))));
 }
 
 /* ---- Footer ---- */
+// Powered by Semanu: klikbare badge onderaan elke pagina.
+function SemanuBadge() {
+  const [hover, setHover] = React.useState(false);
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      justifyContent: 'center',
+      paddingTop: 26
+    }
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "https://www.semanu.be",
+    target: "_blank",
+    rel: "noopener noreferrer",
+    onMouseEnter: () => setHover(true),
+    onMouseLeave: () => setHover(false),
+    style: {
+      display: 'inline-block',
+      lineHeight: 0,
+      borderRadius: 999,
+      transform: hover ? 'translateY(-2px)' : 'none',
+      filter: hover ? 'drop-shadow(0 6px 14px rgba(255,95,31,0.32))' : 'none',
+      transition: 'transform 180ms ease, filter 180ms ease'
+    }
+  }, /*#__PURE__*/React.createElement("img", {
+    src: "/assets/powered-by-semanu.png",
+    alt: "Powered by Semanu",
+    width: 135,
+    height: 41,
+    loading: "lazy",
+    style: {
+      display: 'block',
+      width: 135,
+      height: 'auto'
+    }
+  })));
+}
 function Footer({
   onNav,
   lang,
@@ -1295,6 +1369,7 @@ function Footer({
       margin: '0 auto'
     }
   }, /*#__PURE__*/React.createElement("div", {
+    className: "pl-footgrid",
     style: {
       display: 'grid',
       gridTemplateColumns: '1.4fr 1fr 1fr 1fr',
@@ -1334,19 +1409,19 @@ function Footer({
       lineHeight: 1.7,
       margin: '0 0 20px'
     }
-  }, t('Handgemaakte toegangspoorten, overkappingen en automatisatie op maat. Ontworpen, gemaakt en geplaatst in België.')), /*#__PURE__*/React.createElement(TaalWisselaar, {
+  }, t('Toegangspoorten, overkappingen en automatisatie op maat. Ontworpen, gemaakt en geplaatst in eigen atelier in Mechelen.')), /*#__PURE__*/React.createElement(TaalWisselaar, {
     lang: lang,
     onLang: onLang,
     dark: true
   })), /*#__PURE__*/React.createElement(FooterKol, {
     title: "Poorten",
-    links: [['Metalen poorten', () => onNav('metalen')], ['Houten poorten', () => onNav('houten')], ['Combinatie hout en metaal', () => onNav('combinatie')], ['Overkappingen', () => onNav('overkappingen')]]
+    links: [['Metalen poorten', () => onNav('metalen')], ['Combinatie hout en metaal', () => onNav('combinatie')], ['Massief houten poorten', () => onNav('houten')], ['Overkappingen', () => onNav('overkappingen')], ['Koopjes', () => onNav('koopjes')]]
   }), /*#__PURE__*/React.createElement(FooterKol, {
     title: "Service en info",
-    links: [['Automatisering', () => onNav('automatisering')], ['Onderhoud', () => onNav('onderhoud')], ['Over ons', () => onNav('atelier')], ['Garantie', () => onNav('garantie')], ['FAQ', () => onNav('faq')]]
+    links: [['Plaatsing', () => onNav('plaatsing')], ['Automatisering', () => onNav('automatisering')], ['Onderhoud', () => onNav('onderhoud')], ['Over ons', () => onNav('atelier')], ['Garantie', () => onNav('garantie')], ['FAQ', () => onNav('faq')], ['Jobs', () => onNav('jobs')]]
   }), /*#__PURE__*/React.createElement(FooterKol, {
     title: "Atelier en showroom",
-    links: [[/*#__PURE__*/React.createElement("span", null, "Hombeeksesteenweg 164-166", /*#__PURE__*/React.createElement("br", null), "2800\xA0Mechelen")], ['+32 (0)15 432 111'], ['info@poortland.be'], ['Open op afspraak']]
+    links: [[/*#__PURE__*/React.createElement("span", null, "Hombeeksesteenweg 164-166", /*#__PURE__*/React.createElement("br", null), t('2800\xA0Mechelen'))], ['+32 (0)15 432 111'], ['info@poortland.be'], [/*#__PURE__*/React.createElement("span", null, t('Ma tot vr 9 tot 17 uur'), /*#__PURE__*/React.createElement("br", null), t('Za 10 tot 16 uur'))]]
   })), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
@@ -1359,7 +1434,7 @@ function Footer({
       fontSize: 11.5,
       color: 'var(--text-on-dark-faint)'
     }
-  }, /*#__PURE__*/React.createElement("span", null, t('© 2026 Poortland — Handgemaakt in België sinds 1999')), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("span", null, t('© 2026 Poortland — Uit eigen atelier in Mechelen sinds 1999')), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 22,
@@ -1395,7 +1470,7 @@ function Footer({
       fontFamily: 'inherit',
       fontSize: 'inherit'
     }
-  }, t('Cookiebeleid')), /*#__PURE__*/React.createElement("span", null, "BTW BE 0464 838 351")))));
+  }, t('Cookiebeleid')), /*#__PURE__*/React.createElement("span", null, "BTW BE 0464 838 351"))), /*#__PURE__*/React.createElement(SemanuBadge, null)));
 }
 function FooterKol({
   title,
@@ -1423,7 +1498,8 @@ function FooterKol({
     style: {
       background: 'none',
       border: 0,
-      padding: 0,
+      padding: '4px 0',
+      minHeight: 26,
       cursor: fn ? 'pointer' : 'default',
       fontFamily: 'var(--font-sans)',
       fontSize: 13.5,
@@ -1487,24 +1563,79 @@ function SectieKop({
 
 /* ---- Doorlopende fotobanner (marquee) ---- */
 function FotoBanner({
-  fotos,
-  onNav
+  fotos
 }) {
+  // Sfeerband: niet klikbaar (feedback 2026-08-26). De band schuift vanzelf,
+  // pauzeert zolang de bezoeker vasthoudt en kan versleept worden.
   const rij = [...fotos, ...fotos];
+  const baanRef = React.useRef(null);
+  const st = React.useRef({
+    offset: 0,
+    bezig: false,
+    startX: 0,
+    startOffset: 0
+  });
+  React.useEffect(() => {
+    const s = st.current;
+    let raf = 0;
+    let laatst = performance.now();
+    const langzaam = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const stapje = nu => {
+      const dt = Math.min(nu - laatst, 100);
+      laatst = nu;
+      if (!s.bezig && !langzaam) s.offset -= dt * 0.032;
+      const baan = baanRef.current;
+      if (baan) {
+        const half = baan.scrollWidth / 2;
+        if (half > 0) {
+          if (s.offset <= -half) s.offset += half;
+          if (s.offset > 0) s.offset -= half;
+        }
+        baan.style.transform = 'translateX(' + s.offset + 'px)';
+      }
+      raf = requestAnimationFrame(stapje);
+    };
+    raf = requestAnimationFrame(stapje);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+  const neer = e => {
+    const s = st.current;
+    s.bezig = true;
+    s.startX = e.clientX;
+    s.startOffset = s.offset;
+    if (e.currentTarget.setPointerCapture) try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch (f) {}
+  };
+  const beweeg = e => {
+    const s = st.current;
+    if (s.bezig) s.offset = s.startOffset + (e.clientX - s.startX);
+  };
+  const los = () => {
+    st.current.bezig = false;
+  };
   return /*#__PURE__*/React.createElement("div", {
     className: "pl-marquee",
+    onPointerDown: neer,
+    onPointerMove: beweeg,
+    onPointerUp: los,
+    onPointerCancel: los,
     style: {
       position: 'relative',
       width: '100%',
       overflow: 'hidden',
-      cursor: onNav ? 'pointer' : 'default'
-    },
-    onClick: () => onNav && onNav('metalen')
+      cursor: 'grab',
+      touchAction: 'pan-y',
+      userSelect: 'none'
+    }
   }, /*#__PURE__*/React.createElement("div", {
+    ref: baanRef,
     className: "pl-marquee-track",
     style: {
       display: 'flex',
-      width: 'max-content'
+      width: 'max-content',
+      animation: 'none',
+      willChange: 'transform'
     }
   }, rij.map((f, i) => /*#__PURE__*/React.createElement("figure", {
     key: i,
@@ -1526,11 +1657,13 @@ function FotoBanner({
     src: f.src,
     alt: f.label,
     loading: "lazy",
+    draggable: false,
     style: {
       width: '100%',
       height: '100%',
       objectFit: 'cover',
-      display: 'block'
+      display: 'block',
+      pointerEvents: 'none'
     }
   })), /*#__PURE__*/React.createElement("div", {
     style: {
@@ -1783,15 +1916,15 @@ var PAGINAS = {
         route: 'metalen',
         beeld: 'media/stalen-poort.jpg'
       }, {
-        titel: 'Houten poorten',
-        tekst: 'Warm en natuurlijk',
-        route: 'houten',
-        beeld: 'media/houten-poort.jpg'
-      }, {
         titel: 'Combinatie hout en metaal',
         tekst: 'Stevig en warm',
         route: 'combinatie',
         beeld: 'media/staal-hout.jpg'
+      }, {
+        titel: 'Massief houten poorten',
+        tekst: 'Warm en natuurlijk',
+        route: 'houten',
+        beeld: 'media/houten-poort.jpg'
       }]
     }, {
       h2: 'Van ontwerp tot plaatsing',
@@ -1830,11 +1963,11 @@ var PAGINAS = {
     }]
   },
   houten: {
-    title: 'Houten poorten op maat | Poortland Mechelen',
-    eyebrow: 'Houten poorten',
-    h1: 'Houten poorten op maat',
+    title: 'Massief houten poorten op maat | Poortland Mechelen',
+    eyebrow: 'Massief houten poorten',
+    h1: 'Massief houten poorten op maat',
     beeld: 'media/houten-poort.jpg',
-    intro: 'Een houten poort geeft uw woning een warme, natuurlijke uitstraling. Poortland maakt houten poorten volledig op maat.',
+    intro: 'Een massief houten poort geeft uw woning een warme, natuurlijke uitstraling. Poortland maakt massief houten poorten volledig op maat.',
     cta: {
       label: 'Vraag een offerte aan',
       route: 'contact'
@@ -1844,14 +1977,14 @@ var PAGINAS = {
       route: 'automatisering'
     },
     secties: [{
-      h2: 'Natuurlijke houten poorten met karakter',
-      tekst: 'Wij maken houten poorten met oog voor detail en afwerking, afgestemd op uw woning.'
+      h2: 'Massief houten poorten met karakter',
+      tekst: 'Wij maken massief houten poorten met oog voor detail en afwerking, afgestemd op uw woning.'
     }, {
       h2: 'Duurzame houtsoorten zoals Padouk en Iroko',
       tekst: 'Wij werken met Padouk en Iroko, hardhoutsoorten die bekend staan om hun stabiliteit en lange levensduur.'
     }, {
       h2: 'Enkele en dubbele draaipoorten',
-      tekst: 'Houten poorten zijn er als enkele of dubbele draaipoort met vaste panelen waar nodig.'
+      tekst: 'Massief houten poorten zijn er als enkele of dubbele draaipoort met vaste panelen waar nodig.'
     }, {
       h2: 'Manueel of automatisch bediend',
       tekst: 'U bedient uw houten poort manueel of laat ze automatiseren met een aangepaste aandrijving.'
@@ -2052,6 +2185,61 @@ function OfferteModal({
   const [bezig, setBezig] = React.useState(false);
   const [fout, setFout] = React.useState('');
   const [fotos, setFotos] = React.useState([]);
+  const [modelKiezerOpen, setModelKiezerOpen] = React.useState(false);
+  const [modelLijstOpen, setModelLijstOpen] = React.useState(false);
+  React.useEffect(() => {
+    if (!modelLijstOpen) return;
+    const dicht = e => {
+      if (e.target && e.target.closest && e.target.closest('[data-modellijst]')) return;
+      setModelLijstOpen(false);
+    };
+    document.addEventListener('pointerdown', dicht);
+    return () => document.removeEventListener('pointerdown', dicht);
+  }, [modelLijstOpen]);
+  const [modelStijlFilter, setModelStijlFilter] = React.useState('Alle');
+  // Modellenaanbod per type poort, zelfde bron als de poortpagina's. Eén foto
+  // per modelfamilie (feedback 2026-08-26).
+  const modelAanbod = React.useMemo(() => {
+    const cat = typeof CATEGORIEEN !== 'undefined' && CATEGORIEEN ? CATEGORIEEN : window.CATEGORIEEN || {};
+    const perBasis = lijst => {
+      const items = (lijst || []).filter(m => m && m.naam && m.foto);
+      const kaart = modelBasisKaart(items.map(m => m.naam));
+      const gezien = {};
+      const uit = [];
+      items.forEach(m => {
+        const b = kaart[m.naam] || m.naam;
+        if (gezien[b]) return;
+        gezien[b] = true;
+        uit.push({
+          naam: b,
+          foto: m.foto
+        });
+      });
+      uit.sort((a, b2) => a.naam.localeCompare(b2.naam, 'nl'));
+      return uit;
+    };
+    if (data.typePoort === 'Massief houten poort') return [{
+      naam: null,
+      modellen: perBasis(cat.houten && cat.houten.modellenPlat)
+    }];
+    if (data.typePoort === 'Combinatie hout en metaal') return [{
+      naam: null,
+      modellen: perBasis(cat.combinatie && cat.combinatie.modellenPlat)
+    }];
+    // Aluminium is een eigen keuze geworden (feedback 2026-09-13): de tab
+    // Aluminium hoort bij die keuze, de overige tabs bij staal.
+    const metaalGroepen = cat.metalen && cat.metalen.productenGroepen || [];
+    const isAlu = g => String(g.tab || '').toLowerCase().indexOf('alumin') >= 0;
+    if (data.typePoort === 'Aluminium poort') return metaalGroepen.filter(isAlu).map(g => ({
+      naam: '',
+      modellen: perBasis(g.types)
+    })).filter(g => g.modellen.length);
+    if (data.typePoort === 'Stalen poort') return metaalGroepen.filter(g => !isAlu(g)).map(g => ({
+      naam: g.tab || '',
+      modellen: perBasis(g.types)
+    })).filter(g => g.modellen.length);
+    return [];
+  }, [data.typePoort]);
   React.useEffect(() => {
     const on = e => {
       const svc = e && e.detail && e.detail.service;
@@ -2062,6 +2250,9 @@ function OfferteModal({
       setFout('');
       setBezig(false);
       setFotos([]);
+      setModelKiezerOpen(false);
+      setModelLijstOpen(false);
+      setModelStijlFilter('Alle');
       setOpen(true);
     };
     window.addEventListener('pl-offerte-open', on);
@@ -2078,6 +2269,18 @@ function OfferteModal({
       window.removeEventListener('keydown', onKey);
     };
   }, [open]);
+  const scrollRef = React.useRef(null);
+  const [kanScrollen, setKanScrollen] = React.useState(false);
+  const meetScroll = () => {
+    const el = scrollRef.current;
+    if (el) setKanScrollen(el.scrollHeight - el.clientHeight - el.scrollTop > 30);
+  };
+  React.useEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = 0;
+    const t1 = setTimeout(meetScroll, 80);
+    return () => clearTimeout(t1);
+  }, [step, open]);
+  const aandacht = service === 'poorten' && !data.typeOpening;
   const close = () => setOpen(false);
   const closeReset = () => {
     setOpen(false);
@@ -2089,9 +2292,11 @@ function OfferteModal({
     setBezig(false);
     setFotos([]);
   };
-  const set = (k, v) => setData(d => Object.assign({}, d, {
-    [k]: v
-  }));
+  const set = (k, v) => setData(d => {
+    const n = Object.assign({}, d);
+    if (v === undefined || v === null) delete n[k];else n[k] = v;
+    return n;
+  });
   const kies = s => {
     setService(s);
     setStep(2);
@@ -2161,12 +2366,20 @@ function OfferteModal({
       marginBottom: 20
     }
   }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: 'pl-veld-' + p.name,
     style: labelSt
   }, t(p.label), p.required ? /*#__PURE__*/React.createElement("span", {
     style: {
       color: 'var(--accent)'
     }
-  }, " *") : null), /*#__PURE__*/React.createElement("input", {
+  }, " *") : null), /*#__PURE__*/React.createElement("div", {
+    style: p.meterHulp ? {
+      display: 'flex',
+      gap: 10,
+      alignItems: 'stretch'
+    } : null
+  }, /*#__PURE__*/React.createElement("input", {
+    id: 'pl-veld-' + p.name,
     type: p.type || 'text',
     inputMode: p.inputMode,
     value: data[p.name] || '',
@@ -2174,18 +2387,35 @@ function OfferteModal({
     onChange: e => set(p.name, e.target.value),
     style: Object.assign({}, inputSt, {
       borderColor: errors[p.name] ? 'var(--accent-rust)' : 'var(--line-on-light)'
+    }, p.meterHulp ? { flex: 1 } : null)
+  }), p.meterHulp ? /*#__PURE__*/React.createElement("div", {
+    // Live omrekening cm naar meter zodat een foute ingave meteen opvalt
+    style: Object.assign({}, inputSt, {
+      flex: '0 0 120px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      color: 'var(--text-on-dark-muted, #6E6450)',
+      background: 'rgba(20,28,21,.04)'
     })
-  }), errors[p.name] ? /*#__PURE__*/React.createElement("div", {
+  }, (function () {
+    var cm = parseFloat(String(data[p.name] || '').replace(',', '.'));
+    return isFinite(cm) && cm > 0 ? '= ' + (cm / 100).toFixed(2).replace('.', ',') + ' m' : '= — m';
+  })()) : null), errors[p.name] ? /*#__PURE__*/React.createElement("div", {
+    role: "alert",
     style: errSt
   }, errors[p.name]) : null);
   const Area = p => /*#__PURE__*/React.createElement("div", {
     key: p.name,
+    "data-veld": p.name,
     style: {
       marginBottom: 20
     }
   }, /*#__PURE__*/React.createElement("label", {
+    htmlFor: 'pl-veld-' + p.name,
     style: labelSt
   }, t(p.label)), /*#__PURE__*/React.createElement("textarea", {
+    id: 'pl-veld-' + p.name,
     rows: p.rows || 4,
     value: data[p.name] || '',
     placeholder: t(p.placeholder),
@@ -2202,12 +2432,17 @@ function OfferteModal({
     style: {
       marginBottom: 22
     }
-  }, /*#__PURE__*/React.createElement("label", {
+  }, p.label ? /*#__PURE__*/React.createElement("label", {
     style: labelSt
-  }, t(p.label)), /*#__PURE__*/React.createElement("div", {
+  }, t(p.label)) : null, /*#__PURE__*/React.createElement("div", {
+    // Met kolommen: 2 een vast raster van twee, dat valt op een telefoon terug
+    // naar een kolom via de klasse pl-grid2 in index.html.
+    className: p.kolommen === 2 ? 'pl-grid2' : undefined,
     style: {
       display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(' + (p.min || 190) + 'px, 1fr))',
+      gridTemplateColumns: p.kolommen === 2
+        ? 'repeat(2, minmax(0, 1fr))'
+        : 'repeat(auto-fit, minmax(' + (p.min || 145) + 'px, 1fr))',
       gap: 10
     }
   }, p.options.map(o => {
@@ -2217,7 +2452,7 @@ function OfferteModal({
     return /*#__PURE__*/React.createElement("button", {
       key: val,
       type: "button",
-      onClick: () => set(p.name, val),
+      onClick: () => set(p.name, sel ? undefined : val),
       style: {
         textAlign: 'left',
         cursor: 'pointer',
@@ -2245,6 +2480,632 @@ function OfferteModal({
       }
     }, t(sub)) : null);
   })));
+  // Bovenaanzicht van de poortsituatie: kleedt zich aan met elke keuze
+  // (blokjesconfigurator, schets Jef 2026-08-19). Puur presentatie; de
+  // waarden zelf zitten in dezelfde data velden als de rest van de wizard.
+  // Bovenaanzicht van de poortsituatie in illustratieve stijl (naar het
+  // voorbeeld van Jef/Tom, 2026-08-24). De waarden zitten in dezelfde data
+  // velden als de rest van de wizard.
+  const situatieSvg = () => {
+    const s = [];
+    const B = 960, H = 288, midY = 168;
+    const cm = parseFloat(String(data.breedte || '').replace(',', '.'));
+    const openPx = Math.max(240, Math.min(430, (isFinite(cm) && cm > 0 ? cm : 350)));
+    const x1 = (B - openPx) / 2, x2 = (B + openPx) / 2;
+    const lijn = (a, b, c, d, kleur, dikte, dash) => s.push('<line x1="' + a + '" y1="' + b + '" x2="' + c + '" y2="' + d + '" stroke="' + kleur + '" stroke-width="' + dikte + '" stroke-linecap="round"' + (dash ? ' stroke-dasharray="' + dash + '"' : '') + '/>');
+    const txt = (x, y, t2, kleur, gr, vet, sp) => s.push('<text x="' + x + '" y="' + y + '" fill="' + (kleur || '#6E6450') + '" font-size="' + (gr || 13) + '" text-anchor="middle"' + (vet ? ' font-weight="700"' : '') + (sp ? ' letter-spacing="' + sp + '"' : '') + ' font-family="var(--font-sans)">' + t2 + '</text>');
+    const paalB = p => ({ 'Standaardpaal': 22, 'Brievenbuspaal': 30, 'Pakjespaal': 38, 'Zuil': 46 })[p] || 0;
+
+    s.push('<defs>'
+      + '<pattern id="plStip" width="26" height="26" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1.5" fill="#DDD3BE"/></pattern>'
+      + '<marker id="plPijl" markerWidth="10" markerHeight="10" refX="6.5" refY="5" orient="auto"><path d="M1.5 1.5 L7.5 5 L1.5 8.5" fill="none" stroke="#B7A27B" stroke-width="2" stroke-linecap="round"/></marker>'
+      + '</defs>');
+
+    /* Oprit met stippenraster, enkel aan de doorgang */
+    s.push('<rect x="' + (x1 + 3) + '" y="14" width="' + (openPx - 6) + '" height="' + (midY - 16) + '" rx="10" fill="#EDE6D8"/>');
+    s.push('<rect x="' + (x1 + 3) + '" y="14" width="' + (openPx - 6) + '" height="' + (midY - 16) + '" rx="10" fill="url(#plStip)"/>');
+    txt((x1 + x2) / 2, 44, t('OPRIT'), '#B9AD93', 14, true, '0.25em');
+
+    /* Naamplaatjes Links en Rechts */
+    const chip = (cx, tekst) => {
+      s.push('<rect x="' + (cx - 46) + '" y="52" width="92" height="30" rx="8" fill="#FFFFFF" stroke="#DCD5C6"/>');
+      txt(cx, 72, tekst, '#3E3A34', 13, true, '0.12em');
+    };
+    chip((34 + x1) / 2, t('LINKS'));
+    chip((x2 + B - 34) / 2, t('RECHTS'));
+
+    /* Struiken en zijden */
+    const struiken = (xs, xe) => {
+      for (let gx = xs + 26; gx < xe - 18; gx += 56) {
+        s.push('<ellipse cx="' + (gx + 14) + '" cy="' + (midY - 24) + '" rx="26" ry="13" fill="#7E9469"/>');
+        s.push('<ellipse cx="' + gx + '" cy="' + (midY - 18) + '" rx="20" ry="11" fill="#93A97E"/>');
+        s.push('<ellipse cx="' + (gx + 26) + '" cy="' + (midY - 16) + '" rx="16" ry="9" fill="#6B8258"/>');
+      }
+    };
+    const planken = (xs, xe, vul, rand, dash) => {
+      for (let px2 = xs + 4; px2 < xe - 8; px2 += 15) s.push('<rect x="' + px2 + '" y="' + (midY - 14) + '" width="8" height="28" rx="2" fill="' + vul + '" stroke="' + rand + '" stroke-width="1.5"' + (dash ? ' stroke-dasharray="3 3"' : '') + '/>');
+    };
+    const zijde = links => {
+      const kant = links ? data.aansluitingLinks : data.aansluitingRechts;
+      const paal = links ? data.paalLinks : data.paalRechts;
+      const xs = links ? 34 : x2 + paalB(paal), xe = links ? x1 - paalB(paal) : B - 34;
+      if (kant === 'Woning') {
+        s.push('<rect x="' + xs + '" y="' + (midY - 52) + '" width="' + (xe - xs) + '" height="66" rx="5" fill="#D8D2C6" stroke="#55504A" stroke-width="2"/>');
+        lijn(xs + 14, midY - 19, xe - 14, midY - 19, '#B0A692', 1.6);
+        lijn(xs, midY - 52, xs + 14, midY - 19, '#B0A692', 1.6);
+        lijn(xs, midY + 14, xs + 14, midY - 19, '#B0A692', 1.6);
+        lijn(xe, midY - 52, xe - 14, midY - 19, '#B0A692', 1.6);
+        lijn(xe, midY + 14, xe - 14, midY - 19, '#B0A692', 1.6);
+        txt((xs + xe) / 2, midY + 2, t('woning'), '#8A8070', 13, false, '0.14em');
+      } else if (kant === 'Muur') {
+        struiken(xs, xe);
+        s.push('<rect x="' + xs + '" y="' + (midY - 12) + '" width="' + (xe - xs) + '" height="24" rx="4" fill="#DCD4C6" stroke="#B8AE9C" stroke-width="1.5"/>');
+        lijn(xs + 3, midY, xe - 3, midY, '#B8AE9C', 1.2);
+        for (let bx = xs + 20; bx < xe - 6; bx += 40) { lijn(bx, midY - 12, bx, midY, '#B8AE9C', 1.2); lijn(bx + 20, midY, bx + 20, midY + 12, '#B8AE9C', 1.2); }
+      } else if (kant === 'Vaste afsluiting') {
+        struiken(xs, xe);
+        lijn(xs + 4, midY, xe - 4, midY, '#8A8070', 3);
+        planken(xs, xe, '#C9BFAD', '#8A8070');
+      } else if (kant === 'Aanpasbare afsluiting') {
+        struiken(xs, xe);
+        lijn(xs + 4, midY, xe - 4, midY, '#B0A692', 3, '10 8');
+        planken(xs, xe, '#E6DFD2', '#B0A692', true);
+      } else if (kant === 'Vrije ruimte') {
+        lijn(xs + 4, midY, xe - 4, midY, '#B0A692', 2, '2 10');
+        for (let gx = xs + 26; gx < xe - 10; gx += 60) { lijn(gx, midY - 4, gx - 5, midY - 15, '#8FA37E', 3); lijn(gx, midY - 4, gx, midY - 17, '#8FA37E', 3); lijn(gx, midY - 4, gx + 5, midY - 15, '#8FA37E', 3); }
+      } else lijn(xs + 10, midY, xe - 6, midY, '#C9BFA9', 3.5, '11 11');
+      if (paal && paal !== 'Geen paal') {
+        const b = paalB(paal), px = links ? x1 - b : x2;
+        s.push('<rect x="' + (px + 3) + '" y="' + (midY - b / 2 + 3) + '" width="' + b + '" height="' + b + '" rx="6" fill="rgba(20,28,21,0.18)"/>');
+        s.push('<rect x="' + px + '" y="' + (midY - b / 2) + '" width="' + b + '" height="' + b + '" rx="6" fill="#9C9184" stroke="#55504A" stroke-width="2"/>');
+        s.push('<rect x="' + (px + 3) + '" y="' + (midY - b / 2 + 3) + '" width="' + (b - 6) + '" height="' + (b / 2.6) + '" rx="4" fill="#B3A99B"/>');
+        if (paal === 'Brievenbuspaal') s.push('<rect x="' + (px + 6) + '" y="' + (midY - 2) + '" width="' + (b - 12) + '" height="4" rx="2" fill="#3E3A34"/>');
+        if (paal === 'Pakjespaal') s.push('<rect x="' + (px + 8) + '" y="' + (midY - 4) + '" width="' + (b - 16) + '" height="12" rx="2" fill="none" stroke="#3E3A34" stroke-width="2"/>');
+      }
+    };
+    zijde(true); zijde(false);
+
+    /* De poortvleugel als planken balk */
+    const balk = (gx, gy, lang, hoek) => {
+      s.push('<g transform="rotate(' + hoek + ' ' + gx + ' ' + gy + ')">');
+      s.push('<rect x="' + gx + '" y="' + (gy - 9) + '" width="' + lang + '" height="18" rx="4" fill="#3E3A34" stroke="#2B2823" stroke-width="1.5"/>');
+      for (let px2 = gx + 12; px2 < gx + lang - 6; px2 += 15) lijn(px2, gy - 8, px2, gy + 8, '#5A554C', 2);
+      s.push('</g>');
+    };
+    const boog = pad => s.push('<path d="' + pad + '" fill="none" stroke="#B7A27B" stroke-width="2.5" stroke-dasharray="7 8" stroke-linecap="round" marker-end="url(#plPijl)"/>');
+    const ty = data.typeOpening;
+    const top = Math.min(openPx * 0.36, midY - 34);
+    if (!ty) { lijn(x1 + 8, midY, x2 - 8, midY, '#B9AD93', 5.5, '5 10'); txt((x1 + x2) / 2, midY + 36, t('hier komt uw poort'), '#8A6A3C', 14.5, true); }
+    else if (ty === 'Ik weet het niet') { balk(x1 + 5, midY, openPx - 10, 0); txt((x1 + x2) / 2, midY + 36, t('type nog te bepalen'), '#6E6450', 13); }
+    else if (ty === 'Enkele draaipoort') {
+      // Zonder richting: één vleugel als voorbeeld, met de melding dat de
+      // draairichting bij het plaatsbezoek bepaald wordt.
+      balk(x1, midY, openPx * 0.9, -26);
+      boog('M ' + (x2 - 16) + ' ' + (midY - 10) + ' A ' + openPx * 0.82 + ' ' + openPx * 0.82 + ' 0 0 0 ' + (x1 + openPx * 0.6) + ' ' + (midY - top));
+      txt((x1 + x2) / 2, midY + 36, t('draairichting bepalen wij ter plaatse'), '#9C8E72', 12);
+    } else if (ty === 'Schuifpoort') {
+      balk(x1 + 5, midY, openPx - 10, 0);
+      txt((x1 + x2) / 2, midY + 36, t('schuifrichting bepalen wij ter plaatse'), '#9C8E72', 12);
+    } else if (ty.indexOf('scharnier links') >= 0) { balk(x1, midY, openPx * 0.9, -26); boog('M ' + (x2 - 16) + ' ' + (midY - 10) + ' A ' + openPx * 0.82 + ' ' + openPx * 0.82 + ' 0 0 0 ' + (x1 + openPx * 0.6) + ' ' + (midY - top)); }
+    else if (ty.indexOf('scharnier rechts') >= 0) {
+      s.push('<g transform="rotate(26 ' + x2 + ' ' + midY + ')">');
+      s.push('<rect x="' + (x2 - openPx * 0.9) + '" y="' + (midY - 9) + '" width="' + openPx * 0.9 + '" height="18" rx="4" fill="#3E3A34" stroke="#2B2823" stroke-width="1.5"/>');
+      for (let px3 = x2 - openPx * 0.9 + 12; px3 < x2 - 6; px3 += 15) s.push('<line x1="' + px3 + '" y1="' + (midY - 8) + '" x2="' + px3 + '" y2="' + (midY + 8) + '" stroke="#5A554C" stroke-width="2"/>');
+      s.push('</g>');
+      boog('M ' + (x1 + 16) + ' ' + (midY - 10) + ' A ' + openPx * 0.82 + ' ' + openPx * 0.82 + ' 0 0 1 ' + (x2 - openPx * 0.6) + ' ' + (midY - top)); }
+    else if (ty === 'Dubbele draaipoort') {
+      const top2 = Math.min(openPx * 0.26, midY - 40);
+      balk(x1, midY, openPx * 0.44, -22);
+      s.push('<g transform="rotate(22 ' + x2 + ' ' + midY + ')">');
+      s.push('<rect x="' + (x2 - openPx * 0.44) + '" y="' + (midY - 9) + '" width="' + openPx * 0.44 + '" height="18" rx="4" fill="#3E3A34" stroke="#2B2823" stroke-width="1.5"/>');
+      for (let px4 = x2 - openPx * 0.44 + 12; px4 < x2 - 6; px4 += 15) s.push('<line x1="' + px4 + '" y1="' + (midY - 8) + '" x2="' + px4 + '" y2="' + (midY + 8) + '" stroke="#5A554C" stroke-width="2"/>');
+      s.push('</g>');
+      boog('M ' + ((x1 + x2) / 2 - 18) + ' ' + (midY - 10) + ' A ' + openPx * 0.44 + ' ' + openPx * 0.44 + ' 0 0 0 ' + (x1 + openPx * 0.3) + ' ' + (midY - top2));
+      boog('M ' + ((x1 + x2) / 2 + 18) + ' ' + (midY - 10) + ' A ' + openPx * 0.44 + ' ' + openPx * 0.44 + ' 0 0 1 ' + (x2 - openPx * 0.3) + ' ' + (midY - top2));
+    } else if (ty.indexOf('Schuifpoort') === 0) {
+      const naarLinks = ty.indexOf('links') >= 0;
+      balk(x1 + 5, midY, openPx - 10, 0);
+      const py = midY - 26, ax = naarLinks ? x1 - 6 : x2 + 6, bx = naarLinks ? ax - 62 : ax + 62;
+      s.push('<line x1="' + ax + '" y1="' + py + '" x2="' + bx + '" y2="' + py + '" stroke="#B7A27B" stroke-width="3" stroke-linecap="round" stroke-dasharray="7 8" marker-end="url(#plPijl)"/>');
+    }
+
+    /* Straatzijde met de kijkrichting */
+    const sy = midY + 58;
+    lijn(70, sy, (x1 + x2) / 2 - 110, sy, '#C9BFA9', 1.6, '8 8');
+    lijn((x1 + x2) / 2 + 110, sy, B - 70, sy, '#C9BFA9', 1.6, '8 8');
+    txt((x1 + x2) / 2, sy + 5, t('STRAATZIJDE'), '#8A8070', 14, false, '0.28em');
+    s.push('<path d="M ' + ((x1 + x2) / 2 - 7) + ' ' + (sy + 32) + ' L ' + (x1 + x2) / 2 + ' ' + (sy + 22) + ' L ' + ((x1 + x2) / 2 + 7) + ' ' + (sy + 32) + ' Z" fill="#8A6A3C"/>');
+    txt((x1 + x2) / 2, sy + 52, t('U STAAT HIER'), '#55504A', 12.5, true, '0.22em');
+    return '<svg viewBox="0 0 ' + B + ' ' + H + '" style="display:block;width:100%" aria-label="Bovenaanzicht van uw poortsituatie">' + s.join('') + '</svg>';
+  };
+
+  /* Pictogrammen voor de keuzetegels */
+  const miniIcoon = w => {
+    const paal = x => '<rect x="' + x + '" y="17" width="10" height="12" rx="2" fill="#B8AC9C" stroke="#55504A" stroke-width="1.5"/>';
+    const kaders = { s: '<svg width="96" height="46" viewBox="0 0 96 46" style="display:block;margin:0 auto">', e: '</svg>' };
+    const kln = { s: '<svg width="82" height="42" viewBox="0 0 82 42" style="display:block;margin:0 auto">', e: '</svg>' };
+    const pln = { s: '<svg width="46" height="46" viewBox="0 0 46 46" style="display:block;margin:0 auto">', e: '</svg>' };
+    if (w === 't_el') return kaders.s + paal(6) + paal(80) + '<line x1="17" y1="23" x2="60" y2="7" stroke="#3E3A34" stroke-width="4" stroke-linecap="round"/><path d="M76 18 A32 32 0 0 0 60 5" fill="none" stroke="#B7A27B" stroke-width="2" stroke-dasharray="4 4"/>' + kaders.e;
+    if (w === 't_er') return kaders.s + paal(6) + paal(80) + '<line x1="79" y1="23" x2="36" y2="7" stroke="#3E3A34" stroke-width="4" stroke-linecap="round"/><path d="M20 18 A32 32 0 0 1 36 5" fill="none" stroke="#B7A27B" stroke-width="2" stroke-dasharray="4 4"/>' + kaders.e;
+    if (w === 't_d') return kaders.s + paal(6) + paal(80) + '<line x1="17" y1="23" x2="44" y2="10" stroke="#3E3A34" stroke-width="4" stroke-linecap="round"/><line x1="79" y1="23" x2="52" y2="10" stroke="#3E3A34" stroke-width="4" stroke-linecap="round"/>' + kaders.e;
+    if (w === 't_sl') return kaders.s + '<rect x="26" y="18" width="54" height="10" rx="3" fill="#3E3A34"/><line x1="34" y1="19" x2="34" y2="27" stroke="#5A554C" stroke-width="1.5"/><line x1="44" y1="19" x2="44" y2="27" stroke="#5A554C" stroke-width="1.5"/><line x1="54" y1="19" x2="54" y2="27" stroke="#5A554C" stroke-width="1.5"/><line x1="64" y1="19" x2="64" y2="27" stroke="#5A554C" stroke-width="1.5"/><line x1="20" y1="36" x2="6" y2="36" stroke="#8A6A3C" stroke-width="2.5" stroke-linecap="round"/><path d="M10 32 L5 36 L10 40" fill="none" stroke="#8A6A3C" stroke-width="2.5" stroke-linecap="round"/>' + kaders.e;
+    if (w === 't_sr') return kaders.s + '<rect x="16" y="18" width="54" height="10" rx="3" fill="#3E3A34"/><line x1="24" y1="19" x2="24" y2="27" stroke="#5A554C" stroke-width="1.5"/><line x1="34" y1="19" x2="34" y2="27" stroke="#5A554C" stroke-width="1.5"/><line x1="44" y1="19" x2="44" y2="27" stroke="#5A554C" stroke-width="1.5"/><line x1="54" y1="19" x2="54" y2="27" stroke="#5A554C" stroke-width="1.5"/><line x1="76" y1="36" x2="90" y2="36" stroke="#8A6A3C" stroke-width="2.5" stroke-linecap="round"/><path d="M86 32 L91 36 L86 40" fill="none" stroke="#8A6A3C" stroke-width="2.5" stroke-linecap="round"/>' + kaders.e;
+    if (w === 't_w') return kaders.s + '<text x="48" y="32" text-anchor="middle" font-size="28" fill="#8A6A3C" font-family="var(--font-display)">?</text>' + kaders.e;
+    if (w === 'p_s') return pln.s + '<rect x="14" y="8" width="18" height="30" rx="3" fill="#9C9184" stroke="#55504A" stroke-width="2"/><rect x="16" y="10" width="14" height="8" rx="2" fill="#B3A99B"/>' + pln.e;
+    if (w === 'p_b') return pln.s + '<rect x="12" y="8" width="22" height="30" rx="3" fill="#9C9184" stroke="#55504A" stroke-width="2"/><rect x="16" y="18" width="14" height="4" rx="2" fill="#3E3A34"/>' + pln.e;
+    if (w === 'p_p') return pln.s + '<rect x="10" y="6" width="26" height="34" rx="3" fill="#9C9184" stroke="#55504A" stroke-width="2"/><rect x="15" y="16" width="16" height="14" rx="2" fill="none" stroke="#3E3A34" stroke-width="2"/><line x1="23" y1="16" x2="23" y2="30" stroke="#3E3A34" stroke-width="1.5"/>' + pln.e;
+    if (w === 'p_z') return pln.s + '<rect x="11" y="5" width="24" height="7" rx="2" fill="#C9BFAD" stroke="#55504A" stroke-width="1.8"/><rect x="16" y="12" width="14" height="22" fill="#B8AC9C" stroke="#55504A" stroke-width="1.8"/><rect x="9" y="34" width="28" height="7" rx="2" fill="#C9BFAD" stroke="#55504A" stroke-width="1.8"/>' + pln.e;
+    if (w === 'p_g') return pln.s + '<rect x="13" y="8" width="20" height="30" rx="3" fill="none" stroke="#B0A692" stroke-width="2" stroke-dasharray="5 4"/>' + pln.e;
+    if (w === 'k_h') return kln.s + '<path d="M14 20 L41 6 L68 20" fill="none" stroke="#55504A" stroke-width="2.5" stroke-linejoin="round"/><rect x="20" y="20" width="42" height="17" fill="#D8D2C6" stroke="#55504A" stroke-width="2"/><rect x="36" y="26" width="10" height="11" fill="#8A8070"/>' + kln.e;
+    if (w === 'k_m') return kln.s + '<rect x="6" y="10" width="70" height="24" rx="3" fill="#DCD4C6" stroke="#8A8070" stroke-width="1.8"/><line x1="6" y1="22" x2="76" y2="22" stroke="#8A8070" stroke-width="1.2"/><line x1="24" y1="10" x2="24" y2="22" stroke="#8A8070" stroke-width="1.2"/><line x1="42" y1="10" x2="42" y2="22" stroke="#8A8070" stroke-width="1.2"/><line x1="60" y1="10" x2="60" y2="22" stroke="#8A8070" stroke-width="1.2"/><line x1="15" y1="22" x2="15" y2="34" stroke="#8A8070" stroke-width="1.2"/><line x1="33" y1="22" x2="33" y2="34" stroke="#8A8070" stroke-width="1.2"/><line x1="51" y1="22" x2="51" y2="34" stroke="#8A8070" stroke-width="1.2"/><line x1="69" y1="22" x2="69" y2="34" stroke="#8A8070" stroke-width="1.2"/>' + kln.e;
+    if (w === 'k_v') return kln.s + '<line x1="8" y1="22" x2="74" y2="22" stroke="#8A8070" stroke-width="2.5"/><rect x="12" y="8" width="7" height="28" rx="2" fill="#C9BFAD" stroke="#8A8070" stroke-width="1.5"/><rect x="26" y="8" width="7" height="28" rx="2" fill="#C9BFAD" stroke="#8A8070" stroke-width="1.5"/><rect x="40" y="8" width="7" height="28" rx="2" fill="#C9BFAD" stroke="#8A8070" stroke-width="1.5"/><rect x="54" y="8" width="7" height="28" rx="2" fill="#C9BFAD" stroke="#8A8070" stroke-width="1.5"/><rect x="66" y="8" width="7" height="28" rx="2" fill="#C9BFAD" stroke="#8A8070" stroke-width="1.5"/>' + kln.e;
+    if (w === 'k_a') return kln.s + '<line x1="8" y1="22" x2="74" y2="22" stroke="#B0A692" stroke-width="2.5" stroke-dasharray="8 6"/><rect x="14" y="8" width="7" height="28" rx="2" fill="#E6DFD2" stroke="#B0A692" stroke-width="1.5" stroke-dasharray="3 3"/><rect x="34" y="8" width="7" height="28" rx="2" fill="#E6DFD2" stroke="#B0A692" stroke-width="1.5" stroke-dasharray="3 3"/><rect x="54" y="8" width="7" height="28" rx="2" fill="#E6DFD2" stroke="#B0A692" stroke-width="1.5" stroke-dasharray="3 3"/>' + kln.e;
+    if (w === 'k_g') return kln.s + '<rect x="8" y="10" width="66" height="24" rx="5" fill="none" stroke="#B0A692" stroke-width="2" stroke-dasharray="6 5"/>' + kln.e;
+    return '';
+  };
+
+  /* Keuzetegels met pictogram en vinkje */
+  const KeuzePlaat = p => /*#__PURE__*/React.createElement("div", {
+    key: p.name,
+    "data-veld": p.name,
+    className: p.aandacht ? 'pl-aandacht' : undefined,
+    style: {
+      marginBottom: 24
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-label)',
+      fontSize: 11,
+      fontWeight: 600,
+      letterSpacing: '0.18em',
+      textTransform: 'uppercase',
+      color: 'var(--text-heading)',
+      marginBottom: 10
+    }
+  }, t(p.label)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+      gap: 10
+    }
+  }, p.options.map(o => {
+    const val = o[0], ic = o[1];
+    const sel = data[p.name] === val;
+    return /*#__PURE__*/React.createElement("button", {
+      key: val,
+      type: "button",
+      onClick: () => set(p.name, sel ? undefined : val),
+      style: {
+        position: 'relative',
+        textAlign: 'center',
+        cursor: 'pointer',
+        padding: '16px 10px 13px',
+        borderRadius: 'var(--radius-md)',
+        border: sel ? '2px solid var(--accent)' : '1px solid var(--line-on-light)',
+        background: sel ? 'rgba(138,106,60,0.07)' : '#fff',
+        fontFamily: 'var(--font-sans)',
+        color: 'var(--text-heading)'
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      dangerouslySetInnerHTML: {
+        __html: miniIcoon(ic)
+      }
+    }), /*#__PURE__*/React.createElement("span", {
+      style: {
+        display: 'block',
+        marginTop: 9,
+        fontSize: 13.5,
+        lineHeight: 1.3,
+        fontWeight: sel ? 600 : 400
+      }
+    }, t(val)), sel ? /*#__PURE__*/React.createElement("span", {
+      style: {
+        position: 'absolute',
+        top: -9,
+        right: -9,
+        width: 24,
+        height: 24,
+        borderRadius: '50%',
+        background: 'var(--accent)',
+        color: '#fff',
+        fontSize: 13,
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        boxShadow: '0 1px 4px rgba(20,28,21,0.25)'
+      }
+    }, "✓") : null);
+  })));
+  // Hellingbeeld met twee panelen: vooraanzicht (links naar rechts) en
+  // zijaanzicht (naar de poort toe). Tekent live mee met de antwoorden.
+  // Hellingbeelden per vraag: vooraanzicht (links naar rechts) en zijaanzicht
+  // (naar de poort toe). Elk paneel staat bij zijn eigen vraag en tekent live mee.
+  const hellingSvgLR = () => hellingTweeluikLR();
+  const hellingSvgNaarPoort = () => hellingTweeluikPoort();
+  /* Voorbeeldbeeld bij een vraag. Bewust geen kaartlook: een gestippeld kader
+     met een onderschrift maakt duidelijk dat dit uitleg is en geen keuze
+     (feedback 2026-08-28). */
+  const Uitlegbeeld = svg => /*#__PURE__*/React.createElement("figure", {
+    "aria-hidden": "true",
+    style: {
+      margin: '0 0 14px',
+      padding: '10px 10px 6px',
+      background: 'rgba(20,28,21,0.025)',
+      borderRadius: 'var(--radius-md)',
+      border: '1px dashed var(--line-on-light)',
+      pointerEvents: 'none'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    dangerouslySetInnerHTML: {
+      __html: svg
+    }
+  }), /*#__PURE__*/React.createElement("figcaption", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 6,
+      marginTop: 2,
+      fontFamily: 'var(--font-sans)',
+      fontSize: 12,
+      color: 'var(--text-muted)'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      display: 'inline-flex',
+      width: 15,
+      height: 15,
+      borderRadius: '50%',
+      border: '1px solid var(--text-muted)',
+      fontSize: 9.5,
+      fontWeight: 700,
+      alignItems: 'center',
+      justifyContent: 'center',
+      flex: '0 0 auto'
+    }
+  }, "i"), t('Ter verduidelijking. Kies hieronder wat bij uw situatie past.')));
+  /* Een klant mag tot vier modellen naast elkaar laten ramen, met dezelfde
+     afmetingen (vraag 2026-11-05). Het eerste model blijft in data.model staan
+     zodat de leadfiche en de bestaande e2e tests ongewijzigd blijven werken. */
+  const MAX_MODELLEN = 4;
+  const gekozenModellen = Array.isArray(data.modellen) && data.modellen.length
+    ? data.modellen
+    : (data.model ? [{ naam: data.model, groep: data.modelStijl }] : []);
+  const bewaarModellen = lijst => {
+    set('modellen', lijst.length > 1 ? lijst : undefined);
+    set('model', lijst.length ? lijst[0].naam : undefined);
+    set('modelStijl', lijst.length ? lijst[0].groep : undefined);
+  };
+  const kiesModel = (naam, groep) => {
+    if (!naam) { bewaarModellen([]); return; }
+    const plaats = gekozenModellen.findIndex(m => m.naam === naam);
+    if (plaats >= 0) { bewaarModellen(gekozenModellen.filter((_, i) => i !== plaats)); return; }
+    if (gekozenModellen.length >= MAX_MODELLEN) return;
+    bewaarModellen(gekozenModellen.concat([{ naam: naam, groep: groep || undefined }]));
+  };
+  const ModelBlok = () => {
+    if (!data.typePoort || !modelAanbod.length) return null;
+    const alle = [];
+    modelAanbod.forEach(g => g.modellen.forEach(m => alle.push({
+      naam: m.naam,
+      foto: m.foto,
+      groep: g.naam
+    })));
+    const meerdereGroepen = modelAanbod.length > 1;
+    const zichtbaar = !meerdereGroepen || modelStijlFilter === 'Alle' ? alle : alle.filter(m => m.groep === modelStijlFilter);
+    const lijstItem = (naam, groep, sel) => /*#__PURE__*/React.createElement("button", {
+      key: 'li_' + (groep || '') + (naam || 'geen'),
+      type: "button",
+      onClick: () => {
+        kiesModel(naam, groep);
+        setModelLijstOpen(false);
+      },
+      style: {
+        display: 'block',
+        width: '100%',
+        textAlign: 'left',
+        border: 0,
+        cursor: 'pointer',
+        background: sel ? 'rgba(138,106,60,0.1)' : 'none',
+        borderRadius: 'var(--radius-sm, 6px)',
+        padding: '10px 12px',
+        fontFamily: 'var(--font-sans)',
+        fontSize: 15,
+        fontWeight: sel ? 600 : 400,
+        color: 'var(--text-heading)'
+      }
+    }, naam || '');
+    return /*#__PURE__*/React.createElement("div", {
+      key: 'modelblok',
+      "data-veld": "model",
+      style: {
+        marginBottom: 22
+      }
+    }, /*#__PURE__*/React.createElement("label", {
+      style: labelSt
+    }, t('Model'), /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: 'var(--accent)'
+      }
+    }, " *")), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        gap: 10,
+        flexWrap: 'wrap',
+        alignItems: 'stretch'
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      "data-modellijst": "1",
+      style: {
+        position: 'relative',
+        flex: '1 1 240px'
+      }
+    }, /*#__PURE__*/React.createElement("button", {
+      type: "button",
+      "aria-haspopup": "listbox",
+      "aria-expanded": modelLijstOpen,
+      onClick: () => setModelLijstOpen(v => !v),
+      style: Object.assign({}, inputSt, {
+        cursor: 'pointer',
+        textAlign: 'left',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: 10
+      })
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: gekozenModellen.length ? 'var(--text-heading)' : 'var(--text-muted)'
+      }
+    }, gekozenModellen.length === 0
+      ? t('Kies een model')
+      : (gekozenModellen.length >= MAX_MODELLEN
+          ? t('Vier modellen gekozen, het maximum')
+          : t('Nog een model toevoegen'))), /*#__PURE__*/React.createElement("span", {
+      "aria-hidden": "true",
+      style: {
+        color: 'var(--text-muted)',
+        fontSize: 11,
+        transform: modelLijstOpen ? 'rotate(180deg)' : 'none',
+        transition: 'transform 0.15s ease',
+        flex: '0 0 auto'
+      }
+    }, "▾")), modelLijstOpen ? /*#__PURE__*/React.createElement("div", {
+      role: "listbox",
+      style: {
+        position: 'absolute',
+        top: '100%',
+        left: 0,
+        right: 0,
+        zIndex: 211,
+        marginTop: 6,
+        background: 'var(--surface-paper)',
+        border: '1px solid var(--line-on-light)',
+        borderRadius: 'var(--radius-md)',
+        boxShadow: 'var(--shadow-md)',
+        maxHeight: 320,
+        overflowY: 'auto',
+        padding: 6
+      }
+    }, meerdereGroepen ? modelAanbod.map(g => [/*#__PURE__*/React.createElement("div", {
+      key: 'kop_' + g.naam,
+      style: {
+        fontFamily: 'var(--font-label)',
+        fontSize: 10.5,
+        fontWeight: 600,
+        letterSpacing: '0.16em',
+        textTransform: 'uppercase',
+        color: 'var(--accent-label, var(--accent))',
+        padding: '10px 12px 4px'
+      }
+    }, t(g.naam))].concat(g.modellen.map(m => lijstItem(m.naam, g.naam, gekozenModellen.some(k => k.naam === m.naam))))) : modelAanbod[0].modellen.map(m => lijstItem(m.naam, null, gekozenModellen.some(k => k.naam === m.naam)))) : null), /*#__PURE__*/React.createElement("button", {
+      type: "button",
+      onClick: () => setModelKiezerOpen(v => !v),
+      style: {
+        cursor: 'pointer',
+        border: '1px solid var(--accent)',
+        background: modelKiezerOpen ? 'rgba(138,106,60,0.1)' : 'none',
+        color: 'var(--accent)',
+        fontFamily: 'var(--font-sans)',
+        fontSize: 14.5,
+        fontWeight: 600,
+        padding: '0 18px',
+        borderRadius: 'var(--radius-md)',
+        flex: '0 0 auto'
+      }
+    }, modelKiezerOpen ? t('Sluit de fotokiezer') : t("Kies met foto's"))),
+      gekozenModellen.length ? /*#__PURE__*/React.createElement("div", {
+        style: { display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 10 }
+      }, gekozenModellen.map((m, i) => /*#__PURE__*/React.createElement("span", {
+        key: 'gek_' + m.naam,
+        style: {
+          display: 'inline-flex', alignItems: 'center', gap: 8,
+          border: '1px solid var(--accent)', background: 'rgba(138,106,60,0.08)',
+          borderRadius: 999, padding: '6px 8px 6px 14px',
+          fontFamily: 'var(--font-sans)', fontSize: 14.5, color: 'var(--text-heading)'
+        }
+      }, /*#__PURE__*/React.createElement("span", null, (i + 1) + '. ' + m.naam),
+        /*#__PURE__*/React.createElement("button", {
+          type: "button",
+          "aria-label": t('Model weghalen') + ': ' + m.naam,
+          onClick: () => kiesModel(m.naam, m.groep),
+          style: {
+            border: 0, background: 'none', cursor: 'pointer', lineHeight: 1,
+            fontSize: 17, color: 'var(--text-muted)', padding: '0 4px'
+          }
+        }, '\u00d7')))) : null,
+      gekozenModellen.length ? /*#__PURE__*/React.createElement("p", {
+        style: {
+          margin: '8px 0 0', fontFamily: 'var(--font-sans)', fontSize: 13.5,
+          color: 'var(--text-muted)'
+        }
+      }, gekozenModellen.length === 1
+        ? t('U mag tot vier modellen naast elkaar laten ramen. De afmetingen hieronder gelden dan voor alle gekozen modellen.')
+        : t('Deze modellen krijgen alle dezelfde afmetingen, zodat u de prijzen naast elkaar kan leggen.')) : null,
+      errors.model && !data.model ? /*#__PURE__*/React.createElement("div", {
+      style: errSt
+    }, t(errors.model)) : null, modelKiezerOpen ? /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginTop: 12,
+        border: '1px solid var(--line-on-light)',
+        borderRadius: 'var(--radius-md)',
+        background: '#fff',
+        padding: 14
+      }
+    }, meerdereGroepen ? /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: 8,
+        marginBottom: 12
+      }
+    }, ['Alle'].concat(modelAanbod.map(g => g.naam)).map(naam => /*#__PURE__*/React.createElement("button", {
+      key: naam,
+      type: "button",
+      onClick: () => setModelStijlFilter(naam),
+      style: {
+        cursor: 'pointer',
+        border: '1px solid ' + (modelStijlFilter === naam ? 'var(--accent)' : 'var(--line-on-light)'),
+        background: modelStijlFilter === naam ? 'rgba(138,106,60,0.12)' : 'none',
+        color: modelStijlFilter === naam ? 'var(--text-heading)' : 'var(--text-muted)',
+        fontFamily: 'var(--font-sans)',
+        fontSize: 13,
+        fontWeight: modelStijlFilter === naam ? 600 : 400,
+        padding: '7px 14px',
+        borderRadius: 999
+      }
+    }, t(naam)))) : null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
+        gap: 10,
+        maxHeight: 380,
+        overflowY: 'auto',
+        paddingRight: 4
+      }
+    }, zichtbaar.map(m => {
+      const sel = data.model === m.naam;
+      return /*#__PURE__*/React.createElement("button", {
+        key: (m.groep || '') + m.naam,
+        type: "button",
+        onClick: () => {
+          kiesModel(m.naam, m.groep);
+          setModelKiezerOpen(false);
+        },
+        style: {
+          position: 'relative',
+          cursor: 'pointer',
+          textAlign: 'center',
+          padding: 8,
+          borderRadius: 'var(--radius-md)',
+          border: sel ? '2px solid var(--accent)' : '1px solid var(--line-on-light)',
+          background: sel ? 'rgba(138,106,60,0.07)' : '#fff',
+          fontFamily: 'var(--font-sans)',
+          color: 'var(--text-heading)'
+        }
+      }, /*#__PURE__*/React.createElement("img", {
+        src: m.foto,
+        alt: m.naam,
+        loading: "lazy",
+        style: {
+          width: '100%',
+          aspectRatio: '4 / 3',
+          objectFit: 'cover',
+          display: 'block',
+          borderRadius: 8
+        }
+      }), /*#__PURE__*/React.createElement("span", {
+        style: {
+          display: 'block',
+          marginTop: 7,
+          fontSize: 13,
+          lineHeight: 1.3,
+          fontWeight: sel ? 600 : 400
+        }
+      }, m.naam), sel ? /*#__PURE__*/React.createElement("span", {
+        style: {
+          position: 'absolute',
+          top: -9,
+          right: -9,
+          width: 24,
+          height: 24,
+          borderRadius: '50%',
+          background: 'var(--accent)',
+          color: '#fff',
+          fontSize: 13,
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 1px 4px rgba(20,28,21,0.25)'
+        }
+      }, "✓") : null);
+    }))) : null);
+  };
+  const Toneel = () => /*#__PURE__*/React.createElement("div", {
+    key: 'situatietoneel',
+    style: {
+      marginBottom: 4
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 9,
+      background: 'rgba(20,28,21,0.05)',
+      border: '1px solid var(--line-on-light-soft)',
+      borderRadius: 8,
+      padding: '10px 14px',
+      fontFamily: 'var(--font-sans)',
+      fontSize: 14,
+      color: 'var(--text-body)',
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    "aria-hidden": "true",
+    style: {
+      display: 'inline-flex',
+      width: 18,
+      height: 18,
+      borderRadius: '50%',
+      border: '1.5px solid var(--text-muted)',
+      color: 'var(--text-muted)',
+      fontSize: 11,
+      fontWeight: 700,
+      alignItems: 'center',
+      justifyContent: 'center',
+      flex: '0 0 auto'
+    }
+  }, "i"), t('U kijkt vanaf de straat naar uw woning.')), /*#__PURE__*/React.createElement("div", {
+    style: {
+      border: '1px solid var(--line-on-light)',
+      borderRadius: 'var(--radius-md)',
+      background: '#fff',
+      padding: '6px 6px 0'
+    },
+    dangerouslySetInnerHTML: {
+      __html: situatieSvg()
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      gap: '6px 20px',
+      marginTop: 9,
+      fontFamily: 'var(--font-sans)',
+      fontSize: 12.5,
+      color: 'var(--text-muted)',
+      alignItems: 'center'
+    },
+    dangerouslySetInnerHTML: {
+      __html: [
+        '<svg width="15" height="15" viewBox="0 0 15 15"><rect x="1" y="1" width="13" height="13" rx="3" fill="#9C9184" stroke="#55504A"/></svg> ' + t('Paal'),
+        '<svg width="26" height="10" viewBox="0 0 26 10"><rect x="1" y="2" width="24" height="6" rx="3" fill="#3E3A34"/></svg> ' + t('Poortvleugel'),
+        '<svg width="30" height="12" viewBox="0 0 30 12"><line x1="2" y1="6" x2="22" y2="6" stroke="#B7A27B" stroke-width="2" stroke-dasharray="4 4"/><path d="M22 2 L28 6 L22 10" fill="none" stroke="#B7A27B" stroke-width="2"/></svg> ' + t('Draairichting'),
+        '<svg width="15" height="15" viewBox="0 0 15 15"><rect x="1" y="1" width="13" height="13" rx="3" fill="#EDE6D8" stroke="#DCD5C6"/></svg> ' + t('Oprit'),
+        '<svg width="15" height="15" viewBox="0 0 15 15"><rect x="1" y="1" width="13" height="13" rx="3" fill="#DCD4C6" stroke="#B8AE9C"/></svg> ' + t('Muur of afsluiting')
+      ].map(x => '<span style="display:inline-flex;align-items:center;gap:6px">' + x + '</span>').join('')
+    }
+  }));
   const verzend = () => {
     const req = {
       voornaam: 'Gelieve uw voornaam in te vullen.',
@@ -2259,6 +3120,9 @@ function OfferteModal({
       req.bedrijfsnaam = 'Gelieve de bedrijfsnaam in te vullen.';
       req.btwNummer = 'Gelieve het btw nummer in te vullen.';
     }
+    // De klant kiest bewust een model; zo heeft hij onze modellen gezien en
+    // krijgen wij geen vrijblijvende aanvragen (feedback 2026-09-13).
+    if (service === 'poorten') req.model = 'Gelieve een model te kiezen.';
     const e = {};
     Object.keys(req).forEach(k => {
       if (!data[k] || !String(data[k]).trim()) e[k] = req[k];
@@ -2266,15 +3130,35 @@ function OfferteModal({
     if (data.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.email)) e.email = 'Gelieve een geldig emailadres in te vullen.';
     setErrors(e);
     if (Object.keys(e).length > 0) {
+      // Naast de melding per veld ook een duidelijke balk, zodat een ontbrekend
+      // telefoonnummer of emailadres niet ongemerkt blijft (feedback 2026-09-13).
+      const aantal = Object.keys(e).length;
+      setFout(aantal === 1 ? t('Er ontbreekt nog een verplicht gegeven. Wij hebben uw telefoonnummer en emailadres nodig om u de prijsraming te bezorgen.') : t('Er ontbreken nog verplichte gegevens. Wij hebben uw telefoonnummer en emailadres nodig om u de prijsraming te bezorgen.'));
       const eerste = Object.keys(req).find(k => e[k]);
-      if (window.plSchudVeld && eerste) window.plSchudVeld(eerste);
+      if (eerste) {
+        if (window.plSchudVeld) window.plSchudVeld(eerste);
+        try {
+          const vak = document.querySelector('[data-veld="' + eerste + '"]');
+          if (vak && vak.scrollIntoView) vak.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+          });
+        } catch (f) {}
+      }
       return;
     }
+    setFout('');
     const contactKeys = ['voornaam', 'naam', 'email', 'telefoon', 'adres', 'stad', 'postcode'];
     const specifiek = {};
     Object.keys(data).forEach(k => {
       if (contactKeys.indexOf(k) < 0 && k !== 'opmerkingen' && k !== 'timing' && k !== 'klantType' && k !== 'bedrijfsnaam' && k !== 'btwNummer') specifiek[k] = data[k];
     });
+    // De extra modellen zijn objecten; als leesbare regel naar de leadfiche.
+    if (Array.isArray(data.modellen) && data.modellen.length > 1) {
+      specifiek.modellen = data.modellen.map((m, i) => (i + 1) + '. ' + m.naam).join('  ·  ');
+    } else {
+      delete specifiek.modellen;
+    }
     const aanvraag = {
       dienst: service,
       specifiek: specifiek,
@@ -2329,8 +3213,8 @@ function OfferteModal({
     };
     const eind = (window.POORTLAND_ERP || {}).leadEndpoint;
     if (!eind || !window.poortlandVerstuurLead) {
-      if (window.console) console.log('Poortland offerte aanvraag', aanvraag);
-      setStep(4);
+      if (window.console) console.log('Poortland aanvraag prijsraming', aanvraag);
+      setStep(klaarStap);
       return;
     }
     setBezig(true);
@@ -2342,7 +3226,7 @@ function OfferteModal({
       wizardGegevens: wizardGegevens,
       fotos: fotos
     }).then(() => {
-      setStep(4);
+      setStep(klaarStap);
     }).catch(err => {
       setFout(err && err.message || 'Versturen mislukt. Probeer later opnieuw of bel ons op 015 43 21 11.');
     }).then(() => {
@@ -2350,10 +3234,14 @@ function OfferteModal({
     });
   };
   if (!open) return null;
-  const stapNr = step <= 3 ? step : 3;
+  // Poortofferte telt vier stappen: details, bovenaanzicht, contact, klaar.
+  const contactStap = service === 'poorten' ? 5 : 3;
+  const klaarStap = contactStap + 1;
+  const stapNr = Math.min(step, contactStap);
   return /*#__PURE__*/React.createElement("div", {
     role: "dialog",
     "aria-modal": "true",
+    "aria-label": "Prijsraming aanvragen",
     onClick: close,
     style: {
       position: 'fixed',
@@ -2396,9 +3284,9 @@ function OfferteModal({
       fontWeight: 600,
       letterSpacing: '0.18em',
       textTransform: 'uppercase',
-      color: 'var(--accent)'
+      color: 'var(--accent-label, var(--accent))'
     }
-  }, step <= 3 ? t('Stap') + ' ' + stapNr + ' ' + t('van 3') : t('Klaar')), /*#__PURE__*/React.createElement("button", {
+  }, step <= contactStap ? t('Stap') + ' ' + stapNr + ' ' + t('van') + ' ' + contactStap : t('Klaar')), /*#__PURE__*/React.createElement("button", {
     onClick: close,
     "aria-label": "Sluiten",
     style: {
@@ -2411,6 +3299,8 @@ function OfferteModal({
       padding: '0 4px'
     }
   }, "×")), /*#__PURE__*/React.createElement("div", {
+    ref: scrollRef,
+    onScroll: meetScroll,
     style: {
       flex: '1 1 auto',
       overflowY: 'auto',
@@ -2418,7 +3308,7 @@ function OfferteModal({
     }
   }, step === 1 ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", {
     style: titelSt
-  }, t('Waarvoor wenst u een offerte aan te vragen?')), /*#__PURE__*/React.createElement("p", {
+  }, t('Waarvoor wenst u een prijsraming aan te vragen?')), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 15.5,
@@ -2508,39 +3398,110 @@ function OfferteModal({
     }
   }, t(d)))))) : null, step === 2 && service === 'poorten' ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", {
     style: titelSt
-  }, t('Offerte voor een poort')), /*#__PURE__*/React.createElement("div", {
+  }, t('Prijsraming voor een poort')), /*#__PURE__*/React.createElement("div", {
     style: {
       height: 18
     }
   }), Keuze({
     label: 'Type poort',
     name: 'typePoort',
-    options: ['Houten poort', ['Metalen poort', '(staal, metaal en aluminium)'], 'Combinatie hout en metaal']
-  }), Keuze({
-    label: 'Type opening',
-    name: 'typeOpening',
-    options: ['Draaipoort', 'Schuifpoort', 'Ik weet het niet']
-  }), Field({
+    kolommen: 2,
+    options: ['Massief houten poort', ['Stalen poort', '(staal en cortenstaal)'], ['Aluminium poort', '(meccano, geschroefd)'], 'Combinatie hout en metaal']
+  }), ModelBlok(), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+      columnGap: 18
+    }
+  }, Field({
     label: 'Totale opening breedte in cm',
     name: 'breedte',
     placeholder: 'Bijvoorbeeld: 350',
-    inputMode: 'numeric'
+    inputMode: 'numeric',
+    meterHulp: true,
+    required: true
   }), Field({
     label: 'Zijhoogte in cm',
     name: 'zijhoogte',
     placeholder: 'Bijvoorbeeld: 180',
-    inputMode: 'numeric'
+    inputMode: 'numeric',
+    meterHulp: true,
+    required: true
+  }))) : null, step === 3 && service === 'poorten' ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", {
+    style: titelSt
+  }, t('Uitvoering en omgeving')), /*#__PURE__*/React.createElement("div", {
+    style: {
+      height: 18
+    }
+  }), /*#__PURE__*/React.createElement("label", {
+    style: labelSt
+  }, t('Als u voor de poort staat, loopt de oprit dan op of af van links naar rechts?')), Uitlegbeeld(hellingSvgLR()), Keuze({
+    name: 'hellingLinksRechts',
+    options: ['Vlak', 'Licht hellend', 'Sterk hellend']
+  }), /*#__PURE__*/React.createElement("label", {
+    style: labelSt
+  }, t('Als u voor de poort staat, loopt de oprit dan op of af naar de poort toe?')), Uitlegbeeld(hellingSvgNaarPoort()), Keuze({
+    name: 'hellingNaarPoort',
+    options: ['Vlak', 'Stijgt naar de poort toe', 'Daalt naar de poort toe', 'Sterk of onregelmatig']
   }), Keuze({
     label: 'Type bediening',
     name: 'bediening',
     options: ['Manueel', 'Automatisch']
-  }), Area({
-    label: 'Heeft u nog extra informatie of wensen?',
-    name: 'opmerkingen',
-    placeholder: 'Bijvoorbeeld: bestaande situatie, gewenste kleur, timing, enz.'
+  }), Keuze({
+    label: 'Ondergrond aan de poort',
+    name: 'ondergrond',
+    options: ['Klinker', 'Kasseien', 'Asfalt', 'Beton', 'Kiezel of dolomiet', 'Volle grond']
+  })) : null, step === 4 && service === 'poorten' ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'sticky',
+      top: -27,
+      zIndex: 5,
+      background: 'var(--surface-paper)',
+      padding: '4px 0 10px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-label)',
+      fontSize: 11,
+      fontWeight: 600,
+      letterSpacing: '0.18em',
+      textTransform: 'uppercase',
+      color: 'var(--accent-label, var(--accent))',
+      marginBottom: 8
+    }
+  }, t('Bovenaanzicht van uw poort')), Toneel()), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 15,
+      color: 'var(--text-muted)',
+      margin: '4px 0 20px'
+    }
+  }, t('Maak uw keuze hieronder, de tekening past zich meteen aan.')), KeuzePlaat({
+    label: 'Type opening',
+    name: 'typeOpening',
+    aandacht: aandacht,
+    // De draairichting is bij een raming overbodig; die bepaalt Poortland bij
+    // het plaatsbezoek (feedback 2026-09-13).
+    options: [['Enkele draaipoort', 't_e'], ['Dubbele draaipoort', 't_d'], ['Schuifpoort', 't_s']]
+  }), KeuzePlaat({
+    label: 'Paal links van de poort',
+    name: 'paalLinks',
+    options: [['Standaardpaal', 'p_s'], ['Brievenbuspaal', 'p_b'], ['Pakjespaal', 'p_p'], ['Zuil', 'p_z'], ['Geen paal', 'p_g']]
+  }), KeuzePlaat({
+    label: 'Links naast de poort',
+    name: 'aansluitingLinks',
+    options: [['Woning', 'k_h'], ['Muur', 'k_m'], ['Vaste afsluiting', 'k_v'], ['Aanpasbare afsluiting', 'k_a'], ['Vrije ruimte', 'k_g']]
+  }), KeuzePlaat({
+    label: 'Paal rechts van de poort',
+    name: 'paalRechts',
+    options: [['Standaardpaal', 'p_s'], ['Brievenbuspaal', 'p_b'], ['Pakjespaal', 'p_p'], ['Zuil', 'p_z'], ['Geen paal', 'p_g']]
+  }), KeuzePlaat({
+    label: 'Rechts naast de poort',
+    name: 'aansluitingRechts',
+    options: [['Woning', 'k_h'], ['Muur', 'k_m'], ['Vaste afsluiting', 'k_v'], ['Aanpasbare afsluiting', 'k_a'], ['Vrije ruimte', 'k_g']]
   })) : null, step === 2 && service === 'overkappingen' ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", {
     style: titelSt
-  }, t('Offerte voor een overkapping')), /*#__PURE__*/React.createElement("div", {
+  }, t('Prijsraming voor een overkapping')), /*#__PURE__*/React.createElement("div", {
     style: {
       height: 18
     }
@@ -2638,17 +3599,20 @@ function OfferteModal({
     label: 'Lengte in cm',
     name: 'lengte',
     placeholder: 'Bijvoorbeeld: 500',
-    inputMode: 'numeric'
+    inputMode: 'numeric',
+    meterHulp: true
   }), Field({
     label: 'Breedte in cm',
     name: 'breedte',
     placeholder: 'Bijvoorbeeld: 300',
-    inputMode: 'numeric'
+    inputMode: 'numeric',
+    meterHulp: true
   }), Field({
     label: 'Hoogte in cm',
     name: 'hoogte',
     placeholder: 'Bijvoorbeeld: 250',
-    inputMode: 'numeric'
+    inputMode: 'numeric',
+    meterHulp: true
   }), Keuze({
     label: 'Aantal wanden',
     name: 'wanden',
@@ -2668,7 +3632,7 @@ function OfferteModal({
     placeholder: 'Bijvoorbeeld: gewenste kleur, materiaal, plaatsing, bestaande situatie, enz.'
   })) : null, step === 2 && service === 'automatisering' ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", {
     style: titelSt
-  }, t('Offerte voor automatisering van een bestaande poort')), /*#__PURE__*/React.createElement("p", {
+  }, t('Prijsraming voor automatisering van een bestaande poort')), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 15,
@@ -2715,7 +3679,7 @@ function OfferteModal({
     label: 'Beschrijf kort waarvoor u onderhoud wenst',
     name: 'opmerkingen',
     placeholder: 'Bijvoorbeeld: poort opent moeilijk, afstandsbediening werkt niet, jaarlijks onderhoud, lawaai, storing, enz.'
-  })) : null, step === 3 ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", {
+  })) : null, step === contactStap ? /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", {
     style: titelSt
   }, t('Uw gegevens')), /*#__PURE__*/React.createElement("p", {
     style: {
@@ -2820,60 +3784,42 @@ function OfferteModal({
     placeholder: 'Bijvoorbeeld: Mechelen'
   })), /*#__PURE__*/React.createElement("div", {
     style: {
-      marginBottom: 20
-    }
-  }, /*#__PURE__*/React.createElement("label", {
-    style: labelSt
-  }, t('Gewenste timing')), /*#__PURE__*/React.createElement("div", {
-    style: {
-      position: 'relative'
-    }
-  }, /*#__PURE__*/React.createElement("select", {
-    value: data.timing || '',
-    onChange: e => set('timing', e.target.value),
-    style: Object.assign({}, inputSt, {
-      cursor: 'pointer',
-      appearance: 'none',
-      WebkitAppearance: 'none',
-      backgroundImage: 'linear-gradient(45deg, transparent 50%, var(--accent) 50%), linear-gradient(135deg, var(--accent) 50%, transparent 50%)',
-      backgroundPosition: 'calc(100% - 18px) 55%, calc(100% - 13px) 55%',
-      backgroundSize: '5px 5px, 5px 5px',
-      backgroundRepeat: 'no-repeat',
-      paddingRight: 38
-    })
-  }, /*#__PURE__*/React.createElement("option", {
-    value: ""
-  }, t('Maak een keuze')), /*#__PURE__*/React.createElement("option", {
-    value: "Zo snel mogelijk"
-  }, t('Zo snel mogelijk')), /*#__PURE__*/React.createElement("option", {
-    value: "Binnen drie maanden"
-  }, t('Binnen drie maanden')), /*#__PURE__*/React.createElement("option", {
-    value: "Binnen zes maanden"
-  }, t('Binnen zes maanden')), /*#__PURE__*/React.createElement("option", {
-    value: "Nog in oriëntatie"
-  }, t('Nog in oriëntatie'))))), /*#__PURE__*/React.createElement("div", {
-    style: {
       marginBottom: 4
     }
   }, /*#__PURE__*/React.createElement("label", {
     style: labelSt
   }, t("Foto's toevoegen"), " ", /*#__PURE__*/React.createElement("span", {
     style: {
-      color: 'var(--text-muted)',
-      fontWeight: 400,
-      fontSize: 13.5
+      background: 'var(--accent)',
+      color: '#fff',
+      fontFamily: 'var(--font-label)',
+      fontSize: 10,
+      fontWeight: 700,
+      letterSpacing: '0.1em',
+      textTransform: 'uppercase',
+      padding: '3px 8px',
+      borderRadius: 999,
+      verticalAlign: 'middle'
     }
-  }, t('(optioneel, max 5)'))), /*#__PURE__*/React.createElement("label", {
+  }, t('Sterk aangeraden'))), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 13.5,
+      lineHeight: 1.55,
+      color: 'var(--text-body)',
+      margin: '-2px 0 10px'
+    }
+  }, t('Met enkele foto\'s van de plek maken wij uw prijsraming meteen een stuk nauwkeuriger. Maximaal vijf foto\'s.')), /*#__PURE__*/React.createElement("label", {
     style: {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
       gap: 12,
-      border: '1px dashed var(--line-on-light)',
+      border: '2px dashed var(--accent)',
       borderRadius: 'var(--radius-md)',
-      padding: '13px 14px',
+      padding: '16px',
       cursor: 'pointer',
-      background: '#fff'
+      background: 'rgba(138,106,60,0.06)'
     }
   }, /*#__PURE__*/React.createElement("span", {
     style: {
@@ -2885,10 +3831,13 @@ function OfferteModal({
     style: {
       fontFamily: 'var(--font-label)',
       fontSize: 10.5,
-      fontWeight: 600,
+      fontWeight: 700,
       letterSpacing: '0.12em',
       textTransform: 'uppercase',
-      color: 'var(--accent)',
+      background: 'var(--accent)',
+      color: '#fff',
+      padding: '10px 16px',
+      borderRadius: 999,
       flex: '0 0 auto'
     }
   }, t('Kies bestand'), " ↗"), /*#__PURE__*/React.createElement("input", {
@@ -2899,7 +3848,11 @@ function OfferteModal({
     style: {
       display: 'none'
     }
-  })))) : null, step === 4 ? /*#__PURE__*/React.createElement("div", {
+  }))), service === 'poorten' ? Area({
+    label: 'Heeft u nog extra informatie of wensen?',
+    name: 'opmerkingen',
+    placeholder: 'Bijvoorbeeld: bestaande situatie, gewenste kleur, timing, enz.'
+  }) : null) : null, step === klaarStap ? /*#__PURE__*/React.createElement("div", {
     style: {
       textAlign: 'center',
       padding: '20px 0 12px'
@@ -2928,7 +3881,8 @@ function OfferteModal({
       maxWidth: '46ch',
       margin: '14px auto 0'
     }
-  }, t('We hebben uw offerteaanvraag goed ontvangen. We nemen zo snel mogelijk contact met u op om uw aanvraag verder te bespreken.'))) : null), fout ? /*#__PURE__*/React.createElement("div", {
+  }, t('We hebben uw aanvraag goed ontvangen. U ontvangt zo snel mogelijk een vrijblijvende prijsraming en wij nemen persoonlijk contact met u op.'))) : null), fout ? /*#__PURE__*/React.createElement("div", {
+    role: "alert",
     style: {
       flex: '0 0 auto',
       padding: '12px 24px',
@@ -2948,25 +3902,70 @@ function OfferteModal({
       borderTop: '1px solid var(--line-on-light-soft)',
       flexWrap: 'wrap'
     }
-  }, /*#__PURE__*/React.createElement("div", null, step === 2 ? /*#__PURE__*/React.createElement("button", {
-    onClick: () => setStep(1),
+  }, /*#__PURE__*/React.createElement("div", null, step >= 2 && step <= contactStap ? /*#__PURE__*/React.createElement("button", {
+    onClick: () => setStep(step - 1),
     style: terugSt
-  }, t('Terug')) : null, step === 3 ? /*#__PURE__*/React.createElement("button", {
-    onClick: () => setStep(2),
-    style: terugSt
-  }, t('Terug')) : null), /*#__PURE__*/React.createElement("div", null, step === 1 ? /*#__PURE__*/React.createElement("button", {
+  }, t('Terug')) : null), kanScrollen && step >= 2 && step <= contactStap ? /*#__PURE__*/React.createElement("div", {
+    className: "pl-scrollhint",
+    onClick: () => {
+      const el = scrollRef.current;
+      if (el) el.scrollBy({
+        top: el.clientHeight * 0.7,
+        behavior: 'smooth'
+      });
+    },
+    style: {
+      textAlign: 'center',
+      color: 'var(--accent)',
+      fontFamily: 'var(--font-sans)',
+      fontSize: 11.5,
+      fontWeight: 600,
+      letterSpacing: '0.04em'
+    }
+  }, t('Scroll naar beneden'), /*#__PURE__*/React.createElement("span", {
+    "aria-hidden": "true",
+    dangerouslySetInnerHTML: {
+      __html: '<svg width="18" height="9" viewBox="0 0 18 9"><path d="M1.5 1 L9 7.5 L16.5 1" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><svg width="18" height="9" viewBox="0 0 18 9"><path d="M1.5 1 L9 7.5 L16.5 1" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    }
+  })) : null, /*#__PURE__*/React.createElement("div", null, step === 1 ? /*#__PURE__*/React.createElement("button", {
     onClick: close,
     style: terugSt
-  }, t('Annuleren')) : null, step === 2 ? /*#__PURE__*/React.createElement("button", {
-    onClick: () => setStep(3),
+  }, t('Annuleren')) : null, step >= 2 && step < contactStap ? /*#__PURE__*/React.createElement("button", {
+    onClick: () => {
+      // Het model is verplicht bij een poortaanvraag: zonder keuze blijven we
+      // op stap 2 staan met een duidelijke melding (feedback 2026-09-13).
+      if (step === 2 && service === 'poorten') {
+        // Model, breedte en zijhoogte zijn alle drie nodig om te kunnen ramen.
+        // Zonder maten is een prijs onmogelijk (vraag 2026-11-05).
+        const getal = v => {
+          const n = parseFloat(String(v == null ? '' : v).replace(',', '.'));
+          return isFinite(n) && n > 0 ? n : null;
+        };
+        const tekort = {};
+        if (!data.model) tekort.model = 'Gelieve een model te kiezen.';
+        if (!getal(data.breedte)) tekort.breedte = 'Vul de breedte in, in centimeter.';
+        if (!getal(data.zijhoogte)) tekort.zijhoogte = 'Vul de zijhoogte in, in centimeter.';
+        const namen = Object.keys(tekort);
+        if (namen.length) {
+          setErrors(e => Object.assign({}, e, tekort));
+          setFout(tekort.model
+            ? t('Kies eerst een model en vul de breedte en de zijhoogte in. Bekijk gerust onze modellen met de fotokiezer.')
+            : t('Vul de breedte en de zijhoogte in, anders kunnen wij geen prijs berekenen.'));
+          if (window.plSchudVeld) window.plSchudVeld(namen[0]);
+          return;
+        }
+      }
+      setFout('');
+      setStep(step + 1);
+    },
     style: primair
-  }, t('Volgende')) : null, step === 3 ? /*#__PURE__*/React.createElement("button", {
+  }, t('Volgende')) : null, step === contactStap ? /*#__PURE__*/React.createElement("button", {
     onClick: verzend,
     disabled: bezig,
     style: bezig ? Object.assign({}, primair, {
       opacity: 0.6
     }) : primair
-  }, bezig ? t('Bezig met verzenden') : t('Aanvraag verzenden')) : null, step === 4 ? /*#__PURE__*/React.createElement("button", {
+  }, bezig ? t('Bezig met verzenden') : t('Prijsraming aanvragen')) : null, step === klaarStap ? /*#__PURE__*/React.createElement("button", {
     onClick: closeReset,
     style: primair
   }, t('Sluiten')) : null))));
@@ -3406,7 +4405,7 @@ function CategoriePagina({
     arrow: true,
     as: "button",
     onClick: offerte
-  }, t('Vraag een offerte aan')), /*#__PURE__*/React.createElement(SButton, {
+  }, t('Vraag een prijsraming aan')), /*#__PURE__*/React.createElement(SButton, {
     variant: "ghost",
     dark: true,
     arrow: true,
@@ -3825,150 +4824,10 @@ function CategoriePagina({
       fontWeight: 600,
       letterSpacing: '0.14em',
       textTransform: 'uppercase',
-      color: 'var(--accent)',
+      color: 'var(--accent-label, var(--accent))',
       marginTop: 16
     }
-  }, t('Ontdek deze stijl'), " →")))))))), d.aluminiumBlok && /*#__PURE__*/React.createElement("section", {
-    style: {
-      background: 'var(--surface-paper)',
-      padding: '10px 44px 20px'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      maxWidth: 1000,
-      margin: '0 auto'
-    }
-  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("div", {
-    style: {
-      background: 'var(--surface-card)',
-      border: '1px solid var(--line-on-light)',
-      borderRadius: 'var(--radius-lg, 16px)',
-      padding: '34px 40px'
-    }
-  }, /*#__PURE__*/React.createElement("button", {
-    type: "button",
-    onClick: () => setAluOpen(v => !v),
-    "aria-expanded": aluOpen,
-    style: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      gap: 24,
-      width: '100%',
-      background: 'none',
-      border: 0,
-      padding: 0,
-      cursor: 'pointer',
-      textAlign: 'left'
-    }
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(SEyebrow, {
-    style: {
-      marginBottom: 14
-    }
-  }, t(d.aluminiumBlok.eyebrow)), /*#__PURE__*/React.createElement("h2", {
-    style: {
-      fontFamily: 'var(--font-display)',
-      fontWeight: 500,
-      fontSize: 32,
-      lineHeight: 1.15,
-      letterSpacing: '-0.01em',
-      color: 'var(--text-heading)',
-      margin: 0
-    }
-  }, t(d.aluminiumBlok.titel), d.aluminiumBlok.titel2 ? /*#__PURE__*/React.createElement("span", {
-    style: {
-      display: 'block'
-    }
-  }, t(d.aluminiumBlok.titel2)) : null)), /*#__PURE__*/React.createElement("span", {
-    style: {
-      flex: '0 0 auto',
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: 12
-    }
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontFamily: 'var(--font-label)',
-      fontSize: 11,
-      fontWeight: 600,
-      letterSpacing: '0.14em',
-      textTransform: 'uppercase',
-      color: 'var(--accent)',
-      whiteSpace: 'nowrap'
-    }
-  }, aluOpen ? t('Sluiten') : t('Lees meer')), /*#__PURE__*/React.createElement("span", {
-    "aria-hidden": "true",
-    style: {
-      display: 'inline-flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: 42,
-      height: 42,
-      borderRadius: '50%',
-      border: '1px solid var(--line-on-light)',
-      color: 'var(--accent)',
-      fontSize: 15,
-      lineHeight: 1,
-      transition: 'transform var(--dur) var(--ease-out)',
-      transform: aluOpen ? 'rotate(180deg)' : 'none'
-    }
-  }, "▾"))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      overflow: 'hidden',
-      maxHeight: aluOpen ? 900 : 0,
-      opacity: aluOpen ? 1 : 0,
-      transition: 'max-height 460ms var(--ease-out), opacity 340ms var(--ease-out)'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      paddingTop: 20
-    }
-  }, d.aluminiumBlok.alinea.map((a, i) => /*#__PURE__*/React.createElement("p", {
-    key: i,
-    style: {
-      fontFamily: 'var(--font-sans)',
-      fontSize: 16,
-      lineHeight: 1.72,
-      color: 'var(--text-body)',
-      margin: i ? '12px 0 0' : 0
-    }
-  }, t(a))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontFamily: 'var(--font-sans)',
-      fontSize: 15.5,
-      fontWeight: 600,
-      color: 'var(--text-heading)',
-      margin: '26px 0 16px'
-    }
-  }, t(d.aluminiumBlok.puntenKop)), /*#__PURE__*/React.createElement("div", {
-    className: "pl-cards",
-    style: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(2, 1fr)',
-      gap: 20
-    }
-  }, d.aluminiumBlok.punten.map(([titel, tekst]) => /*#__PURE__*/React.createElement("div", {
-    key: titel,
-    style: {
-      borderTop: '2px solid var(--accent)',
-      paddingTop: 12
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontFamily: 'var(--font-sans)',
-      fontSize: 15,
-      fontWeight: 600,
-      color: 'var(--text-heading)'
-    }
-  }, t(titel)), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontFamily: 'var(--font-sans)',
-      fontSize: 14,
-      lineHeight: 1.6,
-      color: 'var(--text-muted)',
-      marginTop: 4
-    }
-  }, t(tekst))))))))))), /*#__PURE__*/React.createElement("section", {
+  }, t('Ontdek deze stijl'), " →")))))))), d.aluminiumBlok && /*#__PURE__*/React.createElement(window.AluminiumMeccanoBlok, null), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper)',
       padding: '20px 44px 90px',
@@ -4428,7 +5287,7 @@ function CategoriePagina({
       textTransform: 'uppercase',
       boxShadow: '0 6px 20px rgba(20,28,21,0.28)'
     }
-  }, t('Vraag een offerte aan')));
+  }, t('Vraag een prijsraming aan')));
 }
 
 /* materiaalFotos is de fotolijst per poorttype voor de horizontale scroll. Later te beheren vanuit het ERP of CRM. */
@@ -5379,7 +6238,7 @@ var CATEGORIEEN = {
       eyebrow: 'Exclusief patent voor de Benelux',
       titel: 'Zoek je de charme van hout met de ultieme kracht van metaal?',
       titel2: 'Ontdek aluminium.',
-      alinea: ['Wist je dat onze aluminium poorten op een heel unieke manier worden gebouwd? In ons gespecialiseerde atelier lassen we niet, maar passen we de profielen naadloos in elkaar met onzichtbare, roestvrije schroeven. Poortland heeft hiervoor het exclusieve patent voor de Benelux. Het resultaat? De verfijnde esthetiek van een klassieke houten poort, gecombineerd met ongeëvenaard gebruiksgemak.', 'Doordat elk profiel eerst afzonderlijk wordt gelakt en pas daarna gemonteerd, krijgt uitzetting door het weer geen kans om de lak te beschadigen.'],
+      alinea: ['Wist je dat onze aluminium meccano poorten op een heel unieke manier worden gebouwd? De profielen zijn er speciaal voor ontworpen: inwendig zitten meerdere verstevigingen en waar scharnieren of motorbevestigingen komen kunnen extra verstevigingsprofielen geplaatst worden. In ons gespecialiseerde atelier lassen we niet: alle profielen worden eerst gelakt in een automatische lakstraat, dan met CNC op maat gefreesd, in elkaar gestoken en bevestigd met inoxschroeven die na montage onzichtbaar zijn. Poortland heeft hiervoor het exclusieve patent voor de Benelux. Het resultaat: zeer sterke, duurzame verbindingen en bij schade kan elk profiel afzonderlijk vervangen worden.', 'Doordat elk profiel eerst afzonderlijk wordt gelakt en pas daarna gemonteerd, krijgt uitzetting door het weer geen kans om de lak te beschadigen.'],
       puntenKop: 'Waarom een geschroefde aluminium poort de slimste keuze is:',
       punten: [['Oersterk', 'Tot wel 2,5 keer sterker dan een traditionele gelaste poort.'], ['Geen lakschade', 'De lak blijft intact, ook als de temperatuur schommelt.'], ['Duurzame bevestigingen', 'Geen risico op uitgescheurde scharnieren of motorophangingen.'], ['Slim te herstellen', 'Bij eventuele schade vervangen we eenvoudig één afzonderlijk profiel.']]
     },
@@ -5429,10 +6288,10 @@ var CATEGORIEEN = {
     }]
   },
   houten: {
-    title: 'Houten poorten op maat | Poortland Mechelen',
-    eyebrow: 'Houten poorten',
-    h1: 'Houten poorten op maat',
-    introKort: 'Warm, natuurlijk en vol karakter. Poortland maakt houten poorten in duurzame hardhoutsoorten, volledig op maat en met oog voor detail.',
+    title: 'Massief houten poorten op maat | Poortland Mechelen',
+    eyebrow: 'Massief houten poorten',
+    h1: 'Massief houten poorten op maat',
+    introKort: 'Warm, natuurlijk en vol karakter. Poortland maakt massief houten poorten in duurzame hardhoutsoorten, volledig op maat en met oog voor detail.',
     heroBeeld: 'media/hout/Custom%20Padoek.jpg',
     heroLabel: 'Natuurlijk maatwerk',
     materiaalFotos: ['media/houten-poort.jpg', 'media/realisatie-hout-1.jpeg', 'media/staal-hout.jpg', 'media/realisatie-hout-2.jpeg', 'media/hero.jpg'],
@@ -5989,12 +6848,7 @@ function OverkappingenNL({
     variant: "primary",
     arrow: true,
     onClick: () => window.dispatchEvent(new CustomEvent('pl-offerte-open'))
-  }, t('Vraag een offerte aan')), /*#__PURE__*/React.createElement(SButton, {
-    variant: "ghost",
-    dark: true,
-    arrow: true,
-    onClick: () => onNav('contact')
-  }, t('Plan een adviesgesprek'))), /*#__PURE__*/React.createElement("div", {
+  }, t('Vraag een prijsraming aan'))), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 26,
@@ -6051,50 +6905,7 @@ function OverkappingenNL({
       textTransform: 'uppercase',
       color: 'var(--text-heading)'
     }
-  }, t('Terrasoverkapping op maat')))))), /*#__PURE__*/React.createElement("section", {
-    style: {
-      background: 'var(--surface-paper-2)',
-      borderTop: '1px solid var(--line-on-light-soft)',
-      borderBottom: '1px solid var(--line-on-light-soft)',
-      padding: '40px 44px'
-    }
-  }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement("div", {
-    style: {
-      maxWidth: 1000,
-      margin: '0 auto',
-      display: 'flex',
-      justifyContent: 'center',
-      gap: 56,
-      flexWrap: 'wrap'
-    }
-  }, [[1999, 'Poortland sinds', '', true], [250, 'Tevreden Poortland klanten', '+', false], [100, 'Op maat gemaakt', '%', false]].map(([n, l, suf, plat]) => /*#__PURE__*/React.createElement("div", {
-    key: l,
-    style: {
-      textAlign: 'center',
-      minWidth: 150
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontFamily: 'var(--font-display)',
-      fontWeight: 500,
-      fontSize: 40,
-      color: 'var(--accent)',
-      lineHeight: 1
-    }
-  }, /*#__PURE__*/React.createElement(Teller, {
-    eind: n,
-    suffix: suf,
-    plat: plat
-  })), /*#__PURE__*/React.createElement("div", {
-    style: {
-      fontFamily: 'var(--font-label)',
-      fontSize: 10.5,
-      letterSpacing: '0.16em',
-      textTransform: 'uppercase',
-      color: 'var(--text-muted)',
-      marginTop: 10
-    }
-  }, t(l))))))), /*#__PURE__*/React.createElement("div", {
+  }, t('Terrasoverkapping op maat')))))), /*#__PURE__*/React.createElement("div", {
     ref: sectieRef
   }, secties.map((s, i) => {
     const donker = i % 2 === 1;
@@ -6278,15 +7089,10 @@ function OverkappingenNL({
   }, /*#__PURE__*/React.createElement(SButton, {
     variant: "primary",
     size: "lg",
-    arrow: true,
-    onClick: () => onNav('contact')
-  }, t('Plan een adviesgesprek')), /*#__PURE__*/React.createElement(SButton, {
-    variant: "secondary",
-    size: "lg",
     dark: true,
     arrow: true,
     onClick: offerte
-  }, t('Vraag uw offerte aan'))))));
+  }, t('Vraag uw prijsraming aan'))))));
 }
 
 /* ---- Garantie en kwaliteit ---- */
@@ -6354,7 +7160,7 @@ function GarantieNL({
     variant: "primary",
     arrow: true,
     onClick: () => window.dispatchEvent(new CustomEvent('pl-offerte-open'))
-  }, t('Vraag een offerte aan')), /*#__PURE__*/React.createElement(SButton, {
+  }, t('Vraag een prijsraming aan')), /*#__PURE__*/React.createElement(SButton, {
     variant: "ghost",
     dark: true,
     arrow: true,
@@ -6464,7 +7270,7 @@ function GarantieNL({
       maxWidth: '68ch',
       margin: 0
     }
-  }, t('Om een lange levensduur te verzekeren worden alle overkappingen en poorten van Poortland tegen roest behandeld. Hiervoor gebruiken wij twee technieken, namelijk thermisch verzinken en metalliseren. Daarna worden de overkappingen en poorten met twee lagen gepoederlakt.'))), /*#__PURE__*/React.createElement(Reveal, {
+  }, t('Om een lange levensduur te verzekeren worden alle stalen poorten en constructies van Poortland tegen roest behandeld. Hiervoor gebruiken wij twee technieken, namelijk thermisch verzinken en metalliseren, gevolgd door een afwerking met twee lagen poederlak. Aluminium en inox hebben deze behandeling niet nodig; onze overkappingen zijn uit aluminium.'))), /*#__PURE__*/React.createElement(Reveal, {
     delay: 80
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -6720,52 +7526,169 @@ function GarantieNL({
   }, t('Bekijk onze verkoopsvoorwaarden')))));
 }
 
-/* ---- Algemene voorwaarden (verkoopsvoorwaarden 2022) ---- */
+/* ---- Algemene voorwaarden (versies 2026, B2C en B2B) ----
+   De bezoeker kiest zelf of hij particulier dan wel zakelijk klant is; de
+   bijhorende voorwaarden en pdf verschijnen dan. De keuze blijft in de url
+   staan (?klant=zakelijk) zodat een link naar de juiste versie deelbaar is. */
+var VOORWAARDEN_2026 = {
+  particulier: {
+    knop: 'Ik ben particuliere klant',
+    kort: 'Particulieren',
+    versie: 'B2C · consumenten, versie 26 augustus 2026',
+    intro: 'Deze voorwaarden gelden voor klanten die kopen buiten hun beroeps of bedrijfsactiviteit. Dwingend Belgisch consumentenrecht heeft altijd voorrang op een strijdige bepaling.',
+    pdf: '/documenten/Poortland_verkoopsvoorwaarden_2026_particulieren.pdf',
+    secties: [{
+      nr: '1',
+      titel: 'Algemene bepalingen',
+      clausules: [['1.1', 'Deze algemene voorwaarden zijn van toepassing op offertes, bestellingen, verkopen, leveringen en plaatsingen door Poortland nv aan consumenten, voor zover niet schriftelijk anders is overeengekomen. De offerte of bestelbon en eventuele bijzondere voorwaarden hebben voorrang op deze algemene voorwaarden.'], ['1.2', 'U ontvangt deze voorwaarden vóór of uiterlijk bij het sluiten van de overeenkomst op papier of op een duurzame drager. Zij zijn slechts tegenwerpelijk wanneer u redelijkerwijs kennis kon nemen van de inhoud en de voorwaarden heeft aanvaard, bijvoorbeeld door ondertekening van de offerte of bestelbon.'], ['1.3', 'Alle prijzen voor consumenten zijn totaalprijzen inclusief btw en andere verplichte lasten, tenzij een prijs om objectieve redenen vooraf niet volledig kan worden berekend. Leverings, plaatsings of andere bijkomende kosten worden vóór het sluiten van de overeenkomst meegedeeld.'], ['1.4', 'Indien een wettelijk afwijkend btw tarief kan worden toegepast, bezorgt u tijdig de wettelijk vereiste informatie of attesten. Een wettelijk verplichte fiscale regularisatie wordt doorgevoerd volgens de toepasselijke wetgeving.'], ['1.5', 'De geldigheidsduur van de offerte en van de prijs staat in de offerte. Na het verstrijken daarvan is Poortland niet gebonden zolang u de offerte niet heeft aanvaard. Na de totstandkoming van de overeenkomst kan de prijs alleen wijzigen wanneer dat wettelijk is toegestaan en een objectieve, vooraf meegedeelde prijsherzieningsformule geldt, of wanneer beide partijen schriftelijk akkoord gaan over een wijziging van de opdracht.']]
+    }, {
+      nr: '2',
+      titel: 'Bestelling en technische gegevens',
+      clausules: [['2.1', 'Monsters, tekeningen, kleuren, afbeeldingen, afmetingen, gewichten en technische gegevens dienen ter beschrijving van het product. Kleine, technisch onvermijdelijke of gebruikelijke afwijkingen die de conformiteit, het normale gebruik en de uitdrukkelijk overeengekomen kenmerken niet aantasten, gelden niet als gebrek.'], ['2.2', 'Wanneer u zelf maten, plannen, technische gegevens of instructies verstrekt, staat u in voor de juistheid en volledigheid ervan voor zover Poortland daar redelijkerwijs op mocht vertrouwen. Poortland blijft aansprakelijk voor eigen meet, reken, productie of plaatsingsfouten.'], ['2.3', 'Wanneer Poortland maten berekent op basis van een plan van u of van een derde zonder de werkelijke toestand te kunnen controleren, meldt Poortland kennelijke inconsistenties. Gevolgen van onjuiste of onvolledige plannen komen slechts ten laste van u voor zover zij niet aan een fout van Poortland zijn toe te schrijven.'], ['2.4', 'Na een opmeting door Poortland meldt u vóór productie of plaatsing iedere wijziging van de situatie die de maatvoering, uitvoering of kostprijs kan beïnvloeden. Noodzakelijke meerkosten worden vooraf zoveel mogelijk begroot en pas aangerekend na informatie aan u en, waar vereist, uw akkoord.']]
+    }, {
+      nr: '3',
+      titel: 'Levering en afhaling',
+      clausules: [['3.1', 'Goederen uit voorraad kunnen op het overeengekomen tijdstip worden afgehaald tegen betaling volgens de overeengekomen modaliteiten.'], ['3.2', 'Levering aan huis gebeurt tegen de vóór het sluiten van de overeenkomst meegedeelde vergoeding en op de overeengekomen datum of binnen de overeengekomen termijn.'], ['3.3', 'Kan een levering of plaatsing door een objectieve omstandigheid buiten de redelijke controle van Poortland niet doorgaan op de afgesproken datum, dan brengt Poortland u zo spoedig mogelijk op de hoogte en stelt zij een nieuwe redelijke datum voor. Uw wettelijke rechten blijven behouden.'], ['3.4', 'Kan levering of plaatsing niet doorgaan door een omstandigheid die aan u of uw aannemer is toe te rekenen, dan kan Poortland de aantoonbare bijkomende kosten aanrekenen nadat u daarover bent geïnformeerd. Reeds conform de overeenkomst geproduceerde of gereedstaande goederen kunnen volgens de overeengekomen betalingsschijven worden gefactureerd voor zover dat redelijk is in verhouding tot de uitgevoerde prestatie.'], ['3.5', 'De leveringstermijn of uitvoeringsperiode staat zo nauwkeurig mogelijk in de offerte of bestelbon. Is voor een verkoop van roerende goederen geen termijn overeengekomen, dan gelden de wettelijke leveringstermijnen. Bij een toerekenbare vertraging beschikt u over de wettelijke remedies, waaronder waar toepasselijk een aanvullende redelijke termijn en vervolgens beëindiging van de overeenkomst.'], ['3.6', 'Voor zover juridisch mogelijk blijven geleverde goederen eigendom van Poortland tot volledige betaling van de prijs. Het risico van verlies of beschadiging gaat over volgens de dwingende wettelijke regels. Een eigendomsvoorbehoud doet geen afbreuk aan uw wettelijke garantierechten.']]
+    }, {
+      nr: '4',
+      titel: 'Plaatsingen',
+      clausules: [['4.1', 'Tenzij uitdrukkelijk schriftelijk opgenomen in de offerte, staat u in voor het tijdig aanvragen en verkrijgen van de vergunningen en toelatingen die uitsluitend verband houden met uw terrein, woning of keuze van uitvoering. Poortland verstrekt op verzoek de technische informatie waarover zij beschikt. Dit geldt niet voor vergunningen, erkenningen of wettelijke verplichtingen die volgens de wet door Poortland zelf moeten worden vervuld.'], ['4.2', 'Plaatsingen worden uitgevoerd tegen de overeengekomen prijs of het vooraf meegedeelde tarief en op de afgesproken datum of binnen de afgesproken periode. Bij vertraging gelden de artikelen 3.3 en 3.5.'], ['4.3', 'U zorgt ervoor dat de plaats van uitvoering tijdig toegankelijk en redelijkerwijs vrijgemaakt is. Is er niet voorziene ontruimings of wachttijd nodig door een aan u toe te rekenen omstandigheid, dan kan Poortland de redelijke bijkomende kosten aanrekenen nadat u daarover bent geïnformeerd.'], ['4.4', 'De prijs voor grondwerken is gebaseerd op de informatie in de offerte en op de door u meegedeelde of bij normale inspectie waarneembare toestand van de ondergrond. Blijkt tijdens de uitvoering een niet voorzienbare, wezenlijk moeilijkere ondergrond, dan stopt Poortland zo nodig de betrokken werken, informeert zij u en legt zij vóór bijkomende werkzaamheden een voorstel voor de meerprijs en de eventuele termijnverlenging voor.'], ['4.5', 'U deelt vóór de werken alle u bekende informatie mee over ondergrondse leidingen, kabels, tanks, funderingen en andere verborgen voorwerpen. Schade die uitsluitend voortvloeit uit onjuiste of verzwegen informatie kan aan u worden toegerekend. Poortland blijft aansprakelijk voor schade door haar eigen fout of door een wettelijke controleverplichting die zij niet is nagekomen.']]
+    }, {
+      nr: '5',
+      titel: 'Garantie, waarborg en gebreken',
+      clausules: [['5.1', 'Wanneer de overeenkomst juridisch kwalificeert als een verkoop van roerende goederen aan een consument, wat bij bouwelementen zoals poorten inclusief installatie doorgaans het geval kan zijn, geldt de wettelijke conformiteitsgarantie. Voor nieuwe goederen kan een conformiteitsgebrek dat binnen twee jaar vanaf de levering wordt vastgesteld onder deze wettelijke garantie vallen. Deze wettelijke rechten kunnen niet door een commerciële garantie worden beperkt.'], ['5.2', 'Bij een gebrek waarvoor de wettelijke conformiteitsgarantie geldt, heeft u recht op de wettelijk voorziene kosteloze remedies, in de wettelijke volgorde en onder de wettelijke voorwaarden, waaronder herstel of vervanging en, wanneer de wet dat toelaat, prijsvermindering of ontbinding.'], ['5.3', 'Poortland verleent daarnaast, voor zover bevestigd in de offerte of het garantiecertificaat, een commerciële garantie van 10 jaar tegen doorroesten en op de lakkwaliteit van door Poortland geleverde en geplaatste metalen constructies die door Poortland tegen roest zijn behandeld en gelakt. Uitgesloten zijn normale slijtage, oppervlakkige roestvorming zonder doorroesten, roest aan slijtage of bewegingspunten zoals scharnieren en sloten, ondergrondse corrosie, mechanische beschadiging, gebrek aan normaal onderhoud en schade door externe oorzaken. Deze commerciële garantie laat uw wettelijke rechten onverlet.'], ['5.4', 'De wettelijke conformiteitsgarantie begint te lopen vanaf de levering. Een commerciële garantie begint op de datum vermeld in de offerte of het garantiecertificaat en kan de wettelijke termijn nooit verkorten.'], ['5.5', 'Herstellingen onder de wettelijke conformiteitsgarantie gebeuren kosteloos volgens de wet; daarvoor worden geen verplaatsings, arbeids of administratiekosten aangerekend. Voor interventies die uitsluitend onder een commerciële garantie vallen nadat de wettelijke garantie is verstreken, kunnen vooraf meegedeelde verplaatsings en arbeidskosten worden aangerekend indien het garantiecertificaat dat uitdrukkelijk bepaalt.'], ['5.6', 'Schade door verkeerd of abnormaal gebruik, ongeoorloofde wijzigingen of herstellingen door derden, aanrijding, externe beschadiging, grondverzakking, overstroming, aardbeving, uitzonderlijke storm of andere externe oorzaken is niet gedekt door een commerciële garantie, tenzij de schade mede het gevolg is van een fout waarvoor Poortland wettelijk aansprakelijk is.'], ['5.7', 'Wij vragen u zichtbare beschadigingen bij levering of plaatsing zo snel mogelijk en bij voorkeur binnen acht kalenderdagen schriftelijk te melden. Dit is geen vervaltermijn voor dwingende wettelijke rechten. Een gebrek onder de wettelijke conformiteitsgarantie meldt u zo spoedig mogelijk en in ieder geval binnen de wettelijk toepasselijke termijn na vaststelling.']]
+    }, {
+      nr: '6',
+      titel: 'Prijzen en wijzigingen van de opdracht',
+      clausules: [['6.1', 'De totaalprijs en de inbegrepen goederen en werkzaamheden staan in de offerte of bestelbon. De prijs is inclusief btw en andere verplichte lasten. Bijkomende werken of leveringen worden alleen aangerekend wanneer u ze heeft gevraagd of wanneer zij noodzakelijk blijken door omstandigheden die vóór het sluiten van de overeenkomst redelijkerwijs niet konden worden vastgesteld, en nadat u vooraf over aard en prijs bent geïnformeerd en, waar vereist, akkoord heeft gegeven.'], ['6.2', 'Een prijsherziening tijdens de uitvoering is alleen mogelijk wanneer de offerte of bestelbon een duidelijke en objectieve berekeningsmethode bevat die steunt op parameters buiten de loutere wil van Poortland, de werkelijke kostenevolutie weerspiegelt en wettelijk is toegestaan. Zonder zo een vooraf overeengekomen formule blijft de overeengekomen prijs gelden, behoudens een latere uitdrukkelijke overeenkomst of een wettelijk recht op heronderhandeling wegens onvoorzienbare gewijzigde omstandigheden.']]
+    }, {
+      nr: '7',
+      titel: 'Betalingen',
+      clausules: [['7.1', 'Betalingen gebeuren op het bankrekeningnummer vermeld in de offerte of factuur. Wij vragen u wijzigingen van bankgegevens steeds te verifiëren via een gekend communicatiekanaal.'], ['7.2', 'Een betwisting schorst niet automatisch het volledige factuurbedrag. U betaalt het niet betwiste gedeelte op de vervaldag. Voor het redelijk en gemotiveerd betwiste gedeelte behouden beide partijen hun wettelijke rechten, waaronder waar toepasselijk het recht op proportionele opschorting.'], ['7.3', 'Tenzij de offerte of bestelbon anders bepaalt, is bij de bestelling een voorschot van 30% van de totaalprijs verschuldigd. De verdere betalingsschijven en vervaldata staan in de offerte, bestelbon of factuur.'], ['7.4', 'Bij niet tijdige betaling past Poortland Boek XIX van het Wetboek van economisch recht toe. De eerste betalingsherinnering is kosteloos. Pas na het verstrijken van de wettelijke wachttermijn van minstens 14 kalenderdagen kunnen, indien contractueel verschuldigd, verwijlinteresten en een forfaitaire vergoeding worden aangerekend. De interest is beperkt tot het wettelijke maximum. De forfaitaire vergoeding bedraagt maximaal 20 euro bij een saldo tot en met 150 euro, 30 euro plus 10% op de schijf tussen 150,01 en 500 euro, en 65 euro plus 5% op de schijf boven 500 euro met een maximum van 2.000 euro. Legt de wet strengere maxima of voorwaarden op, dan gelden die automatisch.'], ['7.5', 'Is Poortland u een opeisbaar bedrag verschuldigd en betaalt zij dat niet binnen 14 kalenderdagen na een schriftelijke ingebrekestelling, dan heeft u, voor zover wettelijk toegestaan, recht op dezelfde maximale verwijlinterest en dezelfde forfaitaire vergoedingsschijven als in artikel 7.4.'], ['7.6', 'Een foutief toegepast btw tarief wordt geregulariseerd wanneer de fiscale wetgeving dat vereist.'], ['7.7', 'Voor interventies die niet onder een wettelijke of toepasselijke commerciële garantie vallen, worden eventuele diagnose, verplaatsings, arbeids of administratiekosten vooraf duidelijk meegedeeld. Voor wettelijke garantiewerken worden zulke kosten niet aangerekend.']]
+    }, {
+      nr: '8',
+      titel: 'Annulatie, beëindiging, klachten en geschillen',
+      clausules: [['8.1', 'Buiten een wettelijk herroepingsrecht of een beëindiging wegens een tekortkoming van Poortland kunt u vragen de overeenkomst geheel of gedeeltelijk te beëindigen. Stemt Poortland in of kunt u krachtens de wet eenzijdig beëindigen, dan kan Poortland aanspraak maken op een redelijke vergoeding voor reeds uitgevoerde prestaties, reeds bestelde of op maat vervaardigde goederen, niet recupereerbare kosten en, waar wettelijk toegestaan, gederfde winst, telkens verminderd met de door de beëindiging bespaarde kosten en nooit meer dan het bedrag dat bij volledige uitvoering verschuldigd zou zijn.'], ['8.2', 'Klachten kunt u melden via info@poortland.be of per brief aan Poortland nv, Hombeeksesteenweg 164-166, 2800 Mechelen. Poortland behandelt klachten binnen een redelijke termijn. Een klachtregeling beperkt uw toegang tot de bevoegde rechtbank of tot een wettelijk bevoegde buitengerechtelijke geschilleninstantie niet.'], ['8.3', 'Op de overeenkomst is Belgisch recht van toepassing, zonder dat u daardoor bescherming verliest die u op grond van dwingende bepalingen toekomt. Geschillen worden voorgelegd aan de rechtbank die volgens de toepasselijke dwingende bevoegdheidsregels bevoegd is.']]
+    }, {
+      nr: '9',
+      titel: 'Herroepingsrecht bij overeenkomsten op afstand of buiten verkoopruimten',
+      clausules: [['9.1', 'Wordt de overeenkomst op afstand of buiten de verkoopruimten van Poortland gesloten en geldt geen wettelijke uitzondering, dan beschikt u over het wettelijke herroepingsrecht van 14 kalenderdagen. Voor verkoopovereenkomsten begint die termijn in beginsel op de dag na de levering, voor dienstenovereenkomsten in beginsel op de dag na het sluiten van de overeenkomst.'], ['9.2', 'U kunt herroepen met het modelformulier in bijlage bij de pdf of met iedere andere ondubbelzinnige verklaring aan Poortland. U hoeft uw beslissing niet te motiveren. De wettelijke regels over terugbetaling, eventuele retourkosten, waardevermindering en reeds aangevatte dienstverlening zijn van toepassing.'], ['9.3', 'Vraagt u uitdrukkelijk dat een dienst tijdens de herroepingstermijn begint, dan kan bij herroeping een evenredig bedrag verschuldigd zijn voor de reeds uitgevoerde prestatie, voor zover Poortland de wettelijk vereiste informatie heeft verstrekt en u de wettelijk vereiste uitdrukkelijke aanvraag heeft gedaan.'], ['9.4', 'Het herroepingsrecht kan wettelijk uitgesloten zijn voor goederen die volgens uw specificaties zijn vervaardigd of duidelijk voor een specifieke persoon bestemd zijn. Deze uitzondering wordt restrictief toegepast: een keuze uit vooraf bepaalde standaardopties maakt een product niet noodzakelijk tot een uniek maatwerkproduct. Beroept Poortland zich op een uitzondering, dan wordt u daarover vóór het sluiten van de overeenkomst duidelijk geïnformeerd.']]
+    }, {
+      nr: '10',
+      titel: 'Overmacht en onvoorziene omstandigheden',
+      clausules: [['10.1', 'Een partij is niet aansprakelijk voor een tijdelijke niet nakoming die uitsluitend het gevolg is van een onvoorzienbare en onvermijdbare gebeurtenis buiten haar redelijke controle, voor zover die gebeurtenis de uitvoering daadwerkelijk verhindert en de partij redelijke maatregelen neemt om de gevolgen te beperken.'], ['10.2', 'De getroffen partij informeert de andere partij zo spoedig mogelijk over de aard en de vermoedelijke duur van de verhindering. De verplichtingen worden slechts geschorst voor zover en zolang de uitvoering onmogelijk is. Wordt de verhindering duurzaam of de vertraging voor u onredelijk lang, dan behouden partijen de wettelijke rechten om de overeenkomst geheel of gedeeltelijk te beëindigen.'], ['10.3', 'Bij een onvoorzienbare wijziging van omstandigheden die de uitvoering buitensporig bezwarend maakt, kunnen partijen te goeder trouw een redelijke aanpassing bespreken voor zover de wettelijke voorwaarden daarvoor zijn vervuld. Zonder akkoord kan Poortland de prijs niet eenzijdig wijzigen buiten artikel 6.2.']]
+    }]
+  },
+  zakelijk: {
+    knop: 'Ik ben zakelijke klant',
+    kort: 'Ondernemingen',
+    versie: 'B2B · professionele klanten, versie 18 augustus 2026',
+    intro: 'Deze voorwaarden gelden uitsluitend voor klanten die handelen in het kader van hun handels, bedrijfs, ambachts of beroepsactiviteit. Zij houden rekening met de Belgische B2B regels over onrechtmatige bedingen en betalingsachterstand.',
+    pdf: '/documenten/Poortland_verkoopsvoorwaarden_2026_zakelijk.pdf',
+    secties: [{
+      nr: '1',
+      titel: 'Algemene bepalingen',
+      clausules: [['1.1', 'Deze algemene voorwaarden zijn van toepassing op alle offertes, bestellingen, verkopen, leveringen en plaatsingen van Poortland nv aan professionele klanten. Bijzondere voorwaarden in de offerte of bestelbon hebben voorrang op deze algemene voorwaarden.'], ['1.2', 'Deze voorwaarden zijn slechts tegenwerpelijk wanneer zij vóór of bij het sluiten van de overeenkomst aan de klant werden meegedeeld en door de klant werden aanvaard. De algemene of aankoopvoorwaarden van de klant gelden slechts voor zover Poortland ze voorafgaand en uitdrukkelijk schriftelijk heeft aanvaard. Geen enkele bepaling creëert een onweerlegbaar vermoeden van kennisname of aanvaarding.'], ['1.3', 'Alle prijzen zijn exclusief btw en andere belastingen of heffingen, tenzij uitdrukkelijk anders vermeld.'], ['1.4', 'Wordt een bijzonder btw regime of verlaagd tarief gevraagd, dan verstrekt de klant tijdig de wettelijk vereiste gegevens en bewijsstukken. Een wettelijk verplichte fiscale regularisatie wordt doorgerekend aan de partij die de belasting volgens de wet verschuldigd is.'], ['1.5', 'De offerte is geldig gedurende de daarin vermelde termijn. Na aanvaarding blijft de overeengekomen prijs gelden, behoudens een uitdrukkelijk overeengekomen prijsherzieningsmechanisme, een schriftelijke wijziging van de opdracht of de wettelijke regeling inzake gewijzigde omstandigheden.']]
+    }, {
+      nr: '2',
+      titel: 'Bestelling',
+      clausules: [['2.1', 'Monsters, tekeningen, afmetingen, gewichten, afbeeldingen en technische gegevens zijn beschrijvend. Beperkte technisch onvermijdelijke of gebruikelijke afwijkingen die de overeengekomen functionaliteit of essentiële kenmerken niet aantasten, geven geen recht op weigering of schadevergoeding. Poortland blijft aansprakelijk voor afwijkingen die een contractuele tekortkoming vormen.'], ['2.2', 'Door de klant opgegeven maten, plannen, specificaties en technische gegevens worden gebruikt als productie en uitvoeringsbasis. De klant is aansprakelijk voor de gevolgen van onjuiste of onvolledige gegevens voor zover Poortland de fout niet kende en redelijkerwijs niet behoorde te kennen.'], ['2.3', 'Berekent Poortland maten op basis van door de klant aangeleverde plannen zonder controle van de werkelijke toestand, dan draagt de klant het risico van afwijkingen tussen plan en werkelijkheid, behalve wanneer de schade het gevolg is van een eigen fout van Poortland.'], ['2.4', 'Na een opmeting door Poortland meldt de klant onmiddellijk iedere wijziging van de toestand die de maatvoering, productie of plaatsing kan beïnvloeden. Redelijke meerkosten en termijnverlengingen die daaruit rechtstreeks voortvloeien, worden aan de klant toegerekend nadat Poortland hem daarover heeft geïnformeerd.']]
+    }, {
+      nr: '3',
+      titel: 'Levering en afhaling',
+      clausules: [['3.1', 'Bij verkoop uit voorraad kunnen goederen op het overeengekomen tijdstip worden afgehaald tegen betaling volgens de overeengekomen betalingsmodaliteiten.'], ['3.2', 'Levering op locatie gebeurt tegen de overeengekomen vergoeding en volgens de overeengekomen planning.'], ['3.3', 'Kan levering of plaatsing door overmacht of een andere niet aan Poortland toerekenbare verhindering niet op de geplande datum gebeuren, dan stelt Poortland de klant zo spoedig mogelijk in kennis en wordt een nieuwe redelijke datum overeengekomen. Artikel 10 is van toepassing.'], ['3.4', 'Kan levering of plaatsing niet doorgaan door een aan de klant, diens aangestelden of andere door hem ingeschakelde aannemers toe te rekenen oorzaak, dan kan Poortland de reeds geproduceerde of gereserveerde materialen en de aantoonbare bijkomende kosten factureren. Eventuele opslag, wachttijd of herplanningskosten moeten redelijk zijn en verband houden met de werkelijk ontstane last.'], ['3.5', 'Leverings en uitvoeringstermijnen zijn bindend wanneer zij uitdrukkelijk als bindend zijn vermeld. Andere planningen zijn redelijke streefdata. Een overschrijding geeft pas aanleiding tot ontbinding of schadevergoeding wanneer zij aan Poortland toerekenbaar en wezenlijk is en Poortland na een passende ingebrekestelling en redelijke hersteltermijn in gebreke blijft, behoudens wanneer een hersteltermijn volgens de wet of de aard van de verbintenis niet vereist is.'], ['3.6', 'Alle geleverde goederen blijven, voor zover juridisch mogelijk, eigendom van Poortland tot volledige betaling van alle bedragen die voor de betrokken goederen verschuldigd zijn. De klant bewaart goederen onder eigendomsvoorbehoud zorgvuldig en vervreemdt of bezwaart ze niet. De risico overgang gebeurt volgens de overeengekomen Incoterm of, bij gebrek daaraan, bij levering aan de klant.']]
+    }, {
+      nr: '4',
+      titel: 'Plaatsingen',
+      clausules: [['4.1', 'Tenzij schriftelijk anders overeengekomen staat de klant in voor vergunningen, meldingen en toelatingen die verband houden met zijn terrein, gebouw of exploitatie. Poortland blijft verantwoordelijk voor vergunningen, erkenningen en wettelijke verplichtingen die volgens de wet specifiek op haar rusten.'], ['4.2', 'Plaatsingen worden uitgevoerd tegen de overeengekomen prijs of het overeengekomen tarief en volgens de afgesproken planning. Wijzigingen in planning of uitvoering worden zo spoedig mogelijk gecommuniceerd.'], ['4.3', 'De klant zorgt voor vrije, veilige en tijdige toegang tot de werkzone, voor de noodzakelijke nutsvoorzieningen indien overeengekomen en voor de coördinatie met andere aannemers. Extra wachttijd, ontruiming of herplanning door een aan de klant toerekenbare oorzaak kan tegen een redelijk vooraf meegedeeld of gebruikelijk tarief worden aangerekend.'], ['4.4', 'De offerte voor grondwerken is gebaseerd op de meegedeelde en redelijk waarneembare toestand van de ondergrond. Blijkt de werkelijke ondergrond wezenlijk moeilijker door niet vooraf kenbare obstakels, dan informeert Poortland de klant en worden de noodzakelijke bijkomende werken en de prijsimpact in beginsel vooraf afgestemd.'], ['4.5', 'De klant verstrekt alle beschikbare informatie over leidingen, kabels, tanks, funderingen en andere ondergrondse of verborgen elementen. Schade door onjuiste of ontbrekende informatie komt voor rekening van de klant voor zover Poortland geen eigen fout heeft begaan en geen wettelijke verificatieplicht heeft geschonden.']]
+    }, {
+      nr: '5',
+      titel: 'Waarborg en gebreken',
+      clausules: [['5.1', 'Door Poortland geleverde en geplaatste metalen constructies die door Poortland tegen roest zijn behandeld en gelakt, genieten een commerciële garantie van 10 jaar tegen doorroesten en op de lakkwaliteit, te rekenen vanaf levering of plaatsing. Uitgesloten zijn normale slijtage, oppervlakkige roest zonder doorroesten, corrosie aan scharnieren, sloten en andere slijtagepunten, ondergrondse corrosie, mechanische beschadiging, onvoldoende onderhoud en externe schadeoorzaken.'], ['5.2', 'Door Poortland geplaatste elektrische leidingen genieten, tenzij de offerte of bestelbon een langere termijn vermeldt, een commerciële garantie van één jaar vanaf levering of plaatsing.'], ['5.3', 'Door Poortland geplaatste aandrijvingen en elektrische of elektronische materialen genieten, tenzij de offerte, bestelbon of fabrieksgarantie anders bepaalt, een commerciële garantie van twee jaar vanaf levering of plaatsing.'], ['5.4', 'Een garantie dekt herstel of vervanging van het gebrekkige onderdeel volgens de daarin vermelde voorwaarden en beperkt geen aansprakelijkheid die op grond van dwingend recht niet kan worden uitgesloten.'], ['5.5', 'Voor interventies binnen de commerciële garantie kan Poortland verplaatsings en arbeidskosten aanrekenen wanneer het gebrek niet aan Poortland of het geleverde product is toe te rekenen of wanneer de garantievoorwaarden dat uitdrukkelijk bepalen. Vooraf wordt zoveel mogelijk meegedeeld welke kosten kunnen ontstaan.'], ['5.6', 'Niet gedekt zijn gebreken of schade door verkeerd gebruik, onvoldoende onderhoud, ongeoorloofde wijzigingen of herstellingen door derden, externe beschadiging, grondverzakking, overstroming, aardbeving, extreme weersomstandigheden of andere externe oorzaken, behalve voor zover Poortland wettelijk aansprakelijk is voor een eigen fout.'], ['5.7', 'Zichtbare gebreken of transportschade worden bij levering of plaatsing onmiddellijk en uiterlijk binnen acht kalenderdagen schriftelijk gemeld. Verborgen gebreken worden schriftelijk gemeld binnen een redelijke termijn na ontdekking. Een laattijdige melding kan slechts tot verlies van rechten leiden voor zover Poortland daardoor daadwerkelijk in haar bewijs of herstelmogelijkheden is benadeeld of voor zover een geldige wettelijke of contractuele vervaltermijn van toepassing is.']]
+    }, {
+      nr: '6',
+      titel: 'Prijzen',
+      clausules: [['6.1', 'De prijs wordt bepaald in de offerte en bestelbon en omvat uitsluitend de daarin omschreven goederen en prestaties. Meerwerken, wijzigingen of bijkomende prestaties worden afzonderlijk aangerekend volgens vooraf overeengekomen of, bij gebrek daaraan, redelijke marktconforme tarieven.'], ['6.2', 'Een prijsherziening kan alleen worden toegepast wanneer zij uitdrukkelijk in de offerte of bestelbon is overeengekomen en steunt op objectieve parameters die de werkelijke evolutie van relevante materiaal, energie, transport of loonkosten weerspiegelen. Poortland verstrekt op verzoek een redelijke toelichting over de berekening. Een eenzijdige prijswijziging zonder geldige reden is uitgesloten.']]
+    }, {
+      nr: '7',
+      titel: 'Betalingen',
+      clausules: [['7.1', 'Betalingen gebeuren uitsluitend op een door Poortland schriftelijk meegedeeld bankrekeningnummer. Wijzigingen van bankgegevens moeten door de klant worden geverifieerd via een gekend communicatiekanaal.'], ['7.2', 'Een betwisting schorst uitsluitend het ernstig en gemotiveerd betwiste gedeelte van een factuur. Het niet betwiste gedeelte blijft betaalbaar op de vervaldag. De klant mag geen kennelijk disproportioneel bedrag opschorten in verhouding tot het betwiste gebrek.'], ['7.3', 'Tenzij schriftelijk anders overeengekomen is bij de bestelling een voorschot van 30% van de totaalprijs verschuldigd. De overige betalingsschijven en vervaldata staan in de offerte, bestelbon of factuur. Is geen betalingstermijn vermeld, dan geldt de wettelijk toepasselijke termijn voor handelstransacties.'], ['7.4', 'Bij niet tijdige betaling is, zonder afbreuk aan dwingende regels, van rechtswege en zonder ingebrekestelling de wettelijke interest voor betalingsachterstand bij handelstransacties verschuldigd overeenkomstig de wet van 2 augustus 2002, berekend op het onbetaalde bedrag. Daarnaast is de wettelijk voorziene forfaitaire vergoeding voor invorderingskosten van 40 euro verschuldigd, zonder afbreuk aan het recht van Poortland op vergoeding van redelijke bijkomende invorderingskosten voor zover wettelijk toegestaan en aantoonbaar.'], ['7.5', 'Een foutief toegepast btw tarief wordt geregulariseerd wanneer de fiscale wetgeving dat vereist.'], ['7.6', 'Voor interventies buiten garantie met een netto interventiewaarde van minder dan 150 euro kan een administratiekost van 15 euro exclusief btw worden aangerekend, mits deze kost vóór de interventie aan de klant is meegedeeld.']]
+    }, {
+      nr: '8',
+      titel: 'Annulatie, verbreking, klachten en algemeen',
+      clausules: [['8.1', 'Annuleert de klant een bestelling zonder tekortkoming van Poortland, dan is Poortland gerechtigd tot vergoeding van de redelijk voorzienbare schade, waaronder reeds gemaakte kosten, niet annuleerbare bestellingen, reeds geproduceerd maatwerk en gederfde marge, verminderd met de door de annulatie bespaarde kosten. Partijen kunnen in de offerte een redelijke forfaitaire annuleringsvergoeding bepalen. Is maatwerk reeds volledig geproduceerd, dan kan de vergoeding oplopen tot de contractprijs voor dat maatwerk, verminderd met aantoonbaar bespaarde kosten of realiseerbare restwaarde.'], ['8.2', 'Klachten worden zo spoedig mogelijk schriftelijk gemeld via info@poortland.be of per brief aan de maatschappelijke zetel. Partijen streven eerst naar een praktische oplossing, zonder dat dit het recht op gerechtelijke stappen beperkt.'], ['8.3', 'Op de overeenkomst is Belgisch recht van toepassing. Behoudens dwingende bevoegdheidsregels zijn de rechtbanken van het gerechtelijk arrondissement Antwerpen, afdeling Mechelen, bevoegd. Partijen kunnen na het ontstaan van een geschil schriftelijk een andere bevoegde rechtbank of een vorm van bemiddeling overeenkomen.']]
+    }, {
+      nr: '9',
+      titel: 'Aansprakelijkheid',
+      clausules: [['9.1', 'Elke partij is aansprakelijk voor de directe en redelijk voorzienbare schade die het gevolg is van een aan haar toerekenbare contractuele tekortkoming. De benadeelde partij neemt redelijke maatregelen om haar schade te beperken.'], ['9.2', 'Voor zover wettelijk toegestaan is Poortland niet aansprakelijk voor zuiver indirecte gevolgschade zoals verlies van productie, winst, omzet of contracten, behalve wanneer die schade het gevolg is van opzet, zware fout of een tekortkoming aan een essentiële verbintenis waarvan uitsluiting de overeenkomst zou uithollen.'], ['9.3', 'Voor zover wettelijk toegestaan is de totale contractuele aansprakelijkheid van Poortland voor een schadegeval beperkt tot de netto contractwaarde van het deel van de levering of werken waarop de schade betrekking heeft. Deze beperking geldt niet bij opzet, zware fout, aantasting van de lichamelijke integriteit of in andere gevallen waarin een aansprakelijkheidsbeperking wettelijk verboden of kennelijk onrechtmatig is.'], ['9.4', 'Poortland is niet aansprakelijk voor schade die uitsluitend voortvloeit uit foutieve instructies, gegevens of materialen van de klant, uit ingrepen van derden of uit gebruik in strijd met de meegedeelde voorschriften, voor zover Poortland de risico’s niet kende of redelijkerwijs behoorde te kennen.']]
+    }, {
+      nr: '10',
+      titel: 'Overmacht en gewijzigde omstandigheden',
+      clausules: [['10.1', 'Onder overmacht wordt verstaan een onvoorzienbare en onvermijdbare gebeurtenis buiten de redelijke controle van de getroffen partij die de uitvoering van een verbintenis tijdelijk of definitief onmogelijk maakt. De getroffen partij meldt de gebeurtenis en de vermoedelijke gevolgen zo spoedig mogelijk en neemt redelijke maatregelen om de schade te beperken.'], ['10.2', 'Tijdens tijdelijke overmacht worden de getroffen verplichtingen geschorst voor zover uitvoering onmogelijk is. Duurt de verhindering langer dan redelijkerwijs aanvaardbaar, dan treden partijen in overleg; bij een blijvende onmogelijkheid gelden de wettelijke gevolgen van overmacht.'], ['10.3', 'Doen zich na contractsluiting onvoorzienbare omstandigheden voor die de uitvoering buitensporig bezwarend maken en aan de wettelijke voorwaarden voor imprevisie voldoen, dan kan de getroffen partij om heronderhandeling verzoeken. Partijen onderhandelen te goeder trouw; tijdens de onderhandelingen blijven de verbintenissen in beginsel gelden, behoudens een andersluidende wettelijke regel of een schriftelijk akkoord.']]
+    }]
+  }
+};
 function VoorwaardenNL({
   onNav
 }) {
+  // De keuze staat in de url zodat een link naar de juiste versie deelbaar is.
+  var beginKeuze = 'particulier';
+  try {
+    if (typeof window !== 'undefined' && /klant=zakelijk/.test(window.location.search)) beginKeuze = 'zakelijk';
+  } catch (f) {}
+  var [soort, setSoort] = React.useState(beginKeuze);
+  var v = VOORWAARDEN_2026[soort];
   React.useEffect(() => {
     document.title = 'Algemene voorwaarden | Poortland';
     if (window.scrollTo) window.scrollTo(0, 0);
   }, []);
-  const secties = [{
-    nr: '1',
-    titel: 'Algemene bepalingen',
-    clausules: [['1.1', "Deze algemene verkoopsvoorwaarden gelden voor alle bij ons gedane aankopen, bestellingen en/of plaatsingen. De klant aanvaardt ze door het feit van zijn aankoop en/of bestelling."], ['1.2', "Eventuele aankoopvoorwaarden van de klant binden ons enkel indien ze voorafgaand en uitdrukkelijk schriftelijk door ons aanvaard werden."], ['1.3', "Al onze opgegeven prijzen zijn exclusief BTW, tenzij anders vermeld."], ['1.4', "In geval de koper gerechtigd is de BTW niet bij de aankoop te betalen, dient de koper daarvan het wettelijke vereiste bewijs te leveren vooraleer dit afzonderlijk op de factuur verrekend zal worden."], ['1.5', "Bij een bestelling voor latere levering blijft de prijs vast gedurende 3 maanden, te tellen vanaf de datum van de bestelling. Nadien kan deze herzien worden, tenzij anders is overeengekomen."]]
-  }, {
-    nr: '2',
-    titel: 'Bestelling',
-    clausules: [['2.1', "Tenzij ons schriftelijk anders is bedongen gelden onze monsters, tekeningen, afmetingen, gewichten en andere gegevens slechts als benaderende beschrijving van onze producten en kunnen eventuele afwijkingen ervan, van welke aard dan ook, nimmer door de koper ingeroepen worden om hetzij de afneming te weigeren, hetzij de verbreking of schadevergoeding te vorderen. Evenzo kunnen wij, behoudens andersluidende en schriftelijke overeenkomst nimmer aansprakelijk gesteld worden wegens eventuele ongeschiktheid van onze producten voor speciale doeleinden waartoe ze door de koper bestemd werden."], ['2.2', "De door de koper opgegeven maten zullen bij de productie stipt gevolgd worden. In geval de opgegeven maten niet met de werkelijkheid overeenstemmen, ligt de verantwoordelijkheid uitsluitend bij de koper en kan geen schadevergoeding geëist worden."], ['2.3', "In geval de maten door onze verkopers moeten uitgerekend worden op basis van een plan door de koper ter beschikking gesteld, zal dit gebeuren op risico van de koper voor eventuele afwijkingen van de werkelijke maten t.o.v. het plan."], ['2.4', "Wanneer een opmeting gebeurd door onze diensten, is de koper verplicht elke wijziging aan de situatie onmiddellijk te melden. Kosten die teweeg worden gebracht door wijzigingen van de situatie, na opmeting, worden doorberekend aan de klant."]]
-  }, {
-    nr: '3',
-    titel: 'Levering en afhaling',
-    clausules: [['3.1', "Bij verkoop uit voorraad kunnen de goederen onmiddellijk door de koper meegenomen worden tegen contante betaling."], ['3.2', "Aan huis bestelling kan gebeuren tegen een vergoeding en op een vooraf overeengekomen datum."], ['3.3', "In geval de levering en/of plaatsing niet kan gebeuren op de afgesproken datum om redenen onafhankelijk van onze wil, zal de koper een nieuwe datum voorgesteld worden zonder bijkomende kosten."], ['3.4', "In geval de levering en/of plaatsing niet kan gebeuren op de voorziene levertijd om redenen die bij de koper of aannemers van de koper liggen, heeft de verkoper het recht om reeds het bedrag van het materiaal, vermeld in de bestelling, zonder plaatsingskosten, te factureren."], ['3.5', "De opgegeven leverings- en uitvoeringstermijnen worden opgegeven bij benadering en bij niet nakomen door ons van deze termijnen, kan de koper de bestelling niet annuleren, noch kan hij enige schadevergoeding eisen."], ['3.6', "Alle geleverde goederen blijven onze eigendom tot de factuur volledig betaald is."]]
-  }, {
-    nr: '4',
-    titel: 'Plaatsingen',
-    clausules: [['4.1', "De verkoper kan nooit verantwoordelijk gesteld worden voor het ontbreken van vergunning met betrekking tot de toelating tot plaatsen van poorten, zuilen en afsluitingen. Indien niet voldaan is aan het aanvragen van de nodige toelatingen/vergunningen en hieruit volgt dat de geplaatste werken geheel of gedeeltelijk dienen verwijderd te worden, blijft de koper de koopsom verschuldigd aan de verkoper. De eventuele kosten voor verwijdering zijn geheel voor rekening van de koper."], ['4.2', "Plaatsingen zullen uitgevoerd worden volgens het geldende tarief en op een vooraf afgesproken datum. Indien deze datum door ons niet kan gerespecteerd worden om redenen onafhankelijk van onze wil, zal de koper een nieuwe datum voorgesteld worden zonder bijkomende kosten. In geen enkel geval kan de koper bij niet naleving van deze datum door ons de bestelling annuleren, noch schadevergoeding eisen."], ['4.3', "De koper verbindt er zich toe tijdig de locatie waar de plaatsing dient te gebeuren, te ontruimen zodat het werk zonder tijdverlies kan worden uitgevoerd. Indien de plaatsers de locatie zelf moeten ontruimen, alvorens aan de werkzaamheden te kunnen beginnen, uitgezonderd indien uitdrukkelijk en schriftelijk anders is overeengekomen, zullen de kosten voor deze ontruiming aangerekend worden."], ['4.4', "De koper geeft de staat van de ondergrond op in volgende categorieën in stijgende lijn van moeilijkheidsgraad voor plaatsing: volle grond – volle grond met wortels van struiken en bomen – grond met steenafval – steenafval, stenen, beton. Op basis hiervan wordt de prijs voor plaatsing berekend door ons. Indien de werkelijke ondergrond niet overeenkomt met deze opgegeven door de koper en de moeilijkheidsgraad hoger is, zal hiervoor een extra kost worden aangerekend."], ['4.5', "In geval er door de plaatser schade wordt berokkend aan leidingen en andere voorwerpen die zich in de ondergrond bevinden en die ons vooraf niet werden meegedeeld, dan kan de koper geen enkele schadevergoeding vorderen, en is de koper verantwoordelijk voor de opgelopen schade ook indien de leidingen en/of voorwerpen toebehoren aan derden."]]
-  }, {
-    nr: '5',
-    titel: 'Waarborg',
-    clausules: [['5.1', "Alle door ons geleverde en geplaatste metalen constructies, die door ons tegen roest behandeld en nadien geverfd zijn, worden gewaarborgd tegen doorroesten en op de lakkwaliteit voor een termijn van 10 jaar, op voorwaarde dat er geen beschadigingen werden aangebracht en dat de goederen zijn onderhouden als door een goede huisvader. Oppervlakkige roestvorming en roestvorming aan scharnierpunten en sloten of ondergrondse roestvorming, vallen buiten bovenstaande waarborg."], ['5.2', "Alle door ons geplaatste elektrische leidingen en automatiseringen zijn gewaarborgd voor een periode van één jaar, tenzij anders bepaald in de offerte en/of bestelbon."], ['5.3', "Alle door ons geplaatste aandrijvingen, elektrische en elektronische materialen zijn gewaarborgd voor 2 jaar, tenzij een langere termijn op de bestelbon wordt vermeld, tenzij anders bepaald in de offerte en/of bestelbon."], ['5.4', "Bovenvermelde waarborgperiodes gelden vanaf de factuurdatum en enkel indien de factuur voldaan is."], ['5.5', "Voor elke tussenkomst door ons, die onder bovenvermelde waarborgen valt, worden evenwel de verplaatsingskost en de werkuren aangerekend na meer dan 2 jaar na de levering voor particulieren en na meer dan 1 jaar voor professionelen (factuur aan BTW nummer)."], ['5.6', "Evenwel zijn uitdrukkelijk uit onze waarborg gesloten, alle schade veroorzaakt door beschadiging, aardbeving, grondverzakking, verschuivingen, extreme storm, windhoos, orkaan, enz."], ['5.7', "Alle klachten voor zichtbare gebreken bij levering en/of plaatsing, moeten schriftelijk gebeuren en gericht worden aan onze zetel binnen de 8 dagen na uitvoering of ontvangst ervan."]]
-  }, {
-    nr: '6',
-    titel: 'Prijzen',
-    clausules: [['6.1', "De prijs voor een project wordt bepaald in de offerte en bestelbon en is bindend voor zover niet voldaan wordt aan punt 6.2 of mits onderling overleg."], ['6.2', "Indien de aankooprijzen van de grondstoffen met meer dan 10% stijgen of de lonen met meer dan 4% tussen datum bestelbon en datum oplevering, wordt de prijs aangepast volgens de door Poortland aan te tonen verhoging à rato van deze stijging."]]
-  }, {
-    nr: '7',
-    titel: 'Betalingen',
-    clausules: [['7.1', "Alle betalingen moeten gebeuren op onze bankrekening. Wij aanvaarden geen cheques."], ['7.2', "De betalingsverplichtingen van de koper worden niet geschorst door het indienen van een zelfs klaarblijkelijk gegronde klacht betreffende de kwestieuze of andere goederen."], ['7.3', "Bij het plaatsen van de bestelling is er steeds een voorschot van 30% van het totale factuurbedrag verschuldigd, tenzij anders uitdrukkelijk en schriftelijk is overeengekomen."], ['7.4', "Elk bedrag dat niet betaald is geworden binnen de 14 dagen volgend op het zenden van een aangetekende aanmaning, zal van rechtswege verhoogd worden met een forfaitair bedrag van 10% (met een minimum van 50,00 €) tot vergoeding van onze buitengerechtelijke inningskosten, onverminderd de andere vergoedingen en kosten in geval van gerechtelijke vordering. Tevens zal op alle uitstaande bedragen een intrest berekend worden gelijk aan de basisrente van het kaskrediet aangerekend door de Belgische banken, vermeerderd met 2%."], ['7.5', "Indien een factuur is opgesteld aan de klant, waarbij later zou blijken dat een foutief BTW percentage is verrekend, zijn beide partijen gehouden aan de regularisatie hiervan."], ['7.6', "Indien bij interventies de kosten onder de 150 euro (btw exclusief) liggen, zal er een administratieve kost van 15 euro (btw exclusief) worden aangerekend."]]
-  }, {
-    nr: '8',
-    titel: 'Annulatie, verbreking, klachten en algemeen',
-    clausules: [['8.1', "In geval de koper zijn bestelling geheel of gedeeltelijk annuleert is er een schadevergoeding verschuldigd gelijk aan het betaalde voorschot met een minimum 30% van het totale bedrag van de geannuleerde bestelling. Indien de bestelde goederen reeds geproduceerd zijn volgens de indicaties van de koper, kan de bestelling niet geannuleerd worden en is het volledige bedrag verschuldigd."], ['8.2', "Wij aanvaarden geen algemene voorwaarden van onze medecontractanten."], ['8.3', "In geval van betwisting zijn alleen de Rechtbanken van Mechelen of andere naar onze keuze bevoegd."]]
-  }];
+  var kiesSoort = function (nieuw) {
+    setSoort(nieuw);
+    try {
+      var url = window.location.pathname + (nieuw === 'zakelijk' ? '?klant=zakelijk' : '');
+      window.history.replaceState(null, '', url);
+    } catch (f) {}
+  };
+  var keuzeKnop = function (sleutel) {
+    var actief = soort === sleutel;
+    return /*#__PURE__*/React.createElement("button", {
+      key: sleutel,
+      type: "button",
+      "aria-pressed": actief,
+      onClick: function () {
+        kiesSoort(sleutel);
+      },
+      style: {
+        flex: '1 1 240px',
+        cursor: 'pointer',
+        textAlign: 'left',
+        padding: '18px 22px',
+        borderRadius: 'var(--radius-md)',
+        border: actief ? '2px solid var(--accent)' : '1px solid var(--line-on-light)',
+        background: actief ? 'rgba(138,106,60,0.08)' : '#fff',
+        fontFamily: 'var(--font-sans)',
+        color: 'var(--text-heading)'
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        display: 'block',
+        fontSize: 17,
+        fontWeight: actief ? 700 : 600
+      }
+    }, t(VOORWAARDEN_2026[sleutel].knop)), /*#__PURE__*/React.createElement("span", {
+      style: {
+        display: 'block',
+        marginTop: 4,
+        fontSize: 13.5,
+        color: 'var(--text-muted)'
+      }
+    }, t(VOORWAARDEN_2026[sleutel].versie)));
+  };
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-ground)',
       color: 'var(--text-on-dark)',
-      padding: '78px 44px'
+      padding: '84px 44px 64px'
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -6777,124 +7700,174 @@ function VoorwaardenNL({
     style: {
       marginBottom: 18
     }
-  }, "Verkoopsvoorwaarden"), /*#__PURE__*/React.createElement("h1", {
+  }, t('Verkoopsvoorwaarden')), /*#__PURE__*/React.createElement("h1", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
       fontSize: 54,
-      lineHeight: 1.04,
+      lineHeight: 1.05,
       letterSpacing: '-0.01em',
       color: 'var(--stone-100)',
       margin: 0
     }
-  }, "Algemene voorwaarden"), /*#__PURE__*/React.createElement("p", {
+  }, t('Algemene voorwaarden')), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 17,
-      lineHeight: 1.6,
+      lineHeight: 1.7,
       color: 'var(--stone-300)',
       maxWidth: '62ch',
       margin: '22px 0 0'
     }
-  }, "Deze algemene verkoopsvoorwaarden gelden voor alle aankopen, bestellingen en plaatsingen bij Poortland nv. Versie 2022.")))), /*#__PURE__*/React.createElement("section", {
+  }, t('Poortland hanteert aparte voorwaarden voor particuliere en voor zakelijke klanten. Kies hieronder welke op u van toepassing zijn.'))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper)',
-      padding: '68px 44px 92px'
+      padding: '40px 44px 20px'
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
       maxWidth: 900,
       margin: '0 auto'
     }
-  }, secties.map((s, i) => /*#__PURE__*/React.createElement(Reveal, {
-    key: s.nr,
-    delay: i % 3 * 40
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginBottom: 40,
-      paddingTop: i ? 34 : 0,
-      borderTop: i ? '1px solid var(--line-on-light-soft)' : 'none'
-    }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
-      alignItems: 'baseline',
-      gap: 14,
-      marginBottom: 20
+      flexWrap: 'wrap',
+      gap: 14
     }
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontFamily: 'var(--font-display)',
-      fontSize: 30,
-      fontWeight: 500,
-      color: 'var(--accent)',
-      lineHeight: 1
-    }
-  }, s.nr), /*#__PURE__*/React.createElement("h2", {
-    style: {
-      fontFamily: 'var(--font-display)',
-      fontWeight: 500,
-      fontSize: 26,
-      color: 'var(--text-heading)',
-      margin: 0,
-      letterSpacing: '-0.01em'
-    }
-  }, s.titel)), /*#__PURE__*/React.createElement("div", {
+  }, keuzeKnop('particulier'), keuzeKnop('zakelijk')), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
-      flexDirection: 'column',
-      gap: 15
+      flexWrap: 'wrap',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      gap: 16,
+      marginTop: 26,
+      padding: '18px 20px',
+      background: 'rgba(20,28,21,0.04)',
+      borderRadius: 'var(--radius-md)'
     }
-  }, s.clausules.map(([nr, tekst]) => /*#__PURE__*/React.createElement("div", {
-    key: nr,
-    style: {
-      display: 'grid',
-      gridTemplateColumns: '48px 1fr',
-      gap: 6,
-      alignItems: 'baseline'
-    }
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontFamily: 'var(--font-label)',
-      fontSize: 13,
-      fontWeight: 600,
-      color: 'var(--accent)'
-    }
-  }, nr), /*#__PURE__*/React.createElement("p", {
+  }, /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
-      fontSize: 15.5,
-      lineHeight: 1.72,
+      fontSize: 15,
+      lineHeight: 1.6,
       color: 'var(--text-body)',
-      margin: 0
+      margin: 0,
+      maxWidth: '58ch'
     }
-  }, tekst))))))), /*#__PURE__*/React.createElement("div", {
+  }, t(v.intro)), /*#__PURE__*/React.createElement("a", {
+    href: v.pdf,
+    download: true,
     style: {
-      marginTop: 8,
-      paddingTop: 28,
-      borderTop: '1px solid var(--line-on-light-soft)'
+      flex: '0 0 auto',
+      display: 'inline-block',
+      padding: '12px 20px',
+      background: 'var(--accent)',
+      borderRadius: 'var(--radius-md)',
+      fontFamily: 'var(--font-label)',
+      fontSize: 11,
+      fontWeight: 700,
+      letterSpacing: '0.14em',
+      textTransform: 'uppercase',
+      color: '#fff',
+      textDecoration: 'none'
+    }
+  }, t('Download als pdf'), " ↓")))), /*#__PURE__*/React.createElement("section", {
+    style: {
+      background: 'var(--surface-paper)',
+      padding: '20px 44px 90px'
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      fontFamily: 'var(--font-label)',
-      fontSize: 11,
+      maxWidth: 900,
+      margin: '0 auto'
+    }
+  }, v.secties.map(function (s) {
+    return /*#__PURE__*/React.createElement("div", {
+      key: soort + s.nr,
+      style: {
+        marginBottom: 40
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'baseline',
+        gap: 14,
+        marginBottom: 14
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontFamily: 'var(--font-display)',
+        fontSize: 26,
+        color: 'var(--accent)',
+        flex: '0 0 auto'
+      }
+    }, s.nr), /*#__PURE__*/React.createElement("h2", {
+      style: {
+        fontFamily: 'var(--font-display)',
+        fontWeight: 500,
+        fontSize: 26,
+        color: 'var(--text-heading)',
+        margin: 0
+      }
+    }, t(s.titel))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        borderTop: '1px solid var(--line-on-light-soft)'
+      }
+    }, s.clausules.map(function (c) {
+      return /*#__PURE__*/React.createElement("div", {
+        key: c[0],
+        style: {
+          display: 'flex',
+          gap: 16,
+          padding: '14px 0',
+          borderBottom: '1px solid var(--line-on-light-soft)'
+        }
+      }, /*#__PURE__*/React.createElement("span", {
+        style: {
+          flex: '0 0 46px',
+          fontFamily: 'var(--font-label)',
+          fontSize: 12.5,
+          fontWeight: 600,
+          color: 'var(--text-muted)',
+          paddingTop: 3
+        }
+      }, c[0]), /*#__PURE__*/React.createElement("p", {
+        style: {
+          fontFamily: 'var(--font-sans)',
+          fontSize: 15.5,
+          lineHeight: 1.72,
+          color: 'var(--text-body)',
+          margin: 0
+        }
+      }, t(c[1])));
+    })));
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 10,
+      padding: '22px 24px',
+      background: 'var(--surface-card)',
+      border: '1px solid var(--line-on-light)',
+      borderRadius: 'var(--radius-md)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 15,
       fontWeight: 600,
-      letterSpacing: '0.18em',
-      textTransform: 'uppercase',
-      color: 'var(--text-heading)',
-      marginBottom: 10
+      color: 'var(--text-heading)'
     }
   }, "Poortland nv"), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
-      fontSize: 13.5,
-      lineHeight: 1.8,
+      fontSize: 14,
+      lineHeight: 1.7,
       color: 'var(--text-muted)',
-      margin: 0
+      margin: '6px 0 0'
     }
   }, "Hombeeksesteenweg 164-166, 2800 Mechelen · Tel +32 (0)15 432 111 · info@poortland.be", /*#__PURE__*/React.createElement("br", null), "BTW BE 0464 838 351 · KBC BE38 7330 0060 5672 · Belfius BE85 0682 4455 4306 · Reg.nr. 02.23.01")))), /*#__PURE__*/React.createElement(CTASectie, {
-    onNav: onNav,
-    dark: true
+    onNav: onNav
   }));
 }
 function OverOnsNL({
@@ -6923,9 +7896,9 @@ function OverOnsNL({
     getal: '1999',
     label: 'Opgericht'
   }, {
-    teller: 320,
+    teller: 5000,
     suffix: '+',
-    label: 'Werven gerealiseerd'
+    label: 'Projecten gerealiseerd'
   }, {
     getal: 'Mechelen',
     label: 'Eigen atelier'
@@ -7017,7 +7990,7 @@ function OverOnsNL({
     arrow: true,
     as: "button",
     onClick: offerte
-  }, t('Vraag een vrijblijvende offerte aan')), /*#__PURE__*/React.createElement(SButton, {
+  }, t('Vraag een vrijblijvende prijsraming aan')), /*#__PURE__*/React.createElement(SButton, {
     variant: "ghost",
     dark: true,
     arrow: true,
@@ -7323,7 +8296,7 @@ function OverOnsNL({
     arrow: true,
     as: "button",
     onClick: offerte
-  }, t('Vraag een vrijblijvende offerte aan')), /*#__PURE__*/React.createElement(SButton, {
+  }, t('Vraag een vrijblijvende prijsraming aan')), /*#__PURE__*/React.createElement(SButton, {
     variant: "secondary",
     size: "lg",
     arrow: true,
@@ -7526,7 +8499,7 @@ function OverOnsNL({
       textTransform: 'uppercase',
       boxShadow: '0 6px 20px rgba(20,28,21,0.28)'
     }
-  }, t('Vraag een offerte aan')));
+  }, t('Vraag een prijsraming aan')));
 }
 
 /* ---- Gedeelde beleidpagina (privacy en cookies) in de huisstijl ---- */
@@ -7775,8 +8748,8 @@ function AutomatiseringNL({
     document.title = 'Automatisering van poorten | Poortland Mechelen';
     if (window.scrollTo) window.scrollTo(0, 0);
   }, []);
-  const groepenA = [['Aandrijvingen draai en schuifmotoren', ['Faac', 'Gibidi']], ['Elektronische sturingskasten', ['Faac', 'V2', 'Gibidi']], ['Garagepoortmotoren', ['Faac', 'Seip']]];
-  const groepenB = [['Zenders en ontvangers', ['Faac', 'MAC', 'V2', 'Gibidi', 'Seip', 'Cardin', 'Hormann', 'Sommer', 'Nice', 'Came', 'Marantec', 'Novoferm']], ['Parlofonie en videofonie', ['Fasttel', 'Siedle', 'Aiphone', 'Bitron']]];
+  const groepenA = [['Aandrijvingen draai en schuifmotoren', ['Faac', 'Gibidi', 'Tousek']], ['Elektronische sturingskasten', ['Faac', 'V2', 'Gibidi', 'Tousek']], ['Garagepoortmotoren', ['Faac', 'Seip']]];
+  const groepenB = [['Zenders en ontvangers', ['Faac', 'MAC', 'V2', 'Gibidi', 'Seip', 'Cardin', 'Hormann', 'Sommer', 'Nice', 'Came', 'Marantec', 'Novoferm']], ['Parlofonie en videofonie', ['Fasttel', 'Entrya']]];
   const Groep = ({
     titel,
     merken
@@ -7791,7 +8764,7 @@ function AutomatiseringNL({
       fontWeight: 600,
       letterSpacing: '0.16em',
       textTransform: 'uppercase',
-      color: 'var(--accent)',
+      color: 'var(--accent-label, var(--accent))',
       marginBottom: 12
     }
   }, t(titel)), /*#__PURE__*/React.createElement("div", {
@@ -7901,7 +8874,7 @@ function AutomatiseringNL({
     arrow: true,
     as: "button",
     onClick: offerte
-  }, t('Vraag een offerte aan')), /*#__PURE__*/React.createElement(SButton, {
+  }, t('Vraag een prijsraming aan')), /*#__PURE__*/React.createElement(SButton, {
     variant: "ghost",
     dark: true,
     arrow: true,
@@ -7925,7 +8898,7 @@ function AutomatiseringNL({
       margin: 0,
       maxWidth: '72ch'
     }
-  }, t('Poortland beschikt over twee vakkundige techniekers niveau A2 elektromechanica die uw poorten voorzien van automatische opening en sluiting op afstand, voor draaipoorten, schuifpoorten en garagepoorten. Zij installeren ook hoogwaardige installaties voor parlofonie en videofonie. Poortland werkt uitsluitend met kwalitatieve materialen die een lange levensduur garanderen, omdat een geautomatiseerde poort uw comfort hoort te verhogen. Ook het automatiseren van garagepoorten behoort tot het werkterrein van onze techniekers. Hieronder een overzicht van onze samenwerking met verschillende fabrikanten.'))))), /*#__PURE__*/React.createElement("section", {
+  }, t('Poortland beschikt over vakkundige techniekers die uw poorten voorzien van automatische opening en sluiting op afstand, voor draaipoorten, schuifpoorten en garagepoorten. Zij installeren ook hoogwaardige installaties voor parlofonie en videofonie. Poortland werkt uitsluitend met kwalitatieve materialen die een lange levensduur garanderen, omdat een geautomatiseerde poort uw comfort hoort te verhogen. Ook het automatiseren van garagepoorten behoort tot het werkterrein van onze techniekers. Wij automatiseren bovendien bestaande poorten, ongeacht wie ze ooit plaatste. Hieronder een overzicht van onze samenwerking met verschillende fabrikanten.'))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-paper)',
       padding: '40px 44px'
@@ -8148,7 +9121,7 @@ function OnderhoudNL({
       borderRadius: 'var(--radius-md)',
       overflow: 'hidden'
     }
-  }, [['20+', 'Controlepunten', 'Van motor tot veiligheidsdetectie.'], ['±2 uur', 'Volledig onderhoud', 'Controle, smering en afstelling in één afspraak.'], ['1× per jaar', 'Aanbevolen nazicht', 'Voor een veilige en betrouwbare werking.']].map(([cijfer, label, tekst]) => /*#__PURE__*/React.createElement("div", {
+  }, [['20+', 'Controlepunten', 'Van motor tot veiligheidsdetectie.'], ['±1 uur', 'Volledig onderhoud', 'Controle, smering en afstelling in één afspraak.'], ['1× per jaar', 'Aanbevolen nazicht', 'Voor een veilige en betrouwbare werking van uw automatische poort.']].map(([cijfer, label, tekst]) => /*#__PURE__*/React.createElement("div", {
     key: label,
     style: {
       background: 'var(--surface-card)',
@@ -8274,117 +9247,80 @@ var ADVIES_WEETNIET = {
   l: 'Ik weet het niet'
 };
 var ADVIES_STAPPEN = [{
-  id: 'situatie',
-  titel: 'Situatie en gebruik',
-  waarom: 'De bestemming en hoe vaak de poort opent bepalen mee welke aandrijving en welk type het best passen.',
+  id: 'systeem',
+  titel: 'Uw poorttype',
+  waarom: 'U kiest zelf het systeem. De volgende vragen gaan na of uw situatie daar goed bij past en waar wij bij plaatsing op moeten letten.',
   velden: [{
-    sleutel: 'gebruik',
-    label: 'Waarvoor is de poort bedoeld?',
+    sleutel: 'systeem',
+    label: 'Wenst u een enkele draaipoort, dubbele draaipoort of schuifpoort?',
     type: 'enkel',
     opties: [{
-      w: 'woning',
-      l: 'Woning'
+      w: 'enkel',
+      l: 'Enkele draaipoort'
     }, {
-      w: 'praktijk',
-      l: 'Praktijk of kantoor'
+      w: 'dubbel',
+      l: 'Dubbele draaipoort'
     }, {
-      w: 'bedrijf',
-      l: 'Bedrijf'
-    }, {
-      w: 'gemeenschappelijk',
-      l: 'Gemeenschappelijke toegang'
-    }, ADVIES_WEETNIET]
-  }, {
-    sleutel: 'frequentie',
-    label: 'Hoe vaak opent de poort gemiddeld?',
-    type: 'enkel',
-    opties: [{
-      w: 'min5',
-      l: 'Minder dan 5 keer per dag'
-    }, {
-      w: 'tot15',
-      l: '5 tot 15 keer per dag'
-    }, {
-      w: 'meer15',
-      l: 'Meer dan 15 keer per dag'
-    }, {
-      w: 'intensief',
-      l: 'Zeer intensief of gemeenschappelijk'
-    }, ADVIES_WEETNIET]
-  }]
-}, {
-  id: 'achter',
-  titel: 'Vrije ruimte achter de poort',
-  waarom: 'Een draaipoort heeft een vrije zone nodig waarin de vleugels kunnen openen. Voertuigen, muren, hellingen en begroeiing kunnen die beweging hinderen.',
-  illustratie: 'draaicirkel',
-  velden: [{
-    sleutel: 'ruimteAchter',
-    label: 'Hoeveel vrije ruimte is er achter de afsluiting?',
-    type: 'enkel',
-    opties: [{
-      w: 'ruim',
-      l: 'Ruim voldoende'
-    }, {
-      w: 'beperkt',
-      l: 'Beperkt'
-    }, {
-      w: 'nauwelijks',
-      l: 'Nauwelijks ruimte'
-    }, {
-      w: 'parkeren',
-      l: 'Er parkeren vaak voertuigen vlak achter de poort'
-    }, ADVIES_WEETNIET]
-  }]
-}, {
-  id: 'naast',
-  titel: 'Vrije ruimte naast de poort',
-  waarom: 'Een schuifpoort beweegt naast de doorgang en heeft daarom voldoende vrije ruimte in de schuifrichting nodig. Een vrijdragende schuifpoort vraagt meestal extra teruglooplengte.',
-  illustratie: 'schuif',
-  velden: [{
-    sleutel: 'ruimteNaast',
-    label: 'Is er ruimte naast de doorgang om open te schuiven?',
-    type: 'enkel',
-    opties: [{
-      w: 'beide',
-      l: 'Aan beide kanten voldoende'
-    }, {
-      w: 'links',
-      l: 'Links voldoende'
-    }, {
-      w: 'rechts',
-      l: 'Rechts voldoende'
-    }, {
-      w: 'geen',
-      l: 'Aan geen van beide kanten'
-    }, {
-      w: 'obstakels',
-      l: 'Er staan obstakels'
+      w: 'schuif',
+      l: 'Schuifpoort'
     }, ADVIES_WEETNIET]
   }]
 }, {
   id: 'helling',
   titel: 'Helling en terrein',
-  waarom: 'Wanneer een oprit binnen het draaibereik sterk stijgt, kunnen draaivleugels de ondergrond raken. Een schuifpoort kan dan interessanter zijn, mits voldoende zijruimte.',
-  illustratie: 'helling',
+  waarom: 'Een oprit die stijgt naar de openingskant kan draaivleugels de grond doen raken. Een schuifpoort vraagt dan weer een stabiele en waterpas schuifzone naast de oprit.',
   velden: [{
-    sleutel: 'helling',
-    label: 'Hoe ligt de oprit ter hoogte van de poort?',
+    beeld: 'lr',
+    sleutel: 'hellingLR',
+    label: 'Als u voor de poort staat, loopt de oprit dan op of af van links naar rechts?',
     type: 'enkel',
     opties: [{
       w: 'vlak',
       l: 'Vlak'
     }, {
-      w: 'omhoog',
-      l: 'Helt omhoog richting woning'
-    }, {
-      w: 'omlaag',
-      l: 'Helt omlaag richting woning'
-    }, {
-      w: 'zijwaarts',
-      l: 'Helt zijwaarts'
+      w: 'licht',
+      l: 'Licht hellend'
     }, {
       w: 'sterk',
-      l: 'Sterke of onregelmatige helling'
+      l: 'Sterk hellend'
+    }]
+  }, {
+    beeld: 'poort',
+    sleutel: 'hellingOpening',
+    label: 'Als u voor de poort staat, loopt de oprit dan op of af naar de poort toe?',
+    type: 'enkel',
+    indien: function (a) {
+      return a.systeem !== 'schuif';
+    },
+    opties: [{
+      w: 'vlak',
+      l: 'Vlak'
+    }, {
+      w: 'stijgt',
+      l: 'Stijgt naar de poort toe'
+    }, {
+      w: 'daalt',
+      l: 'Daalt naar de poort toe'
+    }, {
+      w: 'sterk',
+      l: 'Sterk of onregelmatig'
+    }]
+  }, {
+    sleutel: 'hellingNaast',
+    label: 'Helt het terrein naast de oprit, waar de poort naartoe schuift?',
+    type: 'enkel',
+    indien: function (a) {
+      return a.systeem === 'schuif' || adviesWeet(a.systeem);
+    },
+    opties: [{
+      w: 'vlak',
+      l: 'Vlak'
+    }, {
+      w: 'licht',
+      l: 'Licht hellend'
+    }, {
+      w: 'sterk',
+      l: 'Sterk hellend'
     }, ADVIES_WEETNIET]
   }]
 }, {
@@ -8417,49 +9353,9 @@ var ADVIES_STAPPEN = [{
       w: 'leidingen',
       l: 'Nutsleidingen'
     }, {
-      w: 'hoogteverschil',
-      l: 'Hoogteverschil'
-    }, {
       w: 'geen',
       l: 'Geen gekende obstakels'
     }]
-  }]
-}, {
-  id: 'wind',
-  titel: 'Wind en poortvulling',
-  waarom: 'Een grote gesloten draaivleugel vangt meer wind dan een open structuur. Dat beinvloedt de belasting op scharnieren, motoren en funderingen.',
-  illustratie: 'wind',
-  velden: [{
-    sleutel: 'wind',
-    label: 'Hoe windgevoelig is de locatie?',
-    type: 'enkel',
-    opties: [{
-      w: 'beschut',
-      l: 'Beschut'
-    }, {
-      w: 'gemiddeld',
-      l: 'Gemiddeld'
-    }, {
-      w: 'sterk',
-      l: 'Regelmatig sterke wind'
-    }, {
-      w: 'zeer',
-      l: 'Zeer windgevoelige ligging'
-    }, ADVIES_WEETNIET]
-  }, {
-    sleutel: 'poortvulling',
-    label: 'Welke poortvulling heeft uw voorkeur?',
-    type: 'enkel',
-    opties: [{
-      w: 'gesloten',
-      l: 'Volledig gesloten'
-    }, {
-      w: 'halfopen',
-      l: 'Halfopen'
-    }, {
-      w: 'open',
-      l: 'Open spijlen'
-    }, ADVIES_WEETNIET]
   }]
 }, {
   id: 'ondergrond',
@@ -8470,60 +9366,23 @@ var ADVIES_STAPPEN = [{
     label: 'Wat is er van toepassing op de ondergrond?',
     type: 'multi',
     opties: [{
-      w: 'verhard',
-      l: 'Vlak en verhard'
+      w: 'klinker',
+      l: 'Klinker'
     }, {
       w: 'kasseien',
       l: 'Kasseien'
     }, {
-      w: 'grind',
-      l: 'Grind'
+      w: 'asfalt',
+      l: 'Asfalt'
     }, {
-      w: 'zand',
-      l: 'Zand'
+      w: 'beton',
+      l: 'Beton'
     }, {
-      w: 'bladeren',
-      l: 'Veel bladeren'
+      w: 'kiezel_dolomiet',
+      l: 'Kiezel of dolomiet'
     }, {
-      w: 'modder',
-      l: 'Modder'
-    }, {
-      w: 'sneeuw',
-      l: 'Sneeuw of ijs'
-    }, {
-      w: 'afwatering',
-      l: 'Gebrekkige afwatering'
-    }]
-  }]
-}, {
-  id: 'veiligheid',
-  titel: 'Parkeren, voetgangers en veiligheid',
-  waarom: 'Deze antwoorden bepalen extra veiligheids- en gebruikstips en beinvloeden de draaicirkel.',
-  velden: [{
-    sleutel: 'veiligheid',
-    label: 'Wat is van toepassing rond de poort?',
-    type: 'multi',
-    opties: [{
-      w: 'parkeren',
-      l: 'Voertuigen parkeren vaak vlak achter de poort'
-    }, {
-      w: 'kinderen',
-      l: 'Kinderen spelen op de oprit'
-    }, {
-      w: 'huisdieren',
-      l: 'Er zijn huisdieren'
-    }, {
-      w: 'voetgangers',
-      l: 'Veel fietsers of voetgangers'
-    }, {
-      w: 'looppoort',
-      l: 'Een aparte looppoort is gewenst'
-    }, {
-      w: 'drukkeweg',
-      l: 'De ingang ligt aan een drukke weg'
-    }, {
-      w: 'geen',
-      l: 'Niets van toepassing'
+      w: 'volle_grond',
+      l: 'Volle grond'
     }]
   }]
 }, {
@@ -8532,49 +9391,15 @@ var ADVIES_STAPPEN = [{
   waarom: 'Dit verfijnt het advies, maar sluit geen enkel type uit.',
   velden: [{
     sleutel: 'automatisatie',
-    label: 'Wat is voor u het belangrijkst?',
+    label: 'Wenst u manuele of automatische bediening?',
     type: 'enkel',
     opties: [{
       w: 'handmatig',
-      l: 'Handmatige bediening'
+      l: 'Manueel'
     }, {
-      w: 'snel',
-      l: 'Snelle opening'
-    }, {
-      w: 'stil',
-      l: 'Stille werking'
-    }, {
-      w: 'stroomuitval',
-      l: 'Bediening bij stroomuitval'
+      w: 'automatisch',
+      l: 'Automatisch'
     }, ADVIES_WEETNIET]
-  }]
-}, {
-  id: 'stijl',
-  titel: 'Uitstraling en voorkeur',
-  waarom: 'Stijl verfijnt het advies maar laat nooit een technisch ongeschikte oplossing winnen.',
-  velden: [{
-    sleutel: 'stijl',
-    label: 'Welke uitstraling spreekt u aan?',
-    type: 'enkel',
-    opties: [{
-      w: 'klassiek',
-      l: 'Klassiek'
-    }, {
-      w: 'landelijk',
-      l: 'Landelijk'
-    }, {
-      w: 'modern',
-      l: 'Modern'
-    }, {
-      w: 'minimalistisch',
-      l: 'Minimalistisch'
-    }, {
-      w: 'architecturaal',
-      l: 'Architecturaal'
-    }, {
-      w: 'geen',
-      l: 'Geen voorkeur'
-    }]
   }]
 }, {
   id: 'prioriteiten',
@@ -8588,9 +9413,6 @@ var ADVIES_STAPPEN = [{
     opties: [{
       w: 'ruimte',
       l: 'Ruimte besparen'
-    }, {
-      w: 'wind',
-      l: 'Windbestendigheid'
     }, {
       w: 'veiligheid',
       l: 'Veiligheid'
@@ -8610,9 +9432,6 @@ var ADVIES_STAPPEN = [{
       w: 'investering',
       l: 'Lagere investering'
     }, {
-      w: 'uitstraling',
-      l: 'Architecturale uitstraling'
-    }, {
       w: 'privacy',
       l: 'Privacy'
     }]
@@ -8623,136 +9442,95 @@ function adviesWeet(v) {
 }
 
 // Pure functie: beoordeelt beide poorttypes op basis van de antwoorden.
+// Sinds de ombouw (feedback Jef 19/08) kiest de bezoeker zelf het systeem;
+// de vragen toetsen die keuze en leveren redenen en aandachtspunten op.
 function beoordeelPoort(a) {
   var swing = {
     score: 0,
-    uitgesloten: false,
     redenen: [],
     let: []
   };
   var slide = {
     score: 0,
-    uitgesloten: false,
     redenen: [],
     let: []
   };
   var onbekend = [];
   a = a || {};
-  switch (a.ruimteAchter) {
-    case 'ruim':
-      swing.score += 3;
-      swing.redenen.push('Er is ruim voldoende ruimte achter de poort voor de draaicirkel.');
-      break;
-    case 'beperkt':
-      swing.score -= 1;
-      swing.let.push('De ruimte achter de poort is beperkt voor een draaicirkel.');
-      break;
-    case 'nauwelijks':
-      swing.score -= 4;
-      slide.score += 2;
-      swing.let.push('Er is nauwelijks ruimte achter de poort voor draaivleugels.');
-      break;
-    case 'parkeren':
-      swing.score -= 4;
-      slide.score += 2;
-      swing.let.push('Er parkeren vaak voertuigen vlak achter de poort, wat draaivleugels hindert.');
-      slide.redenen.push('Voertuigen kunnen dicht bij een schuifpoort blijven staan.');
-      break;
-    default:
-      onbekend.push('de vrije ruimte achter de poort');
-  }
-  switch (a.ruimteNaast) {
-    case 'beide':
-      slide.score += 3;
-      slide.redenen.push('Er is aan beide kanten voldoende ruimte voor de schuifbeweging.');
-      break;
-    case 'links':
-    case 'rechts':
-      slide.score += 2;
-      slide.redenen.push('Er is aan een kant voldoende ruimte voor de schuifbeweging.');
-      break;
-    case 'geen':
-      slide.score -= 6;
-      slide.uitgesloten = true;
-      slide.let.push('Er lijkt aan geen van beide kanten voldoende ruimte voor een schuifpoort.');
-      swing.score += 1;
-      break;
-    case 'obstakels':
-      slide.score -= 2;
-      slide.let.push('Obstakels naast de doorgang kunnen de schuifbeweging hinderen.');
-      break;
-    default:
-      onbekend.push('de vrije ruimte naast de poort');
-      slide.let.push('De ruimte naast de doorgang is niet ingeschat; een vrijdragende schuifpoort vraagt extra teruglooplengte.');
-  }
-  switch (a.helling) {
+  var systeem = a.systeem;
+  if (adviesWeet(systeem)) onbekend.push('het gewenste poorttype');
+  switch (a.hellingLR) {
     case 'vlak':
       swing.score += 1;
-      break;
-    case 'omhoog':
-    case 'omlaag':
-      swing.score -= 2;
-      slide.score += 2;
-      swing.let.push('De oprit helt, wat draaivleugels binnen het draaibereik kan hinderen.');
-      slide.redenen.push('Bij een hellende oprit is een schuifpoort vaak interessanter.');
-      break;
-    case 'zijwaarts':
-      swing.score -= 1;
       slide.score += 1;
       break;
+    case 'licht':
+      swing.let.push('De oprit helt licht van links naar rechts; wij meten dit op tijdens het plaatsbezoek na uw prijsraming.');
+      slide.let.push('Een lichte zijdelingse helling vraagt aandacht voor een waterpas loopzone.');
+      break;
     case 'sterk':
-      swing.score -= 3;
-      slide.score += 2;
-      swing.let.push('Een sterke of onregelmatige helling maakt een draaipoort technisch lastiger.');
+      swing.score -= 2;
+      slide.score -= 1;
+      swing.let.push('Een sterke zijdelingse helling maakt de opstelling van draaivleugels lastiger.');
+      slide.let.push('Bij een sterke zijdelingse helling vraagt de rail of fundering extra nivelleringswerk.');
       break;
     default:
-      onbekend.push('de helling van de oprit');
+      onbekend.push('de zijdelingse helling van de oprit');
+  }
+  if (systeem !== 'schuif') switch (a.hellingOpening) {
+    case 'vlak':
+      swing.score += 2;
+      swing.redenen.push('De oprit is vlak aan de openingskant; de draaivleugels kunnen vrij bewegen.');
+      break;
+    case 'stijgt':
+      swing.score -= 3;
+      slide.score += 2;
+      swing.let.push('De oprit stijgt naar de openingskant toe; draaivleugels kunnen dan de grond raken. Dit vraagt oplopende scharnieren of een aangepaste opstelling.');
+      break;
+    case 'daalt':
+      swing.score += 1;
+      swing.redenen.push('De oprit daalt naar de openingskant; de vleugels draaien vrij van de grond weg.');
+      break;
+    case 'sterk':
+      swing.score -= 4;
+      slide.score += 2;
+      swing.let.push('Een sterke of onregelmatige helling naar de openingskant maakt een draaipoort technisch lastig.');
+      break;
+    default:
+      onbekend.push('de helling naar de openingskant');
+  }
+  if (systeem === 'schuif' || adviesWeet(systeem)) switch (a.hellingNaast) {
+    case 'vlak':
+      slide.score += 2;
+      slide.redenen.push('Het terrein naast de oprit is vlak; de schuifzone kan zonder extra werk aangelegd worden.');
+      break;
+    case 'licht':
+      slide.let.push('Het terrein naast de oprit helt licht; de schuifzone vraagt aandacht bij de fundering.');
+      break;
+    case 'sterk':
+      slide.score -= 3;
+      slide.let.push('Het terrein naast de oprit helt sterk; de schuifzone vraagt dan extra funderings en nivelleringswerk.');
+      break;
+    default:
+      onbekend.push('de helling naast de oprit');
   }
   var obs = a.obstakels || [];
   if (obs.indexOf('boom') >= 0 || obs.indexOf('muur') >= 0 || obs.indexOf('kast') >= 0) swing.let.push('Vaste obstakels kunnen de draaicirkel blokkeren.');
   if (obs.indexOf('leidingen') >= 0) slide.let.push('Nutsleidingen naast de doorgang kunnen de fundering van een schuifpoort bemoeilijken.');
-  var grootGesloten = a.poortvulling === 'gesloten';
-  if (a.wind === 'sterk' || a.wind === 'zeer') {
-    slide.score += 1;
-    slide.redenen.push('Een schuifpoort is doorgaans stabieler bij wind.');
-    if (grootGesloten) {
-      swing.score -= 3;
-      swing.let.push('Een grote gesloten draaivleugel vangt veel wind op een winderige locatie.');
-    } else {
-      swing.score -= 1;
-    }
-  } else if (adviesWeet(a.wind)) onbekend.push('de windgevoeligheid');
-  if (a.frequentie === 'intensief' || a.frequentie === 'meer15') {
-    slide.score += 1;
-    slide.redenen.push('Bij intensief gebruik biedt een schuifpoort een voorspelbare beweging.');
-  }
   var ond = a.ondergrond || [];
-  if (['grind', 'zand', 'bladeren', 'modder', 'sneeuw', 'afwatering'].some(function (k) {
+  if (['kiezel_dolomiet', 'volle_grond'].some(function (k) {
     return ond.indexOf(k) >= 0;
   })) slide.let.push('Een railpoort vraagt een schone, goed afgewaterde loopzone; grind, bladeren, modder of ijs kunnen ze hinderen. Een vrijdragende schuifpoort heeft geen rail in de doorgang.');
-  var pv = a.veiligheid || [];
-  if (pv.indexOf('parkeren') >= 0) {
-    swing.score -= 2;
-    slide.score += 1;
-    swing.let.push('Parkeren vlak achter de poort beperkt de draaicirkel.');
-  }
-  if (pv.indexOf('kinderen') >= 0 || pv.indexOf('drukkeweg') >= 0) {
-    swing.let.push('Voorzie veiligheidsdetectie waar kinderen spelen of bij een drukke weg.');
-    slide.let.push('Scherm de schuifzone langs de zijkant veilig af.');
-  }
-  if (a.stijl === 'klassiek' || a.stijl === 'landelijk') swing.score += 1;
-  if (a.stijl === 'modern' || a.stijl === 'minimalistisch') slide.score += 1;
   var pr = a.prioriteiten || [];
   if (pr.indexOf('ruimte') >= 0) slide.score += 1;
-  if (pr.indexOf('wind') >= 0) slide.score += 1;
   if (pr.indexOf('investering') >= 0) swing.score += 1;
   if (pr.indexOf('onderhoud') >= 0) swing.score += 1;
   var conf = 'hoog';
   if (onbekend.length >= 4) conf = 'beperkt';else if (onbekend.length >= 2) conf = 'gemiddeld';
-  if ((adviesWeet(a.ruimteNaast) || adviesWeet(a.ruimteAchter)) && conf === 'hoog') conf = 'gemiddeld';
   return {
     swing: swing,
     slide: slide,
+    systeem: systeem,
     confidence: conf,
     onbekend: onbekend
   };
@@ -8763,64 +9541,65 @@ function adviesResultaat(a) {
   var b = beoordeelPoort(a);
   var s = b.swing,
     l = b.slide;
-  var sEff = s.uitgesloten ? -99 : s.score;
-  var lEff = l.uitgesloten ? -99 : l.score;
-  var diff = lEff - sEff;
   var kop,
     type,
     zekerheid = b.confidence,
-    alternatief;
-  if (s.uitgesloten && l.uitgesloten) {
-    kop = 'Technische beoordeling aanbevolen';
-    type = 'beide';
-    zekerheid = 'beperkt';
-  } else if (b.onbekend.length >= 4) {
-    kop = 'Voorlopig advies: meerdere oplossingen mogelijk';
-    type = 'beide';
-    zekerheid = 'beperkt';
-  } else if (Math.abs(diff) <= 1 && !s.uitgesloten && !l.uitgesloten) {
-    kop = 'Beide oplossingen zijn technisch geschikt';
-    type = 'beide';
-  } else if (diff > 0) {
-    type = 'schuif';
-    kop = diff >= 4 ? 'Schuifpoort sterk aanbevolen' : diff >= 2 ? 'Schuifpoort aanbevolen' : 'Schuifpoort mogelijk, met aandachtspunten';
-  } else {
+    alternatief = null;
+  var namen = {
+    enkel: 'enkele draaipoort',
+    dubbel: 'dubbele draaipoort',
+    schuif: 'schuifpoort'
+  };
+  if (b.systeem === 'enkel' || b.systeem === 'dubbel') {
     type = 'draai';
-    kop = -diff >= 4 ? 'Draaipoort sterk aanbevolen' : -diff >= 2 ? 'Draaipoort aanbevolen' : 'Draaipoort mogelijk, met aandachtspunten';
+    if (s.score <= -3) {
+      kop = 'Uw ' + namen[b.systeem] + ' kan, met belangrijke aandachtspunten';
+      alternatief = 'Op basis van uw antwoorden kan een schuifpoort in uw situatie interessanter zijn. Wij bekijken dit graag met u ter plaatse.';
+    } else if (s.let.length > 0) kop = 'Uw ' + namen[b.systeem] + ' past, met enkele aandachtspunten';else kop = 'Uw ' + namen[b.systeem] + ' past goed bij uw situatie';
+  } else if (b.systeem === 'schuif') {
+    type = 'schuif';
+    if (l.score <= -3) {
+      kop = 'Uw schuifpoort kan, met belangrijke aandachtspunten';
+      alternatief = 'Op basis van uw antwoorden kan een draaipoort in uw situatie interessanter zijn. Wij bekijken dit graag met u ter plaatse.';
+    } else if (l.let.length > 0) kop = 'Uw schuifpoort past, met enkele aandachtspunten';else kop = 'Uw schuifpoort past goed bij uw situatie';
+  } else {
+    var diff = l.score - s.score;
+    if (b.onbekend.length >= 4) {
+      kop = 'Voorlopig advies: meerdere oplossingen mogelijk';
+      type = 'beide';
+      zekerheid = 'beperkt';
+    } else if (Math.abs(diff) <= 1) {
+      kop = 'Beide oplossingen zijn technisch geschikt';
+      type = 'beide';
+    } else if (diff > 0) {
+      type = 'schuif';
+      kop = diff >= 4 ? 'Schuifpoort sterk aanbevolen' : diff >= 2 ? 'Schuifpoort aanbevolen' : 'Schuifpoort mogelijk, met aandachtspunten';
+      alternatief = 'Een draaipoort blijft mogelijk, maar vraagt in uw situatie extra aandacht.';
+    } else {
+      type = 'draai';
+      kop = -diff >= 4 ? 'Draaipoort sterk aanbevolen' : -diff >= 2 ? 'Draaipoort aanbevolen' : 'Draaipoort mogelijk, met aandachtspunten';
+      alternatief = 'Een schuifpoort blijft mogelijk, maar vraagt in uw situatie extra aandacht voor de zijruimte.';
+    }
   }
-  if (type === 'schuif') alternatief = s.uitgesloten ? 'Een draaipoort lijkt op basis van uw antwoorden minder aangewezen.' : 'Een draaipoort blijft mogelijk, maar vraagt in uw situatie extra aandacht.';
-  if (type === 'draai') alternatief = l.uitgesloten ? 'Een schuifpoort lijkt op basis van uw antwoorden minder aangewezen.' : 'Een schuifpoort blijft mogelijk, maar vraagt in uw situatie extra aandacht voor de zijruimte.';
-  // Vergelijkingstabel
-  function st(waarde, uitgesloten, onbekend) {
-    return {
-      draai: waarde.d,
-      schuif: waarde.s
-    };
-  }
+  var lrStatus = a.hellingLR === 'vlak' ? 'Gunstig' : a.hellingLR === 'sterk' ? 'Aandachtspunt' : a.hellingLR === 'licht' ? 'Mogelijk' : 'Onbekend';
   var vergelijking = [{
-    label: 'Ruimte achter de poort',
-    draai: a.ruimteAchter === 'ruim' ? 'Gunstig' : a.ruimteAchter === 'nauwelijks' || a.ruimteAchter === 'parkeren' ? 'Aandachtspunt' : adviesWeet(a.ruimteAchter) ? 'Onbekend' : 'Mogelijk',
+    label: 'Helling aan de openingskant',
+    draai: a.hellingOpening === 'vlak' || a.hellingOpening === 'daalt' ? 'Gunstig' : a.hellingOpening === 'stijgt' || a.hellingOpening === 'sterk' ? 'Aandachtspunt' : 'Onbekend',
     schuif: 'Gunstig'
   }, {
-    label: 'Ruimte naast de poort',
+    label: 'Helling naast de oprit',
     draai: 'Gunstig',
-    schuif: a.ruimteNaast === 'beide' ? 'Gunstig' : a.ruimteNaast === 'geen' ? 'Waarschijnlijk ongeschikt' : adviesWeet(a.ruimteNaast) ? 'Onbekend' : 'Mogelijk'
+    schuif: a.hellingNaast === 'vlak' ? 'Gunstig' : a.hellingNaast === 'sterk' ? 'Aandachtspunt' : a.hellingNaast === 'licht' ? 'Mogelijk' : 'Onbekend'
   }, {
-    label: 'Geschiktheid bij helling',
-    draai: a.helling === 'vlak' ? 'Gunstig' : a.helling === 'sterk' ? 'Aandachtspunt' : adviesWeet(a.helling) ? 'Onbekend' : 'Mogelijk',
-    schuif: a.helling && a.helling !== 'vlak' ? 'Gunstig' : 'Mogelijk'
-  }, {
-    label: 'Windgevoeligheid',
-    draai: a.wind === 'sterk' || a.wind === 'zeer' ? 'Aandachtspunt' : 'Mogelijk',
-    schuif: 'Gunstig'
-  }, {
-    label: 'Parkeercomfort',
-    draai: a.ruimteAchter === 'parkeren' ? 'Aandachtspunt' : 'Mogelijk',
-    schuif: 'Gunstig'
+    label: 'Zijdelingse helling van de oprit',
+    draai: lrStatus,
+    schuif: lrStatus
   }, {
     label: 'Onderhoud van de loopzone',
     draai: 'Gunstig',
-    schuif: a.ondergrond && a.ondergrond.length ? 'Aandachtspunt' : 'Mogelijk'
+    schuif: (a.ondergrond || []).some(function (k) {
+      return k === 'kiezel_dolomiet' || k === 'volle_grond';
+    }) ? 'Aandachtspunt' : 'Mogelijk'
   }];
   return {
     kop: kop,
@@ -8832,6 +9611,50 @@ function adviesResultaat(a) {
     vergelijking: vergelijking,
     onbekend: b.onbekend
   };
+}
+function hellingTweeluikTxt(s, x, y, t2, kleur, gr, vet) {
+  s.push('<text x="' + x + '" y="' + y + '" fill="' + (kleur || '#8A8070') + '" font-size="' + (gr || 13) + '" text-anchor="middle"' + (vet ? ' font-weight="700"' : '') + ' font-family="var(--font-sans)">' + t2 + '</text>');
+}
+function hellingTweeluikOf(s) {
+  // Scheiding tussen de twee voorbeelden: 'of' in plaats van een streep, zodat
+  // duidelijk is dat dit voorbeelden zijn en geen keuze (feedback 2026-08-28).
+  s.push('<line x1="480" y1="34" x2="480" y2="88" stroke="#EAE3D3" stroke-width="1.5"/>');
+  s.push('<line x1="480" y1="132" x2="480" y2="160" stroke="#EAE3D3" stroke-width="1.5"/>');
+  s.push('<text x="480" y="115" fill="#9C8E72" font-size="15" text-anchor="middle" font-style="italic" font-family="var(--font-display, serif)">' + t('of') + '</text>');
+}
+function hellingTweeluikLR() {
+  var s = [];
+  var helft = function (cx, hoek) {
+    s.push('<g transform="rotate(' + hoek + ' ' + cx + ' 112)">');
+    s.push('<line x1="' + (cx - 165) + '" y1="112" x2="' + (cx + 165) + '" y2="112" stroke="#B0A692" stroke-width="5" stroke-linecap="round"/>');
+    for (var px = cx - 38; px <= cx + 42; px += 11) s.push('<line x1="' + px + '" y1="66" x2="' + px + '" y2="108" stroke="#8A6A3C" stroke-width="6" stroke-linecap="round"/>');
+    s.push('<rect x="' + (cx - 60) + '" y="52" width="13" height="60" rx="3" fill="#9C9184" stroke="#55504A" stroke-width="2"/>');
+    s.push('<rect x="' + (cx + 47) + '" y="52" width="13" height="60" rx="3" fill="#9C9184" stroke="#55504A" stroke-width="2"/>');
+    s.push('</g>');
+  };
+  helft(240, -5);
+  helft(720, 5);
+  hellingTweeluikOf(s);
+  hellingTweeluikTxt(s, 240, 178, t('helt af naar links'));
+  hellingTweeluikTxt(s, 720, 178, t('helt af naar rechts'));
+  return '<svg viewBox="0 0 960 192" style="display:block;width:100%" aria-label="Voorbeelden van een oprit die naar links of naar rechts afhelt">' + s.join('') + '</svg>';
+}
+function hellingTweeluikPoort() {
+  var s = [];
+  var helft = function (cx, eindY) {
+    s.push('<line x1="' + (cx - 150) + '" y1="118" x2="' + (cx - 60) + '" y2="118" stroke="#C9BFA9" stroke-width="5" stroke-linecap="round"/>');
+    s.push('<line x1="' + (cx - 60) + '" y1="118" x2="' + (cx + 130) + '" y2="' + eindY + '" stroke="#B0A692" stroke-width="5" stroke-linecap="round"/>');
+    s.push('<rect x="' + (cx + 126) + '" y="' + (eindY - 58) + '" width="11" height="58" rx="3" fill="#8A6A3C"/>');
+    s.push('<circle cx="' + (cx - 110) + '" cy="88" r="8" fill="none" stroke="#9C8E72" stroke-width="2.5"/>');
+    s.push('<path d="M' + (cx - 110) + ' 96 L' + (cx - 110) + ' 113 M' + (cx - 110) + ' 101 L' + (cx - 119) + ' 108 M' + (cx - 110) + ' 101 L' + (cx - 101) + ' 108" stroke="#9C8E72" stroke-width="2.5" stroke-linecap="round" fill="none"/>');
+    hellingTweeluikTxt(s, cx - 110, 136, t('u'), '#9C8E72', 12, true);
+  };
+  helft(250, 88);
+  helft(730, 148);
+  hellingTweeluikOf(s);
+  hellingTweeluikTxt(s, 250, 178, t('stijgt naar de poort toe'));
+  hellingTweeluikTxt(s, 730, 178, t('daalt naar de poort toe'));
+  return '<svg viewBox="0 0 960 192" style="display:block;width:100%" aria-label="Voorbeelden van een oprit die stijgt of daalt naar de poort toe">' + s.join('') + '</svg>';
 }
 function AdviesIllustratie({
   soort
@@ -9011,6 +9834,9 @@ function PoortAdviesModal() {
   if (!open) return null;
   var totaal = ADVIES_STAPPEN.length;
   var huidige = ADVIES_STAPPEN[stap];
+  var zichtbareVelden = huidige.velden.filter(function (v) {
+    return !v.indien || v.indien(antwoorden);
+  });
   function kies(veld, waarde) {
     setAntwoorden(function (vorig) {
       var n = Object.assign({}, vorig);
@@ -9031,7 +9857,7 @@ function PoortAdviesModal() {
   function actief(veld, waarde) {
     return veld.type === 'multi' ? (antwoorden[veld.sleutel] || []).indexOf(waarde) >= 0 : antwoorden[veld.sleutel] === waarde;
   }
-  var stapKlaar = huidige.velden.every(function (v) {
+  var stapKlaar = zichtbareVelden.every(function (v) {
     return v.type === 'multi' ? (antwoorden[v.sleutel] || []).length > 0 : !!antwoorden[v.sleutel];
   });
   var res = klaar ? adviesResultaat(antwoorden) : null;
@@ -9162,7 +9988,7 @@ function PoortAdviesModal() {
       color: 'var(--text-muted)',
       margin: '4px 0 20px'
     }
-  }, t('Deze korte test onderbouwt of een draaipoort of een schuifpoort het best bij uw situatie past. Aan de hand van uw oprit, de beschikbare ruimte en uw voorkeuren krijgt u een onderbouwd advies. Volledig vrijblijvend en zonder gegevens achter te laten.')) : huidige.waarom && /*#__PURE__*/React.createElement("div", {
+  }, t('In deze korte test kiest u zelf het gewenste poorttype. Daarna toetsen we of uw oprit en omgeving daar goed bij passen en waar wij bij plaatsing op moeten letten. Volledig vrijblijvend en zonder gegevens achter te laten.')) : huidige.waarom && /*#__PURE__*/React.createElement("div", {
     style: {
       marginBottom: 16
     }
@@ -9200,7 +10026,7 @@ function PoortAdviesModal() {
     }
   }, /*#__PURE__*/React.createElement(AdviesIllustratie, {
     soort: huidige.illustratie
-  })), huidige.velden.map(function (veld) {
+  })), zichtbareVelden.map(function (veld) {
     return /*#__PURE__*/React.createElement("div", {
       key: veld.sleutel,
       style: {
@@ -9219,10 +10045,48 @@ function PoortAdviesModal() {
         fontWeight: 400,
         color: 'var(--text-muted)'
       }
-    }, " ", t('(meerdere mogelijk)'))), /*#__PURE__*/React.createElement("div", {
+    }, " ", t('(meerdere mogelijk)'))), veld.beeld ? /*#__PURE__*/React.createElement("figure", {
+      "aria-hidden": "true",
+      style: {
+        margin: '0 0 12px',
+        padding: '10px 10px 6px',
+        background: 'rgba(20,28,21,0.025)',
+        borderRadius: 'var(--radius-md)',
+        border: '1px dashed var(--line-on-light)',
+        pointerEvents: 'none'
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      dangerouslySetInnerHTML: {
+        __html: veld.beeld === 'lr' ? hellingTweeluikLR() : hellingTweeluikPoort()
+      }
+    }), /*#__PURE__*/React.createElement("figcaption", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 6,
+        marginTop: 2,
+        fontFamily: 'var(--font-sans)',
+        fontSize: 12,
+        color: 'var(--text-muted)'
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        display: 'inline-flex',
+        width: 15,
+        height: 15,
+        borderRadius: '50%',
+        border: '1px solid var(--text-muted)',
+        fontSize: 9.5,
+        fontWeight: 700,
+        alignItems: 'center',
+        justifyContent: 'center',
+        flex: '0 0 auto'
+      }
+    }, "i"), t('Ter verduidelijking. Kies hieronder wat bij uw situatie past.'))) : null, /*#__PURE__*/React.createElement("div", {
       style: {
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
         gap: 8
       }
     }, veld.opties.map(function (o) {

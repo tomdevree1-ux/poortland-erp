@@ -8,11 +8,13 @@ import { datum, euro, leeg, persoon, weergaveNaam } from '../lib/formaat'
 import type { Klant, Lead } from '../lib/types'
 import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Paneel, PotloodKnop, Selecteer, TekstVak } from '../ui'
 import { timingOpties, typeAanvraagOpties } from './Leads'
+import { ContactpersonenPaneel } from './ContactpersonenPaneel'
+import { groepeerWizard, situatieSvg, wizardLabel, wizardWaarde, type WizardStap } from '../lib/wizardvelden'
+import FotoPaneel from './lead/FotoPaneel'
+import WizardPaneel from './lead/WizardPaneel'
 
 const typeTekst = Object.fromEntries(typeAanvraagOpties)
 const timingTekst = Object.fromEntries(timingOpties)
-
-interface WizardStap { titel: string; velden: { label: string; waarde: string }[] }
 
 function parseWizard(json?: string): WizardStap[] | null {
   if (!json) return null
@@ -22,22 +24,6 @@ function parseWizard(json?: string): WizardStap[] | null {
     return null
   } catch { return null }
 }
-
-// Nette veldnamen voor de ruwe sleutels uit de websitewizard (poorten,
-// overkappingen, automatisering en onderhoud). Onbekende sleutels tonen we as is.
-const wizardVeldLabels: Record<string, string> = {
-  Dienst: 'Dienst', typePoort: 'Type poort', typeOpening: 'Type opening',
-  breedte: 'Breedte (cm)', zijhoogte: 'Zijhoogte (cm)', bediening: 'Type bediening',
-  uitvoering: 'Uitvoering', lengte: 'Lengte (cm)', hoogte: 'Hoogte (cm)',
-  wanden: 'Aantal wanden', glazenSchuifwand: 'Glazen schuifwand', zonnewerendGlas: 'Zonnewerend glas',
-  autoBeschrijving: 'Gegevens van de poort', bouwjaar: 'Bouwjaar', typeMotor: 'Type of merk motor'
-}
-const wizardLabel = (l: string) => wizardVeldLabels[l] ?? l
-const wizardDienstTekst: Record<string, string> = {
-  poorten: 'Poorten', overkappingen: 'Overkapping', automatisering: 'Automatisering', onderhoud: 'Onderhoud'
-}
-const wizardWaarde = (veld: { label: string; waarde: string }) =>
-  veld.label === 'Dienst' ? (wizardDienstTekst[veld.waarde] ?? veld.waarde) : veld.waarde
 
 export default function LeadDetail() {
   const { leadId } = useParams({ from: '/app/leads/$leadId' })
@@ -84,19 +70,6 @@ export default function LeadDetail() {
     zetBewerkOpen(true)
   }
 
-  const bestandRef = useRef<HTMLInputElement>(null)
-  const uploadFoto = useMutation({
-    mutationFn: (bestand: File) => {
-      const form = new FormData()
-      form.append('bestand', bestand)
-      return api.formulier(`/leads/${leadId}/fotos`, form)
-    },
-    onSuccess: ververs, onError: f => zetFout((f as Error).message)
-  })
-  const verwijderFoto = useMutation({
-    mutationFn: (fotoId: string) => api.del(`/leads/${leadId}/fotos/${fotoId}`),
-    onSuccess: ververs, onError: f => zetFout((f as Error).message)
-  })
 
   const [klantKeuze, zetKlantKeuze] = useState('')
   const klantZoek = useZoekterm()
@@ -214,6 +187,8 @@ export default function LeadDetail() {
 
   if (!lead) return null
   const wizard = parseWizard(lead.wizardGegevens)
+  const groepen = wizard ? groepeerWizard(wizard) : []
+  const situatieTekening = wizard ? situatieSvg(wizard) : null
   const openWizardBewerk = () => {
     if (!wizard) return
     zetWizardVorm(wizard.map(s => ({ titel: s.titel, velden: s.velden.map(v => ({ ...v })) })))
@@ -224,7 +199,7 @@ export default function LeadDetail() {
       <PaginaKop eyebrow="Verkoop · lead" titel={weergaveNaam(lead) || leeg(lead.email)}
         actie={<div className="flex gap-2">
           {!lead.gearchiveerdOp && (lead.status === 'nieuw' || lead.status === 'gekwalificeerd') &&
-            <Knop variant="primair" onClick={openOmzetten}>Omzetten naar dossier ↗</Knop>}
+            <Knop variant="primair" onClick={openOmzetten}>Dossier aanmaken ↗</Knop>}
           {!lead.gearchiveerdOp && lead.status === 'verloren' &&
             <Knop variant="primair" onClick={() => heractiveer.mutate()}>Heractiveren ↺</Knop>}
           {bewerkbaar && <Knop variant="ghost" onClick={() => zetVerliesOpen(true)}>Verliezen</Knop>}
@@ -273,43 +248,13 @@ export default function LeadDetail() {
           <p className="whitespace-pre-line text-sm leading-relaxed text-inkt-body">{leeg(lead.eersteVraag)}</p>
         </Paneel>
 
-        <Paneel titel="Foto's van de plek" actie={bewerkbaar && (
-          <>
-            <input ref={bestandRef} type="file" accept="image/jpeg,image/png,image/webp,image/heic" hidden
-              onChange={e => e.target.files?.[0] && uploadFoto.mutate(e.target.files[0])} />
-            <Knop variant="secundair" className="h-8 px-3 text-xs" onClick={() => bestandRef.current?.click()}
-              disabled={uploadFoto.isPending}>{uploadFoto.isPending ? 'Bezig…' : 'Foto toevoegen'}</Knop>
-          </>)}>
-          {!lead.fotos?.length ? (
-            <p className="text-sm text-inkt-muted">Nog geen foto's. Vanaf het webformulier komen ze hier automatisch binnen.</p>
-          ) : (
-            <div className="flex gap-3 overflow-x-auto pb-1">
-              {lead.fotos.map(f => (
-                <figure key={f.id} className="group relative h-32 w-44 flex-none overflow-hidden rounded-control border border-inkt/10 bg-vlak-sunken">
-                  <a href={f.url} target="_blank" rel="noreferrer" className="block h-full w-full">
-                    <img src={f.url} alt={f.bestandsnaam} className="h-full w-full object-cover" />
-                  </a>
-                  {bewerkbaar && (
-                    <button className="focusring absolute right-1 top-1 hidden rounded-chip bg-corten-600 px-1.5 text-xs text-stone2-50 group-hover:block"
-                      onClick={e => { e.stopPropagation(); verwijderFoto.mutate(f.id) }} aria-label="Foto verwijderen">×</button>
-                  )}
-                </figure>
-              ))}
-            </div>
-          )}
-        </Paneel>
+        <FotoPaneel leadId={leadId} lead={lead} bewerkbaar={bewerkbaar} onVervers={ververs} onFout={zetFout} />
+
+        <ContactpersonenPaneel basisPad={`/leads/${leadId}`}
+          personen={lead.contactpersonen ?? []} onVervers={ververs} onFout={zetFout} />
 
         {wizard && (
-          <Paneel titel="Offerteaanvraag (wizard van de website)" actie={bewerkbaar && <PotloodKnop onClick={openWizardBewerk} />}>
-            <dl className="space-y-1.5 text-sm">
-              {wizard.flatMap(s => s.velden).filter(v => v.waarde).map((veld, i) => (
-                <div key={i} className="flex justify-between gap-4 border-b border-inkt/[.06] py-1.5 last:border-0">
-                  <dt className="text-inkt-muted">{wizardLabel(veld.label)}</dt>
-                  <dd className="text-right font-medium">{wizardWaarde(veld)}</dd>
-                </div>
-              ))}
-            </dl>
-          </Paneel>
+          <WizardPaneel groepen={groepen} situatieTekening={situatieTekening} bewerkbaar={bewerkbaar} onBewerk={openWizardBewerk} />
         )}
         <Modaal open={wizardOpen} titel="Offerteaanvraag bewerken" onSluit={() => zetWizardOpen(false)}>
           {wizardVorm && (
@@ -352,12 +297,12 @@ export default function LeadDetail() {
             })
           }}>
             <div className="grid grid-cols-2 gap-4">
-              <Invoer label="Voornaam" optioneel value={vorm.voornaam} onChange={e => zetVorm({ ...vorm, voornaam: e.target.value })} />
+              <Invoer label="Voornaam" value={vorm.voornaam} onChange={e => zetVorm({ ...vorm, voornaam: e.target.value })} required />
               <Invoer label="Naam" value={vorm.naam} onChange={e => zetVorm({ ...vorm, naam: e.target.value })} required />
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <Invoer label="Email" optioneel type="email" value={vorm.email} onChange={e => zetVorm({ ...vorm, email: e.target.value })} />
-              <Invoer label="Telefoon" optioneel value={vorm.telefoon} onChange={e => zetVorm({ ...vorm, telefoon: e.target.value })} />
+              <Invoer label="Email" type="email" value={vorm.email} onChange={e => zetVorm({ ...vorm, email: e.target.value })} required />
+              <Invoer label="Telefoon" value={vorm.telefoon} onChange={e => zetVorm({ ...vorm, telefoon: e.target.value })} required />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <Selecteer label="Type aanvraag" optioneel value={vorm.typeAanvraag} onChange={e => zetVorm({ ...vorm, typeAanvraag: e.target.value })}>
@@ -375,13 +320,13 @@ export default function LeadDetail() {
                 <option value="bedrijf">Bedrijf</option>
               </Selecteer>
               {vorm.klantType === 'bedrijf' && (
-                <Invoer label="Bedrijfsnaam" value={vorm.bedrijfsnaam} onChange={e => zetVorm({ ...vorm, bedrijfsnaam: e.target.value })} />
+                <Invoer label="Bedrijfsnaam" value={vorm.bedrijfsnaam} onChange={e => zetVorm({ ...vorm, bedrijfsnaam: e.target.value })} required />
               )}
             </div>
             {vorm.klantType === 'bedrijf' && (
-              <Invoer label="Btw nummer" optioneel value={vorm.btwNummer} onChange={e => zetVorm({ ...vorm, btwNummer: e.target.value })} />
+              <Invoer label="Btw nummer" value={vorm.btwNummer} onChange={e => zetVorm({ ...vorm, btwNummer: e.target.value })} required />
             )}
-            <Invoer label="Straat en huisnummer" optioneel value={vorm.straat} onChange={e => zetVorm({ ...vorm, straat: e.target.value })} />
+            <Invoer label="Straat en huisnummer" value={vorm.straat} onChange={e => zetVorm({ ...vorm, straat: e.target.value })} required />
             <div className="grid grid-cols-2 gap-4">
               <Invoer label="Postcode" optioneel value={vorm.postcode} onChange={e => zetVorm({ ...vorm, postcode: e.target.value })} />
               <Invoer label="Gemeente" optioneel value={vorm.gemeente} onChange={e => zetVorm({ ...vorm, gemeente: e.target.value })} />
@@ -470,16 +415,16 @@ export default function LeadDetail() {
               )}
               <div className="grid grid-cols-2 gap-4">
                 <Invoer label="Naam" value={nieuweKlant.naam} onChange={e => zetNieuweKlant({ ...nieuweKlant, naam: e.target.value })} required />
-                <Invoer label="Voornaam" optioneel value={nieuweKlant.voornaam} onChange={e => zetNieuweKlant({ ...nieuweKlant, voornaam: e.target.value })} />
+                <Invoer label="Voornaam" value={nieuweKlant.voornaam} onChange={e => zetNieuweKlant({ ...nieuweKlant, voornaam: e.target.value })} required />
               </div>
-              <Invoer label="Straat en huisnummer" optioneel value={nieuweKlant.straat} onChange={e => zetNieuweKlant({ ...nieuweKlant, straat: e.target.value })} />
+              <Invoer label="Straat en huisnummer" value={nieuweKlant.straat} onChange={e => zetNieuweKlant({ ...nieuweKlant, straat: e.target.value })} required />
               <div className="grid grid-cols-2 gap-4">
                 <Invoer label="Postcode" optioneel value={nieuweKlant.postcode} onChange={e => zetNieuweKlant({ ...nieuweKlant, postcode: e.target.value })} />
                 <Invoer label="Stad of gemeente" optioneel value={nieuweKlant.gemeente} onChange={e => zetNieuweKlant({ ...nieuweKlant, gemeente: e.target.value })} />
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <Invoer label="Email" optioneel type="email" value={nieuweKlant.email} onChange={e => zetNieuweKlant({ ...nieuweKlant, email: e.target.value })} />
-                <Invoer label="Telefoon" optioneel value={nieuweKlant.telefoon} onChange={e => zetNieuweKlant({ ...nieuweKlant, telefoon: e.target.value })} />
+                <Invoer label="Email" type="email" value={nieuweKlant.email} onChange={e => zetNieuweKlant({ ...nieuweKlant, email: e.target.value })} required />
+                <Invoer label="Telefoon" value={nieuweKlant.telefoon} onChange={e => zetNieuweKlant({ ...nieuweKlant, telefoon: e.target.value })} required />
               </div>
             </div>
           )}
@@ -515,4 +460,3 @@ export default function LeadDetail() {
     </>
   )
 }
-

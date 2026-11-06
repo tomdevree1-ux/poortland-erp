@@ -33,7 +33,7 @@ public class ProjectenController(PoortlandDbContext db) : ControllerBase
             {
                 p.Id, p.Nummer, p.Werfadres, p.Omschrijving, p.Status, p.GarantieMaanden, p.VerwachteOpleverdatum,
                 p.AangemaaktOp,
-                Klant = new { p.Klant!.Id, p.Klant.Naam, p.Klant.Voornaam, p.Klant.Bedrijfsnaam, p.Klant.Gemeente },
+                Klant = new { p.Klant!.Id, p.Klant.Naam, p.Klant.Voornaam, p.Klant.Bedrijfsnaam, p.Klant.Gemeente, p.Klant.Telefoon },
                 OfferteWaarde = p.Offertes.Where(o => o.VerwijderdOp == null)
                     .OrderByDescending(o => o.VersieOfferte)
                     .Select(o => (decimal?)o.TotaalExclBtw).FirstOrDefault()

@@ -6,14 +6,15 @@ using Poortland.Api.Data;
 namespace Poortland.Api.Domein;
 
 public record RegelInvoer(string Soort, Guid? ArtikelId, string Omschrijving, decimal Aantal,
-    ArtikelEenheid Eenheid, decimal Eenheidsprijs, decimal KortingBedrag, BtwTarief Btw);
-public record OfferteInvoer(List<RegelInvoer> Regels, decimal KortingPercentage, decimal KortingBedrag, DateOnly? GeldigTot);
+    ArtikelEenheid Eenheid, decimal Eenheidsprijs, decimal KortingBedrag, BtwTarief Btw, string? Detail = null);
+public record OfferteInvoer(List<RegelInvoer> Regels, decimal KortingPercentage, decimal KortingBedrag,
+    DateOnly? GeldigTot, OfferteSoort? Soort = null, bool? BtwVerlegd = null, string? Model = null);
 
 public class OfferteService(
     PoortlandDbContext db, ClaimsContext claims, InstellingenService instellingen,
     OffertePdfService pdf, IEmailVerzender email, SupabaseOpslag opslag)
 {
-    public async Task<Offerte> Maak(Guid projectId, Taal? taal)
+    public async Task<Offerte> Maak(Guid projectId, Taal? taal, OfferteSoort soort = OfferteSoort.Offerte)
     {
         var project = await db.Projecten.Include(p => p.Klant).FirstOrDefaultAsync(p => p.Id == projectId)
             ?? throw new DomeinFout("Project niet gevonden.");
@@ -27,6 +28,11 @@ public class OfferteService(
             VersieOfferte = versie,
             Taal = taal ?? project.Klant?.Communicatietaal ?? Taal.Nl,
             GeldigTot = DateOnly.FromDateTime(DateTime.Today.AddDays(dagen)),
+            Soort = soort,
+            // Btw verlegd voorstellen bij een onderneming met btw nummer; de
+            // verkoper kan dit altijd zelf uitzetten (feedback 2026-09-13).
+            BtwVerlegd = project.Klant?.Type == KlantType.Bedrijf
+                && !string.IsNullOrWhiteSpace(project.Klant?.BtwNummer),
             AangemaaktDoor = claims.MedewerkerId
         };
         db.Offertes.Add(offerte);
@@ -39,20 +45,54 @@ public class OfferteService(
     {
         var bron = await db.Offertes.Include(o => o.Regels).FirstOrDefaultAsync(o => o.Id == offerteId)
             ?? throw new DomeinFout("Offerte niet gevonden.");
-        var nieuw = await Maak(bron.ProjectId, bron.Taal);
+        var nieuw = await Maak(bron.ProjectId, bron.Taal, bron.Soort);
         nieuw.KortingPercentage = bron.KortingPercentage;
         nieuw.KortingBedrag = bron.KortingBedrag;
+        nieuw.BtwVerlegd = bron.BtwVerlegd;
+        nieuw.Model = bron.Model;
+        nieuw.UitRamingId = bron.UitRamingId;
         foreach (var r in bron.Regels.Where(r => r.VerwijderdOp is null).OrderBy(r => r.Volgnummer))
         {
             db.Offerteregels.Add(new Offerteregel
             {
                 OfferteId = nieuw.Id, Volgnummer = r.Volgnummer, Soort = r.Soort, ArtikelId = r.ArtikelId,
-                Omschrijving = r.Omschrijving, Aantal = r.Aantal, Eenheid = r.Eenheid,
+                Omschrijving = r.Omschrijving, Detail = r.Detail, Aantal = r.Aantal, Eenheid = r.Eenheid,
                 Eenheidsprijs = r.Eenheidsprijs, KortingBedrag = r.KortingBedrag, Btw = r.Btw, Totaal = r.Totaal,
                 AangemaaktDoor = claims.MedewerkerId
             });
         }
         HerberekenTotalen(nieuw, bron.Regels.Select(r => (r.Totaal, r.Btw)).ToList());
+        await db.SaveChangesAsync();
+        return nieuw;
+    }
+
+    /* Feedback 2026-09-13: een prijsraming ontstaat zonder plaatsbezoek. Na de
+       opmeting of op basis van het plan van de architect wordt ze met één klik
+       een offerte, met behoud van de inhoud en een verwijzing naar de raming. */
+    public async Task<Offerte> ZetOmNaarOfferte(Guid ramingId)
+    {
+        var raming = await db.Offertes.Include(o => o.Regels).FirstOrDefaultAsync(o => o.Id == ramingId)
+            ?? throw new DomeinFout("Prijsraming niet gevonden.");
+        if (raming.Soort != OfferteSoort.Prijsraming)
+            throw new DomeinFout("Dit document is al een offerte.");
+
+        var nieuw = await Maak(raming.ProjectId, raming.Taal, OfferteSoort.Offerte);
+        nieuw.KortingPercentage = raming.KortingPercentage;
+        nieuw.KortingBedrag = raming.KortingBedrag;
+        nieuw.BtwVerlegd = raming.BtwVerlegd;
+        nieuw.Model = raming.Model;
+        nieuw.UitRamingId = raming.Id;
+        foreach (var r in raming.Regels.Where(r => r.VerwijderdOp is null).OrderBy(r => r.Volgnummer))
+        {
+            db.Offerteregels.Add(new Offerteregel
+            {
+                OfferteId = nieuw.Id, Volgnummer = r.Volgnummer, Soort = r.Soort, ArtikelId = r.ArtikelId,
+                Omschrijving = r.Omschrijving, Detail = r.Detail, Aantal = r.Aantal, Eenheid = r.Eenheid,
+                Eenheidsprijs = r.Eenheidsprijs, KortingBedrag = r.KortingBedrag, Btw = r.Btw, Totaal = r.Totaal,
+                AangemaaktDoor = claims.MedewerkerId
+            });
+        }
+        HerberekenTotalen(nieuw, raming.Regels.Select(r => (r.Totaal, r.Btw)).ToList());
         await db.SaveChangesAsync();
         return nieuw;
     }
@@ -74,7 +114,7 @@ public class OfferteService(
             db.Offerteregels.Add(new Offerteregel
             {
                 OfferteId = offerte.Id, Volgnummer = volgnummer++, Soort = r.Soort, ArtikelId = r.ArtikelId,
-                Omschrijving = r.Omschrijving, Aantal = r.Aantal, Eenheid = r.Eenheid,
+                Omschrijving = r.Omschrijving, Detail = r.Detail, Aantal = r.Aantal, Eenheid = r.Eenheid,
                 Eenheidsprijs = r.Eenheidsprijs, KortingBedrag = r.KortingBedrag, Btw = r.Btw, Totaal = totaal,
                 AangemaaktDoor = claims.MedewerkerId
             });
@@ -82,6 +122,9 @@ public class OfferteService(
         offerte.KortingPercentage = invoer.KortingPercentage;
         offerte.KortingBedrag = invoer.KortingBedrag;
         if (invoer.GeldigTot is { } tot) offerte.GeldigTot = tot;
+        if (invoer.Soort is { } soort) offerte.Soort = soort;
+        if (invoer.BtwVerlegd is { } verlegd) offerte.BtwVerlegd = verlegd;
+        if (invoer.Model is not null) offerte.Model = invoer.Model.Trim() is { Length: > 0 } m ? m : null;
         HerberekenTotalen(offerte, regelTotalen);
         await db.SaveChangesAsync();
         return offerte;
@@ -89,7 +132,12 @@ public class OfferteService(
 
     void HerberekenTotalen(Offerte offerte, IReadOnlyCollection<(decimal totaal, BtwTarief btw)> regels)
     {
-        var (excl, btw, incl, _) = Prijsmotor.Totalen(regels, offerte.KortingPercentage, offerte.KortingBedrag);
+        // Bij btw verlegd draagt de medecontractant de btw af: op het document
+        // staat nul procent met de wettelijke vermelding.
+        var telling = offerte.BtwVerlegd
+            ? regels.Select(r => (r.totaal, BtwTarief.P0)).ToList()
+            : regels;
+        var (excl, btw, incl, _) = Prijsmotor.Totalen(telling, offerte.KortingPercentage, offerte.KortingBedrag);
         offerte.TotaalExclBtw = excl;
         offerte.TotaalBtw = btw;
         offerte.TotaalInclBtw = incl;
@@ -182,7 +230,8 @@ public class OfferteService(
                 MedewerkerId = medewerker, Type = "order_aangemaakt",
                 Titel = $"Offerte {offerte.Nummer} goedgekeurd",
                 Boodschap = "Het orderdossier staat klaar voor productie en planning.",
-                EntiteitType = "order", EntiteitId = order.Id,
+                // Wijst naar het dossier: daar leeft de opvolging (een orderscherm bestaat niet).
+                EntiteitType = "project", EntiteitId = offerte.ProjectId,
                 AangemaaktDoor = claims.MedewerkerId
             });
         }

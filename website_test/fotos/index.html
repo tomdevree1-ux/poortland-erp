@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Toon ons uw poort — Poortland</title>
+<link rel="icon" type="image/png" href="/assets/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@500;600&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --accent:#A6824C; --accent-strong:#8A6A3C;
+    --paper:#FBF8F1; --card:#FFFDF8; --stone-200:#ECE3D2; --stone-300:#DBCEB5;
+    --ink:#141C15; --body:#2A332A; --muted:#6E6450; --faint:#9C8E72; --corten:#A85638; --olijf:#717544;
+    --sans:'Hanken Grotesk',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
+    --display:'Cormorant',Georgia,serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);font-family:var(--sans);color:var(--body);min-height:100vh;display:flex;flex-direction:column}
+  header{background:linear-gradient(165deg,#26312a 0%,#1a231c 48%,#10160f 100%);padding:18px 20px;border-bottom:1px solid rgba(166,130,76,.35)}
+  .kop{max-width:640px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .merk{display:flex;align-items:center;gap:12px}
+  .mono{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border:1.4px solid #ECE3D2;color:#F4EEE1;font-family:var(--display);font-size:20px;font-weight:600}
+  .woord{color:#F4EEE1;font-weight:600;letter-spacing:.3em;text-transform:uppercase;font-size:14px}
+  .sub{color:#9C8E72;font-size:10px;letter-spacing:.2em;text-transform:uppercase;margin-top:2px}
+  .talen{display:flex;gap:2px}
+  .talen button{border:0;background:transparent;color:#9C8E72;font-family:var(--sans);font-size:12px;font-weight:600;padding:5px 7px;border-radius:5px;cursor:pointer;letter-spacing:.06em}
+  .talen button.aan{background:rgba(166,130,76,.28);color:#ECE3D2}
+  main{flex:1;width:100%;max-width:640px;margin:0 auto;padding:28px 20px 48px}
+  h1{font-family:var(--display);font-weight:500;font-size:30px;color:var(--ink);margin:0 0 6px;line-height:1.1}
+  .intro{color:var(--muted);font-size:15px;line-height:1.6;margin:0 0 10px}
+  .intro.tweede{margin-bottom:22px}
+  .kaart{background:var(--card);border:1px solid var(--stone-200);border-radius:10px;padding:18px;box-shadow:0 2px 8px rgba(15,22,15,.06);margin-bottom:16px}
+  .kaartkop{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-strong);margin:0 0 14px}
+  .melding{border-radius:8px;padding:12px 14px;font-size:14px;margin-bottom:16px}
+  .melding.info{background:rgba(166,130,76,.10);border-left:3px solid var(--accent);color:var(--body)}
+  .melding.fout{background:rgba(168,86,56,.10);border-left:3px solid var(--corten);color:var(--body)}
+  .rij{display:grid;gap:12px}
+  @media(min-width:520px){.rij.twee{grid-template-columns:1fr 1fr}}
+  .veld{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+  .veld label{font-size:13px;font-weight:600;color:var(--ink)}
+  .veld input,.veld textarea{font-family:var(--sans);font-size:15px;color:var(--body);background:#fff;border:1px solid var(--stone-300);border-radius:7px;padding:10px 12px;width:100%}
+  .veld input:focus,.veld textarea:focus{outline:2px solid rgba(166,130,76,.4);outline-offset:1px;border-color:var(--accent)}
+  .veld textarea{min-height:76px;resize:vertical}
+  .hint{font-size:12px;color:var(--faint)}
+  .akkoord{display:flex;align-items:flex-start;gap:9px;font-size:13.5px;color:var(--body);line-height:1.55}
+  .akkoord input{margin-top:2px;width:17px;height:17px;flex:none;accent-color:var(--accent-strong)}
+  .akkoord + .akkoord{margin-top:12px}
+  .toestemming{border:1px solid rgba(166,130,76,.45);background:rgba(166,130,76,.07);border-radius:9px;padding:14px}
+  .toestemming .uitleg{margin:8px 0 0 26px;font-size:12.5px;color:var(--muted);line-height:1.6}
+  .tegels{display:grid;gap:12px}
+  @media(min-width:520px){.tegels{grid-template-columns:1fr 1fr}}
+  .tegel{display:flex;flex-direction:column;align-items:center;gap:10px;padding:26px 16px;border:1.5px dashed var(--stone-300);border-radius:10px;background:#fff;cursor:pointer;text-align:center;transition:border-color .2s;font-family:var(--sans)}
+  .tegel:hover{border-color:var(--accent)}
+  .tegel b{font-size:16px;color:var(--ink)}
+  .tegel span{font-size:13px;color:var(--muted)}
+  .tegel svg{width:34px;height:34px;stroke:var(--accent-strong)}
+  .drop{border:1.5px dashed var(--stone-300);border-radius:10px;background:#fff;padding:34px 20px;text-align:center;transition:border-color .2s,background .2s}
+  .drop.actief{border-color:var(--accent);background:rgba(166,130,76,.06)}
+  .drop b{display:block;font-size:16px;color:var(--ink);margin-bottom:4px}
+  .drop span{font-size:13px;color:var(--muted)}
+  .knop{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:6px;background:var(--accent);color:#FAF6EE;font-family:var(--sans);font-weight:600;font-size:15px;padding:12px 22px;cursor:pointer;transition:background .2s}
+  .knop:hover{background:var(--accent-strong)}
+  .knop[disabled]{opacity:.45;cursor:not-allowed}
+  .knop.stil{background:transparent;color:var(--accent-strong);border:1px solid var(--accent)}
+  .previews{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:10px;margin-top:16px}
+  .prev{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;border:1px solid var(--stone-200);background:var(--stone-200)}
+  .prev img{width:100%;height:100%;object-fit:cover}
+  .prev .weg{position:absolute;top:4px;right:4px;width:22px;height:22px;border:0;border-radius:999px;background:rgba(20,28,21,.65);color:#fff;font-size:13px;line-height:1;cursor:pointer}
+  .prev .naam{position:absolute;left:0;right:0;bottom:0;background:rgba(20,28,21,.55);color:#ECE3D2;font-size:9px;padding:2px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .balkwrap{margin-top:16px;display:none}
+  .balk{height:8px;border-radius:999px;background:var(--stone-200);overflow:hidden}
+  .balk i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+  .balktxt{font-size:12px;color:var(--muted);margin-top:6px}
+  .tips{margin:0;padding-left:18px;color:var(--muted);font-size:13.5px;line-height:1.75}
+  .voet{text-align:center;color:var(--faint);font-size:12px;padding:18px}
+  .succes{text-align:center;padding:26px 10px}
+  .succes .vink{width:52px;height:52px;margin:0 auto 14px;border-radius:999px;background:rgba(113,117,68,.15);display:flex;align-items:center;justify-content:center}
+  .succes h2{font-family:var(--display);font-weight:500;font-size:24px;color:var(--ink);margin:0 0 8px}
+  .succes p{color:var(--muted);font-size:14px;line-height:1.6;margin:0 0 18px}
+  .acties{margin-top:18px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .verborgen{display:none!important}
+</style>
+</head>
+<body>
+<header>
+  <div class="kop">
+    <div class="merk">
+      <span class="mono">P</span>
+      <div><div class="woord">Poortland</div><div class="sub" data-t="kop_sub">Uw poort in beeld</div></div>
+    </div>
+    <nav class="talen" id="talen" aria-label="Taalkeuze"></nav>
+  </div>
+</header>
+<main>
+  <h1 data-t="titel">Mogen wij uw poort laten zien?</h1>
+  <p class="intro" data-t="intro1">Elke poort die ons atelier verlaat is anders. Wij zien ze alleen op de dag van de plaatsing, terwijl ze pas echt tot haar recht komt wanneer ze een tijdje bij u staat.</p>
+  <p class="intro tweede" data-t="intro2">Daarom vragen wij u vriendelijk om een foto. Met uw toestemming tonen wij een selectie van deze realisaties op onze website en sociale media, zodat wie twijfelt kan zien wat er mogelijk is.</p>
+
+  <div id="meldingen"></div>
+
+  <div id="formulier">
+    <div class="kaart">
+      <p class="kaartkop" data-t="kop_gegevens">Uw gegevens</p>
+      <div class="veld">
+        <label for="naam" data-t="lbl_naam">Uw naam *</label>
+        <input id="naam" name="naam" type="text" autocomplete="name" required>
+      </div>
+      <div class="rij twee">
+        <div class="veld">
+          <label for="email" data-t="lbl_email">Emailadres</label>
+          <input id="email" name="email" type="email" autocomplete="email">
+        </div>
+        <div class="veld">
+          <label for="telefoon" data-t="lbl_telefoon">Telefoon</label>
+          <input id="telefoon" name="telefoon" type="tel" autocomplete="tel">
+        </div>
+      </div>
+      <p class="hint" style="margin:-4px 0 14px" data-t="hint_contact">Vul minstens een van beide in, dan kunnen wij u bedanken en iets laten weten als we uw foto gebruiken.</p>
+      <div class="rij twee">
+        <div class="veld">
+          <label for="gemeente" data-t="lbl_gemeente">Gemeente</label>
+          <input id="gemeente" name="gemeente" type="text" autocomplete="address-level2">
+        </div>
+        <div class="veld">
+          <label for="jaar" data-t="lbl_jaar">Jaar van plaatsing</label>
+          <input id="jaar" name="jaar" type="number" inputmode="numeric" min="1950" max="2100" placeholder="2024">
+        </div>
+      </div>
+      <p class="hint" style="margin:-4px 0 14px" data-t="hint_extra">Beide zijn optioneel. Bij een realisatie vermelden wij hoogstens de streek, nooit uw adres.</p>
+      <div class="veld">
+        <label for="bericht" data-t="lbl_bericht">Wilt u er iets bij vertellen?</label>
+        <textarea id="bericht" name="bericht"></textarea>
+        <span class="hint" data-t="hint_bericht">Bijvoorbeeld het model, wat u er zelf van vindt of waarom u voor deze poort koos.</span>
+      </div>
+    </div>
+
+    <div class="kaart">
+      <p class="kaartkop" data-t="kop_toestemming">Toestemming</p>
+      <label class="akkoord">
+        <input type="checkbox" id="akkoord">
+        <span data-t="lbl_privacy">Poortland mag mijn gegevens gebruiken om mij over deze foto's te contacteren.</span>
+      </label>
+      <div class="toestemming" style="margin-top:14px">
+        <label class="akkoord">
+          <input type="checkbox" id="publicatie">
+          <span data-t="lbl_publicatie">Poortland mag deze foto's tonen op de website en de sociale media van Poortland.</span>
+        </label>
+        <p class="uitleg" data-t="uitleg_publicatie">Wij tonen enkel de poort, dus zonder uw naam, adres of nummerplaat. Laat u dit vinkje open, dan blijven de foto's intern en gebruiken wij ze enkel om uw dossier bij te houden. U kunt uw toestemming altijd weer intrekken met een mailtje naar info@poortland.be.</p>
+      </div>
+    </div>
+
+    <div class="kaart">
+      <p class="kaartkop" data-t="kop_fotos">Uw foto's</p>
+      <div class="tegels verborgen" id="mobielTegels">
+        <button type="button" class="tegel" id="tegelCamera">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          <b data-t="tegel_camera">Foto nemen</b><span data-t="tegel_camera_sub">Open de camera van uw toestel</span>
+        </button>
+        <button type="button" class="tegel" id="tegelKiezen">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+          <b data-t="tegel_kiezen">Bestaande foto's kiezen</b><span data-t="tegel_kiezen_sub">Uit uw galerij of bestanden</span>
+        </button>
+      </div>
+      <div class="drop verborgen" id="dropzone">
+        <b data-t="drop_titel">Sleep uw foto's hierheen</b>
+        <span data-t="drop_of">of</span><br><br>
+        <button type="button" class="knop stil" id="knopSelecteer" data-t="drop_knop">Foto's selecteren</button>
+        <div style="margin-top:10px"><span data-t="drop_limiet">JPG, PNG, WEBP of HEIC · tot 20 MB per foto · maximaal 20 foto's</span></div>
+      </div>
+
+      <input type="file" id="invoerCamera" accept="image/*" capture="environment" hidden>
+      <input type="file" id="invoerBestanden" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" multiple hidden>
+
+      <div class="previews" id="previews"></div>
+      <div class="balkwrap" id="balkwrap">
+        <div class="balk"><i id="balkvul"></i></div>
+        <div class="balktxt" id="balktxt"></div>
+      </div>
+      <div class="acties">
+        <button type="button" class="knop" id="knopUpload" data-t="versturen">Foto's versturen</button>
+      </div>
+    </div>
+
+    <div class="kaart">
+      <p class="kaartkop" data-t="kop_tips">Zo komt uw poort het mooist in beeld</p>
+      <ul class="tips">
+        <li data-t="tip1">Neem de foto recht van voor met de volledige poort in beeld.</li>
+        <li data-t="tip2">Bij daglicht en bij voorkeur zonder fel tegenlicht.</li>
+        <li data-t="tip3">Zet even een auto, container of tuinslang opzij, dat scheelt veel.</li>
+        <li data-t="tip4">Een detail van het hout, het staal of het beslag is altijd welkom.</li>
+        <li data-t="tip5">Liggend fotograferen past het best op onze website.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="kaart succes verborgen" id="succes">
+    <div class="vink"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#717544" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+    <h2 data-t="succes_titel">Hartelijk dank</h2>
+    <p id="succesTekst" data-t="succes_tekst">Uw foto's zijn goed aangekomen. Wij bekijken ze met plezier en laten iets weten als we ze bij onze realisaties tonen.</p>
+    <button type="button" class="knop stil" id="knopNogmeer" data-t="succes_meer">Nog extra foto's sturen</button>
+  </div>
+</main>
+<footer class="voet">Poortland · Hombeeksesteenweg 164-166, 2800 Mechelen · 015 43 21 11</footer>
+
+<script>
+(function () {
+  // Vaste publieke fotopagina (migraties 0044 en 0045). Bedoeld voor bestaande
+  // klanten die hun geplaatste poort met ons delen. Publiceren vraagt een eigen
+  // vinkje naast het gewone privacyakkoord.
+  var VERTALINGEN = {
+    nl: {
+      kop_sub: 'Uw poort in beeld', titel: 'Mogen wij uw poort laten zien?',
+      intro1: 'Elke poort die ons atelier verlaat is anders. Wij zien ze alleen op de dag van de plaatsing, terwijl ze pas echt tot haar recht komt wanneer ze een tijdje bij u staat.',
+      intro2: 'Daarom vragen wij u vriendelijk om een foto. Met uw toestemming tonen wij een selectie van deze realisaties op onze website en sociale media, zodat wie twijfelt kan zien wat er mogelijk is.',
+      kop_gegevens: 'Uw gegevens', kop_toestemming: 'Toestemming', kop_fotos: "Uw foto's",
+      kop_tips: 'Zo komt uw poort het mooist in beeld',
+      lbl_naam: 'Uw naam *', lbl_email: 'Emailadres', lbl_telefoon: 'Telefoon',
+      hint_contact: 'Vul minstens een van beide in, dan kunnen wij u bedanken en iets laten weten als we uw foto gebruiken.',
+      lbl_gemeente: 'Gemeente', lbl_jaar: 'Jaar van plaatsing',
+      hint_extra: 'Beide zijn optioneel. Bij een realisatie vermelden wij hoogstens de streek, nooit uw adres.',
+      lbl_bericht: 'Wilt u er iets bij vertellen?',
+      hint_bericht: 'Bijvoorbeeld het model, wat u er zelf van vindt of waarom u voor deze poort koos.',
+      lbl_privacy: "Poortland mag mijn gegevens gebruiken om mij over deze foto's te contacteren.",
+      lbl_publicatie: "Poortland mag deze foto's tonen op de website en de sociale media van Poortland.",
+      uitleg_publicatie: "Wij tonen enkel de poort, dus zonder uw naam, adres of nummerplaat. Laat u dit vinkje open, dan blijven de foto's intern en gebruiken wij ze enkel om uw dossier bij te houden. U kunt uw toestemming altijd weer intrekken met een mailtje naar info@poortland.be.",
+      tegel_camera: 'Foto nemen', tegel_camera_sub: 'Open de camera van uw toestel',
+      tegel_kiezen: "Bestaande foto's kiezen", tegel_kiezen_sub: 'Uit uw galerij of bestanden',
+      drop_titel: "Sleep uw foto's hierheen", drop_of: 'of', drop_knop: "Foto's selecteren",
+      drop_limiet: 'JPG, PNG, WEBP of HEIC · tot 20 MB per foto · maximaal 20 foto’s',
+      tip1: 'Neem de foto recht van voor met de volledige poort in beeld.',
+      tip2: 'Bij daglicht en bij voorkeur zonder fel tegenlicht.',
+      tip3: 'Zet even een auto, container of tuinslang opzij, dat scheelt veel.',
+      tip4: 'Een detail van het hout, het staal of het beslag is altijd welkom.',
+      tip5: 'Liggend fotograferen past het best op onze website.',
+      versturen: "Foto's versturen", versturen_1: '1 foto versturen', versturen_n: "{n} foto's versturen",
+      bezig: 'Bezig met versturen…',
+      succes_titel: 'Hartelijk dank',
+      succes_tekst: "Uw foto's zijn goed aangekomen. Wij bekijken ze met plezier en laten iets weten als we ze bij onze realisaties tonen.",
+      succes_meer: "Nog extra foto's sturen",
+      geen_naam: 'Gelieve uw naam in te vullen.',
+      geen_contact: 'Vul een emailadres of een telefoonnummer in zodat wij u kunnen bereiken.',
+      geen_akkoord: 'Gelieve akkoord te gaan met de verwerking van uw gegevens.',
+      geen_fotos: 'Kies eerst minstens een foto.',
+      te_groot: "De foto '{naam}' is groter dan 20 MB en werd overgeslagen.",
+      max_bereikt: "Maximaal 20 foto's per keer.",
+      upload_fout: 'Het versturen lukte niet. Probeer opnieuw.',
+      verbinding_weg: 'De verbinding viel weg tijdens het versturen. Probeer opnieuw.',
+      foto_weg: 'Foto verwijderen'
+    },
+    fr: {
+      kop_sub: 'Votre portail en image', titel: 'Pouvons-nous montrer votre portail ?',
+      intro1: "Chaque portail qui quitte notre atelier est unique. Nous ne le voyons que le jour de la pose, alors qu'il prend toute sa valeur une fois installé chez vous depuis un certain temps.",
+      intro2: "C'est pourquoi nous vous demandons aimablement une photo. Avec votre accord, nous montrons une sélection de ces réalisations sur notre site et nos réseaux sociaux, pour que ceux qui hésitent voient ce qui est possible.",
+      kop_gegevens: 'Vos coordonnées', kop_toestemming: 'Autorisation', kop_fotos: 'Vos photos',
+      kop_tips: 'Pour mettre votre portail en valeur',
+      lbl_naam: 'Votre nom *', lbl_email: 'Adresse email', lbl_telefoon: 'Téléphone',
+      hint_contact: 'Indiquez au moins un des deux, afin que nous puissions vous remercier et vous prévenir si nous utilisons votre photo.',
+      lbl_gemeente: 'Commune', lbl_jaar: 'Année de pose',
+      hint_extra: "Les deux sont facultatifs. Pour une réalisation, nous mentionnons tout au plus la région, jamais votre adresse.",
+      lbl_bericht: 'Souhaitez-vous ajouter un mot ?',
+      hint_bericht: 'Par exemple le modèle, votre avis ou la raison de votre choix.',
+      lbl_privacy: 'Poortland peut utiliser mes coordonnées pour me contacter au sujet de ces photos.',
+      lbl_publicatie: 'Poortland peut montrer ces photos sur son site et ses réseaux sociaux.',
+      uitleg_publicatie: "Nous montrons uniquement le portail, sans votre nom, votre adresse ni votre plaque. Si vous laissez cette case vide, les photos restent internes et servent uniquement à votre dossier. Vous pouvez retirer votre accord à tout moment via info@poortland.be.",
+      tegel_camera: 'Prendre une photo', tegel_camera_sub: "Ouvrez l'appareil photo de votre appareil",
+      tegel_kiezen: 'Choisir des photos existantes', tegel_kiezen_sub: 'Depuis votre galerie ou vos fichiers',
+      drop_titel: 'Glissez vos photos ici', drop_of: 'ou', drop_knop: 'Sélectionner des photos',
+      drop_limiet: 'JPG, PNG, WEBP ou HEIC · max. 20 Mo par photo · 20 photos maximum',
+      tip1: 'Photographiez de face, avec le portail entier dans le cadre.',
+      tip2: 'À la lumière du jour et de préférence sans fort contre-jour.',
+      tip3: 'Écartez un instant la voiture, le conteneur ou le tuyau d’arrosage.',
+      tip4: 'Un détail du bois, de l’acier ou de la quincaillerie est toujours bienvenu.',
+      tip5: 'Le format paysage convient le mieux à notre site.',
+      versturen: 'Envoyer les photos', versturen_1: 'Envoyer 1 photo', versturen_n: 'Envoyer {n} photos',
+      bezig: 'Envoi en cours…',
+      succes_titel: 'Merci beaucoup',
+      succes_tekst: 'Vos photos sont bien arrivées. Nous les regardons avec plaisir et vous préviendrons si nous les montrons parmi nos réalisations.',
+      succes_meer: "Envoyer d'autres photos",
+      geen_naam: 'Veuillez indiquer votre nom.',
+      geen_contact: 'Indiquez un email ou un numéro de téléphone pour que nous puissions vous joindre.',
+      geen_akkoord: 'Veuillez accepter le traitement de vos données.',
+      geen_fotos: "Choisissez d'abord au moins une photo.",
+      te_groot: "La photo '{naam}' dépasse 20 Mo et a été ignorée.",
+      max_bereikt: '20 photos maximum par envoi.',
+      upload_fout: "L'envoi a échoué. Réessayez.",
+      verbinding_weg: "La connexion a été interrompue pendant l'envoi. Réessayez.",
+      foto_weg: 'Supprimer la photo'
+    },
+    en: {
+      kop_sub: 'Your gate in picture', titel: 'May we show your gate?',
+      intro1: 'Every gate that leaves our workshop is different. We only see it on installation day, while it truly comes into its own once it has been standing at your place for a while.',
+      intro2: 'That is why we kindly ask you for a photo. With your permission we show a selection of these projects on our website and social media, so that those who hesitate can see what is possible.',
+      kop_gegevens: 'Your details', kop_toestemming: 'Permission', kop_fotos: 'Your photos',
+      kop_tips: 'How your gate looks its best',
+      lbl_naam: 'Your name *', lbl_email: 'Email address', lbl_telefoon: 'Phone',
+      hint_contact: 'Fill in at least one of the two, so we can thank you and let you know if we use your photo.',
+      lbl_gemeente: 'Town', lbl_jaar: 'Year of installation',
+      hint_extra: 'Both are optional. With a project we mention the region at most, never your address.',
+      lbl_bericht: 'Would you like to add anything?',
+      hint_bericht: 'For example the model, what you think of it or why you chose this gate.',
+      lbl_privacy: 'Poortland may use my details to contact me about these photos.',
+      lbl_publicatie: 'Poortland may show these photos on its website and social media.',
+      uitleg_publicatie: 'We only show the gate, so without your name, address or number plate. If you leave this box empty, the photos stay internal and are only used for your file. You can withdraw your permission at any time via info@poortland.be.',
+      tegel_camera: 'Take a photo', tegel_camera_sub: "Open your device's camera",
+      tegel_kiezen: 'Choose existing photos', tegel_kiezen_sub: 'From your gallery or files',
+      drop_titel: 'Drag your photos here', drop_of: 'or', drop_knop: 'Select photos',
+      drop_limiet: 'JPG, PNG, WEBP or HEIC · up to 20 MB per photo · 20 photos maximum',
+      tip1: 'Shoot straight from the front, with the whole gate in frame.',
+      tip2: 'In daylight and preferably without harsh backlight.',
+      tip3: 'Move a car, bin or garden hose aside for a moment, it makes a real difference.',
+      tip4: 'A close up of the wood, the steel or the hardware is always welcome.',
+      tip5: 'Landscape orientation suits our website best.',
+      versturen: 'Send photos', versturen_1: 'Send 1 photo', versturen_n: 'Send {n} photos',
+      bezig: 'Sending…',
+      succes_titel: 'Thank you very much',
+      succes_tekst: 'Your photos arrived safely. We will enjoy looking at them and will let you know if we show them among our projects.',
+      succes_meer: 'Send more photos',
+      geen_naam: 'Please fill in your name.',
+      geen_contact: 'Enter an email address or a phone number so we can reach you.',
+      geen_akkoord: 'Please agree to the processing of your details.',
+      geen_fotos: 'Please choose at least one photo first.',
+      te_groot: "The photo '{naam}' exceeds 20 MB and was skipped.",
+      max_bereikt: 'Maximum 20 photos at a time.',
+      upload_fout: 'Sending failed. Please try again.',
+      verbinding_weg: 'The connection dropped while sending. Please try again.',
+      foto_weg: 'Remove photo'
+    },
+    de: {
+      kop_sub: 'Ihr Tor im Bild', titel: 'Dürfen wir Ihr Tor zeigen?',
+      intro1: 'Jedes Tor, das unsere Werkstatt verlässt, ist anders. Wir sehen es nur am Tag der Montage, dabei kommt es erst richtig zur Geltung, wenn es eine Weile bei Ihnen steht.',
+      intro2: 'Deshalb bitten wir Sie freundlich um ein Foto. Mit Ihrer Erlaubnis zeigen wir eine Auswahl dieser Arbeiten auf unserer Website und in den sozialen Medien, damit Unentschlossene sehen, was möglich ist.',
+      kop_gegevens: 'Ihre Angaben', kop_toestemming: 'Einverständnis', kop_fotos: 'Ihre Fotos',
+      kop_tips: 'So kommt Ihr Tor am besten zur Geltung',
+      lbl_naam: 'Ihr Name *', lbl_email: 'E-Mail-Adresse', lbl_telefoon: 'Telefon',
+      hint_contact: 'Bitte mindestens eines von beiden angeben, damit wir uns bedanken und Bescheid geben können, wenn wir Ihr Foto verwenden.',
+      lbl_gemeente: 'Ort', lbl_jaar: 'Jahr der Montage',
+      hint_extra: 'Beides ist freiwillig. Bei einer Referenz nennen wir höchstens die Region, niemals Ihre Adresse.',
+      lbl_bericht: 'Möchten Sie etwas dazu erzählen?',
+      hint_bericht: 'Zum Beispiel das Modell, Ihre Meinung dazu oder warum Sie dieses Tor gewählt haben.',
+      lbl_privacy: 'Poortland darf meine Angaben nutzen, um mich zu diesen Fotos zu kontaktieren.',
+      lbl_publicatie: 'Poortland darf diese Fotos auf der Website und in den sozialen Medien zeigen.',
+      uitleg_publicatie: 'Wir zeigen ausschließlich das Tor, also ohne Ihren Namen, Ihre Adresse oder Ihr Kennzeichen. Lassen Sie dieses Kästchen leer, bleiben die Fotos intern und dienen nur Ihrer Akte. Sie können Ihr Einverständnis jederzeit über info@poortland.be widerrufen.',
+      tegel_camera: 'Foto aufnehmen', tegel_camera_sub: 'Öffnen Sie die Kamera Ihres Geräts',
+      tegel_kiezen: 'Vorhandene Fotos wählen', tegel_kiezen_sub: 'Aus Ihrer Galerie oder Ihren Dateien',
+      drop_titel: 'Ziehen Sie Ihre Fotos hierher', drop_of: 'oder', drop_knop: 'Fotos auswählen',
+      drop_limiet: 'JPG, PNG, WEBP oder HEIC · bis 20 MB pro Foto · maximal 20 Fotos',
+      tip1: 'Fotografieren Sie frontal, mit dem ganzen Tor im Bild.',
+      tip2: 'Bei Tageslicht und möglichst ohne starkes Gegenlicht.',
+      tip3: 'Stellen Sie Auto, Tonne oder Gartenschlauch kurz beiseite, das hilft sehr.',
+      tip4: 'Eine Nahaufnahme von Holz, Stahl oder Beschlag ist immer willkommen.',
+      tip5: 'Querformat passt am besten auf unsere Website.',
+      versturen: 'Fotos senden', versturen_1: '1 Foto senden', versturen_n: '{n} Fotos senden',
+      bezig: 'Wird gesendet…',
+      succes_titel: 'Herzlichen Dank',
+      succes_tekst: 'Ihre Fotos sind gut angekommen. Wir sehen sie uns gerne an und melden uns, wenn wir sie bei unseren Referenzen zeigen.',
+      succes_meer: 'Weitere Fotos senden',
+      geen_naam: 'Bitte geben Sie Ihren Namen an.',
+      geen_contact: 'Geben Sie eine E-Mail-Adresse oder Telefonnummer an, damit wir Sie erreichen können.',
+      geen_akkoord: 'Bitte stimmen Sie der Verarbeitung Ihrer Daten zu.',
+      geen_fotos: 'Bitte wählen Sie zuerst mindestens ein Foto.',
+      te_groot: "Das Foto '{naam}' ist größer als 20 MB und wurde übersprungen.",
+      max_bereikt: 'Maximal 20 Fotos pro Vorgang.',
+      upload_fout: 'Das Senden ist fehlgeschlagen. Bitte erneut versuchen.',
+      verbinding_weg: 'Die Verbindung wurde beim Senden unterbrochen. Bitte erneut versuchen.',
+      foto_weg: 'Foto entfernen'
+    }
+  };
+  var taal = (function () {
+    var b = (navigator.language || 'nl').slice(0, 2).toLowerCase();
+    return VERTALINGEN[b] ? b : 'nl';
+  })();
+  function T(sleutel, vars) {
+    var tekst = (VERTALINGEN[taal] && VERTALINGEN[taal][sleutel]) || VERTALINGEN.nl[sleutel] || sleutel;
+    if (vars) Object.keys(vars).forEach(function (k) { tekst = tekst.replace('{' + k + '}', vars[k]); });
+    return tekst;
+  }
+  var laatsteMelding = null;
+  var el = function (id) { return document.getElementById(id); };
+  function meld(soort, sleutel, vars) {
+    laatsteMelding = [soort, sleutel, vars];
+    el('meldingen').innerHTML = '<div class="melding ' + soort + '">' + T(sleutel, vars) + '</div>';
+    el('meldingen').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  function zetTaal(nieuw) {
+    taal = nieuw;
+    document.documentElement.lang = nieuw;
+    document.querySelectorAll('[data-t]').forEach(function (n) { n.textContent = T(n.getAttribute('data-t')); });
+    document.querySelectorAll('#talen button').forEach(function (b) {
+      b.classList.toggle('aan', b.getAttribute('data-taal') === nieuw);
+    });
+    toonPreviews();
+    if (laatsteMelding) meld(laatsteMelding[0], laatsteMelding[1], laatsteMelding[2]);
+  }
+  var talenNav = el('talen');
+  ;['nl', 'fr', 'en', 'de'].forEach(function (t) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.textContent = t.toUpperCase(); b.setAttribute('data-taal', t);
+    b.onclick = function () { zetTaal(t); };
+    talenNav.appendChild(b);
+  });
+
+  // Herkomst uit de link, bijvoorbeeld /fotos?bron=nieuwsbrief.
+  var bron = (new URLSearchParams(location.search).get('bron') || '').slice(0, 60);
+  var gekozen = [];
+  var MAX = 20, MAX_MB = 20;
+
+  var mobiel = matchMedia('(pointer: coarse)').matches;
+  el(mobiel ? 'mobielTegels' : 'dropzone').classList.remove('verborgen');
+  zetTaal(taal);
+
+  function voegToe(bestanden) {
+    for (var i = 0; i < bestanden.length; i++) {
+      var f = bestanden[i];
+      if (gekozen.length >= MAX) { meld('fout', 'max_bereikt'); break; }
+      if (f.size > MAX_MB * 1024 * 1024) { meld('fout', 'te_groot', { naam: f.name }); continue; }
+      gekozen.push(f);
+    }
+    toonPreviews();
+  }
+  function toonPreviews() {
+    var wrap = el('previews'); if (!wrap) return;
+    wrap.innerHTML = '';
+    gekozen.forEach(function (f, i) {
+      var d = document.createElement('div'); d.className = 'prev';
+      var img = document.createElement('img');
+      img.alt = f.name;
+      try { img.src = URL.createObjectURL(f); } catch (e) { }
+      var weg = document.createElement('button'); weg.className = 'weg'; weg.textContent = '×';
+      weg.setAttribute('aria-label', T('foto_weg'));
+      weg.onclick = function () { gekozen.splice(i, 1); toonPreviews(); };
+      var naam = document.createElement('div'); naam.className = 'naam'; naam.textContent = f.name;
+      d.appendChild(img); d.appendChild(weg); d.appendChild(naam); wrap.appendChild(d);
+    });
+    el('knopUpload').textContent = gekozen.length === 0 ? T('versturen')
+      : gekozen.length === 1 ? T('versturen_1') : T('versturen_n', { n: gekozen.length });
+  }
+
+  el('tegelCamera').onclick = function () { el('invoerCamera').click(); };
+  el('tegelKiezen').onclick = function () { el('invoerBestanden').click(); };
+  el('knopSelecteer').onclick = function () { el('invoerBestanden').click(); };
+  el('invoerCamera').onchange = function () { voegToe(this.files); this.value = ''; };
+  el('invoerBestanden').onchange = function () { voegToe(this.files); this.value = ''; };
+  var drop = el('dropzone');
+  ;['dragenter', 'dragover'].forEach(function (t) {
+    drop.addEventListener(t, function (e) { e.preventDefault(); drop.classList.add('actief'); });
+  });
+  ;['dragleave', 'drop'].forEach(function (t) {
+    drop.addEventListener(t, function (e) { e.preventDefault(); drop.classList.remove('actief'); });
+  });
+  drop.addEventListener('drop', function (e) { if (e.dataTransfer) voegToe(e.dataTransfer.files); });
+
+  el('knopUpload').onclick = function () {
+    var naam = el('naam').value.trim();
+    var email = el('email').value.trim();
+    var telefoon = el('telefoon').value.trim();
+    if (naam.length < 2) { meld('fout', 'geen_naam'); el('naam').focus(); return; }
+    if (!email && !telefoon) { meld('fout', 'geen_contact'); el('email').focus(); return; }
+    if (!el('akkoord').checked) { meld('fout', 'geen_akkoord'); return; }
+    if (!gekozen.length) { meld('fout', 'geen_fotos'); return; }
+
+    var form = new FormData();
+    form.append('naam', naam);
+    form.append('email', email);
+    form.append('telefoon', telefoon);
+    form.append('bericht', el('bericht').value.trim());
+    form.append('gemeente', el('gemeente').value.trim());
+    form.append('geplaatstJaar', el('jaar').value.trim());
+    form.append('bron', bron);
+    form.append('privacyAkkoord', 'true');
+    form.append('publicatieAkkoord', el('publicatie').checked ? 'true' : 'false');
+    gekozen.forEach(function (f) { form.append('fotos', f); });
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/api/v1/fotoberichten/publiek');
+    el('balkwrap').style.display = 'block';
+    el('knopUpload').disabled = true;
+    xhr.upload.onprogress = function (e) {
+      if (e.lengthComputable) {
+        var pct = Math.round(e.loaded / e.total * 100);
+        el('balkvul').style.width = pct + '%';
+        el('balktxt').textContent = T('bezig') + ' ' + pct + '%';
+      }
+    };
+    xhr.onload = function () {
+      el('knopUpload').disabled = false;
+      var j = {};
+      try { j = JSON.parse(xhr.responseText); } catch (e) { }
+      if (xhr.status >= 200 && xhr.status < 300) {
+        el('formulier').classList.add('verborgen');
+        el('meldingen').innerHTML = ''; laatsteMelding = null;
+        el('succes').classList.remove('verborgen');
+        gekozen = [];
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        el('balkwrap').style.display = 'none';
+        if (j && j.fout) {
+          laatsteMelding = null;
+          el('meldingen').innerHTML = '<div class="melding fout"></div>';
+          el('meldingen').firstChild.textContent = j.fout;
+          el('meldingen').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else meld('fout', 'upload_fout');
+      }
+    };
+    xhr.onerror = function () {
+      el('knopUpload').disabled = false;
+      el('balkwrap').style.display = 'none';
+      meld('fout', 'verbinding_weg');
+    };
+    xhr.send(form);
+  };
+
+  el('knopNogmeer').onclick = function () {
+    el('succes').classList.add('verborgen');
+    el('formulier').classList.remove('verborgen');
+    el('balkwrap').style.display = 'none';
+    el('balkvul').style.width = '0';
+    toonPreviews();
+  };
+})();
+</script>
+</body>
+</html>

@@ -8,7 +8,7 @@ namespace Poortland.Api.Controllers;
 
 public record WeigerInvoer(string Reden);
 public record HeractiveerInvoer(DateOnly NieuweGeldigheid);
-public record MaakOfferteInvoer(Taal? Taal);
+public record MaakOfferteInvoer(Taal? Taal, OfferteSoort? Soort);
 
 [ApiController]
 [Route("api/v1")]
@@ -18,7 +18,7 @@ public class OffertesController(OfferteService service) : ControllerBase
     [HttpPost("projecten/{projectId:guid}/offertes")]
     [VereistRol("verkoop")]
     public async Task<IActionResult> Maak(Guid projectId, MaakOfferteInvoer invoer) =>
-        Ok(await service.Maak(projectId, invoer.Taal));
+        Ok(await service.Maak(projectId, invoer.Taal, invoer.Soort ?? OfferteSoort.Offerte));
 
     [HttpGet("offertes/{id:guid}")]
     public async Task<IActionResult> Detail(Guid id) => Ok(await service.Laad(id));
@@ -27,6 +27,11 @@ public class OffertesController(OfferteService service) : ControllerBase
     [VereistRol("verkoop")]
     public async Task<IActionResult> Bewaar(Guid id, OfferteInvoer invoer) =>
         Ok(await service.BewaarInhoud(id, invoer));
+
+    // Een prijsraming omzetten naar een offerte na het plaatsbezoek.
+    [HttpPost("offertes/{id:guid}/naar-offerte")]
+    [VereistRol("verkoop")]
+    public async Task<IActionResult> NaarOfferte(Guid id) => Ok(await service.ZetOmNaarOfferte(id));
 
     [HttpPost("offertes/{id:guid}/nieuwe-versie")]
     [VereistRol("verkoop")]

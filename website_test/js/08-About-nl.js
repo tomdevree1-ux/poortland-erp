@@ -14,8 +14,8 @@ function AboutNL({
     CTASectie,
     SectieKop
   } = window;
-  const vakmanschap = [['Handwerk', 'Elke poort wordt met de hand getekend, gelast en afgewerkt. Geen samengesteld pakket, maar één object.'], ['Belgische productie', 'Alles gebeurt in ons eigen atelier in Mechelen. Geen import, geen tussenschakels.'], ['Materiaalkennis', 'Wij kennen het gedrag van eik, aluminium, staal en cortenstaal, en kiezen wat past bij uw woning.'], ['Detailzorg', 'Verhouding, ritme en afwerking worden tot in het detail uitgewerkt en gecontroleerd.'], ['Eigen plaatsers', 'Onze eigen techniekers plaatsen en stellen af. Zij kennen de poort die zij monteren.'], ['Automatisatie', 'Wij integreren betrouwbare, verdoken aandrijving en blijven beschikbaar voor de opvolging.']];
-  const cijfers = [['1999', 'Opgericht'], ['100%', 'Handgemaakt'], ['320+', 'Werven'], ['4', 'Materialen']];
+  const vakmanschap = [['Maatwerk', 'Elke poort wordt op maat getekend, gelast en afgewerkt. Geen samengesteld pakket, maar één object.'], ['Belgische productie', 'Alles gebeurt in ons eigen atelier in Mechelen. Geen import, geen tussenschakels.'], ['Materiaalkennis', 'Wij kennen het gedrag van eik, aluminium, staal en cortenstaal, en kiezen wat past bij uw woning.'], ['Detailzorg', 'Verhouding, ritme en afwerking worden tot in het detail uitgewerkt en gecontroleerd.'], ['Eigen plaatsers', 'Onze eigen techniekers plaatsen en stellen af. Zij kennen de poort die zij monteren.'], ['Automatisatie', 'Wij integreren betrouwbare, verdoken aandrijving en blijven beschikbaar voor de opvolging.']];
+  const cijfers = [['1999', 'Opgericht'], ['100%', 'Eigen atelier'], ['5000+', 'Projecten'], ['4', 'Materialen']];
   return /*#__PURE__*/React.createElement("div", {
     style: {
       background: 'var(--surface-paper)'

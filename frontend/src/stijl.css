@@ -17,3 +17,15 @@ h1, h2 { @apply font-display; }
 /* Geen spinnerpijltjes op nummervelden (rustiger formulieren). */
 input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+
+/* Mobiel (audit 2026-08-11, K2): brede tabellen scrollen binnen het werkvlak
+   in plaats van de hele pagina te verbreden. De zijbalk is op deze breedtes
+   een uitschuifpaneel (zie AppSchil). */
+@media (max-width: 1023px) {
+  main {
+    overflow-x: auto;
+  }
+  main table {
+    min-width: 640px;
+  }
+}

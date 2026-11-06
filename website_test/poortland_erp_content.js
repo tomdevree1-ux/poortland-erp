@@ -108,8 +108,10 @@
     band.style.cssText = 'display:flex;gap:14px;width:max-content;animation:poortlandband 40s linear infinite';
     var lijst = fotos.concat(fotos); // dubbel voor een naadloze lus
     lijst.forEach(function (f) {
-      var item = beeld(f, 'height:180px;aspect-ratio:4/3;object-fit:cover;display:block;border-radius:6px');
-      item.style.cssText = 'flex:0 0 auto';
+      // Bewust geen link: de banner is sfeer, geen galerij (feedback 2026-08-21)
+      var item = document.createElement('img');
+      item.src = f.thumb; item.alt = f.alt || ''; item.loading = 'lazy';
+      item.style.cssText = 'height:180px;aspect-ratio:4/3;object-fit:cover;display:block;border-radius:6px;flex:0 0 auto';
       band.appendChild(item);
     });
     band.addEventListener('mouseenter', function () { band.style.animationPlayState = 'paused'; });
@@ -146,7 +148,7 @@
       return knop;
     }
 
-    [['Alle', 'soort', ''], ['Houten poorten', 'poortType', 'hout'],
+    [['Alle', 'soort', ''], ['Massief houten poorten', 'poortType', 'hout'],
      ['Metalen poorten', 'poortType', 'metaal'], ['Hout en metaal', 'poortType', 'hout_metaal'],
      ['Draaipoorten', 'uitvoering', 'draaipoort'], ['Schuifpoorten', 'uitvoering', 'schuifpoort'],
      ['Overkappingen', 'soort', 'overkapping']]

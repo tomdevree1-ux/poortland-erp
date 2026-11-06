@@ -43,6 +43,10 @@ public class OffertePdfService
             regels.Select(r => (r.Totaal, r.Btw)).ToList(),
             offerte.KortingPercentage, offerte.KortingBedrag).perTarief;
         var voorschot = Prijsmotor.Rond(offerte.TotaalInclBtw * voorschotPct / 100m);
+        // Prijsraming: opgemaakt zonder plaatsbezoek, dus met een duidelijk
+        // voorbehoud. Btw verlegd: de medecontractant draagt de btw af.
+        var isRaming = offerte.Soort == OfferteSoort.Prijsraming;
+        var btwVerlegd = offerte.BtwVerlegd;
 
         return Document.Create(document => document.Page(pagina =>
         {
@@ -88,8 +92,9 @@ public class OffertePdfService
 
                 inhoud.Item().Column(titel =>
                 {
-                    titel.Item().Text("VRIJBLIJVENDE PRIJSOPGAVE").FontSize(7.5f).Bold().LetterSpacing(0.22f).FontColor(BronsDiep);
-                    titel.Item().Text("Offerte").FontFamily(Serif).FontSize(26).Medium().FontColor(Inkt);
+                    titel.Item().Text(isRaming ? "VRIJBLIJVENDE RAMING · NOG GEEN OPMETING" : "VRIJBLIJVENDE PRIJSOPGAVE")
+                        .FontSize(7.5f).Bold().LetterSpacing(0.22f).FontColor(BronsDiep);
+                    titel.Item().Text(isRaming ? "Prijsraming" : "Offerte").FontFamily(Serif).FontSize(26).Medium().FontColor(Inkt);
                 });
 
                 inhoud.Item().Background(Vlak).Border(1).BorderColor(LijnZacht).Padding(10).Row(meta =>
@@ -135,7 +140,9 @@ public class OffertePdfService
                     Partij(partijen.RelativeItem(), "WERF", new[]
                     {
                         offerte.Project?.Werfadres ?? "—",
-                        offerte.Project?.Omschrijving ?? ""
+                        offerte.Project?.Omschrijving ?? "",
+                        // De klant miste een aanduiding van het model (feedback 2026-09-13).
+                        string.IsNullOrWhiteSpace(offerte.Model) ? "" : $"Model: {offerte.Model}"
                     });
                 });
 
@@ -148,6 +155,7 @@ public class OffertePdfService
                         kolommen.ConstantColumn(42);
                         kolommen.ConstantColumn(44);
                         kolommen.ConstantColumn(64);
+                        kolommen.ConstantColumn(30);
                         kolommen.ConstantColumn(64);
                     });
                     tabel.Header(hoofd =>
@@ -159,7 +167,7 @@ public class OffertePdfService
                                 .Text(tekst).FontSize(6.8f).Bold().LetterSpacing(0.14f).FontColor(Gedempt);
                         }
                         Kop("NR"); Kop("OMSCHRIJVING"); Kop("AANTAL", true); Kop("EENHEID");
-                        Kop("EENHEIDSPRIJS", true); Kop("TOTAAL", true);
+                        Kop("EENHEIDSPRIJS", true); Kop("BTW", true); Kop("TOTAAL", true);
                     });
 
                     var nummer = 1;
@@ -168,7 +176,14 @@ public class OffertePdfService
                         tabel.Cell().BorderBottom(1).BorderColor(LijnZacht).PaddingVertical(6)
                             .Text(label).FontSize(8.5f);
                         tabel.Cell().BorderBottom(1).BorderColor(LijnZacht).PaddingVertical(6).PaddingRight(8)
-                            .Text(r.Omschrijving).FontSize(8.5f);
+                            .Column(cel =>
+                            {
+                                cel.Item().Text(r.Omschrijving).FontSize(8.5f);
+                                // Extra technische info, bijvoorbeeld de gebruikte profielen.
+                                if (!string.IsNullOrWhiteSpace(r.Detail))
+                                    cel.Item().PaddingTop(2).Text(r.Detail).FontSize(7.5f)
+                                        .FontColor(Gedempt).LineHeight(1.35f);
+                            });
                         tabel.Cell().BorderBottom(1).BorderColor(LijnZacht).PaddingVertical(6).AlignRight()
                             .Text($"{r.Aantal:0.##}").FontSize(8.5f);
                         tabel.Cell().BorderBottom(1).BorderColor(LijnZacht).PaddingVertical(6).PaddingLeft(6)
@@ -176,12 +191,15 @@ public class OffertePdfService
                         tabel.Cell().BorderBottom(1).BorderColor(LijnZacht).PaddingVertical(6).AlignRight()
                             .Text($"€ {r.Eenheidsprijs:N2}").FontSize(8.5f);
                         tabel.Cell().BorderBottom(1).BorderColor(LijnZacht).PaddingVertical(6).AlignRight()
+                            .Text(btwVerlegd ? "vl." : $"{Prijsmotor.Percentage(r.Btw):0}%")
+                            .FontSize(8).FontColor(Gedempt);
+                        tabel.Cell().BorderBottom(1).BorderColor(LijnZacht).PaddingVertical(6).AlignRight()
                             .Text($"€ {r.Totaal:N2}").FontSize(8.5f);
                     }
                     foreach (var r in producten) Regel(r, $"{nummer++}");
                     if (opties.Count > 0)
                     {
-                        tabel.Cell().ColumnSpan(6).PaddingTop(10).PaddingBottom(2)
+                        tabel.Cell().ColumnSpan(7).PaddingTop(10).PaddingBottom(2)
                             .Text("OPTIES EN ALTERNATIEVEN").FontSize(7.5f).Bold().LetterSpacing(0.22f).FontColor(BronsDiep);
                         var letter = 'a';
                         foreach (var r in opties) Regel(r, $"{letter++}");
@@ -193,7 +211,15 @@ public class OffertePdfService
                     onder.RelativeItem().Column(vw =>
                     {
                         vw.Item().Text("VOORWAARDEN").FontSize(7.5f).Bold().LetterSpacing(0.22f).FontColor(BronsDiep);
+                        if (isRaming)
+                            vw.Item().PaddingTop(5)
+                                .Text("Dit is een vrijblijvende raming zonder plaatsbezoek. De definitieve prijs volgt in een offerte na opmeting ter plaatse of op basis van het plan van de architect.")
+                                .FontSize(7.5f).FontColor(BronsDiep).LineHeight(1.5f);
                         vw.Item().PaddingTop(5).Text(voorwaarden).FontSize(7.5f).FontColor(Gedempt).LineHeight(1.5f);
+                        if (btwVerlegd)
+                            vw.Item().PaddingTop(4)
+                                .Text("Btw verlegd. Bij gebrek aan schriftelijke betwisting binnen een termijn van één maand na de ontvangst van de factuur, wordt de klant geacht te erkennen dat hij een belastingplichtige is gehouden tot de indiening van periodieke aangiften. Als die voorwaarde niet vervuld is, is de klant ten aanzien van die voorwaarde aansprakelijk voor de betaling van de verschuldigde belasting, interesten en geldboeten.")
+                                .FontSize(7).FontColor(Gedempt).LineHeight(1.4f);
                     });
                     onder.ConstantItem(14);
                     onder.ConstantItem(180).Background(Vlak).Border(1).BorderColor(LijnZacht).Padding(11).Column(totalen =>
@@ -209,8 +235,12 @@ public class OffertePdfService
                         TotaalRij("Subtotaal", subtotaal);
                         if (korting > 0) TotaalRij("Korting", -korting);
                         TotaalRij("Totaal excl. btw", offerte.TotaalExclBtw);
-                        foreach (var (tarief, bedragen) in perTarief.OrderBy(p => p.Key))
-                            TotaalRij($"Btw {Prijsmotor.Percentage(tarief):0}%", bedragen.btw);
+                        if (btwVerlegd)
+                            totalen.Item().PaddingVertical(2)
+                                .Text("Btw verlegd naar de medecontractant").FontSize(7.5f).FontColor(Gedempt);
+                        else
+                            foreach (var (tarief, bedragen) in perTarief.OrderBy(p => p.Key))
+                                TotaalRij($"Btw {Prijsmotor.Percentage(tarief):0}%", bedragen.btw);
                         totalen.Item().PaddingTop(4).BorderTop(1.2f).BorderColor(Inkt).PaddingTop(5).Row(eind =>
                         {
                             eind.RelativeItem().AlignMiddle().Text("TOTAAL INCL. BTW").FontSize(7.5f).Bold().LetterSpacing(0.1f).FontColor(Inkt);
@@ -244,6 +274,10 @@ public class OffertePdfService
                     goedkeuring.ConstantItem(14);
                     Tekenvak(goedkeuring.RelativeItem(), $"{bedrijf.Naam.ToUpperInvariant()} · DE ZAAKVOERDER");
                 });
+
+                inhoud.Item().PaddingTop(6)
+                    .Text("Door dit document te ondertekenen bevestigt de klant kennis genomen te hebben van de verkoopsvoorwaarden en ze te aanvaarden.")
+                    .FontSize(7).FontColor(Gedempt).LineHeight(1.4f);
             });
 
             pagina.Footer().PaddingTop(8).Row(voet =>

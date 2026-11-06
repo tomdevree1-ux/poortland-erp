@@ -1,9 +1,11 @@
 import { useRef, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useSearch } from '@tanstack/react-router'
 import { api } from '../lib/api'
+import ArtikelKiezer, { eenheidKort, type ArtikelKeuze } from '../ArtikelKiezer'
 import { datum, leeg, weergaveNaam } from '../lib/formaat'
 import type { WerkbonRij } from '../lib/types'
-import { Badge, Invoer, Knop, LegeStaat, Melding, Modaal, PaginaKop, Paneel, Selecteer, Selectievak } from '../ui'
+import { Badge, Invoer, Knop, LegeStaat, Melding, Modaal, PaginaKop, Paneel, Selecteer, Selectievak, Th, Td, rijKlik } from '../ui'
 
 /* TS-09: het veldscherm van de plaatser. De eigen werkbonnen met het
    invulscherm (werken, materialen, meerwerk), foto's voor en na en de
@@ -12,9 +14,13 @@ import { Badge, Invoer, Knop, LegeStaat, Melding, Modaal, PaginaKop, Paneel, Sel
 const soortTekst: Record<string, string> = {
   uitgevoerd_werk: 'Uitgevoerd werk', materiaal: 'Materiaal', meerwerk: 'Meerwerk'
 }
-export const werkbonTypeTekst: Record<string, string> = {
-  plaatsing1: 'Plaatsing 1', plaatsing2: 'Plaatsing 2', interventie: 'Interventie'
+// De vier LSB types; plaatsingen zijn onbeperkt in aantal en het volgnummer
+// loopt per dossier op.
+const typeTekst: Record<string, string> = {
+  automatisatie: 'Automatisatie', onderhoud: 'Onderhoud', herstelling: 'Herstelling'
 }
+export const werkbonTitel = (b: { type: string; plaatsingNummer?: number }) =>
+  b.type === 'plaatsing' ? `Plaatsing ${b.plaatsingNummer ?? ''}`.trim() : (typeTekst[b.type] ?? b.type)
 
 /* Handtekeningvlak: tekenen met vinger, stylus of muis op een canvas. */
 function HandtekeningVlak({ bijKlaar, bijAnnuleer, bezig }:
@@ -71,10 +77,23 @@ function HandtekeningVlak({ bijKlaar, bijAnnuleer, bezig }:
 export default function Veld() {
   const qc = useQueryClient()
   const [fout, zetFout] = useState<string>()
-  const [openId, zetOpenId] = useState<string | null>(null)
+  // De planner komt hier binnen met ?bon=<id> vanuit het dossier. Die bon staat
+  // niet in zijn eigen lijst, dus halen wij ze er apart bij.
+  const zoek = useSearch({ strict: false }) as { bon?: string }
+  const [openId, zetOpenId] = useState<string | null>(zoek.bon ?? null)
   const { data: bonnen } = useQuery({ queryKey: ['werkbonnen-mijn'], queryFn: () => api.get<WerkbonRij[]>('/werkbonnen/mijn') })
-  const bon = (bonnen ?? []).find(b => b.id === openId) ?? null
-  const ververs = () => { zetFout(undefined); qc.invalidateQueries({ queryKey: ['werkbonnen-mijn'] }) }
+  const losseId = openId && !(bonnen ?? []).some(b => b.id === openId) ? openId : null
+  const { data: losseBon } = useQuery({
+    queryKey: ['werkbon', losseId],
+    queryFn: () => api.get<WerkbonRij>(`/werkbonnen/${losseId}`),
+    enabled: !!losseId
+  })
+  const bon = (bonnen ?? []).find(b => b.id === openId) ?? losseBon ?? null
+  const ververs = () => {
+    zetFout(undefined)
+    qc.invalidateQueries({ queryKey: ['werkbonnen-mijn'] })
+    qc.invalidateQueries({ queryKey: ['werkbon'] })
+  }
   const bijFout = (f: unknown) => zetFout((f as Error).message)
   const bewerkbaar = bon != null && (bon.status === 'open' || bon.status === 'uitgevoerd')
 
@@ -83,14 +102,22 @@ export default function Veld() {
     onSuccess: ververs, onError: bijFout
   })
   const [regelVorm, zetRegelVorm] = useState({ soort: 'uitgevoerd_werk', omschrijving: '', aantal: '', eenheid: '', afwijking: false })
+  // Een regel verwijst bij voorkeur naar de catalogus. Vrije tekst blijft
+  // mogelijk voor wat er niet in staat.
+  const [artikel, zetArtikel] = useState<ArtikelKeuze | null>(null)
   const maakRegel = useMutation({
     mutationFn: () => api.post(`/werkbonnen/${bon!.id}/regels`, {
-      soort: regelVorm.soort, omschrijving: regelVorm.omschrijving,
+      soort: regelVorm.soort, omschrijving: regelVorm.omschrijving || artikel?.naam || '',
       aantal: regelVorm.aantal !== '' ? Number(regelVorm.aantal) : null,
       eenheid: regelVorm.eenheid || null,
-      afwijkingVanStuklijst: regelVorm.afwijking
+      afwijkingVanStuklijst: regelVorm.afwijking,
+      artikelId: artikel?.id ?? null
     }),
-    onSuccess: () => { ververs(); zetRegelVorm({ soort: 'uitgevoerd_werk', omschrijving: '', aantal: '', eenheid: '', afwijking: false }) },
+    onSuccess: () => {
+      ververs()
+      zetRegelVorm({ soort: 'uitgevoerd_werk', omschrijving: '', aantal: '', eenheid: '', afwijking: false })
+      zetArtikel(null)
+    },
     onError: bijFout
   })
   const verwijderRegel = useMutation({
@@ -145,20 +172,23 @@ export default function Veld() {
           <LegeStaat titel="Geen open werkbonnen"
             tekst="De planner maakt werkbonnen aan vanuit het dossier; jouw bonnen verschijnen hier." />
         ) : (
-          <div className="grid grid-cols-2 gap-4">
-            {bonnen!.map(b => (
-              <button key={b.id} type="button" onClick={() => openBon(b)}
-                className="focusring rounded-card border border-inkt/10 bg-vlak-surface p-4 text-left transition hover:border-bronze-500">
-                <div className="flex items-center justify-between gap-3">
-                  <span className="font-semibold">{b.project?.nummer ? `${b.project.nummer} · ` : ''}{weergaveNaam(b.project?.klant)}</span>
-                  <Badge status={b.status} />
-                </div>
-                <div className="mt-1 text-sm text-inkt-muted">
-                  {werkbonTypeTekst[b.type] ?? b.type} · {b.project?.werfadres} · {datum(b.uitvoeringsdatum)}
-                </div>
-              </button>
-            ))}
-          </div>
+          <table className="w-full border-separate border-spacing-0">
+            <thead><tr>
+              <Th>Dossier</Th><Th>Klant</Th><Th>Type</Th><Th>Werfadres</Th><Th>Datum</Th><Th rechts>Status</Th>
+            </tr></thead>
+            <tbody>
+              {bonnen!.map(b => (
+                <tr key={b.id} className={rijKlik} onClick={() => openBon(b)}>
+                  <Td className="font-semibold">{b.project?.nummer ?? '—'}</Td>
+                  <Td className="font-semibold">{weergaveNaam(b.project?.klant)}</Td>
+                  <Td>{werkbonTitel(b)}</Td>
+                  <Td className="max-w-72 truncate text-inkt-muted">{b.project?.werfadres}</Td>
+                  <Td className="whitespace-nowrap">{datum(b.uitvoeringsdatum)}</Td>
+                  <Td className="text-right"><Badge status={b.status} /></Td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )
       ) : (
         <div className="space-y-6">
@@ -166,6 +196,7 @@ export default function Veld() {
             <Knop variant="ghost" onClick={() => zetOpenId(null)}>← Alle werkbonnen</Knop>
             <div className="flex items-center gap-3">
               <Badge status={bon.status} />
+              <Knop variant="neutraal" onClick={() => api.download(`/werkbonnen/${bon.id}/pdf`).catch(bijFout)}>PDF</Knop>
               {bon.status === 'open' && (
                 <Knop variant="secundair" onClick={() => afronden.mutate()} disabled={afronden.isPending}>Werken afronden</Knop>
               )}
@@ -175,7 +206,7 @@ export default function Veld() {
             </div>
           </div>
 
-          <Paneel titel={`${bon.project?.nummer ? `Dossier ${bon.project.nummer} · ` : ''}${weergaveNaam(bon.project?.klant)} · ${werkbonTypeTekst[bon.type] ?? bon.type}`}>
+          <Paneel titel={`${bon.project?.nummer ? `Dossier ${bon.project.nummer} · ` : ''}${weergaveNaam(bon.project?.klant)} · ${werkbonTitel(bon)}`}>
             <dl className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm">
               <div className="flex justify-between"><dt className="text-inkt-muted">Werfadres</dt><dd className="font-semibold">{bon.project?.werfadres}</dd></div>
               <div className="flex justify-between"><dt className="text-inkt-muted">Datum</dt><dd>{datum(bon.uitvoeringsdatum)}</dd></div>
@@ -204,6 +235,7 @@ export default function Veld() {
                   <li key={r.id} className="flex items-center justify-between gap-3 rounded-control border border-inkt/[.07] bg-vlak-surface px-3 py-1.5">
                     <span>
                       <span className="mr-2 rounded-chip bg-bronze-500/15 px-1.5 py-0.5 text-xs font-semibold text-bronze-600">{soortTekst[r.soort]}</span>
+                      {r.artikelCode && <span className="mr-1.5 font-mono text-xs text-inkt-muted">{r.artikelCode}</span>}
                       {r.omschrijving}
                       {r.aantal != null && <span className="text-inkt-muted"> · {r.aantal} {leeg(r.eenheid)}</span>}
                       {r.afwijkingVanStuklijst && <span className="ml-2 text-xs font-semibold text-corten-600">afwijking van stuklijst</span>}
@@ -225,9 +257,21 @@ export default function Veld() {
                     <option value="materiaal">Materiaal</option>
                     <option value="meerwerk">Meerwerk</option>
                   </Selecteer>
-                  <Invoer label="Omschrijving" className="col-span-3" value={regelVorm.omschrijving}
-                    onChange={e => zetRegelVorm({ ...regelVorm, omschrijving: e.target.value })} required />
+                  <div className="col-span-3">
+                    <ArtikelKiezer waarde={artikel} label="Artikel uit de catalogus"
+                      onKies={a => {
+                        zetArtikel(a)
+                        if (a) zetRegelVorm(v => ({
+                          ...v,
+                          omschrijving: v.omschrijving || a.naam,
+                          eenheid: v.eenheid || eenheidKort[a.eenheid]
+                        }))
+                      }} />
+                  </div>
                 </div>
+                <Invoer label="Omschrijving" value={regelVorm.omschrijving}
+                  placeholder={artikel ? artikel.naam : 'Wat is er gedaan of geleverd'}
+                  onChange={e => zetRegelVorm({ ...regelVorm, omschrijving: e.target.value })} />
                 <div className="flex items-end gap-3">
                   <Invoer label="Aantal" optioneel type="number" step="0.01" className="w-28" value={regelVorm.aantal}
                     onChange={e => zetRegelVorm({ ...regelVorm, aantal: e.target.value })} />
@@ -238,7 +282,7 @@ export default function Veld() {
                       Afwijking van de stuklijst
                     </Selectievak>
                   )}
-                  <Knop variant="secundair" className="ml-auto" disabled={maakRegel.isPending || !regelVorm.omschrijving.trim()}>
+                  <Knop variant="secundair" className="ml-auto" disabled={maakRegel.isPending || (!regelVorm.omschrijving.trim() && !artikel)}>
                     Toevoegen
                   </Knop>
                 </div>

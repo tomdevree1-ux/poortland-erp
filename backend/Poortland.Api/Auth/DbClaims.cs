@@ -3,6 +3,14 @@ using Poortland.Api.Data;
 
 namespace Poortland.Api.Auth;
 
+// Ambient identiteit die met de async-context van het verzoek meestroomt. De
+// middleware zet ze, en de SaveChanges van de DbContext leest ze, ongeacht welke
+// context-instantie schrijft. Zo kan ze bij het schrijven nooit verloren gaan.
+public static class Identiteit
+{
+    public static readonly AsyncLocal<string?> Json = new();
+}
+
 // Zet de identiteit als request.jwt.claims op de databankverbinding zodat
 // RLS, mag() en de triggers dezelfde context zien (TS-02, verdediging in de diepte).
 public static class DbClaims
@@ -50,6 +58,12 @@ public class ClaimsMiddleware(RequestDelegate volgende)
             claims.VulMedewerkerAan(medewerkerId.Value, rollen);
             // De volledige claims opnieuw zetten zodat de rollen ook in de databanksessie staan.
             await DbClaims.ZetClaims(db, claims, http.RequestAborted);
+            // Zowel op de context als in de ambient waarde, zodat elke schrijfactie
+            // (SaveChanges) de identiteit gegarandeerd transactioneel op de juiste
+            // verbinding zet, ongeacht welke context-instantie schrijft.
+            var identiteitJson = claims.NaarJwtClaimsJson();
+            db.IdentiteitJson = identiteitJson;
+            Identiteit.Json.Value = identiteitJson;
         }
         await volgende(http);
     }

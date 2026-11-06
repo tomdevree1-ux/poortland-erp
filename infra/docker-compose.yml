@@ -17,6 +17,7 @@ services:
     environment:
       DOMEIN: ${DOMEIN}
       SITE_DOMEIN: ${SITE_DOMEIN}
+      ROBOTS_TAG: ${ROBOTS_TAG:-all}
     restart: unless-stopped
     ports:
       - "80:80"

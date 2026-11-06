@@ -48,7 +48,11 @@ function Button({
     fontFamily: 'var(--font-label)',
     fontWeight: 600,
     textTransform: 'uppercase',
-    lineHeight: 1,
+    // Was lineHeight 1 met whiteSpace nowrap. Lange labels in het Duits en het
+    // Frans maakten de knop dan 586 px breed op een scherm van 390 px, waardoor
+    // ze buiten beeld viel. Nu wrapt het label en blijft de knop binnen zijn
+    // kolom (WCAG 1.4.10 Reflow).
+    lineHeight: 1.25,
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -58,7 +62,9 @@ function Button({
     cursor: disabled ? 'not-allowed' : 'pointer',
     opacity: disabled ? 0.45 : 1,
     transition: 'background var(--dur) var(--ease-out), color var(--dur) var(--ease-out), border-color var(--dur) var(--ease-out)',
-    whiteSpace: 'nowrap',
+    whiteSpace: 'normal',
+    textAlign: 'center',
+    maxWidth: '100%',
     textDecoration: 'none',
     ...sizes[size]
   };
@@ -139,7 +145,9 @@ function Eyebrow({
   ...rest
 }) {
   const colors = {
-    accent: 'var(--accent)',
+    // --accent-label is dieper dan --accent: kleine kapitalen op 10 px
+    // haalden anders maar 3.87 contrast op de warme gronden (WCAG 1.4.3).
+    accent: 'var(--accent-label, var(--accent))',
     muted: dark ? 'var(--text-on-dark-muted)' : 'var(--text-muted)',
     plain: dark ? 'var(--stone-200)' : 'var(--text-heading)'
   };

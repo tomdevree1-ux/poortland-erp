@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Foto's uploaden — Poortland</title>
+<link rel="icon" type="image/png" href="/assets/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@500;600&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --forest-950:#0F160F; --forest-900:#141C15; --accent:#A6824C; --accent-strong:#8A6A3C;
+    --paper:#FBF8F1; --card:#FFFDF8; --stone-200:#ECE3D2; --stone-300:#DBCEB5;
+    --ink:#141C15; --body:#2A332A; --muted:#6E6450; --faint:#9C8E72; --corten:#A85638; --olijf:#717544;
+    --sans:'Hanken Grotesk',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
+    --display:'Cormorant',Georgia,serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);font-family:var(--sans);color:var(--body);min-height:100vh;display:flex;flex-direction:column}
+  header{background:linear-gradient(165deg,#26312a 0%,#1a231c 48%,#10160f 100%);padding:18px 20px;border-bottom:1px solid rgba(166,130,76,.35)}
+  .kop{max-width:640px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .merk{display:flex;align-items:center;gap:12px}
+  .mono{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border:1.4px solid #ECE3D2;color:#F4EEE1;font-family:var(--display);font-size:20px;font-weight:600}
+  .woord{color:#F4EEE1;font-weight:600;letter-spacing:.3em;text-transform:uppercase;font-size:14px}
+  .sub{color:#9C8E72;font-size:10px;letter-spacing:.2em;text-transform:uppercase;margin-top:2px}
+  .talen{display:flex;gap:2px}
+  .talen button{border:0;background:transparent;color:#9C8E72;font-family:var(--sans);font-size:12px;font-weight:600;padding:5px 7px;border-radius:5px;cursor:pointer;letter-spacing:.06em}
+  .talen button.aan{background:rgba(166,130,76,.28);color:#ECE3D2}
+  main{flex:1;width:100%;max-width:640px;margin:0 auto;padding:28px 20px 48px}
+  h1{font-family:var(--display);font-weight:500;font-size:30px;color:var(--ink);margin:0 0 6px;line-height:1.1}
+  .intro{color:var(--muted);font-size:15px;line-height:1.6;margin:0 0 22px}
+  .kaart{background:var(--card);border:1px solid var(--stone-200);border-radius:10px;padding:18px;box-shadow:0 2px 8px rgba(15,22,15,.06)}
+  .melding{border-radius:8px;padding:12px 14px;font-size:14px;margin-bottom:16px}
+  .melding.info{background:rgba(166,130,76,.10);border-left:3px solid var(--accent);color:var(--body)}
+  .melding.fout{background:rgba(168,86,56,.10);border-left:3px solid var(--corten);color:var(--body)}
+  .tegels{display:grid;gap:12px}
+  @media(min-width:520px){.tegels{grid-template-columns:1fr 1fr}}
+  .tegel{display:flex;flex-direction:column;align-items:center;gap:10px;padding:26px 16px;border:1.5px dashed var(--stone-300);border-radius:10px;background:#fff;cursor:pointer;text-align:center;transition:border-color .2s;font-family:var(--sans)}
+  .tegel:hover{border-color:var(--accent)}
+  .tegel b{font-size:16px;color:var(--ink)}
+  .tegel span{font-size:13px;color:var(--muted)}
+  .tegel svg{width:34px;height:34px;stroke:var(--accent-strong)}
+  .drop{border:1.5px dashed var(--stone-300);border-radius:10px;background:#fff;padding:34px 20px;text-align:center;transition:border-color .2s,background .2s}
+  .drop.actief{border-color:var(--accent);background:rgba(166,130,76,.06)}
+  .drop b{display:block;font-size:16px;color:var(--ink);margin-bottom:4px}
+  .drop span{font-size:13px;color:var(--muted)}
+  .knop{display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:6px;background:var(--accent);color:#FAF6EE;font-family:var(--sans);font-weight:600;font-size:15px;padding:11px 20px;cursor:pointer;transition:background .2s}
+  .knop:hover{background:var(--accent-strong)}
+  .knop[disabled]{opacity:.45;cursor:not-allowed}
+  .knop.stil{background:transparent;color:var(--accent-strong);border:1px solid var(--accent)}
+  .previews{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:10px;margin-top:16px}
+  .prev{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;border:1px solid var(--stone-200);background:var(--stone-200)}
+  .prev img{width:100%;height:100%;object-fit:cover}
+  .prev .weg{position:absolute;top:4px;right:4px;width:22px;height:22px;border:0;border-radius:999px;background:rgba(20,28,21,.65);color:#fff;font-size:13px;line-height:1;cursor:pointer}
+  .prev .naam{position:absolute;left:0;right:0;bottom:0;background:rgba(20,28,21,.55);color:#ECE3D2;font-size:9px;padding:2px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .balkwrap{margin-top:16px;display:none}
+  .balk{height:8px;border-radius:999px;background:var(--stone-200);overflow:hidden}
+  .balk i{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+  .balktxt{font-size:12px;color:var(--muted);margin-top:6px}
+  .voet{text-align:center;color:var(--faint);font-size:12px;padding:18px}
+  .succes{text-align:center;padding:26px 10px}
+  .succes .vink{width:52px;height:52px;margin:0 auto 14px;border-radius:999px;background:rgba(113,117,68,.15);display:flex;align-items:center;justify-content:center}
+  .succes h2{font-family:var(--display);font-weight:500;font-size:24px;color:var(--ink);margin:0 0 8px}
+  .succes p{color:var(--muted);font-size:14px;line-height:1.6;margin:0 0 18px}
+  .acties{margin-top:18px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .verborgen{display:none!important}
+</style>
+</head>
+<body>
+<header>
+  <div class="kop">
+    <div class="merk">
+      <span class="mono">P</span>
+      <div><div class="woord">Poortland</div><div class="sub" data-t="kop_sub">Foto's uploaden</div></div>
+    </div>
+    <nav class="talen" id="talen" aria-label="Taalkeuze"></nav>
+  </div>
+</header>
+<main>
+  <h1 data-t="titel">Foto's van de plek</h1>
+  <p class="intro" data-t="intro">Bedankt om ons enkele foto's te bezorgen van de huidige situatie en de plaats waar de poort komt. Meerdere duidelijke foto's vanuit verschillende hoeken helpen ons uw aanvraag zo goed mogelijk voor te bereiden.</p>
+
+  <div id="meldingen"></div>
+
+  <div class="kaart" id="uploader">
+    <div class="tegels verborgen" id="mobielTegels">
+      <button type="button" class="tegel" id="tegelCamera">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <b data-t="tegel_camera">Foto nemen</b><span data-t="tegel_camera_sub">Open de camera van uw toestel</span>
+      </button>
+      <button type="button" class="tegel" id="tegelKiezen">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+        <b data-t="tegel_kiezen">Bestaande foto's kiezen</b><span data-t="tegel_kiezen_sub">Uit uw galerij of bestanden</span>
+      </button>
+    </div>
+    <div class="drop verborgen" id="dropzone">
+      <b data-t="drop_titel">Sleep uw foto's hierheen</b>
+      <span data-t="drop_of">of</span><br><br>
+      <button type="button" class="knop stil" id="knopSelecteer" data-t="drop_knop">Foto's selecteren</button>
+      <div style="margin-top:10px"><span data-t="drop_limiet">JPG, PNG, WEBP of HEIC · tot 20 MB per foto · maximaal 20 foto's</span></div>
+    </div>
+
+    <input type="file" id="invoerCamera" accept="image/*" capture="environment" hidden>
+    <input type="file" id="invoerBestanden" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" multiple hidden>
+
+    <div class="previews" id="previews"></div>
+    <div class="balkwrap" id="balkwrap">
+      <div class="balk"><i id="balkvul"></i></div>
+      <div class="balktxt" id="balktxt"></div>
+    </div>
+    <div class="acties">
+      <button type="button" class="knop verborgen" id="knopUpload"></button>
+    </div>
+  </div>
+
+  <div class="kaart succes verborgen" id="succes">
+    <div class="vink"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#717544" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+    <h2 data-t="succes_titel">Uw foto's zijn goed ontvangen</h2>
+    <p id="succesTekst" data-t="succes_tekst">Bedankt! Ons team bekijkt uw aanvraag zo snel mogelijk.</p>
+    <button type="button" class="knop stil" id="knopNogmeer" data-t="succes_meer">Nog extra foto's toevoegen</button>
+  </div>
+</main>
+<footer class="voet">Poortland · Hombeeksesteenweg 164-166, 2800 Mechelen · 015 43 21 11</footer>
+
+<script>
+(function () {
+  // ====== Meertaligheid: automatische herkenning van de browsertaal plus een
+  // zichtbare taalkeuze, zoals op de website (NL, FR, EN, DE). ======
+  var VERTALINGEN = {
+    nl: {
+      kop_sub: "Foto's uploaden", titel: "Foto's van de plek",
+      intro: "Bedankt om ons enkele foto's te bezorgen van de huidige situatie en de plaats waar de poort komt. Meerdere duidelijke foto's vanuit verschillende hoeken helpen ons uw aanvraag zo goed mogelijk voor te bereiden.",
+      tegel_camera: 'Foto nemen', tegel_camera_sub: 'Open de camera van uw toestel',
+      tegel_kiezen: "Bestaande foto's kiezen", tegel_kiezen_sub: 'Uit uw galerij of bestanden',
+      drop_titel: "Sleep uw foto's hierheen", drop_of: 'of', drop_knop: "Foto's selecteren",
+      drop_limiet: 'JPG, PNG, WEBP of HEIC · tot 20 MB per foto · maximaal 20 foto’s',
+      succes_titel: "Uw foto's zijn goed ontvangen", succes_tekst: 'Bedankt! Ons team bekijkt uw aanvraag zo snel mogelijk.',
+      succes_meer: "Nog extra foto's toevoegen",
+      versturen_1: '1 foto versturen', versturen_n: "{n} foto's versturen",
+      bezig: 'Bezig met uploaden…', reeds: "Er werden reeds {n} foto's ontvangen. U kunt gerust nog extra foto's toevoegen.",
+      nog_toevoegen: "U kunt gerust nog extra foto's toevoegen zolang de link geldig is.",
+      link_ongeldig: 'Deze uploadlink is niet meer geldig. Neem gerust contact op, dan bezorgen we u een nieuwe link.',
+      link_onvolledig: 'Deze uploadlink is onvolledig. Gebruik de volledige link uit de email.',
+      te_groot: "De foto '{naam}' is groter dan 20 MB en werd overgeslagen.",
+      max_bereikt: "Maximaal 20 foto's per keer.",
+      verbinding: 'De verbinding lukte niet. Probeer de pagina te herladen.',
+      upload_fout: 'Het uploaden lukte niet. Probeer opnieuw.',
+      verbinding_weg: 'De verbinding viel weg tijdens het uploaden. Probeer opnieuw.',
+      foto_weg: 'Foto verwijderen'
+    },
+    fr: {
+      kop_sub: 'Envoyer des photos', titel: "Photos de l'emplacement",
+      intro: "Merci de nous transmettre quelques photos de la situation actuelle et de l'endroit où le portail sera placé. Plusieurs photos nettes sous différents angles nous aident à préparer votre demande au mieux.",
+      tegel_camera: 'Prendre une photo', tegel_camera_sub: "Ouvrez l'appareil photo de votre appareil",
+      tegel_kiezen: 'Choisir des photos existantes', tegel_kiezen_sub: 'Depuis votre galerie ou vos fichiers',
+      drop_titel: 'Glissez vos photos ici', drop_of: 'ou', drop_knop: 'Sélectionner des photos',
+      drop_limiet: 'JPG, PNG, WEBP ou HEIC · max. 20 Mo par photo · 20 photos maximum',
+      succes_titel: 'Vos photos ont bien été reçues', succes_tekst: 'Merci ! Notre équipe examine votre demande au plus vite.',
+      succes_meer: 'Ajouter encore des photos',
+      versturen_1: 'Envoyer 1 photo', versturen_n: 'Envoyer {n} photos',
+      bezig: 'Envoi en cours…', reeds: '{n} photo(s) ont déjà été reçues. Vous pouvez en ajouter davantage.',
+      nog_toevoegen: 'Vous pouvez ajouter des photos tant que le lien est valable.',
+      link_ongeldig: "Ce lien n'est plus valable. Contactez-nous et nous vous enverrons un nouveau lien.",
+      link_onvolledig: "Ce lien est incomplet. Utilisez le lien complet de l'email.",
+      te_groot: "La photo '{naam}' dépasse 20 Mo et a été ignorée.",
+      max_bereikt: '20 photos maximum par envoi.',
+      verbinding: 'La connexion a échoué. Rechargez la page.',
+      upload_fout: "L'envoi a échoué. Réessayez.",
+      verbinding_weg: "La connexion a été interrompue pendant l'envoi. Réessayez.",
+      foto_weg: 'Supprimer la photo'
+    },
+    en: {
+      kop_sub: 'Upload photos', titel: 'Photos of the location',
+      intro: 'Thank you for sending us a few photos of the current situation and the spot where the gate will be installed. Several clear photos from different angles help us prepare your request as well as possible.',
+      tegel_camera: 'Take a photo', tegel_camera_sub: "Open your device's camera",
+      tegel_kiezen: 'Choose existing photos', tegel_kiezen_sub: 'From your gallery or files',
+      drop_titel: 'Drag your photos here', drop_of: 'or', drop_knop: 'Select photos',
+      drop_limiet: 'JPG, PNG, WEBP or HEIC · up to 20 MB per photo · 20 photos maximum',
+      succes_titel: 'Your photos were received', succes_tekst: 'Thank you! Our team will review your request as soon as possible.',
+      succes_meer: 'Add more photos',
+      versturen_1: 'Send 1 photo', versturen_n: 'Send {n} photos',
+      bezig: 'Uploading…', reeds: '{n} photo(s) already received. Feel free to add more.',
+      nog_toevoegen: 'You can add more photos as long as the link is valid.',
+      link_ongeldig: 'This upload link is no longer valid. Contact us and we will send you a new one.',
+      link_onvolledig: 'This upload link is incomplete. Use the full link from the email.',
+      te_groot: "The photo '{naam}' exceeds 20 MB and was skipped.",
+      max_bereikt: 'Maximum 20 photos at a time.',
+      verbinding: 'The connection failed. Please reload the page.',
+      upload_fout: 'The upload failed. Please try again.',
+      verbinding_weg: 'The connection dropped during the upload. Please try again.',
+      foto_weg: 'Remove photo'
+    },
+    de: {
+      kop_sub: 'Fotos hochladen', titel: 'Fotos vom Standort',
+      intro: 'Vielen Dank, dass Sie uns einige Fotos der aktuellen Situation und des Ortes senden, an dem das Tor montiert wird. Mehrere klare Fotos aus verschiedenen Blickwinkeln helfen uns, Ihre Anfrage bestmöglich vorzubereiten.',
+      tegel_camera: 'Foto aufnehmen', tegel_camera_sub: 'Öffnen Sie die Kamera Ihres Geräts',
+      tegel_kiezen: 'Vorhandene Fotos wählen', tegel_kiezen_sub: 'Aus Ihrer Galerie oder Ihren Dateien',
+      drop_titel: 'Ziehen Sie Ihre Fotos hierher', drop_of: 'oder', drop_knop: 'Fotos auswählen',
+      drop_limiet: 'JPG, PNG, WEBP oder HEIC · bis 20 MB pro Foto · maximal 20 Fotos',
+      succes_titel: 'Ihre Fotos sind gut angekommen', succes_tekst: 'Vielen Dank! Unser Team prüft Ihre Anfrage so schnell wie möglich.',
+      succes_meer: 'Weitere Fotos hinzufügen',
+      versturen_1: '1 Foto senden', versturen_n: '{n} Fotos senden',
+      bezig: 'Wird hochgeladen…', reeds: 'Es wurden bereits {n} Foto(s) empfangen. Sie können gerne weitere hinzufügen.',
+      nog_toevoegen: 'Sie können weitere Fotos hinzufügen, solange der Link gültig ist.',
+      link_ongeldig: 'Dieser Link ist nicht mehr gültig. Kontaktieren Sie uns und wir senden Ihnen einen neuen.',
+      link_onvolledig: 'Dieser Link ist unvollständig. Verwenden Sie den vollständigen Link aus der E-Mail.',
+      te_groot: "Das Foto '{naam}' ist größer als 20 MB und wurde übersprungen.",
+      max_bereikt: 'Maximal 20 Fotos pro Vorgang.',
+      verbinding: 'Die Verbindung ist fehlgeschlagen. Bitte laden Sie die Seite neu.',
+      upload_fout: 'Das Hochladen ist fehlgeschlagen. Bitte erneut versuchen.',
+      verbinding_weg: 'Die Verbindung wurde beim Hochladen unterbrochen. Bitte erneut versuchen.',
+      foto_weg: 'Foto entfernen'
+    }
+  };
+  var taal = (function () {
+    var b = (navigator.language || 'nl').slice(0, 2).toLowerCase();
+    return VERTALINGEN[b] ? b : 'nl';
+  })();
+  function T(sleutel, vars) {
+    var tekst = (VERTALINGEN[taal] && VERTALINGEN[taal][sleutel]) || VERTALINGEN.nl[sleutel] || sleutel;
+    if (vars) Object.keys(vars).forEach(function (k) { tekst = tekst.replace('{' + k + '}', vars[k]); });
+    return tekst;
+  }
+  var laatsteMelding = null; // [soort, sleutel, vars] om bij taalwissel te hertalen
+  function zetTaal(nieuw) {
+    taal = nieuw;
+    document.documentElement.lang = nieuw;
+    document.querySelectorAll('[data-t]').forEach(function (n) { n.textContent = T(n.getAttribute('data-t')); });
+    document.querySelectorAll('#talen button').forEach(function (b) {
+      b.classList.toggle('aan', b.getAttribute('data-taal') === nieuw);
+    });
+    toonPreviews();
+    if (laatsteMelding) meld(laatsteMelding[0], laatsteMelding[1], laatsteMelding[2]);
+  }
+  var talenNav = document.getElementById('talen');
+  ;['nl', 'fr', 'en', 'de'].forEach(function (t) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.textContent = t.toUpperCase(); b.setAttribute('data-taal', t);
+    b.onclick = function () { zetTaal(t); };
+    talenNav.appendChild(b);
+  });
+
+  // ====== Uploadlogica ======
+  var token = (location.pathname.match(/\/upload\/([A-Za-z0-9_-]{20,})/) || [])[1] || '';
+  var api = '/api/v1/uploadportaal/' + encodeURIComponent(token);
+  var gekozen = [];
+  var MAX = 20, MAX_MB = 20;
+  var el = function (id) { return document.getElementById(id); };
+  function meld(soort, sleutel, vars) {
+    laatsteMelding = [soort, sleutel, vars];
+    el('meldingen').innerHTML = '<div class="melding ' + soort + '">' + T(sleutel, vars) + '</div>';
+  }
+  function faalStaat(sleutel) {
+    meld('fout', sleutel);
+    el('uploader').classList.add('verborgen');
+  }
+
+  var mobiel = matchMedia('(pointer: coarse)').matches;
+  el(mobiel ? 'mobielTegels' : 'dropzone').classList.remove('verborgen');
+  zetTaal(taal);
+
+  if (!token) { faalStaat('link_onvolledig'); return; }
+
+  fetch(api).then(function (a) { return a.json().then(function (j) { return { ok: a.ok, j: j }; }); })
+    .then(function (r) {
+      if (!r.ok) { faalStaat('link_ongeldig'); return; }
+      if (r.j.aantalFotos > 0) meld('info', 'reeds', { n: r.j.aantalFotos });
+    })
+    .catch(function () { meld('fout', 'verbinding'); });
+
+  function voegToe(bestanden) {
+    for (var i = 0; i < bestanden.length; i++) {
+      var f = bestanden[i];
+      if (gekozen.length >= MAX) { meld('fout', 'max_bereikt'); break; }
+      if (f.size > MAX_MB * 1024 * 1024) { meld('fout', 'te_groot', { naam: f.name }); continue; }
+      gekozen.push(f);
+    }
+    toonPreviews();
+  }
+  function toonPreviews() {
+    var wrap = el('previews'); if (!wrap) return;
+    wrap.innerHTML = '';
+    gekozen.forEach(function (f, i) {
+      var d = document.createElement('div'); d.className = 'prev';
+      var img = document.createElement('img');
+      img.alt = f.name;
+      try { img.src = URL.createObjectURL(f); } catch (e) { }
+      var weg = document.createElement('button'); weg.className = 'weg'; weg.textContent = '×';
+      weg.setAttribute('aria-label', T('foto_weg'));
+      weg.onclick = function () { gekozen.splice(i, 1); toonPreviews(); };
+      var naam = document.createElement('div'); naam.className = 'naam'; naam.textContent = f.name;
+      d.appendChild(img); d.appendChild(weg); d.appendChild(naam); wrap.appendChild(d);
+    });
+    el('knopUpload').classList.toggle('verborgen', gekozen.length === 0);
+    el('knopUpload').textContent = gekozen.length === 1 ? T('versturen_1') : T('versturen_n', { n: gekozen.length });
+  }
+
+  el('tegelCamera').onclick = function () { el('invoerCamera').click(); };
+  el('tegelKiezen').onclick = function () { el('invoerBestanden').click(); };
+  el('knopSelecteer').onclick = function () { el('invoerBestanden').click(); };
+  el('invoerCamera').onchange = function () { voegToe(this.files); this.value = ''; };
+  el('invoerBestanden').onchange = function () { voegToe(this.files); this.value = ''; };
+  var drop = el('dropzone');
+  ;['dragenter', 'dragover'].forEach(function (t) {
+    drop.addEventListener(t, function (e) { e.preventDefault(); drop.classList.add('actief'); });
+  });
+  ;['dragleave', 'drop'].forEach(function (t) {
+    drop.addEventListener(t, function (e) { e.preventDefault(); drop.classList.remove('actief'); });
+  });
+  drop.addEventListener('drop', function (e) { if (e.dataTransfer) voegToe(e.dataTransfer.files); });
+
+  el('knopUpload').onclick = function () {
+    if (!gekozen.length) return;
+    var form = new FormData();
+    gekozen.forEach(function (f) { form.append('fotos', f); });
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', api + '/fotos');
+    el('balkwrap').style.display = 'block';
+    el('knopUpload').disabled = true;
+    xhr.upload.onprogress = function (e) {
+      if (e.lengthComputable) {
+        var pct = Math.round(e.loaded / e.total * 100);
+        el('balkvul').style.width = pct + '%';
+        el('balktxt').textContent = T('bezig') + ' ' + pct + '%';
+      }
+    };
+    xhr.onload = function () {
+      el('knopUpload').disabled = false;
+      var j = {};
+      try { j = JSON.parse(xhr.responseText); } catch (e) { }
+      if (xhr.status >= 200 && xhr.status < 300) {
+        el('uploader').classList.add('verborgen');
+        el('meldingen').innerHTML = ''; laatsteMelding = null;
+        el('succes').classList.remove('verborgen');
+        gekozen = [];
+      } else {
+        el('balkwrap').style.display = 'none';
+        meld('fout', xhr.status === 404 ? 'link_ongeldig' : 'upload_fout');
+      }
+    };
+    xhr.onerror = function () {
+      el('knopUpload').disabled = false;
+      el('balkwrap').style.display = 'none';
+      meld('fout', 'verbinding_weg');
+    };
+    xhr.send(form);
+  };
+
+  el('knopNogmeer').onclick = function () {
+    el('succes').classList.add('verborgen');
+    el('uploader').classList.remove('verborgen');
+    el('balkwrap').style.display = 'none';
+    el('balkvul').style.width = '0';
+    toonPreviews();
+    meld('info', 'nog_toevoegen');
+  };
+})();
+</script>
+</body>
+</html>

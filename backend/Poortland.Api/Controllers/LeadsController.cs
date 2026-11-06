@@ -11,7 +11,8 @@ namespace Poortland.Api.Controllers;
 public record LeadInvoer(LeadKanaal Kanaal, string? Naam, string? Voornaam, string? Email, string? Telefoon,
     string? EersteVraag, Guid? EigenaarId, DateOnly? Opvolgdatum,
     string? TypeAanvraag, string? Gemeente, string? GewensteTiming,
-    string? KlantType, string? Bedrijfsnaam, string? BtwNummer, string? Straat, string? Postcode);
+    string? KlantType, string? Bedrijfsnaam, string? BtwNummer, string? Straat, string? Postcode,
+    List<ContactpersoonInvoer>? Contactpersonen = null);
 public record LeadWijziging(string? Naam, string? Voornaam, string? Email, string? Telefoon, string? EersteVraag,
     string? TypeAanvraag, string? KlantType, string? Bedrijfsnaam, string? BtwNummer,
     string? Straat, string? Postcode, string? Gemeente, string? GewensteTiming, DateOnly? Opvolgdatum,
@@ -60,7 +61,7 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
     };
 
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> Detail(Guid id)
+    public async Task<IActionResult> Detail(Guid id, [FromServices] IConfiguration config)
     {
         var lead = await db.Leads.AsNoTracking()
             .Include(l => l.Bijlagen.Where(b => b.VerwijderdOp == null))
@@ -69,6 +70,15 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
         // Signed urls parallel ophalen (audit snelheid 1).
         var fotos = await Task.WhenAll(lead.Bijlagen.Select(async b =>
             (object)new { b.Id, b.Bestandsnaam, url = await opslag.SignedUrl(BucketUploads, b.BestandPad, 600) }));
+        // Contactpersonen van deze lead; na omzetting zijn ze ook aan de klant
+        // gekoppeld en dus op beide fiches dezelfde bron (migratie 0039).
+        var contactpersonen = await db.Contactpersonen.AsNoTracking()
+            .Where(c => c.LeadId == id && c.VerwijderdOp == null)
+            .OrderBy(c => c.AangemaaktOp).ToListAsync();
+        // Fotostatus (feedback 2026-08-06): foto's aanwezig = ontvangen, anders
+        // actieve uploadlink = link verstuurd, anders nog geen foto's.
+        var tokenActief = lead.UploadToken != null && lead.UploadTokenGeldigTot > DateTimeOffset.UtcNow;
+        var fotoStatus = fotos.Length > 0 ? "fotosOntvangen" : tokenActief ? "linkVerstuurd" : "nogGeenFotos";
         return Ok(new
         {
             lead.Id, lead.KlantId, lead.Kanaal, lead.Status, lead.EigenaarId, lead.Opvolgdatum,
@@ -76,8 +86,97 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
             lead.VerliesReden, lead.OmgezetProjectId, lead.TypeAanvraag,
             lead.KlantType, lead.Bedrijfsnaam, lead.BtwNummer, lead.Straat, lead.Postcode, lead.Gemeente,
             lead.GewensteTiming, lead.PrivacyAkkoord, lead.PrivacyAkkoordOp, lead.WizardGegevens,
-            lead.GearchiveerdOp, lead.AangemaaktOp, fotos
+            lead.GearchiveerdOp, lead.AangemaaktOp, fotos, contactpersonen,
+            lead.UploadToken, lead.UploadTokenGeldigTot, lead.UploadLinkVerstuurdOp, tokenActief, fotoStatus,
+            uploadUrl = lead.UploadToken == null ? null :
+                $"{(config["Site:Origin"] ?? config["Frontend:Origin"] ?? "").TrimEnd('/')}/upload/{lead.UploadToken}"
         });
+    }
+
+    // Foto-opvraag: genereer een cryptografisch veilige uploadlink voor deze lead.
+    // Opnieuw genereren overschrijft de oude token (de oude link vervalt vanzelf).
+    [HttpPost("{id:guid}/uploadlink")]
+    [VereistRol("verkoop")]
+    public async Task<IActionResult> MaakUploadlink(Guid id, [FromServices] IConfiguration config)
+    {
+        var lead = await db.Leads.FirstOrDefaultAsync(l => l.Id == id && l.VerwijderdOp == null);
+        if (lead is null) return NotFound();
+        var token = Convert.ToBase64String(System.Security.Cryptography.RandomNumberGenerator.GetBytes(32))
+            .Replace('+', '-').Replace('/', '_').TrimEnd('=');
+        lead.UploadToken = token;
+        lead.UploadTokenGeldigTot = DateTimeOffset.UtcNow.AddDays(30);
+        lead.UploadLinkVerstuurdOp = DateTimeOffset.UtcNow;
+        await db.SaveChangesAsync();
+        // De link leeft op de publieke website. Site:Origin komt uit de omgevings-
+        // configuratie (rol_uit.sh) en past zich dus vanzelf aan per omgeving,
+        // inclusief het echte productiedomein.
+        var siteOrigin = (config["Site:Origin"] ?? config["Frontend:Origin"] ?? "").TrimEnd('/');
+        return Ok(new { token, geldigTot = lead.UploadTokenGeldigTot, url = $"{siteOrigin}/upload/{token}" });
+    }
+
+    // Uploadlink manueel intrekken.
+    [HttpDelete("{id:guid}/uploadlink")]
+    [VereistRol("verkoop")]
+    public async Task<IActionResult> TrekUploadlinkIn(Guid id)
+    {
+        var lead = await db.Leads.FirstOrDefaultAsync(l => l.Id == id && l.VerwijderdOp == null);
+        if (lead is null) return NotFound();
+        lead.UploadToken = null;
+        lead.UploadTokenGeldigTot = null;
+        await db.SaveChangesAsync();
+        return Ok(new { ingetrokken = true });
+    }
+
+    // Contactpersonen bij de lead: zelfde venster en velden als bij de klant.
+    // Bij de omzetting koppelt de service ze automatisch aan de nieuwe klant.
+    [HttpPost("{id:guid}/contactpersonen")]
+    [VereistRol("verkoop")]
+    public async Task<IActionResult> MaakContactpersoon(Guid id, ContactpersoonInvoer invoer)
+    {
+        var bestaat = await db.Leads.AnyAsync(l => l.Id == id && l.VerwijderdOp == null);
+        if (!bestaat) return NotFound();
+        var persoon = new Contactpersoon
+        {
+            LeadId = id, Naam = invoer.Naam, Voornaam = invoer.Voornaam, Functie = invoer.Functie,
+            Email = invoer.Email, Telefoon = invoer.Telefoon,
+            Type = invoer.Type,
+            Bedrijfsnaam = invoer.Type == KlantType.Bedrijf ? invoer.Bedrijfsnaam : null,
+            BtwNummer = invoer.Type == KlantType.Bedrijf ? invoer.BtwNummer : null,
+            OntvangtOfferte = invoer.OntvangtOfferte,
+            AangemaaktDoor = claims.MedewerkerId
+        };
+        db.Contactpersonen.Add(persoon);
+        await db.SaveChangesAsync();
+        return Ok(persoon);
+    }
+
+    [HttpPatch("{id:guid}/contactpersonen/{persoonId:guid}")]
+    [VereistRol("verkoop")]
+    public async Task<IActionResult> WijzigContactpersoon(Guid id, Guid persoonId, ContactpersoonInvoer invoer)
+    {
+        var persoon = await db.Contactpersonen
+            .FirstOrDefaultAsync(c => c.Id == persoonId && c.LeadId == id && c.VerwijderdOp == null);
+        if (persoon is null) return NotFound();
+        persoon.Naam = invoer.Naam; persoon.Voornaam = invoer.Voornaam; persoon.Functie = invoer.Functie;
+        persoon.Email = invoer.Email; persoon.Telefoon = invoer.Telefoon;
+        persoon.Type = invoer.Type;
+        persoon.Bedrijfsnaam = invoer.Type == KlantType.Bedrijf ? invoer.Bedrijfsnaam : null;
+        persoon.BtwNummer = invoer.Type == KlantType.Bedrijf ? invoer.BtwNummer : null;
+        persoon.OntvangtOfferte = invoer.OntvangtOfferte;
+        await db.SaveChangesAsync();
+        return Ok(persoon);
+    }
+
+    [HttpDelete("{id:guid}/contactpersonen/{persoonId:guid}")]
+    [VereistRol("verkoop")]
+    public async Task<IActionResult> VerwijderContactpersoon(Guid id, Guid persoonId)
+    {
+        var persoon = await db.Contactpersonen
+            .FirstOrDefaultAsync(c => c.Id == persoonId && c.LeadId == id && c.VerwijderdOp == null);
+        if (persoon is null) return NotFound();
+        persoon.VerwijderdOp = DateTimeOffset.UtcNow; // soft delete (TS-01)
+        await db.SaveChangesAsync();
+        return Ok(new { persoon.Id, verwijderd = true });
     }
 
     [HttpPost]
@@ -98,7 +197,30 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
             AangemaaktDoor = claims.MedewerkerId
         };
         db.Leads.Add(lead);
+        // Eerst de lead bewaren: EF kent de koppeling contactpersoon-lead niet als
+        // relatie, dus in een gezamenlijke save kan de contactpersoon vóór de lead
+        // vertrekken en dan schendt de insert de foreign key.
         await db.SaveChangesAsync();
+        // Extra contactpersonen die meteen bij het aanmaken meegegeven worden
+        // (feedback 2026-08-06): zelfde velden als het losse endpoint hieronder.
+        var personen = (invoer.Contactpersonen ?? []).Where(p => !string.IsNullOrWhiteSpace(p.Naam)).ToList();
+        if (personen.Count > 0)
+        {
+            foreach (var p in personen)
+            {
+                db.Contactpersonen.Add(new Contactpersoon
+                {
+                    LeadId = lead.Id, Naam = p.Naam, Voornaam = p.Voornaam, Functie = p.Functie,
+                    Email = p.Email, Telefoon = p.Telefoon,
+                    Type = p.Type,
+                    Bedrijfsnaam = p.Type == KlantType.Bedrijf ? p.Bedrijfsnaam : null,
+                    BtwNummer = p.Type == KlantType.Bedrijf ? p.BtwNummer : null,
+                    OntvangtOfferte = p.OntvangtOfferte,
+                    AangemaaktDoor = claims.MedewerkerId
+                });
+            }
+            await db.SaveChangesAsync();
+        }
         return CreatedAtAction(nameof(Detail), new { id = lead.Id }, lead);
     }
 
@@ -147,6 +269,7 @@ public class LeadsController(PoortlandDbContext db, ClaimsContext claims, LeadSe
 
         claims.VulAlsSysteem();
         await DbClaims.ZetClaims(db, claims, HttpContext.RequestAborted);
+        db.IdentiteitJson = claims.NaarJwtClaimsJson();
         var eigenaar = await db.Database
             .SqlQuery<Guid>($@"select m.id as ""Value"" from medewerker m
                 join medewerker_rol r on r.medewerker_id = m.id

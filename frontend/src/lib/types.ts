@@ -19,6 +19,9 @@ export interface Lead {
   privacyAkkoord?: boolean; privacyAkkoordOp?: string; wizardGegevens?: string
   gearchiveerdOp?: string
   fotos?: LeadFoto[]
+  contactpersonen?: import('../paginas/ContactpersonenPaneel').ContactpersoonRij[]
+  uploadToken?: string; uploadTokenGeldigTot?: string; uploadLinkVerstuurdOp?: string; uploadUrl?: string
+  tokenActief?: boolean; fotoStatus?: 'nogGeenFotos' | 'linkVerstuurd' | 'fotosOntvangen'
 }
 export interface Klant {
   id: string; type: 'particulier' | 'bedrijf'; naam: string; voornaam?: string; bedrijfsnaam?: string; btwNummer?: string
@@ -28,23 +31,28 @@ export interface Klant {
 export interface ProjectRij {
   id: string; nummer?: number; werfadres: string; omschrijving?: string; status: OrderStatus
   garantieMaanden: number; verwachteOpleverdatum?: string; aangemaaktOp: string
-  klant: { id: string; naam: string; voornaam?: string; bedrijfsnaam?: string; gemeente?: string }; offerteWaarde?: number
+  klant: { id: string; naam: string; voornaam?: string; bedrijfsnaam?: string; gemeente?: string; telefoon?: string }; offerteWaarde?: number
 }
 export interface Offerteregel {
-  id?: string; volgnummer?: number; soort: string; artikelId?: string; omschrijving: string
+  id?: string; volgnummer?: number; soort: string; artikelId?: string; omschrijving: string; detail?: string
   aantal: number; eenheid: Eenheid; eenheidsprijs: number; kortingBedrag: number
   btw: BtwTarief; totaal?: number
 }
 export interface Offerte {
   id: string; projectId: string; nummer: string; versieOfferte: number; status: OfferteStatus
+  soort?: 'prijsraming' | 'offerte'; uitRamingId?: string; btwVerlegd?: boolean; model?: string
   taal: string; geldigTot: string; kortingPercentage: number; kortingBedrag: number
   totaalExclBtw: number; totaalBtw: number; totaalInclBtw: number
   verzondenOp?: string; beslistOp?: string; weigerReden?: string
   regels: Offerteregel[]; aangemaaktOp: string; gewijzigdOp?: string
 }
 export interface Artikel {
-  id: string; code: string; omschrijving: string; eenheid: Eenheid
+  id: string; code: string; naam: string; omschrijving: string; eenheid: Eenheid
   basisprijs: number; btwDefault: BtwTarief; isActief: boolean
+  // Velden uit het productbestand van Poortland (migratie 0048)
+  categorie1?: string; categorie2?: string; leverancier?: string; leverancierNummer?: string
+  merk?: string; model?: string; type?: string; stdMaten?: string
+  poortlandId?: number; prijsOntbreekt?: boolean
 }
 export interface Opvolgtaak {
   id: string; type: string; offerteId?: string; leadId?: string
@@ -73,6 +81,7 @@ export interface MedewerkerRij {
 export interface WerkbonRegelRij {
   id: string; soort: 'uitgevoerd_werk' | 'materiaal' | 'meerwerk'
   omschrijving: string; aantal?: number; eenheid?: string; afwijkingVanStuklijst: boolean
+  artikelId?: string; artikelCode?: string
 }
 export interface WerkbonFotoRij {
   id: string; moment: 'voor' | 'na'; bestandsnaam: string; gpsLat?: number; gpsLon?: number
@@ -80,7 +89,8 @@ export interface WerkbonFotoRij {
 }
 export interface WerkbonRij {
   id: string; projectId: string; plaatserId: string
-  type: 'plaatsing1' | 'plaatsing2' | 'interventie'
+  type: 'plaatsing' | 'automatisatie' | 'onderhoud' | 'herstelling'
+  plaatsingNummer?: number
   status: 'open' | 'uitgevoerd' | 'klantGetekend' | 'verwerktInFacturatie'
   uitvoeringsdatum?: string; urenBegin?: string; urenEinde?: string; opmerkingen?: string
   getekendOp?: string; handtekeningUrl?: string; plaatser: string
@@ -90,7 +100,7 @@ export interface WerkbonRij {
 }
 
 // TS-08 planning
-export type Projectfase = 'voorbereiding' | 'draadafsluiting' | 'plaatsing1' | 'plaatsing2' | 'automatisering'
+export type Projectfase = 'voorbereiding' | 'draadafsluiting' | 'plaatsing' | 'automatisering'
 export interface PlanningsItemRij {
   id: string; projectId: string; fase: Projectfase; geplandeDatum: string
   status: 'gepland' | 'bevestigd' | 'uitgevoerd'

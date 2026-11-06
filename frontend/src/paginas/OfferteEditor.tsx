@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link, useParams } from '@tanstack/react-router'
 import { api } from '../lib/api'
+import ArtikelKiezer, { type ArtikelKeuze } from '../ArtikelKiezer'
 import { datum, euro } from '../lib/formaat'
 import type { Artikel, Offerte, Offerteregel } from '../lib/types'
 import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Paneel, PotloodKnop, Selecteer, TekstVak, Th, Td } from '../ui'
@@ -12,7 +13,6 @@ export default function OfferteEditor() {
   const { offerteId } = useParams({ from: '/app/offertes/$offerteId' })
   const qc = useQueryClient()
   const { data: offerte } = useQuery({ queryKey: ['offerte', offerteId], queryFn: () => api.get<Offerte>(`/offertes/${offerteId}`) })
-  const { data: artikelen } = useQuery({ queryKey: ['artikelen'], queryFn: () => api.get<Artikel[]>('/artikelen'), staleTime: 10 * 60 * 1000 })
   const [regels, zetRegels] = useState<Offerteregel[]>([])
   const [kortingPct, zetKortingPct] = useState(0)
   const [kortingBedrag, zetKortingBedrag] = useState(0)
@@ -20,6 +20,8 @@ export default function OfferteEditor() {
   const [weigerOpen, zetWeigerOpen] = useState(false)
   const [reden, zetReden] = useState('')
   const [bewerkModus, zetBewerkModus] = useState(false)
+  const [btwVerlegd, zetBtwVerlegd] = useState(false)
+  const [model, zetModel] = useState('')
   const magBewerken = offerte?.status === 'nieuw'
   const bewerkbaar = magBewerken && bewerkModus
 
@@ -28,6 +30,8 @@ export default function OfferteEditor() {
       zetRegels(offerte.regels.map(r => ({ ...r })))
       zetKortingPct(offerte.kortingPercentage)
       zetKortingBedrag(offerte.kortingBedrag)
+      zetBtwVerlegd(!!offerte.btwVerlegd)
+      zetModel(offerte.model ?? '')
     }
   }, [offerte?.id, offerte?.status, offerte?.gewijzigdOp, bewerkModus])
 
@@ -36,16 +40,19 @@ export default function OfferteEditor() {
       zetRegels(offerte.regels.map(r => ({ ...r })))
       zetKortingPct(offerte.kortingPercentage)
       zetKortingBedrag(offerte.kortingBedrag)
+      zetBtwVerlegd(!!offerte.btwVerlegd)
+      zetModel(offerte.model ?? '')
     }
     zetFout(undefined)
     zetBewerkModus(false)
   }
 
-  function voegArtikelToe(artikelId: string) {
-    const artikel = artikelen?.find(a => a.id === artikelId)
-    if (!artikel) return
+  // De catalogus telt 910 artikelen, dus zoeken in plaats van een keuzelijst.
+  async function voegArtikelToe(keuze: ArtikelKeuze | null) {
+    if (!keuze) return
+    const artikel = await api.get<Artikel>(`/artikelen/${keuze.id}`)
     zetRegels([...regels, {
-      soort: 'product', artikelId: artikel.id, omschrijving: artikel.omschrijving,
+      soort: 'product', artikelId: artikel.id, omschrijving: artikel.naam || artikel.omschrijving,
       aantal: 1, eenheid: artikel.eenheid, eenheidsprijs: artikel.basisprijs,
       kortingBedrag: 0, btw: artikel.btwDefault
     }])
@@ -60,9 +67,11 @@ export default function OfferteEditor() {
   const bewaar = useMutation({
     mutationFn: () => api.patch<Offerte>(`/offertes/${offerteId}`, {
       regels: regels.map(r => ({ soort: r.soort, artikelId: r.artikelId ?? null, omschrijving: r.omschrijving,
+        detail: r.detail || null,
         aantal: Number(r.aantal), eenheid: r.eenheid, eenheidsprijs: Number(r.eenheidsprijs),
         kortingBedrag: Number(r.kortingBedrag), btw: r.btw })),
-      kortingPercentage: Number(kortingPct), kortingBedrag: Number(kortingBedrag), geldigTot: null
+      kortingPercentage: Number(kortingPct), kortingBedrag: Number(kortingBedrag), geldigTot: null,
+      btwVerlegd: btwVerlegd, model: model || null
     }),
     onSuccess: () => { zetFout(undefined); zetBewerkModus(false); qc.invalidateQueries({ queryKey: ['offerte', offerteId] }) },
     onError: f => zetFout((f as Error).message)
@@ -74,6 +83,12 @@ export default function OfferteEditor() {
   })
   const verzenden = actie('verzenden')
   const akkoord = actie('akkoord')
+  // Een prijsraming wordt na het plaatsbezoek een offerte (feedback 2026-09-13).
+  const naarOfferte = useMutation({
+    mutationFn: () => api.post<Offerte>(`/offertes/${offerteId}/naar-offerte`),
+    onSuccess: () => qc.invalidateQueries(),
+    onError: f => zetFout((f as Error).message)
+  })
   const nieuweVersie = useMutation({
     mutationFn: () => api.post<Offerte>(`/offertes/${offerteId}/nieuwe-versie`),
     onSuccess: () => qc.invalidateQueries(),
@@ -86,9 +101,10 @@ export default function OfferteEditor() {
   })
 
   if (!offerte) return null
+  const isRaming = offerte.soort === 'prijsraming'
   return (
     <>
-      <PaginaKop eyebrow={`Offerte · versie ${offerte.versieOfferte}`} titel={offerte.nummer}
+      <PaginaKop eyebrow={`${isRaming ? 'Prijsraming' : 'Offerte'} · versie ${offerte.versieOfferte}`} titel={offerte.nummer}
         actie={bewerkModus ? (
           <div className="flex gap-2">
             <Knop variant="ghost" onClick={annuleerBewerken}>Annuleren</Knop>
@@ -97,8 +113,7 @@ export default function OfferteEditor() {
           </div>
         ) : (
           <div className="flex gap-2">
-            <a href={`/api/v1/offertes/${offerte.id}/pdf`} target="_blank" rel="noreferrer">
-              <Knop variant="neutraal">PDF</Knop></a>
+            <Knop variant="neutraal" onClick={() => api.download(`/offertes/${offerte.id}/pdf`)}>PDF</Knop>
             {magBewerken && <Knop variant="secundair" onClick={() => zetBewerkModus(true)}>Bewerken</Knop>}
             {magBewerken && offerte.regels.length > 0 &&
               <Knop variant="primair" onClick={() => verzenden.mutate()}>Verzenden ↗</Knop>}
@@ -106,6 +121,8 @@ export default function OfferteEditor() {
             {offerte.status === 'verzonden' && <Knop variant="ghost" onClick={() => zetWeigerOpen(true)}>Weigeren</Knop>}
             {(offerte.status === 'verzonden' || offerte.status === 'goedgekeurd' || offerte.status === 'geweigerd' || offerte.status === 'verlopen') &&
               <Knop variant="neutraal" onClick={() => nieuweVersie.mutate()}>Nieuwe versie</Knop>}
+            {isRaming && <Knop variant="secundair" onClick={() => naarOfferte.mutate()}
+              disabled={naarOfferte.isPending}>Omzetten naar offerte ↗</Knop>}
           </div>
         )} />
       <div className="mb-4 flex items-center gap-4 text-sm text-inkt-muted">
@@ -123,10 +140,9 @@ export default function OfferteEditor() {
 
       <Paneel titel="Regels" actie={bewerkbaar && (
         <div className="flex gap-2">
-          <Selecteer value="" onChange={e => e.target.value && voegArtikelToe(e.target.value)} className="w-64">
-            <option value="">Artikel uit de catalogus…</option>
-            {artikelen?.map(a => <option key={a.id} value={a.id}>{a.code} · {a.omschrijving}</option>)}
-          </Selecteer>
+          <div className="w-72">
+            <ArtikelKiezer waarde={null} label="" onKies={voegArtikelToe} />
+          </div>
           <Knop variant="neutraal" type="button" onClick={voegVrijeRegelToe}>Vrije regel</Knop>
         </div>)}>
         {regels.length === 0 ? <p className="text-sm text-inkt-muted">Nog geen regels. Kies een artikel of voeg een vrije regel toe.</p> : (
@@ -135,8 +151,15 @@ export default function OfferteEditor() {
             <tbody>
               {regels.map((r, i) => (
                 <tr key={i}>
-                  <Td><input disabled={!bewerkbaar} className="focusring w-full bg-transparent" value={r.omschrijving}
-                    onChange={e => wijzig(i, { omschrijving: e.target.value })} /></Td>
+                  <Td>
+                    <input disabled={!bewerkbaar} className="focusring w-full bg-transparent" value={r.omschrijving}
+                      onChange={e => wijzig(i, { omschrijving: e.target.value })} />
+                    {(bewerkbaar || r.detail) && (
+                      <input disabled={!bewerkbaar} className="focusring mt-1 w-full bg-transparent text-xs text-inkt-muted"
+                        placeholder="Extra info, bijvoorbeeld de gebruikte profielen"
+                        value={r.detail ?? ''} onChange={e => wijzig(i, { detail: e.target.value })} />
+                    )}
+                  </Td>
                   <Td rechts><input disabled={!bewerkbaar} type="number" step="0.01" min="0.01" className="focusring w-20 bg-transparent text-right"
                     value={r.aantal} onChange={e => wijzig(i, { aantal: Number(e.target.value) })} /></Td>
                   <Td>
@@ -168,10 +191,18 @@ export default function OfferteEditor() {
               value={kortingPct} onChange={e => zetKortingPct(Number(e.target.value))} className="w-28" />
             <Invoer label="Korting €" type="number" step="0.01" min="0" disabled={!bewerkbaar}
               value={kortingBedrag} onChange={e => zetKortingBedrag(Number(e.target.value))} className="w-28" />
+            <Invoer label="Model" disabled={!bewerkbaar} value={model}
+              onChange={e => zetModel(e.target.value)} className="w-56" optioneel />
+            <label className="flex items-center gap-2 pb-2 text-sm text-inkt-body">
+              <input type="checkbox" checked={btwVerlegd} disabled={!bewerkbaar}
+                onChange={e => zetBtwVerlegd(e.target.checked)} className="h-4 w-4 accent-bronze-600" />
+              Btw verlegd
+            </label>
           </div>
           <dl className="cijfers space-y-1 text-right text-sm">
             <div className="flex justify-between gap-10"><dt className="text-inkt-muted">Totaal excl. btw</dt><dd>{euro(offerte.totaalExclBtw)}</dd></div>
-            <div className="flex justify-between gap-10"><dt className="text-inkt-muted">Btw</dt><dd>{euro(offerte.totaalBtw)}</dd></div>
+            <div className="flex justify-between gap-10"><dt className="text-inkt-muted">Btw</dt>
+              <dd>{offerte.btwVerlegd ? 'verlegd' : euro(offerte.totaalBtw)}</dd></div>
             <div className="flex justify-between gap-10 font-display text-xl font-semibold text-bronze-600">
               <dt>Totaal incl. btw</dt><dd>{euro(offerte.totaalInclBtw)}</dd></div>
           </dl>

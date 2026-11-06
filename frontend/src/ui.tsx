@@ -26,10 +26,11 @@ export function Knop({ variant = 'secundair', className, ...rest }:
   )
 }
 
-export function VeldLabel({ children, htmlFor }: { children: ReactNode; optioneel?: boolean; htmlFor?: string }) {
+export function VeldLabel({ children, optioneel, htmlFor }: { children: ReactNode; optioneel?: boolean; htmlFor?: string }) {
   return (
     <label htmlFor={htmlFor} className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.14em] text-inkt-muted">
       {children}
+      {optioneel && <span className="ml-1 font-normal normal-case tracking-normal text-inkt-faint">· optioneel</span>}
     </label>
   )
 }
@@ -151,6 +152,8 @@ export const statusToon: Record<string, string> = {
   concept: 'neutraal', gepubliceerd: 'olijf', gearchiveerd: 'neutraal',
   open: 'brons', uitgevoerd: 'olijf', vervallen: 'neutraal',
   besteld: 'neutraal', voorbehandeling: 'brons', lakwerk: 'brons',
+  nogGeenFotos: 'neutraal', linkVerstuurd: 'brons', fotosOntvangen: 'olijf', behandeld: 'olijf',
+  zichtbaar: 'olijf', verkocht: 'corten', verborgen: 'neutraal', gesloten: 'neutraal',
   inVoorbereiding: 'neutraal', inUitvoering: 'brons', externInBehandeling: 'brons', afgerond: 'olijf',
   gepland: 'neutraal', bevestigd: 'brons',
   klantGetekend: 'olijf', verwerktInFacturatie: 'olijf',
@@ -169,7 +172,9 @@ export const statusTekst: Record<string, string> = {
   externInBehandeling: 'Extern in behandeling', afgerond: 'Afgerond',
   gepland: 'Gepland', bevestigd: 'Bevestigd',
   klantGetekend: 'Klant getekend', verwerktInFacturatie: 'Verwerkt in facturatie',
-  gemeld: 'Gemeld', ingepland: 'Ingepland',
+  gemeld: 'Gemeld', ingepland: 'Ingepland', behandeld: 'Behandeld',
+  zichtbaar: 'Zichtbaar', verkocht: 'Verkocht', verborgen: 'Verborgen', gesloten: 'Gesloten',
+  nogGeenFotos: "Nog geen foto's", linkVerstuurd: 'Uploadlink verstuurd', fotosOntvangen: "Foto's ontvangen",
   gefactureerd: 'Gefactureerd'
 }
 export function Badge({ status }: { status: string }) {
@@ -265,7 +270,7 @@ export function Modaal({ open, titel, children, onSluit }:
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-forest-950/50 p-4" onClick={onSluit}>
       <div role="dialog" aria-modal="true" aria-label={titel}
-        className="relative w-full max-w-lg rounded-card border border-inkt/10 bg-vlak-surface p-6 shadow-xl"
+        className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-card border border-inkt/10 bg-vlak-surface p-6 shadow-xl"
         onClick={e => e.stopPropagation()}>
         <button type="button" onClick={onSluit} aria-label="Sluiten"
           className="focusring absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-control text-xl leading-none text-inkt-muted hover:bg-inkt/[.06] hover:text-inkt">×</button>

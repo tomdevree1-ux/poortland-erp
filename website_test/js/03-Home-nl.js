@@ -39,9 +39,9 @@ function HomeNL({
       }
       return a;
     };
-    const uit = (bron, mat) => shuf((bron || []).filter(t => t && t.foto).map(t => ({
-      src: t.foto,
-      label: mat + (t.naam ? ' · ' + t.naam : '')
+    const uit = (bron, mat) => shuf((bron || []).filter(item => item && item.foto).map(item => ({
+      src: item.foto,
+      label: t(mat) + (item.naam ? ' · ' + item.naam : '')
     })));
     const metaalTypes = (cat.metalen && cat.metalen.productenGroepen || []).reduce((acc, g) => acc.concat(g.types || []), []);
     const bronnen = [uit(metaalTypes, 'Metaal'), uit(cat.houten && cat.houten.modellenPlat, 'Hout'), uit(cat.combinatie && cat.combinatie.modellenPlat, 'Combinatie')].filter(a => a.length);
@@ -52,7 +52,7 @@ function HomeNL({
     }
     return mix;
   }, []);
-  const routes = [['houten', 'Houten poorten', 'Warm en tijdloos', 'media/houten-poort.jpg'], ['metalen', 'Metalen poorten', 'Strak en onderhoudsarm', 'media/aluminium-poort.jpg'], ['combinatie', 'Combinatie metaal en hout', 'Kracht en warmte', 'media/staal-hout.jpg']];
+  const routes = [['metalen', 'Metalen poorten', 'Strak en onderhoudsarm', 'media/aluminium-poort.jpg'], ['combinatie', 'Combinatie metaal en hout', 'Kracht en warmte', 'media/staal-hout.jpg'], ['houten', 'Massief houten poorten', 'Warm en tijdloos', 'media/houten-poort.jpg']];
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-ground)',
@@ -68,8 +68,8 @@ function HomeNL({
     className: "pl-herohome",
     style: {
       display: 'grid',
-      gridTemplateColumns: '1.05fr 0.95fr',
-      gap: 60,
+      gridTemplateColumns: '1.18fr 0.82fr',
+      gap: 44,
       alignItems: 'center',
       paddingBottom: 64
     }
@@ -79,16 +79,17 @@ function HomeNL({
       marginBottom: 22
     }
   }, t('Toegangspoorten · België')), /*#__PURE__*/React.createElement("h1", {
+    className: "pl-hero-h1",
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
-      fontSize: 72,
-      lineHeight: 1.02,
+      fontSize: 'clamp(34px, 3.8vw, 54px)',
+      lineHeight: 1.06,
       letterSpacing: '-0.01em',
       color: 'var(--stone-100)',
       margin: 0
     }
-  }, t('Handgemaakte poorten en overkappingen op maat.'))), /*#__PURE__*/React.createElement(Reveal, {
+  }, React.createElement('span', null, t('Poorten en overkappingen') + ' '), React.createElement('br'), React.createElement('span', null, t('op maat, uit eigen atelier') + ' '), React.createElement('br'), React.createElement('span', null, t('in Mechelen.')))), /*#__PURE__*/React.createElement(Reveal, {
     delay: 120
   }, /*#__PURE__*/React.createElement("p", {
     style: {
@@ -110,7 +111,7 @@ function HomeNL({
     variant: "primary",
     arrow: true,
     onClick: () => onNav('contact')
-  }, t('Plan een adviesgesprek')), /*#__PURE__*/React.createElement(HButton, {
+  }, t('Vraag een prijsraming aan')), /*#__PURE__*/React.createElement(HButton, {
     variant: "ghost",
     dark: true,
     arrow: true,
@@ -121,7 +122,7 @@ function HomeNL({
       gap: 44,
       marginTop: 54
     }
-  }, [[1999, 'Sinds', '', true], [100, 'Handgemaakt', '%', false], [320, 'Werven', '+', false]].map(([n, l, suf, plat]) => /*#__PURE__*/React.createElement("div", {
+  }, [[1999, 'Sinds', '', true], [100, 'Eigen atelier', '%', false], [5000, 'Projecten', '+', false]].map(([n, l, suf, plat]) => /*#__PURE__*/React.createElement("div", {
     key: l
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -156,7 +157,7 @@ function HomeNL({
     }
   }, /*#__PURE__*/React.createElement("img", {
     src: "media/hero.jpg",
-    alt: "Handgemaakte poort van Poortland in hout en staal",
+    alt: "Poort op maat van Poortland in hout en staal",
     style: {
       width: '100%',
       height: '100%',
@@ -181,7 +182,7 @@ function HomeNL({
       textTransform: 'uppercase',
       color: 'rgba(236,227,210,0.92)'
     }
-  }, t('Handgemaakt in België'))))), /*#__PURE__*/React.createElement(ClaimBalk, {
+  }, t('Uit eigen atelier'))))), /*#__PURE__*/React.createElement(ClaimBalk, {
     dark: true
   }))), /*#__PURE__*/React.createElement("section", {
     style: {
@@ -213,7 +214,7 @@ function HomeNL({
       fontStyle: 'italic',
       color: 'var(--accent)'
     }
-  }, t('even belangrijk')), t(' zijn. Geen importproduct, maar Belgisch handwerk dat past bij de woning, de omgeving en het dagelijks gebruik.'))))), /*#__PURE__*/React.createElement("section", {
+  }, t('even belangrijk')), t(' zijn. Geen importproduct, maar Belgisch maatwerk dat past bij de woning, de omgeving en het dagelijks gebruik.'))))), /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--forest-900)',
       padding: '90px 44px',
@@ -237,7 +238,7 @@ function HomeNL({
     dark: true,
     eyebrow: "Wat wij maken",
     titel: "Poorten, overkappingen en automatisaties.",
-    max: "16ch"
+    max: "44ch"
   }))), /*#__PURE__*/React.createElement("div", {
     className: "pl-cards3",
     style: {
@@ -358,11 +359,7 @@ function HomeNL({
     eyebrow: "Uitgelichte realisaties",
     titel: "Elke poort heeft een unieke aanpak.",
     max: "16ch"
-  }), /*#__PURE__*/React.createElement(HButton, {
-    variant: "secondary",
-    onClick: () => onNav('metalen')
-  }, t('Alle modellen')))), /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(window.FotoBanner, {
-    onNav: onNav,
+  }))), /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(window.FotoBanner, {
     fotos: bannerFotos
   })))), /*#__PURE__*/React.createElement("section", {
     style: {
@@ -391,7 +388,7 @@ function HomeNL({
     style: {
       marginBottom: 18
     }
-  }, t('Handwerk uit België')), /*#__PURE__*/React.createElement("h2", {
+  }, t('Maatwerk uit België')), /*#__PURE__*/React.createElement("h2", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
@@ -453,7 +450,7 @@ function HomeNL({
     variant: "primary",
     arrow: true,
     onClick: () => window.dispatchEvent(new CustomEvent('pl-offerte-open'))
-  }, t('Vraag een offerte aan')))), /*#__PURE__*/React.createElement(Reveal, {
+  }, t('Vraag een prijsraming aan')))), /*#__PURE__*/React.createElement(Reveal, {
     delay: 100,
     style: {
       display: 'flex',
@@ -536,7 +533,7 @@ function HomeNL({
       gridTemplateColumns: 'repeat(3, 1fr)',
       gap: 14
     }
-  }, [['metalen', 'Metalen poorten', 'Staal of aluminium, strak afgewerkt en gemaakt voor jarenlang gebruik.'], ['houten', 'Houten poorten', 'Een warme, natuurlijke uitstraling met aandacht voor detail en verhouding.'], ['combinatie', 'Combinatie hout en metaal', 'De kracht van metaal met de uitstraling van hout, volledig op maat gemaakt.']].map(([r, m, d], i) => /*#__PURE__*/React.createElement(Reveal, {
+  }, [['metalen', 'Metalen poorten', 'Staal of aluminium, strak afgewerkt en gemaakt voor jarenlang gebruik.'], ['combinatie', 'Combinatie hout en metaal', 'De kracht van metaal met de uitstraling van hout, volledig op maat gemaakt.'], ['houten', 'Massief houten poorten', 'Een warme, natuurlijke uitstraling met aandacht voor detail en verhouding.']].map(([r, m, d], i) => /*#__PURE__*/React.createElement(Reveal, {
     key: r,
     delay: i * 70,
     style: {
@@ -587,7 +584,7 @@ function HomeNL({
       fontWeight: 600,
       letterSpacing: '0.14em',
       textTransform: 'uppercase',
-      color: 'var(--accent)',
+      color: 'var(--accent-label, var(--accent))',
       marginTop: 16
     }
   }, t('Bekijk'), " →"))))), /*#__PURE__*/React.createElement("div", {
@@ -612,7 +609,7 @@ function HomeNL({
     align: "center",
     eyebrow: "Werkwijze",
     titel: "Van eerste advies tot perfecte plaatsing.",
-    intro: "Een poort op maat vraagt meer dan een mooie tekening. Daarom start elk project met persoonlijk advies, een plaatsbezoek en een nauwkeurige opmeting."
+    intro: "Een poort op maat vraagt meer dan een mooie tekening. Daarom start elk project met een vrijblijvende prijsraming, gevolgd door persoonlijk advies, een plaatsbezoek en een nauwkeurige opmeting."
   })), /*#__PURE__*/React.createElement("div", {
     style: {
       maxWidth: 860,
@@ -706,10 +703,10 @@ function HomeNL({
       fontSize: 32,
       color: 'var(--stone-100)',
       margin: '0 auto 14px',
-      maxWidth: '26ch',
+      maxWidth: '46ch',
       lineHeight: 1.3
     }
-  }, t('“Een poort is de eerste indruk van het huis. Wij zorgen dat die jarenlang klopt.”')), /*#__PURE__*/React.createElement("p", {
+  }, t('“Een poort is de eerste indruk van het huis.'), React.createElement('br'), t('Wij zorgen dat die jarenlang klopt.”')), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 16,

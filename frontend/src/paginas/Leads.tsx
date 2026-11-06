@@ -6,7 +6,7 @@ import { api } from '../lib/api'
 import { useZoekterm } from '../lib/zoek'
 import { datum, leeg, weergaveNaam } from '../lib/formaat'
 import type { Lead } from '../lib/types'
-import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Selecteer, TekstVak, Th, Td, rijKlik } from '../ui'
+import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Selecteer, Selectievak, TekstVak, Th, Td, rijKlik } from '../ui'
 
 // Snelknop in de leadtabel: rustig gedempt, kleurt op bij hover, met tooltip.
 const actieBtn = 'inline-flex h-8 w-8 items-center justify-center rounded-control text-inkt-faint transition'
@@ -48,7 +48,14 @@ export default function Leads() {
   const leegVorm = { kanaal: 'telefoon', naam: '', voornaam: '', email: '', telefoon: '', eersteVraag: '', typeAanvraag: '',
     klantType: 'particulier', bedrijfsnaam: '', btwNummer: '', straat: '', postcode: '', gemeente: '', gewensteTiming: '' }
   const [vorm, zetVorm] = useState(leegVorm)
-  function openNieuw() { zetVorm(leegVorm); zetNieuwOpen(true) }
+  // Extra contactpersonen die meteen bij het aanmaken meegaan (feedback 2026-08-06).
+  // Zelfde velden als het contactpersonenpaneel op de fiche.
+  const leegPersoon = { voornaam: '', naam: '', email: '', telefoon: '', type: 'particulier',
+    bedrijfsnaam: '', btwNummer: '', ontvangtOfferte: false }
+  const [personen, zetPersonen] = useState<typeof leegPersoon[]>([])
+  const wijzigPersoon = (i: number, deel: Partial<typeof leegPersoon>) =>
+    zetPersonen(personen.map((p, idx) => idx === i ? { ...p, ...deel } : p))
+  function openNieuw() { zetVorm(leegVorm); zetPersonen([]); maak.reset(); zetNieuwOpen(true) }
   const maak = useMutation({
     mutationFn: () => api.post<Lead>('/leads', {
       ...vorm,
@@ -56,7 +63,14 @@ export default function Leads() {
       bedrijfsnaam: vorm.klantType === 'bedrijf' ? (vorm.bedrijfsnaam || undefined) : undefined,
       btwNummer: vorm.klantType === 'bedrijf' ? (vorm.btwNummer || undefined) : undefined,
       straat: vorm.straat || undefined, postcode: vorm.postcode || undefined,
-      gemeente: vorm.gemeente || undefined
+      gemeente: vorm.gemeente || undefined,
+      contactpersonen: personen.filter(p => p.naam.trim()).map(p => ({
+        naam: p.naam, voornaam: p.voornaam || undefined, email: p.email || undefined,
+        telefoon: p.telefoon || undefined, type: p.type,
+        bedrijfsnaam: p.type === 'bedrijf' ? (p.bedrijfsnaam || undefined) : undefined,
+        btwNummer: p.type === 'bedrijf' ? (p.btwNummer || undefined) : undefined,
+        ontvangtOfferte: p.ontvangtOfferte
+      }))
     }),
     onSuccess: () => { qc.invalidateQueries({ queryKey: ['leads'] }); zetNieuwOpen(false) }
   })
@@ -85,7 +99,11 @@ export default function Leads() {
     <>
       <PaginaKop eyebrow="Verkoop · leadinbox" titel="Leads"
         actie={<Knop variant="primair" onClick={openNieuw}>Nieuwe lead ↗</Knop>} />
-      {melding && <div className="mb-4"><Melding soort={melding.soort}>{melding.tekst}</Melding></div>}
+      {melding && (
+        <div className="fixed left-1/2 top-4 z-50 w-full max-w-md -translate-x-1/2 px-4 drop-shadow-lg">
+          <Melding soort={melding.soort}>{melding.tekst}</Melding>
+        </div>
+      )}
       <div className="mb-4 flex gap-3">
         <Selecteer value={status} onChange={e => zetStatus(e.target.value)} className="w-48">
           <option value="">Alle statussen</option>
@@ -116,12 +134,12 @@ export default function Leads() {
                 <Td>{kanaalTekst[lead.kanaal] ?? lead.kanaal}</Td>
                 <Td className="max-w-72 truncate text-inkt-muted">{leeg(lead.eersteVraag)}</Td>
                 <Td><Badge status={lead.status} /></Td>
-                <Td>{datum(lead.aangemaaktOp)}</Td>
+                <Td className="whitespace-nowrap">{datum(lead.aangemaaktOp)}</Td>
                 <Td>
                   <div className="flex items-center justify-end gap-0.5" onClick={e => e.stopPropagation()}>
                     {(lead.status === 'nieuw' || lead.status === 'gekwalificeerd') && !lead.gearchiveerdOp && (
                       <>
-                        <button type="button" title="Omzetten naar dossier" aria-label="Omzetten naar dossier"
+                        <button type="button" title="Dossier aanmaken" aria-label="Dossier aanmaken"
                           onClick={() => ga(lead.id, 'omzetten')}
                           className={`${actieBtn} hover:bg-bronze-500/10 hover:text-bronze-600`}><FolderPlus size={17} /></button>
                         <button type="button" title="Verliezen" aria-label="Verliezen"
@@ -170,15 +188,15 @@ export default function Leads() {
             )}
           </div>
           {vorm.klantType === 'bedrijf' && (
-            <Invoer label="Btw nummer" optioneel value={vorm.btwNummer} onChange={e => zetVorm({ ...vorm, btwNummer: e.target.value })} />
+            <Invoer label="Btw nummer" value={vorm.btwNummer} onChange={e => zetVorm({ ...vorm, btwNummer: e.target.value })} required />
           )}
           <div className="grid grid-cols-2 gap-4">
-            <Invoer label="Voornaam" optioneel value={vorm.voornaam} onChange={e => zetVorm({ ...vorm, voornaam: e.target.value })} />
+            <Invoer label="Voornaam" value={vorm.voornaam} onChange={e => zetVorm({ ...vorm, voornaam: e.target.value })} required />
             <Invoer label="Naam" value={vorm.naam} onChange={e => zetVorm({ ...vorm, naam: e.target.value })} required />
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <Invoer label="Email" optioneel type="email" value={vorm.email} onChange={e => zetVorm({ ...vorm, email: e.target.value })} />
-            <Invoer label="Telefoon" optioneel value={vorm.telefoon} onChange={e => zetVorm({ ...vorm, telefoon: e.target.value })} />
+            <Invoer label="Email" type="email" value={vorm.email} onChange={e => zetVorm({ ...vorm, email: e.target.value })} required />
+            <Invoer label="Telefoon" value={vorm.telefoon} onChange={e => zetVorm({ ...vorm, telefoon: e.target.value })} required />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <Selecteer label="Type aanvraag" optioneel value={vorm.typeAanvraag} onChange={e => zetVorm({ ...vorm, typeAanvraag: e.target.value })}>
@@ -190,12 +208,61 @@ export default function Leads() {
               {timingOpties.map(([w, tekst]) => <option key={w} value={w}>{tekst}</option>)}
             </Selecteer>
           </div>
-          <Invoer label="Straat en huisnummer" optioneel value={vorm.straat} onChange={e => zetVorm({ ...vorm, straat: e.target.value })} />
+          <Invoer label="Straat en huisnummer" value={vorm.straat} onChange={e => zetVorm({ ...vorm, straat: e.target.value })} required />
           <div className="grid grid-cols-2 gap-4">
             <Invoer label="Postcode" optioneel value={vorm.postcode} onChange={e => zetVorm({ ...vorm, postcode: e.target.value })} />
             <Invoer label="Stad of gemeente" optioneel value={vorm.gemeente} onChange={e => zetVorm({ ...vorm, gemeente: e.target.value })} />
           </div>
           <TekstVak label="Omschrijving van het project" optioneel value={vorm.eersteVraag} onChange={e => zetVorm({ ...vorm, eersteVraag: e.target.value })} />
+          {/* Extra contactpersonen naast de hoofdcontactpersoon hierboven */}
+          <div className="space-y-3 border-t border-inkt/10 pt-4">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold uppercase tracking-wider text-inkt-muted">
+                Extra contactpersonen <span className="font-normal normal-case tracking-normal">· optioneel</span>
+              </span>
+              <Knop type="button" variant="secundair" className="h-8 px-3 text-sm"
+                onClick={() => zetPersonen([...personen, { ...leegPersoon }])}>
+                + Contactpersoon
+              </Knop>
+            </div>
+            {personen.map((p, i) => (
+              <div key={i} className="space-y-3 rounded-control border border-inkt/10 bg-inkt/[.02] p-3">
+                <div className="flex items-start justify-between gap-3">
+                  <Selecteer label="Type" value={p.type} onChange={e => wijzigPersoon(i, { type: e.target.value })} className="w-40">
+                    <option value="particulier">Particulier</option>
+                    <option value="bedrijf">Bedrijf</option>
+                  </Selecteer>
+                  <button type="button" aria-label={`Contactpersoon ${i + 1} verwijderen`}
+                    onClick={() => zetPersonen(personen.filter((_, idx) => idx !== i))}
+                    className="mt-6 inline-flex h-8 w-8 items-center justify-center rounded-control text-inkt-faint transition hover:bg-corten-500/10 hover:text-corten-600">
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+                {p.type === 'bedrijf' && (
+                  <div className="grid grid-cols-2 gap-4">
+                    <Invoer label="Bedrijfsnaam" value={p.bedrijfsnaam} onChange={e => wijzigPersoon(i, { bedrijfsnaam: e.target.value })} />
+                    <Invoer label="Btw nummer" optioneel value={p.btwNummer} onChange={e => wijzigPersoon(i, { btwNummer: e.target.value })} />
+                  </div>
+                )}
+                <div className="grid grid-cols-2 gap-4">
+                  <Invoer label="Voornaam" optioneel value={p.voornaam} onChange={e => wijzigPersoon(i, { voornaam: e.target.value })} />
+                  <Invoer label="Naam" value={p.naam} onChange={e => wijzigPersoon(i, { naam: e.target.value })} required />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <Invoer label="Email" type="email" optioneel value={p.email} onChange={e => wijzigPersoon(i, { email: e.target.value })} />
+                  <Invoer label="Telefoon" optioneel value={p.telefoon} onChange={e => wijzigPersoon(i, { telefoon: e.target.value })} />
+                </div>
+                <Selectievak checked={p.ontvangtOfferte} onChange={v => wijzigPersoon(i, { ontvangtOfferte: v })}>
+                  Deze persoon ontvangt de offerte
+                </Selectievak>
+              </div>
+            ))}
+          </div>
+          {maak.isError && (
+            <Melding soort="fout">
+              {maak.error instanceof Error ? maak.error.message : 'Bewaren mislukt. Probeer opnieuw.'}
+            </Melding>
+          )}
           <div className="flex justify-end gap-2">
             <Knop type="button" variant="ghost" onClick={() => zetNieuwOpen(false)}>Annuleren</Knop>
             <Knop variant="primair" disabled={maak.isPending}>{maak.isPending ? 'Bezig…' : 'Bewaren'}</Knop>

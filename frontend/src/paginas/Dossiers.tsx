@@ -29,16 +29,16 @@ export default function Dossiers() {
       ) : (
         <table className="w-full border-separate border-spacing-0">
           <thead><tr>
-            <Th>Nr</Th><Th>Klant &amp; adres</Th><Th>Omschrijving</Th><Th>Status</Th><Th rechts>Waarde</Th>
+            <Th>Nr</Th><Th>Klant</Th><Th>Adres</Th><Th>Telefoon</Th><Th>Status</Th><Th rechts>Waarde</Th>
           </tr></thead>
           <tbody>
             {projecten?.map(p => (
               <tr key={p.id} className={rijKlik}
                 onClick={() => navigeer({ to: '/dossiers/$projectId', params: { projectId: p.id } })}>
                 <Td className="cijfers font-semibold text-bronze-600">{p.nummer ?? '—'}</Td>
-                <Td><span className="font-semibold">{weergaveNaam(p.klant)}</span>
-                  <span className="ml-2 text-inkt-muted">{p.werfadres}</span></Td>
-                <Td className="max-w-64 truncate text-inkt-muted">{leeg(p.omschrijving)}</Td>
+                <Td className="font-semibold">{weergaveNaam(p.klant)}</Td>
+                <Td className="text-inkt-muted">{p.werfadres}</Td>
+                <Td className="whitespace-nowrap text-inkt-muted">{leeg(p.klant.telefoon)}</Td>
                 <Td><Badge status={p.status} /></Td>
                 <Td rechts>{euro(p.offerteWaarde)}</Td>
               </tr>

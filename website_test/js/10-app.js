@@ -101,8 +101,11 @@ const SLUGS = {
   atelier: '/over-ons/',
   automatisering: '/automatisering/',
   onderhoud: '/onderhoud/',
+  plaatsing: '/plaatsing-poorten/',
   garantie: '/garantie/',
   faq: '/faq/',
+  koopjes: '/koopjes/',
+  jobs: '/jobs/',
   contact: '/contact/',
   voorwaarden: '/algemene-voorwaarden/',
   privacy: '/privacybeleid/',
@@ -123,22 +126,81 @@ function routeUitPad(pad) {
       route: r
     };
   }
+  // Onbekend pad: de server geeft hier al een echte 404 mee. Toon ook een
+  // echte 404 in beeld in plaats van stilletjes de homepagina (audit 2026-10-04).
   return {
-    route: 'home'
+    route: 'nietgevonden'
   };
 }
+// De taal staat in de link als ?taal=fr. Zo opent een gedeelde of gemailde
+// link altijd in de bedoelde taal en blijft de keuze zichtbaar in de URL,
+// zonder dat er per taal een aparte site nodig is (audit 2026-10-04).
+const TAALCODES = { nl: 'NL', fr: 'FR', en: 'EN', de: 'DE' };
+function taalUitUrl() {
+  try {
+    const p = new URLSearchParams(window.location.search).get('taal');
+    return p ? TAALCODES[p.toLowerCase()] : null;
+  } catch (e) { return null; }
+}
+function zetTaalInUrl(l) {
+  try {
+    const u = new URL(window.location.href);
+    if (l === 'NL') u.searchParams.delete('taal');
+    else u.searchParams.set('taal', l.toLowerCase());
+    window.history.replaceState({}, '', u.pathname + u.search + u.hash);
+  } catch (e) {}
+}
+
+// 404 in de huisstijl: rustige kop, uitleg en de weg terug.
+function NietGevonden({ onNav }) {
+  const t = window.plT || (x => x);
+  const link = (label, route) => /*#__PURE__*/React.createElement("button", {
+    key: route,
+    type: "button",
+    onClick: () => onNav(route),
+    style: {
+      background: 'none', border: 0, padding: '8px 0', minHeight: 32, cursor: 'pointer',
+      fontFamily: 'var(--font-sans)', fontSize: 15, color: 'var(--accent-label, var(--accent))',
+      textAlign: 'left', textDecoration: 'underline', textUnderlineOffset: '3px'
+    }
+  }, t(label));
+  return /*#__PURE__*/React.createElement("section", {
+    style: { maxWidth: 680, margin: '0 auto', padding: '96px 24px 120px' }
+  }, /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-label)', fontSize: 11, letterSpacing: '0.18em',
+      textTransform: 'uppercase', color: 'var(--accent-label, var(--accent))', margin: '0 0 14px'
+    }
+  }, t('Pagina niet gevonden')), /*#__PURE__*/React.createElement("h1", {
+    style: {
+      fontFamily: 'var(--font-display)', fontWeight: 500, fontSize: 'clamp(32px, 6vw, 46px)',
+      lineHeight: 1.1, color: 'var(--text-heading)', margin: '0 0 16px'
+    }
+  }, t('Deze pagina bestaat niet meer.')), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)', fontSize: 16, lineHeight: 1.7,
+      color: 'var(--text-body)', margin: '0 0 28px', maxWidth: '60ch'
+    }
+  }, t('Mogelijk is de link verouderd of staat er een tikfout in het adres. Hieronder vindt u de weg terug.')), /*#__PURE__*/React.createElement("div", {
+    style: { display: 'flex', flexDirection: 'column', gap: 2 }
+  }, [['Naar de homepagina', 'home'], ['Onze poorten', 'metalen'], ['Overkappingen', 'overkappingen'], ['Veelgestelde vragen', 'faq'], ['Contact', 'contact']].map(([l, r]) => link(l, r))));
+}
+
 function App() {
   const startRoute = routeUitPad(window.location.pathname);
   const [route, setRoute] = React.useState(startRoute.route);
   const [productKey, setProductKey] = React.useState(startRoute.productKey || 'houten');
   const [contactType, setContactType] = React.useState(null);
-  const [lang, setLang] = React.useState(window.PL_TAAL || 'NL');
+  const startTaal = taalUitUrl() || window.PL_TAAL || 'NL';
+  const [lang, setLang] = React.useState(startTaal);
   const kiesTaal = l => {
     if (window.plZetTaal) window.plZetTaal(l);
+    zetTaalInUrl(l);
     setLang(l);
   };
   React.useEffect(() => {
     if (window.plZetTaal) window.plZetTaal(lang);
+    if (taalUitUrl()) zetTaalInUrl(lang);
   }, []);
   const [lightbox, setLightbox] = React.useState(null);
   const scrollRef = React.useRef(null);
@@ -191,15 +253,97 @@ function App() {
   // als kopie van de homepage aanmelden en zou Google alleen de homepage
   // indexeren. Googlebot voert JavaScript uit en leest deze bijgewerkte waarde.
   React.useEffect(() => {
+    // Een 404 krijgt geen canonical naar de homepagina: dat zou een zachte 404
+    // zijn. De server stuurt hier al X-Robots-Tag noindex mee.
+    if (route === 'nietgevonden') {
+      document.title = (window.plT || (x => x))('Pagina niet gevonden | Poortland');
+      return;
+    }
     const url = 'https://poortland.be' + padVoorRoute(route);
     const can = document.querySelector('link[rel="canonical"]');
     if (can) can.setAttribute('href', url);
     const og = document.querySelector('meta[property="og:url"]');
     if (og) og.setAttribute('content', url);
-  }, [route]);
-  const navRoute = route;
+    // Titel per route. Elke route staat hier, ook de homepagina: zonder die
+    // regel bleef na een klik binnen de app de titel van de vorige pagina
+    // staan (audit 2026-10-04). De titels lopen door de vertaalmotor, zodat
+    // een Franse of Duitse bezoeker geen Nederlandse tabtitel ziet.
+    const vertaal = window.plT || (x => x);
+    const TITELS = {
+      home: 'Poorten en overkappingen op maat | Poortland Mechelen',
+      metalen: 'Metalen poorten op maat | Poortland Mechelen',
+      houten: 'Massief houten poorten op maat | Poortland Mechelen',
+      combinatie: 'Poorten in hout en metaal op maat | Poortland',
+      overkappingen: 'Overkappingen op maat | Poortland Mechelen',
+      werkwijze: 'Onze werkwijze van ontwerp tot plaatsing | Poortland',
+      atelier: 'Over Poortland | vakmanschap in eigen beheer',
+      automatisering: 'Automatisering van poorten | Poortland Mechelen',
+      onderhoud: 'Onderhoud van poorten | Poortland Mechelen',
+      plaatsing: 'Poort plaatsen op maat | Schuifpoorten en draaipoorten | Poortland',
+      garantie: 'Garantie en kwaliteit | Poortland',
+      faq: 'Veelgestelde vragen over poorten | Poortland',
+      koopjes: 'Koopjes uit voorraad | Poortland Mechelen',
+      jobs: 'Jobs bij Poortland | Mechelen',
+      contact: 'Contact en prijsraming | Poortland Mechelen',
+      voorwaarden: 'Algemene voorwaarden | Poortland',
+      privacy: 'Privacybeleid | Poortland',
+      cookie: 'Cookiebeleid | Poortland'
+    };
+    if (TITELS[route]) document.title = vertaal(TITELS[route]);
+
+    // Taalvarianten aanmelden. De site wisselt van taal zonder de URL te
+    // veranderen; met ?taal= blijft een gedeelde link in de juiste taal openen
+    // en kunnen zoekmachines de varianten uit elkaar houden.
+    const basis = 'https://poortland.be' + padVoorRoute(route);
+    const codes = { NL: 'nl', FR: 'fr', EN: 'en', DE: 'de' };
+    document.querySelectorAll('link[data-i18n-alt]').forEach(n => n.remove());
+    Object.keys(codes).forEach(code => {
+      const l = document.createElement('link');
+      l.rel = 'alternate';
+      l.hreflang = codes[code];
+      l.href = code === 'NL' ? basis : basis + '?taal=' + codes[code];
+      l.setAttribute('data-i18n-alt', '1');
+      document.head.appendChild(l);
+    });
+    const x = document.createElement('link');
+    x.rel = 'alternate'; x.hreflang = 'x-default'; x.href = basis;
+    x.setAttribute('data-i18n-alt', '1');
+    document.head.appendChild(x);
+    const ogL = document.querySelector('meta[property="og:locale"]');
+    const nuTaal = codes[window.PL_TAAL] || 'nl';
+    if (ogL) ogL.setAttribute('content', nuTaal === 'nl' ? 'nl_BE' : nuTaal);
+    // og:title en og:description volgen de pagina zodra die haar titel zette
+    setTimeout(() => {
+      const ogT = document.querySelector('meta[property="og:title"]');
+      if (ogT) ogT.setAttribute('content', document.title);
+      const desc = document.querySelector('meta[name="description"]');
+      const ogD = document.querySelector('meta[property="og:description"]');
+      if (desc && ogD && desc.getAttribute('content')) ogD.setAttribute('content', desc.getAttribute('content'));
+    }, 0);
+  }, [route, lang]);
+  const navRoute = route === 'nietgevonden' ? 'home' : route;
   let Screen;
   switch (route) {
+    case 'plaatsing':
+      Screen = /*#__PURE__*/React.createElement(window.PlaatsingNL, {
+        onNav: onNav
+      });
+      break;
+    case 'koopjes':
+      Screen = /*#__PURE__*/React.createElement(window.KoopjesNL, {
+        onNav: onNav
+      });
+      break;
+    case 'jobs':
+      Screen = /*#__PURE__*/React.createElement(window.JobsNL, {
+        onNav: onNav
+      });
+      break;
+    case 'nietgevonden':
+      Screen = /*#__PURE__*/React.createElement(NietGevonden, {
+        onNav: onNav
+      });
+      break;
     case 'werkwijze':
       Screen = /*#__PURE__*/React.createElement(window.ProcessNL, {
         onNav: onNav
@@ -297,6 +441,8 @@ function App() {
     onLang: kiesTaal
   }), /*#__PURE__*/React.createElement("main", {
     key: routeKey,
+    id: "inhoud",
+    tabIndex: -1,
     className: "pl-page",
     "data-route": route
   }, Screen), /*#__PURE__*/React.createElement(Footer, {

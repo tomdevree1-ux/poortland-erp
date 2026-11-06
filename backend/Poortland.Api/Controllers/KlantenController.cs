@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Poortland.Api.Adapters;
 using Poortland.Api.Auth;
 using Poortland.Api.Data;
 
@@ -9,13 +10,16 @@ namespace Poortland.Api.Controllers;
 public record KlantInvoer(KlantType Type, string Naam, string? Voornaam, string? Bedrijfsnaam, string? BtwNummer, string? Straat, string? Postcode,
     string? Gemeente, string? Email, string? Telefoon, Taal Communicatietaal, string? Communicatievoorkeur);
 public record ContactmomentInvoer(Guid? ProjectId, string Type, string? Notitie);
-public record ContactpersoonInvoer(string Naam, string? Voornaam, string? Functie, string? Email, string? Telefoon);
+public record ContactpersoonInvoer(string Naam, string? Voornaam, string? Functie, string? Email, string? Telefoon,
+    KlantType Type = KlantType.Particulier, string? Bedrijfsnaam = null, string? BtwNummer = null, bool OntvangtOfferte = false);
 
 [ApiController]
 [Route("api/v1/klanten")]
 [Authorize]
-public class KlantenController(PoortlandDbContext db, ClaimsContext claims) : ControllerBase
+public class KlantenController(PoortlandDbContext db, ClaimsContext claims, SupabaseOpslag opslag) : ControllerBase
 {
+    const string BucketUploads = "lead_uploads";
+
     [HttpGet]
     public async Task<IActionResult> Lijst([FromQuery] string? zoek)
     {
@@ -54,7 +58,20 @@ public class KlantenController(PoortlandDbContext db, ClaimsContext claims) : Co
         var momenten = await db.Contactmomenten.AsNoTracking()
             .Where(c => c.KlantId == id && c.VerwijderdOp == null)
             .OrderByDescending(c => c.Datum).Take(50).ToListAsync();
-        return Ok(new { klant, projecten, contactmomenten = momenten });
+        // Herkomst: de leads die naar deze klant omgezet zijn, met hun foto's.
+        // Een koppeling, geen kopie: de foto's blijven bij de lead horen en zijn
+        // op beide fiches dezelfde bron (feedback 2026-08-06).
+        var leads = await db.Leads.AsNoTracking()
+            .Include(l => l.Bijlagen.Where(b => b.VerwijderdOp == null))
+            .Where(l => l.KlantId == id && l.VerwijderdOp == null)
+            .OrderByDescending(l => l.AangemaaktOp).ToListAsync();
+        var leadFotos = await Task.WhenAll(leads.SelectMany(l => l.Bijlagen).Select(async b =>
+            (object)new { b.Id, b.Bestandsnaam, url = await opslag.SignedUrl(BucketUploads, b.BestandPad, 600) }));
+        var herkomst = leads.Select(l => new
+        {
+            l.Id, l.Naam, l.Voornaam, l.Kanaal, l.TypeAanvraag, l.GewensteTiming, l.AangemaaktOp
+        });
+        return Ok(new { klant, projecten, contactmomenten = momenten, herkomstLeads = herkomst, leadFotos });
     }
 
     [HttpPost]
@@ -95,20 +112,24 @@ public class KlantenController(PoortlandDbContext db, ClaimsContext claims) : Co
     }
 
     // Verwijderen is aan de beheerder (rollenmatrix: klant D) en blijft soft delete.
-    // Een klant met lopende dossiers kan niet weg: eerst het dossier verwijderen,
-    // zo blijft de historiek consistent en verweest er geen project.
+    // Een klant met dossiers kan mee met zijn dossiers gearchiveerd worden
+    // (dossiersMee=true): alles gaat in een beweging uit de werking en de audit
+    // trail bewaart de volledige historiek. Zonder die keuze blijft de beveiliging
+    // dat er geen verweesde dossiers kunnen ontstaan.
     [HttpDelete("{id:guid}")]
     [VereistRol("beheerder")]
-    public async Task<IActionResult> Verwijder(Guid id)
+    public async Task<IActionResult> Verwijder(Guid id, [FromQuery] bool dossiersMee = false)
     {
         var klant = await db.Klanten.FirstOrDefaultAsync(k => k.Id == id && k.VerwijderdOp == null);
         if (klant is null) return NotFound();
-        var heeftDossiers = await db.Projecten.AnyAsync(p => p.KlantId == id && p.VerwijderdOp == null);
-        if (heeftDossiers)
-            return Conflict(new { fout = "Deze klant heeft nog dossiers. Verwijder eerst de dossiers." });
-        klant.VerwijderdOp = DateTimeOffset.UtcNow;
+        var dossiers = await db.Projecten.Where(p => p.KlantId == id && p.VerwijderdOp == null).ToListAsync();
+        if (dossiers.Count > 0 && !dossiersMee)
+            return Conflict(new { fout = "Deze klant heeft nog dossiers. Vink aan om ze mee te archiveren." });
+        var nu = DateTimeOffset.UtcNow;
+        foreach (var dossier in dossiers) dossier.VerwijderdOp = nu;
+        klant.VerwijderdOp = nu;
         await db.SaveChangesAsync();
-        return Ok(new { klant.Id, verwijderd = true });
+        return Ok(new { klant.Id, verwijderd = true, dossiersGearchiveerd = dossiers.Count });
     }
 
     // Contactpersonen bij de klant: tuinman, architect, elektricien, concierge...
@@ -119,7 +140,12 @@ public class KlantenController(PoortlandDbContext db, ClaimsContext claims) : Co
         var persoon = new Contactpersoon
         {
             KlantId = id, Naam = invoer.Naam, Voornaam = invoer.Voornaam, Functie = invoer.Functie,
-            Email = invoer.Email, Telefoon = invoer.Telefoon, AangemaaktDoor = claims.MedewerkerId
+            Email = invoer.Email, Telefoon = invoer.Telefoon,
+            Type = invoer.Type,
+            Bedrijfsnaam = invoer.Type == KlantType.Bedrijf ? invoer.Bedrijfsnaam : null,
+            BtwNummer = invoer.Type == KlantType.Bedrijf ? invoer.BtwNummer : null,
+            OntvangtOfferte = invoer.OntvangtOfferte,
+            AangemaaktDoor = claims.MedewerkerId
         };
         db.Contactpersonen.Add(persoon);
         await db.SaveChangesAsync();
@@ -135,6 +161,10 @@ public class KlantenController(PoortlandDbContext db, ClaimsContext claims) : Co
         if (persoon is null) return NotFound();
         persoon.Naam = invoer.Naam; persoon.Voornaam = invoer.Voornaam; persoon.Functie = invoer.Functie;
         persoon.Email = invoer.Email; persoon.Telefoon = invoer.Telefoon;
+        persoon.Type = invoer.Type;
+        persoon.Bedrijfsnaam = invoer.Type == KlantType.Bedrijf ? invoer.Bedrijfsnaam : null;
+        persoon.BtwNummer = invoer.Type == KlantType.Bedrijf ? invoer.BtwNummer : null;
+        persoon.OntvangtOfferte = invoer.OntvangtOfferte;
         await db.SaveChangesAsync();
         return Ok(persoon);
     }

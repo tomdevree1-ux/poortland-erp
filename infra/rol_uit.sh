@@ -29,13 +29,19 @@ regels = [
     f"Cors__Origins__0=https://{domein}",
     f"Cors__Origins__1=https://{site_domein}",
     f"Frontend__Origin=https://{domein}",
+    f"Site__Origin=https://{site_domein}",
 ]
 extra = d.get("Cors", {}).get("Origins", [])
 for i, o in enumerate(x for x in extra if not x.startswith("http://localhost")):
     regels.append(f"Cors__Origins__{i+2}={o}")
 open(".env.deploy", "w").write("\n".join(regels) + "\n")
+# De testomgeving mag nooit in zoekmachines; op het echte domein valt deze
+# variabele weg en geldt de standaard "all" uit de Caddyfile.
+robots = "noindex, nofollow" if "nip.io" in domein else "all"
 open(".env.build", "w").write(
-    f"DOMEIN={domein}\nSITE_DOMEIN={site_domein}\n"
+    # De waarde bevat een spatie, dus tussen aanhalingstekens: anders leest
+    # source .env.build enkel "noindex," en probeert het "nofollow" als commando.
+    f'DOMEIN={domein}\nSITE_DOMEIN={site_domein}\nROBOTS_TAG="{robots}"\n'
     f"VITE_SUPABASE_URL={fe['VITE_SUPABASE_URL']}\nVITE_SUPABASE_ANON_KEY={fe['VITE_SUPABASE_ANON_KEY']}\n")
 print(f"   beheerapp: https://{domein}")
 print(f"   testsite : https://{site_domein}")

@@ -85,11 +85,13 @@ function ContactNL({
   const {
     Reveal
   } = window;
+  // Onder 860px stapelen de twee kolommen; anders steekt het formulier
+  // buiten het scherm op een smartphone (audit 2026-08-11, H1).
+  const mobiel = useIsMobile(860);
   const [sent, setSent] = React.useState(false);
   const [types, setTypes] = React.useState(voorselectie ? [voorselectie] : []);
   const [akkoord, setAkkoord] = React.useState(false);
   const [bestand, setBestand] = React.useState('');
-  const [timing, setTiming] = React.useState('');
   const [bezig, setBezig] = React.useState(false);
   const [fout, setFout] = React.useState('');
   const [klantType, setKlantType] = React.useState('particulier');
@@ -109,22 +111,6 @@ function ContactNL({
     value: 'andere',
     label: 'Vraag'
   }];
-  const timingOpties = [{
-    value: '',
-    label: 'Gewenste timing'
-  }, {
-    value: 'zo-snel',
-    label: 'Zo snel mogelijk'
-  }, {
-    value: '3-maand',
-    label: 'Binnen drie maanden'
-  }, {
-    value: '6-maand',
-    label: 'Binnen zes maanden'
-  }, {
-    value: 'orientatie',
-    label: 'Nog in oriëntatie'
-  }];
   return /*#__PURE__*/React.createElement("div", {
     style: {
       background: 'var(--surface-ground)',
@@ -132,23 +118,24 @@ function ContactNL({
     }
   }, /*#__PURE__*/React.createElement("section", {
     style: {
-      padding: '70px 44px 96px'
+      padding: mobiel ? '48px 20px 72px' : '70px 44px 96px'
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
       maxWidth: 1200,
       margin: '0 auto',
       display: 'grid',
-      gridTemplateColumns: '0.92fr 1.08fr',
-      gap: 72,
-      alignItems: 'start'
+      gridTemplateColumns: mobiel ? 'minmax(0, 1fr)' : '0.92fr 1.08fr',
+      gap: mobiel ? 40 : 72,
+      alignItems: 'start',
+      minWidth: 0
     }
   }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(CoEyebrow, {
     dark: true,
     style: {
       marginBottom: 20
     }
-  }, t('Plan een adviesgesprek')), /*#__PURE__*/React.createElement("h1", {
+  }, t('Contact')), /*#__PURE__*/React.createElement("h1", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
@@ -167,14 +154,14 @@ function ContactNL({
       maxWidth: '42ch',
       marginTop: 22
     }
-  }, t("Vertel kort waarnaar u op zoek bent. Heeft u al een bepaalde stijl of materiaalkeuze in gedachten? Voeg zeker de gewenste afmetingen toe en upload enkele foto's als u die beschikbaar heeft."), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("br", null), t('Wij nemen persoonlijk contact op en plannen een adviesgesprek met plaatsbezoek en opmeting.')), /*#__PURE__*/React.createElement("div", {
+  }, t("Vertel kort waarnaar u op zoek bent. Heeft u al een bepaalde stijl of materiaalkeuze in gedachten? Voeg zeker de gewenste afmetingen toe en upload enkele foto's als u die beschikbaar heeft."), /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("br", null), t('U ontvangt eerst een vrijblijvende prijsraming, zodat u meteen een idee heeft van het budget. Daarna plannen we samen een adviesgesprek met opmeting ter plaatse.')), /*#__PURE__*/React.createElement("div", {
     style: {
       marginTop: 42,
       display: 'flex',
       flexDirection: 'column',
       gap: 24
     }
-  }, [['Atelier en showroom', 'Hombeeksesteenweg 164-166\n2800 Mechelen'], ['Telefoon', '+32 (0)15 432 111'], ['Email', 'info@poortland.be'], ['Openingsuren', 'Open op afspraak, maandag tot zaterdag']].map(([k, v]) => /*#__PURE__*/React.createElement("div", {
+  }, [['Atelier en showroom', 'Hombeeksesteenweg 164-166\n2800 Mechelen'], ['Telefoon', '+32 (0)15 432 111'], ['Email', 'info@poortland.be'], ['Openingsuren', 'Maandag tot vrijdag 9 tot 17 uur\nZaterdag 10 tot 16 uur\nBezoek de showroom bij voorkeur op afspraak']].map(([k, v]) => /*#__PURE__*/React.createElement("div", {
     key: k
   }, /*#__PURE__*/React.createElement("div", {
     style: {
@@ -183,7 +170,7 @@ function ContactNL({
       fontWeight: 600,
       letterSpacing: '0.2em',
       textTransform: 'uppercase',
-      color: 'var(--accent)',
+      color: 'var(--accent-label, var(--accent))',
       marginBottom: 6
     }
   }, t(k)), /*#__PURE__*/React.createElement("div", {
@@ -241,7 +228,7 @@ function ContactNL({
       marginTop: 14,
       maxWidth: '40ch'
     }
-  }, t('Wij nemen binnen twee werkdagen persoonlijk contact op om uw adviesgesprek en plaatsbezoek in te plannen. De volgende stap is een rustige opmeting bij u ter plaatse.')), /*#__PURE__*/React.createElement("div", {
+  }, t('Wij nemen binnen twee werkdagen persoonlijk contact op. U ontvangt eerst een vrijblijvende prijsraming; daarna plannen wij samen een adviesgesprek met opmeting bij u ter plaatse.')), /*#__PURE__*/React.createElement("div", {
     style: {
       marginTop: 28,
       display: 'flex',
@@ -290,7 +277,6 @@ function ContactNL({
           email: fd.get('email') || '',
           telefoon: fd.get('telefoon') || '',
           straat: fd.get('straat') || '',
-          gewensteTiming: timing,
           typeAanvraag: types.join(','),
           vraag: vraag
         },
@@ -316,7 +302,7 @@ function ContactNL({
       fontWeight: 600,
       letterSpacing: '0.2em',
       textTransform: 'uppercase',
-      color: 'var(--accent)',
+      color: 'var(--accent-label, var(--accent))',
       marginBottom: 12
     }
   }, t('Type aanvraag'), " ", /*#__PURE__*/React.createElement("span", {
@@ -329,7 +315,7 @@ function ContactNL({
   }, t('(meerdere mogelijk)'))), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
-      flexWrap: 'nowrap',
+      flexWrap: 'wrap',
       gap: 7
     }
   }, typeOpties.map(o => {
@@ -360,7 +346,7 @@ function ContactNL({
       fontWeight: 600,
       letterSpacing: '0.2em',
       textTransform: 'uppercase',
-      color: 'var(--accent)',
+      color: 'var(--accent-label, var(--accent))',
       marginBottom: 12
     }
   }, t('Type klant')), /*#__PURE__*/React.createElement("div", {
@@ -391,8 +377,8 @@ function ContactNL({
   }, kt === 'particulier' ? t('Particulier') : t('Bedrijf'))))), klantType === 'bedrijf' ? /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
-      gridTemplateColumns: '1fr 1fr',
-      gap: 24
+      gridTemplateColumns: mobiel ? 'minmax(0, 1fr)' : '1fr 1fr',
+      gap: mobiel ? 16 : 24
     }
   }, /*#__PURE__*/React.createElement(CoInput, {
     label: t('Bedrijfsnaam'),
@@ -409,30 +395,33 @@ function ContactNL({
   })) : null, /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
-      gridTemplateColumns: '1fr 1fr',
-      gap: 24
+      gridTemplateColumns: mobiel ? 'minmax(0, 1fr)' : '1fr 1fr',
+      gap: mobiel ? 16 : 24
     }
   }, /*#__PURE__*/React.createElement(CoInput, {
     label: t('Voornaam'),
     name: "voornaam",
+    autoComplete: "given-name",
     dark: true,
     placeholder: t('Uw voornaam'),
     required: true
   }), /*#__PURE__*/React.createElement(CoInput, {
     label: t('Naam'),
     name: "naam",
+    autoComplete: "family-name",
     dark: true,
     placeholder: t('Uw naam'),
     required: true
   })), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'grid',
-      gridTemplateColumns: '1fr 1fr',
-      gap: 24
+      gridTemplateColumns: mobiel ? 'minmax(0, 1fr)' : '1fr 1fr',
+      gap: mobiel ? 16 : 24
     }
   }, /*#__PURE__*/React.createElement(CoInput, {
     label: t('Email'),
     name: "email",
+    autoComplete: "email",
     dark: true,
     type: "email",
     placeholder: "u@voorbeeld.be",
@@ -440,12 +429,15 @@ function ContactNL({
   }), /*#__PURE__*/React.createElement(CoInput, {
     label: t('Telefoon'),
     name: "telefoon",
+    autoComplete: "tel",
     dark: true,
     type: "tel",
-    placeholder: "+32 ..."
+    placeholder: "+32 ...",
+    required: true
   })), /*#__PURE__*/React.createElement(CoInput, {
     label: t('Straat en huisnummer'),
     name: "straat",
+    autoComplete: "street-address",
     dark: true,
     placeholder: t('bv. Dorpsstraat 12')
   }), /*#__PURE__*/React.createElement(CoInput, {
@@ -454,26 +446,49 @@ function ContactNL({
     dark: true,
     as: "textarea",
     placeholder: t('De opening is ongeveer 4 meter, een schuifpoort voor de oprit ...')
-  }), /*#__PURE__*/React.createElement(Select, {
-    label: "Gewenste timing",
-    value: timing,
-    onChange: e => setTiming(e.target.value),
-    opties: timingOpties
   }), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       flexDirection: 'column',
       gap: 8
     }
-  }, /*#__PURE__*/React.createElement(VeldLabel, null, "Foto's toevoegen"), /*#__PURE__*/React.createElement("label", {
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8,
+      flexWrap: 'wrap'
+    }
+  }, /*#__PURE__*/React.createElement(VeldLabel, null, "Foto's toevoegen"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      background: 'var(--accent)',
+      color: '#fff',
+      fontFamily: 'var(--font-label)',
+      fontSize: 10,
+      fontWeight: 700,
+      letterSpacing: '0.1em',
+      textTransform: 'uppercase',
+      padding: '3px 8px',
+      borderRadius: 999
+    }
+  }, t('Sterk aangeraden'))), /*#__PURE__*/React.createElement("p", {
+    style: {
+      fontFamily: 'var(--font-sans)',
+      fontSize: 13.5,
+      lineHeight: 1.55,
+      color: 'var(--stone-300)',
+      margin: '-2px 0 2px'
+    }
+  }, t('Met enkele foto\'s van de plek maken wij uw prijsraming meteen een stuk nauwkeuriger.')), /*#__PURE__*/React.createElement("label", {
     style: {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
       gap: 12,
-      border: '1px dashed var(--line-on-dark)',
+      border: '2px dashed var(--accent)',
       borderRadius: 'var(--radius-sm)',
-      padding: '14px 16px',
+      background: 'rgba(198,163,107,0.08)',
+      padding: '16px',
       cursor: 'pointer'
     }
   }, /*#__PURE__*/React.createElement("span", {
@@ -486,10 +501,13 @@ function ContactNL({
     style: {
       fontFamily: 'var(--font-label)',
       fontSize: 10.5,
-      fontWeight: 600,
+      fontWeight: 700,
       letterSpacing: '0.12em',
       textTransform: 'uppercase',
-      color: 'var(--accent)',
+      background: 'var(--accent)',
+      color: '#fff',
+      padding: '10px 16px',
+      borderRadius: 999,
       flex: '0 0 auto'
     }
   }, t('Kies bestand'), " ↗"), /*#__PURE__*/React.createElement("input", {
@@ -531,6 +549,7 @@ function ContactNL({
     }
   }, akkoord ? '✓' : ''), /*#__PURE__*/React.createElement("input", {
     type: "checkbox",
+    required: true,
     checked: akkoord,
     onChange: e => setAkkoord(e.target.checked),
     style: {
@@ -544,6 +563,7 @@ function ContactNL({
       color: 'var(--stone-300)'
     }
   }, t('Ik ga akkoord met de verwerking van mijn gegevens om mijn aanvraag te behandelen, volgens het privacybeleid.'))), fout ? /*#__PURE__*/React.createElement("div", {
+    role: "alert",
     style: {
       fontFamily: 'var(--font-sans)',
       fontSize: 13.5,

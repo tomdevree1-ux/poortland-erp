@@ -7,6 +7,7 @@
 User-agent: *
 Allow: /
 Disallow: /api/
+Disallow: /fotos
 
 # Klassieke zoekmachines
 User-agent: Bingbot
@@ -14,6 +15,7 @@ User-agent: DuckDuckBot
 User-agent: YandexBot
 Allow: /
 Disallow: /api/
+Disallow: /fotos
 
 # AI-assistenten: weergave in de resultaten en ophalen na een klik
 User-agent: OAI-SearchBot
@@ -25,6 +27,7 @@ User-agent: Claude-User
 User-agent: Applebot
 Allow: /
 Disallow: /api/
+Disallow: /fotos
 
 # Trainingsdata. Poortland laat dit toe: een model dat onze tekst niet mag lezen
 # citeert ons ook nooit. Wilt u dit weigeren, vervang dan Allow door Disallow.
@@ -37,5 +40,6 @@ User-agent: cohere-ai
 User-agent: Meta-ExternalAgent
 Allow: /
 Disallow: /api/
+Disallow: /fotos
 
 Sitemap: https://poortland.be/sitemap.xml

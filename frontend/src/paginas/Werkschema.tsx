@@ -47,7 +47,7 @@ export default function Werkschema() {
             {taken?.map(t => (
               <tr key={t.id} className="hover:bg-bronze-500/[.06]">
                 <Td className="font-medium">{t.omschrijving}</Td>
-                <Td>{datum(t.dueDatum)}</Td>
+                <Td className="whitespace-nowrap">{datum(t.dueDatum)}</Td>
                 <Td rechts>
                   <div className="flex justify-end gap-2">
                     <Knop variant="secundair" className="h-8 px-3 text-xs"

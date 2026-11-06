@@ -9,7 +9,7 @@ async function meld(page: import('@playwright/test').Page) {
   await page.getByLabel('Email').fill(process.env.E2E_EMAIL!)
   await page.getByLabel('Wachtwoord').fill(process.env.E2E_WACHTWOORD!)
   await page.getByRole('button', { name: 'Aanmelden' }).click()
-  await expect(page.getByText('Leads')).toBeVisible()
+  await expect(page.getByRole('link', { name: 'Leads', exact: true })).toBeVisible()
 }
 
 test.describe('Service en nazorg', () => {

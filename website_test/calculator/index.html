@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Poortland calculator — prototype</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;0,600;1,400&family=Fraunces:opsz,wght@9..144,400..600&family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script>window.PL_DATA = {"models":[{"n":"TIGRIS","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":0,"f":"standaard"},{"n":"SPIJLENPOORT","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":0,"f":"open"},{"n":"KAMA","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":0,"f":"standaard"},{"n":"TIGRIS PLANE","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":0,"f":"dicht"},{"n":"KWAI PLANE LIGNA 2-SIDES","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":0,"f":"dicht"},{"n":"KWAI PLANE 1-SIDE","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":0,"f":"dicht"},{"n":"ORINOCO","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"KWAI PLANE 2-SIDES","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":0,"f":"dicht"},{"n":"ESLA","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":0,"f":"standaard"},{"n":"GLEN-KWAI","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":0,"f":"standaard"},{"n":"KWAI PLANE LIGNA 1-SIDE","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"dicht"},{"n":"BEEKVLIET","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"KWAI PLANE LIGNA OPEN 2-SIDES","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":0,"f":"open"},{"n":"JAPURA","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"VELUWE","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"BRENTA","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"KWAI WOOD PADOUK","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"dicht"},{"n":"TIGRIS WOOD","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"dicht"},{"n":"VIENNE","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"OOSTERSCHELDE","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"SIRET","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"DANENBERG","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"LAKE ONTARIO","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"RENO","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"TAAG","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"KWAI PLANE LIGNA OPEN 1-SIDE","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"open"},{"n":"ODUM","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"APOLLO","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"ARNO","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"ONEGA KEBONY","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"SPIJLENPOORT TYPE V","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"open"},{"n":"TARO","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"VELUWE RM","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"VLEET","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"ALLEGRO","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"AMBLEVE","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"AMSTEL","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"ARGESJ","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"AVEYRON","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"BASENTO","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"BASENTO TYPE B","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"BEEKVLIET TYPE RM","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"BEEKVLIET TYPE RZ","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"BEEKVLIET TYPE Z","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"BRENTA TYPE K","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"CARIBOU","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"COLUMBIA","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"CONTESSA","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"CORNI","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"CUMBERLAND - ZSH","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"CUMBERLAND TYPE K - MSH","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"DELAWARE","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"EBRO","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"EUFRAAT","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"GARONNE","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"GLENFIDDICH B","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"GLENFIDDICH HV - |","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"GLENFIDDICH PLANE 1-Z","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"dicht"},{"n":"GLENFIDDICH PLANE 2-Z","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"dicht"},{"n":"GLENFIDDICH R","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"GLENFIDDICH V / \\","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"IJSEL","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"JALOMITZA","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"KASSAI","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"KILLIAN","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"KWAI GLAS","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"KWAI LASER","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"KWAI LIGNA 7/12","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"dicht"},{"n":"KWAI PLY","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"KWAI WOOD THERMO","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"dicht"},{"n":"LAKE MICHIGAN","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"LASLO","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"LECH","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"LEIE","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"LOCH LOMOND","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"LOIRE","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"LUXUS KADER 100X40","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"LUXUS KADER 40X40","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"LUXUS KADER 60X40","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"MANITOBA","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"MERSEY","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"MISSISIPI","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"MISSOURI","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"MONDEGO","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"NARMADA","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"NOTEC","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"NOTEC G","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"OHIO","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"OOSTERSCHELDE C","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"OPUS","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"PO","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"RHONE","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"ROER","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"SADO","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"SAVANNAH","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"SHANNON","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"SILVER CREEK","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"SPIJLENPOORT DUBBELE SPIJLEN","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"open"},{"n":"SPIJLENPOORT TYPE A","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"open"},{"n":"SPIJLENPOORT TYPE B","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"open"},{"n":"SPIJLENPOORT TYPE B.A.","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"open"},{"n":"SPIJLENPOORT TYPE C","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"open"},{"n":"TALISKER","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"TARN","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"TIBER","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"TWEED 1 - ZGK","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"TWEED 2 - MGK","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"VELUWE RZ","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"VIRGINIA","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"WESTERSCHELDE","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"WISLA","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"YELLOWSTONE","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"},{"n":"YUKON","e":true,"d":true,"sr":true,"sv":true,"vh":true,"g":1,"f":"standaard"}],"auto":[{"n":"Aandrijving elektromechanisch FAAC 390 - 230V - met KNIKARM","s":"Aandrijvingen","p":847.1,"fab":"FAAC"},{"n":"Aandrijving elektromechanisch FAAC 390 - 230V - excl. Knikarm","s":"Aandrijvingen","p":657,"fab":"FAAC"},{"n":"Aandrijving elektromechanisch FAAC 390 - 24V - excl. Knikarm","s":"Aandrijvingen","p":762.7,"fab":"FAAC"},{"n":"Aandrijving elektromechanisch FAAC 390 - 24V - met KNIKARM","s":"Aandrijvingen","p":952.8,"fab":"FAAC"},{"n":"Knikarm voor FAAC 390","s":"Aandrijvingen","p":190.1,"fab":"FAAC"},{"n":"Eindeloopschakelaar (open + dicht) voor FAAC 390","s":"Aandrijvingen","p":16.5,"fab":"FAAC"},{"n":"Ontgrendelingsmech. extern, met kabel en slot voor 390","s":"Aandrijvingen","p":237.6,"fab":"FAAC"},{"n":"Aandrijving elektromechanisch FAAC 391 - 24V - slave","s":"Aandrijvingen","p":567.9,"fab":"FAAC"},{"n":"Aandrijving elektromechanisch FAAC 391 E - 24V - incl. sturing E391","s":"Aandrijvingen","p":895.8,"fab":"FAAC"},{"n":"Ontgrendelingsmech. extern, met kabel en slot voor 391","s":"Aandrijvingen","p":237.6,"fab":"FAAC"},{"n":"Aandrijving elektromechanisch FAAC 412 - 230V","s":"Aandrijvingen","p":380.2,"fab":"FAAC"},{"n":"Kit Faac 413 - 24V - 2 aandrijvingen, sturing E024S - Ontvanger 868mhz - 2 zenders - Ledlamp 24V - Fotocellen XP 20B D","s":"Aandrijvingen","p":1760.7,"fab":"FAAC"},{"n":"Kit Faac 413 - 230V - 2 aandrijvingen, sturing E045 - Ontvanger 868mhz - 2 zenders - Faac Light 230v - Fotocellen XP 20B D","s":"Aandrijvingen","p":1562.3,"fab":"FAAC"},{"n":"Aandrijving elektromechanisch FAAC 413 - 230V","s":"Aandrijvingen","p":543,"fab":"FAAC"},{"n":"Aandrijving elektromechanisch FAAC 413 - 24V - mech. aanslag ingebouwd","s":"Aandrijvingen","p":663,"fab":"FAAC"},{"n":"Kit Faac 415 - 24V - 2 aandrijvingen, sturing E124 - Ontvanger 868mhz - 2 zenders - Ledlamp 24V - Fotocellen XP 20B D","s":"Aandrijvingen","p":1864,"fab":"FAAC"},{"n":"Kit Faac 415 L - 24V - 2 aandrijvingen lang, sturing E124 - Ontvanger 868mhz - 2 zenders - Ledlamp 24V - Fotocellen XP 20B D","s":"Aandrijvingen","p":1900.8,"fab":"FAAC"},{"n":"Kit Faac 415 - 230V - 2 aandrijvingen, sturing E045 - Ontvanger 868mhz - 2 zenders - Faac Light 230v - Fotocellen XP 20B D","s":"Aandrijvingen","p":1588.4,"fab":"FAAC"},{"n":"Kit Faac 415 L- 230V - 2 aandrijvingen lang, sturing E045 - Ontvanger 868mhz - 2 zenders - Faac Light 230v - Fotocellen XP 20B D","s":"Aandrijvingen","p":1695.3,"fab":"FAAC"},{"n":"Aandrijving elektromechanisch FAAC 415 - 230V","s":"Aandrijvingen","p":539.4,"fab":"FAAC"},{"n":"Aandrijving elektromechanisch FAAC 415 - 24V","s":"Aandrijvingen","p":642.8,"fab":"FAAC"},{"n":"Aandrijving elektromechanisch FAAC 415LONG - 230V","s":"Aandrijvingen","p":569.1,"fab":"FAAC"},{"n":"Aandrijving elektromechanisch FAAC 415LONG - 24V","s":"Aandrijvingen","p":658.2,"fab":"FAAC"},{"n":"Aandrijving elektromechanisch FAAC S418 - 24V - mech aanslag ingebouwd","s":"Aandrijvingen","p":551.3,"fab":"FAAC"},{"n":"Aandrijving elektromechanisch FAAC 770 - 230V","s":"Aandrijvingen","p":825.7,"fab":"FAAC"},{"n":"Aandrijving elektromechanisch FAAC 770 - 230V - INOX - incl. ontgr. en eindsch.","s":"Aandrijvingen","p":1349.7,"fab":"FAAC"},{"n":"Aandrijving elektromechanisch FAAC 770 - 230V - STAAL - incl. ontgr. en eindsch.","s":"Aandrijvingen","p":1188.1,"fab":"FAAC"},{"n":"Aandrijving elektromechanisch FAAC 770 - 24V","s":"Aandrijvingen","p":825.7,"fab":"FAAC"},{"n":"Aandrijving elektromechanisch FAAC 770 - 24V - INOX - incl. ontgrendeling en eindschakelaar","s":"Aandrijvingen","p":1349.7,"fab":"FAAC"},{"n":"Aandrijving elektromechanisch FAAC 770 - 24V - STAAL - incl. ontgr. en eindsch.","s":"Aandrijvingen","p":1188.1,"fab":"FAAC"},{"n":"Zelfdragende huizing met ontrgr. mech. 770 inox 110°","s":"Toebehoren automatisering","p":524,"fab":"FAAC"},{"n":"Zelfdragende huizing met ontrgr. mech. 770 staal 110°","s":"Toebehoren automatisering","p":362.4,"fab":"FAAC"},{"n":"Interne eindaanslag \"gesloten\" voor 770","s":"Toebehoren automatisering","p":91.5,"fab":"FAAC"},{"n":"Interne eindaanslag \"open\" voor 770","s":"Toebehoren automatisering","p":42.4,"fab":"FAAC"},{"n":"Encodergroep voor 770N","s":"Toebehoren automatisering","p":110.1,"fab":"FAAC"},{"n":"Kit opening tot 140° voor faac 770","s":"Toebehoren automatisering","p":127.2,"fab":"FAAC"},{"n":"Kit opening tot 180° voor faac 770","s":"Toebehoren automatisering","p":434.9,"fab":"FAAC"},{"n":"KIT 400 -230V: 2 electrohydraulische motoren - sturing E145, ontvanger - 2 zenders - paar regelbare fotocellen XP 20B D + waarschuwingslamp","s":"Aandrijvingen","p":3426.2,"fab":"FAAC"},{"n":"KIT 400 lang -230V: 2 electrohydraulische motoren - sturing E145, ontvanger - 2 zenders - paar regelbare fotocellen XP 20B D + waarschuwingslamp","s":"Aandrijvingen","p":3825.4,"fab":"FAAC"},{"n":"Aandrijving hydraulisch FAAC  400 CBAC - 230V","s":"Aandrijvingen","p":1495.7,"fab":"FAAC"},{"n":"Aandrijving hydraulisch FAAC  400 CBAC LONG - 230V","s":"Aandrijvingen","p":1736.9,"fab":"FAAC"},{"n":"Aandrijving hydraulisch FAAC  400 CBACR SNEL - 230V","s":"Aandrijvingen","p":1716.7,"fab":"FAAC"},{"n":"Positive stop - mechanische aanslag intern - voor FAAC 400","s":"Toebehoren automatisering","p":187.8,"fab":"FAAC"},{"n":"Positive stop - mechanische aanslag intern - voor FAAC 400 LONG","s":"Toebehoren automatisering","p":218.6,"fab":"FAAC"},{"n":"Aandrijving hydraulisch FAAC  402 CBC - 230V","s":"Aandrijvingen","p":822.1,"fab":"FAAC"},{"n":"KIT 422 -230V: 2 electrohydraulische motoren - sturing E145, ontvanger - 2 zenders - paar regelbare fotocellen XP 20B D + waarschuwingslamp","s":"Aandrijvingen","p":2883.3,"fab":"FAAC"},{"n":"Aandrijving hydraulisch FAAC  422 CBAC - 230V","s":"Aandrijvingen","p":1188,"fab":"FAAC"},{"n":"KIT S450H -24V: 2 electrohydraulische motoren - sturing E124, ontvanger - 2 zenders - paar regelbare fotocellen XP 20B D + waarschuwingslamp LED 24v","s":"Aandrijvingen","p":2567.3,"fab":"FAAC"},{"n":"Aandrijving hydraulisch FAAC S 450 H - 24V","s":"Aandrijvingen","p":995.6,"fab":"FAAC"},{"n":"KIT S800H ENC 100° INOX -24V: 2 ondergrondse, electrohydr. motoren + inox inbouwhuizing + ontgrendelingsarm, sturing E124, onvanger + 2 zenders, regelbare fotocellen XP 20B D + waarschuwingslamp","s":"Aandrijvingen","p":4502.6,"fab":"FAAC"},{"n":"Aandrijving hydr. FAAC S800H ENC CBAC 100° - 24V","s":"Aandrijvingen","p":1276,"fab":"FAAC"},{"n":"Aandrijving hydr. FAAC S800H ENC CBAC 180° - 24V","s":"Aandrijvingen","p":1361.5,"fab":"FAAC"},{"n":"Aandrijving hydr. FAAC S800H ENC SB 100° - 24V","s":"Aandrijvingen","p":1276,"fab":"FAAC"},{"n":"Aandrijving hydr. FAAC S800H ENC SB 180° - 24V","s":"Aandrijvingen","p":1361.5,"fab":"FAAC"},{"n":"Aandrijving hydraulisch FAAC S800H ENC CBAC 100° - 24V - INOX - incl ontgrendeling","s":"Aandrijvingen","p":2257.5,"fab":"FAAC"},{"n":"Aandrijving hydraulisch FAAC S800H ENC CBAC 100° - 24V - STAAL - incl ontgrendeling","s":"Aandrijvingen","p":1950.9,"fab":"FAAC"},{"n":"Aandrijving hydraulisch FAAC S800H ENC CBAC 180° - 24V - INOX - incl ontgrendeling","s":"Aandrijvingen","p":2343,"fab":"FAAC"},{"n":"Aandrijving hydraulisch FAAC S800H ENC CBAC 180° - 24V - STAAL - incl ontgrendeling","s":"Aandrijvingen","p":2036.4,"fab":"FAAC"},{"n":"Zelfdragende huizing S 800 H inox","s":"Toebehoren automatisering","p":663,"fab":"FAAC"},{"n":"Zelfdragende huizing S 800 H staal","s":"Toebehoren automatisering","p":356.4,"fab":"FAAC"},{"n":"Hydraulisch ontrgrendelingsmech. voor S 800","s":"Toebehoren automatisering","p":160.4,"fab":"FAAC"},{"n":"Kroon (verhoogd) voor S 800 H","s":"Toebehoren automatisering","p":158.1,"fab":"FAAC"},{"n":"Aandrijving mech. FAAC C720 - 24V - ingebouwde sturing E721 (persoonlijke ontgrendelingssleutel)","s":"Aandrijvingen","p":740.4,"fab":"FAAC"},{"n":"Aandrijving mech. FAAC C720 - 24V (unviesele sleutel)","s":"Aandrijvingen","p":704.5,"fab":"FAAC"},{"n":"Ontgrendelingskit met prersoonlijke sleutel voor C720/C721","s":"Aandrijvingen","p":35.9,"fab":"FAAC"},{"n":"Aandrijving mech. FAAC 746 ER Z16 of Z20 - ingebouwde sturing 780D (persoonlijke ontgrendelingssleutel)","s":"Aandrijvingen","p":1279.9,"fab":"FAAC"},{"n":"Aandrijving mech. FAAC 844ER Z16 - ingebouwde sturing 780D (persoonlijke ontgrendelingssleutel)","s":"Aandrijvingen","p":1729.8,"fab":"FAAC"},{"n":"Aandrijving mech. FAAC 844 R TRIFASE  - exclusief sturing en tandwiel (persoonlijke ontgrendelingssleutel)","s":"Aandrijvingen","p":312.5,"fab":"FAAC"},{"n":"Aandrijving mech. FAAC 884 MC TRIFASE  - stalen behuizing RAL 2004, met 884T-sturing met ingebouwde eindschakelaars, zonder tandwiel (persoonlijke ontgrendelingssleutel)","s":"Aandrijvingen","p":4567.9,"fab":"FAAC"},{"n":"FAAC C850 FAST SLIDER :  230V motor met electrorem , ingebouwde frequentie-inverter en ingebouwde sturing E850 , Z28 module 4 tandwiel, mechanische eindeloopschakelaars, geheel in gelakte stalen huizing RAL9006","s":"Aandrijvingen","p":4229.3,"fab":"FAAC"},{"n":"Funderingsplaat met regelingen opzij en in de hoogte voor Faac 746/844","s":"Toebehoren automatisering","p":53.8,"fab":"FAAC"},{"n":"Funderingsplaat voor Faac 884","s":"Toebehoren automatisering","p":180.6,"fab":"FAAC"},{"n":"Tandwiel Z12","s":"Toebehoren automatisering","p":72.5,"fab":"FAAC"},{"n":"Tandwiel Z16","s":"Toebehoren automatisering","p":50.4,"fab":"FAAC"},{"n":"Tandwiel Z16 - module 6 voor Faac 884","s":"Toebehoren automatisering","p":142.6,"fab":"FAAC"},{"n":"Tandwiel Z20","s":"Toebehoren automatisering","p":50.4,"fab":"FAAC"},{"n":"Tandlat nylon 1m","s":"Toebehoren automatisering","p":32,"fab":"FAAC"},{"n":"Tandlat staal verzinkt 30x12mm - incl. bevestigingsschroeven","s":"Toebehoren automatisering","p":118.8,"fab":"FAAC"},{"n":"Tandlat staal verzinkt 30x8mm - incl. bevestigingsschroeven","s":"Toebehoren automatisering","p":97.1,"fab":"FAAC"},{"n":"Tandlat staal verzinkt 30x30mm - module 6 voor Faac 884","s":"Toebehoren automatisering","p":82,"fab":"FAAC"},{"n":"3 x Hoekstukken voor bevestiging tandheugel voor Faac 884 (per m)","s":"Toebehoren automatisering","p":22.2,"fab":"FAAC"},{"n":"Garagedeuropener kit FAAC 550 (aandrijving+armen+plaat+ontvanger+2 zenders)","s":"Aandrijvingen","p":1207.1,"fab":"FAAC"},{"n":"Garagedeuropener FAAC 550  - incl. sturing E550 met eidschakelaars - mech","s":"Toebehoren automatisering","p":902.9,"fab":"FAAC"},{"n":"Garagedeuropener FAAC 550 Slave - zonder sturing - mech","s":"Toebehoren automatisering","p":607.1,"fab":"FAAC"},{"n":"Garagedeuropener kit dubbel FAAC 550 (2 aandrijvingen+armen+plaat+ontvanger+2 zenders)","s":"Aandrijvingen","p":1619.3,"fab":"FAAC"},{"n":"Set armen voor centrale montage FAAC 550, incl. basisplaat 130cm","s":"Toebehoren automatisering","p":265,"fab":"FAAC"},{"n":"Set armen voor dubbele montage FAAC 550, incl. basisplaten 130cm","s":"Toebehoren automatisering","p":216.3,"fab":"FAAC"},{"n":"Kabelset voor externe ontgrendeling op handgreep","s":"Aandrijvingen","p":16.9,"fab":"FAAC"},{"n":"Verlenging externe ontgrendeling","s":"Aandrijvingen","p":29.1,"fab":"FAAC"},{"n":"Gepersonaliseerde ontgrendelingssleutel n°1 tot n° 50 voor Faac 550","s":"Aandrijvingen","p":22.2,"fab":"FAAC"},{"n":"Garagedeuropener kit FAAC 595 hydr. (1 aandrijving+armen+plaat+ontvanger+2 zenders)","s":"Aandrijvingen","p":1773.7,"fab":"FAAC"},{"n":"Garagedeuraandrijving FAAC 595 I - incl. sturing 596/615BPR - hydr","s":"Aandrijvingen","p":1586,"fab":"FAAC"},{"n":"Garagedeuraandrijving FAAC 595 SLAVE - hydr","s":"Aandrijvingen","p":1196.4,"fab":"FAAC"},{"n":"Basisplaat 150cm voor FAAC 595","s":"Toebehoren automatisering","p":99.2,"fab":"FAAC"},{"n":"Kit verhogingsstukjes voor basisplaat 150cm voor FAAC 595","s":"Toebehoren automatisering","p":29,"fab":"FAAC"},{"n":"Kit einderitschakelaars (open + dicht) voor FAAC 595","s":"Toebehoren automatisering","p":50.4,"fab":"FAAC"},{"n":"Set armen voor centrale montage FAAC 595, zonder basisplaat","s":"Toebehoren automatisering","p":222.2,"fab":"FAAC"},{"n":"Set armen voor dubbele montage FAAC 595, excl. basisplaten","s":"Toebehoren automatisering","p":123.6,"fab":"FAAC"},{"n":"Externe ontgrendeling met sleutel voor garagedeuren tot max. 15 mm. dikte ( n° 1  tot n°36)","s":"Aandrijvingen","p":80.4,"fab":"FAAC"},{"n":"Externe ontgrendeling met sleutel voor garagedeuren groter dan 15 mm. dikte ( n° 1  tot n°36)","s":"Aandrijvingen","p":82.7,"fab":"FAAC"},{"n":"Aandrijving elektromechanisch FAAC D600 + ontv + 2 zenders 2k","s":"Aandrijvingen","p":368.3,"fab":"FAAC"},{"n":"Aandrijving elektromechanisch FAAC D700 HS + ontv + 2 zenders 2k","s":"Aandrijvingen","p":379,"fab":"FAAC"},{"n":"Aandrijving elektromechanisch FAAC D1000 + ontv + 2 zenders 2k","s":"Aandrijvingen","p":430.1,"fab":"FAAC"},{"n":"Garagedeuropener kit D1000 riem (3000 - 2250mm) + ontv + 2 zenders 2k","s":"Zender / ontvanger","p":551.3,"fab":"FAAC"},{"n":"Garagedeuropener kit D1000 riem (3600 - 2850mm) + ontv + 2 zenders 2k","s":"Zender / ontvanger","p":567.9,"fab":"FAAC"},{"n":"Garagedeuropener kit D600 riem (3000 - 2250mm) + ontv + 2 zenders 2k","s":"Zender / ontvanger","p":474.1,"fab":"FAAC"},{"n":"Garagedeuropener kit D600 riem (3600 - 2850mm) + ontv + 2 zenders 2k","s":"Zender / ontvanger","p":493.1,"fab":"FAAC"},{"n":"Garagedeuropener kit D700 riem (3000 - 2250mm) + ontv + 2 zenders 2k","s":"Zender / ontvanger","p":506.1,"fab":"FAAC"},{"n":"Garagedeuropener kit D700 riem (3600 - 2850mm) + ontv + 2 zenders 2k","s":"Zender / ontvanger","p":521.6,"fab":"FAAC"},{"n":"Tandriemrail 3000mm, bewegingsslag 2250mm - voorgemonteerd","s":"Toebehoren automatisering","p":130.7,"fab":"FAAC"},{"n":"Tandriemrail 3600mm, bewegingsslag 2850mm - voorgemonteerd","s":"Toebehoren automatisering","p":153.3,"fab":"FAAC"},{"n":"Tandriemrail 4200mm, bewegingsslag 3450mm - voorgemonteerd","s":"Toebehoren automatisering","p":234.1,"fab":"FAAC"},{"n":"Noodontgrendeling kabelset","s":"Aandrijvingen","p":16.9,"fab":"FAAC"},{"n":"Noodontgrendeling slot met uitneembare cilinder","s":"Aandrijvingen","p":18.6,"fab":"FAAC"},{"n":"Noodontgrendeling kabelset + slot met uitneembare cilinder","s":"Aandrijvingen","p":35.5,"fab":"FAAC"},{"n":"Middenophangbeugel met bevestigingslatten voor D600/D700HS/D1000","s":"Toebehoren automatisering","p":67,"fab":"FAAC"},{"n":"middenophangbeugel D600-D700HS-D1000","s":"Toebehoren automatisering","p":31.5,"fab":"FAAC"},{"n":"V-Kit heavy","s":"Toebehoren automatisering","p":417.6,"fab":"FAAC"},{"n":"Gepersonaliseerde ontgrendelingssleutel n°1 tot n° 36","s":"Aandrijvingen","p":29.6,"fab":"FAAC"},{"n":"Kit sturing E124 + ontv inplug RP 2-k + 2 zenders XT4","s":"Zender / ontvanger","p":846.8,"fab":"FAAC"},{"n":"Sturingsprint FAAC E024 (incl. behuizing)","s":"Toebehoren automatisering","p":452.7,"fab":"FAAC"},{"n":"Sturingsprint FAAC E124 (incl. behuizing)","s":"Toebehoren automatisering","p":615.4,"fab":"FAAC"},{"n":"Sturingsprint FAAC E145","s":"Toebehoren automatisering","p":396.8,"fab":"FAAC"},{"n":"Sturingsprint FAAC E721","s":"Toebehoren automatisering","p":389.7,"fab":"FAAC"},{"n":"780 D: Inbouwsturing voor 844 ER","s":"Toebehoren automatisering","p":442,"fab":"FAAC"},{"n":"Sturingsprint E850: inbouwsturing","s":"Toebehoren automatisering","p":927.9,"fab":"FAAC"},{"n":"Sturingsprint E550: inbouwsturing","s":"Toebehoren automatisering","p":322,"fab":"FAAC"},{"n":"Sturingsprint 596/615 BPR: inbouwsturing voor FAAC 595","s":"Toebehoren automatisering","p":223.4,"fab":"FAAC"},{"n":"Sturingsprint E600: inbouwsturing","s":"Toebehoren automatisering","p":145,"fab":"FAAC"},{"n":"Sturingsprint E700 HS: inbouwsturing","s":"Toebehoren automatisering","p":175.9,"fab":"FAAC"},{"n":"Sturingsprint E1000: inbouwsturing","s":"Toebehoren automatisering","p":164,"fab":"FAAC"},{"n":"HUIZING VOOR MOTORSTURING MODEL 'LM'","s":"Aandrijvingen","p":86.7,"fab":"FAAC"},{"n":"HUIZING VOOR MOTORSTURING MODEL 'L'","s":"Aandrijvingen","p":55.6,"fab":"FAAC"},{"n":"HUIZING VOOR MOTORSTURING MODEL 'E'","s":"Aandrijvingen","p":37.3,"fab":"FAAC"},{"n":"Noodbatterij voor E024 sturing","s":"Toebehoren automatisering","p":222.2,"fab":"FAAC"},{"n":"Noodbatterij voor E124 sturing","s":"Toebehoren automatisering","p":244.8,"fab":"FAAC"},{"n":"Encoder absoluut met bus-aansluiting / vleugel","s":"Toebehoren automatisering","p":110.2,"fab":"FAAC"},{"n":"Lusdetector MATRIX S: microprocessorsturing voor magnetische lusdetectie - 1 kanaal","s":"Toebehoren automatisering","p":199.5,"fab":"FAAC"},{"n":"Lusdetector MATRIX D: microprocessorsturing voor magnetische lusdetectie - 2 kanalen","s":"Toebehoren automatisering","p":235.7,"fab":"FAAC"},{"n":"Antenne 868Mhz met coax - voor XF, RP, PL, XR","s":"Toebehoren automatisering","p":29,"fab":"FAAC"},{"n":"Externe ontvanger in behuizing - XR2 868 - 2k - met ingebouwde antenne","s":"Zender / ontvanger","p":88.5,"fab":"FAAC"},{"n":"Externe ontvanger in behuizing - XR4 868 - 4k - met ingebouwde antenne","s":"Zender / ontvanger","p":111,"fab":"FAAC"},{"n":"Ontvanger inplug - frequentiemodule XF868 - 2k - voor 24V-sturingen","s":"Zender / ontvanger","p":68.2,"fab":"FAAC"},{"n":"Ontvanger inplug - RP 868SLH - 1k - met ingebouwde antenne","s":"Zender / ontvanger","p":91.3,"fab":"FAAC"},{"n":"Ontvanger inplug - RP 868SLH - 2k - met ingebouwde antenne","s":"Zender / ontvanger","p":101.4,"fab":"FAAC"},{"n":"Zender XT2 868 SLH - 2k - wit","s":"Zender / ontvanger","p":49.9,"fab":"FAAC"},{"n":"Zender XT2 868 SLH - 2k - zwart","s":"Zender / ontvanger","p":49.9,"fab":"FAAC"},{"n":"Zender XT4 686 SLH - 4k - wit of zwart","s":"Zender / ontvanger","p":65,"fab":"FAAC"},{"n":"Zender XT4 868 SLH - 4k - wit","s":"Zender / ontvanger","p":65,"fab":"FAAC"},{"n":"Zender XT4 868 SLH - 4k - zwart","s":"Zender / ontvanger","p":65,"fab":"FAAC"},{"n":"Sleutelcontact inbouw - 2 puls","s":"Bediening","p":100.1,"fab":"FAAC"},{"n":"Sleutelcontact opbouw - 2 puls","s":"Bediening","p":100.1,"fab":"FAAC"},{"n":"Waarschuwingslamp met knipperlicht FAACLIGHT 24V","s":"Veiligheidstoebehoren","p":57.5,"fab":"FAAC"},{"n":"Codeklavier FAAC draadloos - 868mhz - 4 codes - - voeding 9v batterij - incl. ontvanger","s":"Zender / ontvanger","p":212.3,"fab":"FAAC"},{"n":"Codeklavier FAAC platte opbouw - staal - verlichte toetsen - 4 codes - 1 relais - incl sturing","s":"Bediening","p":256.3,"fab":"FAAC"},{"n":"Fotocel XP 30 - opbouw - reikwijdte 30m -regelbaar fotocel - 13ms - IP54","s":"Veiligheidstoebehoren","p":85.3,"fab":"FAAC"},{"n":"Fotocel XP 30B - opbouw - reikwijdte 30m -regelbaar fotocel - 20ms - IP54 - tot 16 paar in 1 systeem","s":"Veiligheidstoebehoren","p":88,"fab":"FAAC"},{"n":"Fotocel XP 20D - opbouw - reikwijdte 20m -regelbaar fotocel - 13ms - IP54","s":"Veiligheidstoebehoren","p":77.1,"fab":"FAAC"},{"n":"Fotocel XP 20B D - opbouw - reikwijdte 20m -regelbaar fotocel - 20ms - IP54 - tot 16 paar in 1 systeem","s":"Veiligheidstoebehoren","p":92.5,"fab":"FAAC"},{"n":"Fotocel XP 20W D - opbouw - reikwijdte 20m -regelbaar fotocel - 40ms - Wireless - tot 16 paar in 1 systeem","s":"Veiligheidstoebehoren","p":103.1,"fab":"FAAC"},{"n":"Bevestigingskit voor Faac 415 - Regelbare montagebeugelset zonder lassen, in roestvrij staal","s":"Toebehoren automatisering","p":166.4,"fab":"FAAC"},{"n":"Bevestigingskit voor Faac 422 - Regelbare montagebeugelset zonder lassen, in roestvrij staal","s":"Toebehoren automatisering","p":166.4,"fab":"FAAC"},{"n":"Bevestigingskit voor Faac 400 - Regelbare montagebeugelset zonder lassen, in roestvrij staal","s":"Toebehoren automatisering","p":166.4,"fab":"FAAC"},{"n":"Pantograaf inox voor FAAC 422/400/415 - zuilen tot 100cm","s":"Toebehoren automatisering","p":377.7,"fab":"FAAC"},{"n":"Ontgrendelingssysteem voor pantograaf","s":"Aandrijvingen","p":202.2,"fab":"FAAC"},{"n":"Regelbare inox beugel pantograaf","s":"Toebehoren automatisering","p":84.4,"fab":"FAAC"},{"n":"Hydrauliekolie 1 LITER","s":"Toebehoren automatisering","p":30.9,"fab":"FAAC"},{"n":"Ontgrendelingsleutel VIRO","s":"Aandrijvingen","p":6,"fab":"FAAC"},{"n":"CONDENSATOR 25 μF","s":"Toebehoren automatisering","p":20.8,"fab":"FAAC"},{"n":"CONDENSATOR 16 μF","s":"Toebehoren automatisering","p":9.4,"fab":"FAAC"},{"n":"CONDENSATOR 8 μF","s":"Toebehoren automatisering","p":10.1,"fab":"FAAC"},{"n":"CONDENSATOR 6.3 μF","s":"Toebehoren automatisering","p":9.9,"fab":"FAAC"},{"n":"Codeklavier DIGICODE CL platte opbouw - inox - verlichte toetsen - 99 codes - 2 relais - incl. sturing","s":"Bediening","p":334,"fab":"FAAC"},{"n":"Dubbel Codeklavier DIGICODE CL platte opbouw - inox - verlichte toetsen - 99 codes - 2 relais - incl. sturing","s":"Bediening","p":559,"fab":"FAAC"},{"n":"Codeklavier DIGICODE CR2 platte opbouw - behuizing Zamak - verlichte toetsen - 99 codes - 2 relais - incl. sturing","s":"Bediening","p":232,"fab":"FAAC"},{"n":"Dubbel Codeklavier DIGICODE CR2 platte opbouw - behuizing Zamak - verlichte toetsen - 99 codes - 2 relais - incl. sturing","s":"Bediening","p":392,"fab":"FAAC"},{"n":"Codeklavier DIGICODE CR2 platte opbouw - behuizing Zamak - verlichte toetsen - 99 codes - slave","s":"Bediening","p":169,"fab":"FAAC"},{"n":"Plaatsingskost (excl. Hoofdbekabeling)","s":"Toebehoren automatisering","p":550,"fab":"FAAC"},{"n":"Motorsteun","s":"Aandrijvingen","p":62,"fab":"FAAC"},{"n":"Plaatsen inbouwbak(ken) ondergrondse aandrijving + drainage (nieuwe palen)","s":"Aandrijvingen","p":250,"fab":"FAAC"},{"n":"Plaatsen inbouwbak(ken) Ondergrondse aandrijving met drainage - met bestaande palen","s":"Aandrijvingen","p":450,"fab":"FAAC"},{"n":"Elektrisch inbouwslot 12/24V - watervast","s":"Toebehoren automatisering","p":144,"fab":"FAAC"},{"n":"Elektrisch slot - watervast - inbouw in poortvleugel","s":"Toebehoren automatisering","p":290,"fab":"FAAC"},{"n":"Paar fotocel inbouw","s":"Veiligheidstoebehoren","p":120,"fab":null},{"n":"Paar fotocel opbouw","s":"Veiligheidstoebehoren","p":90,"fab":null},{"n":"Paar fotocel inbouw in fotocelpaaltjes","s":"Veiligheidstoebehoren","p":200,"fab":null},{"n":"Knipperlicht oranje","s":"Veiligheidstoebehoren","p":90,"fab":null},{"n":"Paar fotocellijsten 14m H850/695","s":"Veiligheidstoebehoren","p":584,"fab":null},{"n":"Paar fotocellijsten 14m H1250/1065","s":"Veiligheidstoebehoren","p":631,"fab":null},{"n":"Paar fotocellijsten 14m H1600/1430","s":"Veiligheidstoebehoren","p":675,"fab":null},{"n":"Paar fotocellijsten 14m H2000/1800","s":"Veiligheidstoebehoren","p":706,"fab":null},{"n":"Dubbel paar fotocellijsten (master/slave) 14m H850/695","s":"Veiligheidstoebehoren","p":1404,"fab":null},{"n":"Dubbel paar fotocellijsten (master/slave) 14m H1250/1065","s":"Veiligheidstoebehoren","p":1440,"fab":null},{"n":"Dubbel paar fotocellijsten (master/slave) 14m H1600/1430","s":"Veiligheidstoebehoren","p":1580,"fab":null},{"n":"Dubbel paar fotocellijsten (master/slave) 14m H2000/1800","s":"Veiligheidstoebehoren","p":1670,"fab":null},{"n":"Facila videokit WIFI opbouw + 7\"","s":"Bediening","p":940,"fab":null},{"n":"Facila videokit WIFI opbouw met code + 7\"","s":"Bediening","p":1090,"fab":null},{"n":"Facila monitor 7\"","s":"Bediening","p":435,"fab":null},{"n":"Facila buitenpost WIFI opbouw","s":"Bediening","p":355,"fab":null},{"n":"Niko videokit opbouw 7\" + IP","s":"Bediening","p":1050,"fab":null},{"n":"Niko monitor 7,0\"","s":"Bediening","p":420,"fab":null},{"n":"Bticino videokit opbouw 7\" + wifi","s":"Bediening","p":1152,"fab":null},{"n":"Fasttel Kit FT600 video 1 drukknop (FT600VK)","s":"Bediening","p":1250,"fab":"FASTTEL"},{"n":"Fasttel Kit FT600 video + klavier 1 drukknop (FT600VKK)","s":"Bediening","p":1560,"fab":"FASTTEL"},{"n":"Fasttel extra binnentoestel FT600 7\" (FT600W)","s":"Bediening","p":450,"fab":"FASTTEL"},{"n":"Fasttel extra buitentoestel FT600 vidéo - 1 drukknop (FT600SIPVC)","s":"Bediening","p":985,"fab":"FASTTEL"},{"n":"Fasttel Kit FT600 1 drukknop / klavier + extern klavier","s":"Bediening","p":1990,"fab":"FASTTEL"},{"n":"Cifero codeklavier opbouw 60 codes 2 relais","s":"Bediening","p":360,"fab":null},{"n":"Dubbel codeklavier opbouw 60 codes 2 relais","s":"Bediening","p":485,"fab":null},{"n":"Entrya module op wifi","s":"Bediening","p":380,"fab":"Entrya"},{"n":"Entrya module SIM kaart","s":"Bediening","p":445,"fab":"Entrya"},{"n":"Magnetische lus: 1x lus + detector MATRIX S","s":"Bediening","p":690,"fab":null},{"n":"Magnetische richtingsgevoelige lus: 2x lus + detector MATRIX D","s":"Bediening","p":990,"fab":null}],"palen":[{"n":"Paal met hardhout bekleding - iroko (155x155x2100mm)","p":890},{"n":"Paal met hardhout bekleding - padoek (155x155x2100mm)","p":1020},{"n":"Zuil in iroko (520x430x2100mm)","p":1880},{"n":"Zuil in padoek (520x430x2100mm)","p":2650},{"n":"Zuil met brievenbus - iroko (520x430x2100mm)","p":2420},{"n":"Zuil met brievenbus - padoek (520x430x2100mm)","p":3230},{"n":"Poortpaal hardhout - poteau en bois exotique (90x90x2700mm)","p":100},{"n":"Poortpaal hardhout - poteau bois exotique (120x120x2000mm)","p":150},{"n":"Poortpaal hardhout - poteau bois exotique (120x120x3000mm)","p":220},{"n":"Poortpaal hardhout - poteau bois exotique (140x140x3000mm)","p":290},{"n":"Padoekpaal - Poteau padouk (140x140x27000mm)","p":500},{"n":"Padoekpaal - Poteau padouk (140x140x3000mm)","p":550}]};window.PL_PRIJZEN2020 = {"ALLEGRO":{"dubbel":[[0,250,1730.0],[251,399,1550.0],[400,800,1400.0]],"enkel":[[0,120,2060.0],[121,199,1860.0],[200,800,1610.0]],"schuif_rail":[[0,349,1610.0],[350,500,1370.0],[501,600,1330.0],[601,700,1290.0],[701,1200,1260.0]],"schuif_vrijdragend":[[0,500,1840.0],[501,700,1790.0],[701,1200,1730.0]],"schuif_vrijdragend_b":[[0,500,1680.0],[501,700,1630.0],[701,1200,1580.0]],"vast_hekwerk":[[0,200,1550.0],[201,500,1390.0],[501,1000,1250.0],[1001,2000,1190.0],[2001,5000,1160.0]]},"AMBLEVE":{"dubbel":[[0,250,1550.0],[251,399,1390.0],[400,800,1260.0]],"enkel":[[0,120,1850.0],[121,199,1670.0],[200,800,1440.0]],"schuif_rail":[[0,349,1450.0],[350,500,1240.0],[501,600,1190.0],[601,700,1160.0],[701,1200,1140.0]],"schuif_vrijdragend":[[0,500,1660.0],[501,700,1620.0],[701,1200,1570.0]],"schuif_vrijdragend_b":[[0,500,1520.0],[501,700,1480.0],[701,1200,1430.0]],"vast_hekwerk":[[0,200,940.0],[201,500,840.0],[501,1000,750.0],[1001,2000,720.0],[2001,5000,700.0]]},"AMSTEL":{"dubbel":[[0,250,2840.0],[251,399,2550.0],[400,800,2300.0]],"enkel":[[0,120,3360.0],[121,199,3030.0],[200,800,2650.0]],"schuif_rail":[[0,349,2610.0],[350,500,2220.0],[501,600,2150.0],[601,700,2090.0],[701,1200,2040.0]],"schuif_vrijdragend":[[0,500,2940.0],[501,700,2860.0],[701,1200,2770.0]],"schuif_vrijdragend_b":[[0,500,2680.0],[501,700,2600.0],[701,1200,2520.0]],"vast_hekwerk":[[0,200,1700.0],[201,500,1530.0],[501,1000,1370.0],[1001,2000,1310.0],[2001,5000,1280.0]]},"APOLLO":{"dubbel":[[0,250,2620.0],[251,399,2350.0],[400,800,2120.0]],"enkel":[[0,120,3100.0],[121,199,2790.0],[200,800,2440.0]],"schuif_rail":[[0,349,2410.0],[350,500,2050.0],[501,600,1980.0],[601,700,1930.0],[701,1200,1880.0]],"schuif_vrijdragend":[[0,500,2720.0],[501,700,2640.0],[701,1200,2560.0]],"schuif_vrijdragend_b":[[0,500,2480.0],[501,700,2410.0],[701,1200,2340.0]],"vast_hekwerk":[[0,200,2480.0],[201,500,2230.0],[501,1000,2000.0],[1001,2000,1910.0],[2001,5000,1860.0]]},"ARGESJ":{"dubbel":[[0,250,1400.0],[251,399,1260.0],[400,800,1140.0]],"enkel":[[0,120,1680.0],[121,199,1520.0],[200,800,1310.0]],"schuif_rail":[[0,349,1320.0],[350,500,1130.0],[501,600,1090.0],[601,700,1060.0],[701,1200,1030.0]],"schuif_vrijdragend":[[0,500,1520.0],[501,700,1480.0],[701,1200,1430.0]],"schuif_vrijdragend_b":[[0,500,1390.0],[501,700,1350.0],[701,1200,1310.0]],"vast_hekwerk":[[0,200,990.0],[201,500,890.0],[501,1000,800.0],[1001,2000,770.0],[2001,5000,750.0]]},"ARNO":{"dubbel":[[0,250,1760.0],[251,399,1580.0],[400,800,1430.0]],"enkel":[[0,120,2100.0],[121,199,1890.0],[200,800,1640.0]],"schuif_rail":[[0,349,1640.0],[350,500,1400.0],[501,600,1350.0],[601,700,1320.0],[701,1200,1280.0]],"schuif_vrijdragend":[[0,500,1870.0],[501,700,1820.0],[701,1200,1760.0]],"schuif_vrijdragend_b":[[0,500,1710.0],[501,700,1660.0],[701,1200,1610.0]],"vast_hekwerk":[[0,200,1060.0],[201,500,950.0],[501,1000,850.0],[1001,2000,820.0],[2001,5000,800.0]]},"AVEYRON":{"dubbel":[[0,250,2250.0],[251,399,2020.0],[400,800,1820.0]],"enkel":[[0,120,2670.0],[121,199,2410.0],[200,800,2100.0]],"schuif_rail":[[0,349,2080.0],[350,500,1770.0],[501,600,1710.0],[601,700,1670.0],[701,1200,1630.0]],"schuif_vrijdragend":[[0,500,2350.0],[501,700,2280.0],[701,1200,2210.0]],"schuif_vrijdragend_b":[[0,500,2150.0],[501,700,2090.0],[701,1200,2030.0]],"vast_hekwerk":[[0,200,1800.0],[201,500,1620.0],[501,1000,1450.0],[1001,2000,1390.0],[2001,5000,1350.0]]},"BASENTO":{"dubbel":[[0,250,1460.0],[251,399,1310.0],[400,800,1180.0]],"enkel":[[0,120,1620.0],[121,199,1460.0],[200,800,1260.0]],"schuif_rail":[[0,349,1370.0],[350,500,1170.0],[501,600,1130.0],[601,700,1100.0],[701,1200,1070.0]],"schuif_vrijdragend":[[0,500,1570.0],[501,700,1530.0],[701,1200,1480.0]],"schuif_vrijdragend_b":[[0,500,1440.0],[501,700,1400.0],[701,1200,1360.0]],"vast_hekwerk":[[0,200,880.0],[201,500,790.0],[501,1000,710.0],[1001,2000,680.0],[2001,5000,660.0]]},"BASENTO type B":{"dubbel":[[0,250,1370.0],[251,399,1230.0],[400,800,1110.0]],"enkel":[[0,120,1520.0],[121,199,1370.0],[200,800,1180.0]],"schuif_rail":[[0,349,1290.0],[350,500,1100.0],[501,600,1060.0],[601,700,1040.0],[701,1200,1010.0]],"schuif_vrijdragend":[[0,500,1480.0],[501,700,1440.0],[701,1200,1400.0]],"schuif_vrijdragend_b":[[0,500,1360.0],[501,700,1320.0],[701,1200,1280.0]],"vast_hekwerk":[[0,200,830.0],[201,500,740.0],[501,1000,670.0],[1001,2000,640.0],[2001,5000,620.0]]},"BEEKVLIET":{"dubbel":[[0,250,1240.0],[251,399,1110.0],[400,800,1000.0]],"enkel":[[0,120,1430.0],[121,199,1290.0],[200,800,1110.0]],"schuif_rail":[[0,349,1170.0],[350,500,1000.0],[501,600,960.0],[601,700,940.0],[701,1200,920.0]],"schuif_vrijdragend":[[0,500,1350.0],[501,700,1310.0],[701,1200,1270.0]],"schuif_vrijdragend_b":[[0,500,1240.0],[501,700,1210.0],[701,1200,1170.0]],"vast_hekwerk":[[0,200,750.0],[201,500,670.0],[501,1000,600.0],[1001,2000,580.0],[2001,5000,560.0]]},"BEEKVLIET type RM":{"dubbel":[[0,250,1240.0],[251,399,1110.0],[400,800,1000.0]],"enkel":[[0,120,1380.0],[121,199,1250.0],[200,800,1070.0]],"schuif_rail":[[0,349,1170.0],[350,500,1000.0],[501,600,960.0],[601,700,940.0],[701,1200,920.0]],"schuif_vrijdragend":[[0,500,1350.0],[501,700,1310.0],[701,1200,1270.0]],"schuif_vrijdragend_b":[[0,500,1240.0],[501,700,1210.0],[701,1200,1170.0]],"vast_hekwerk":[[0,200,750.0],[201,500,670.0],[501,1000,600.0],[1001,2000,580.0],[2001,5000,560.0]]},"BEEKVLIET type RZ":{"dubbel":[[0,250,1190.0],[251,399,1070.0],[400,800,970.0]],"enkel":[[0,120,1330.0],[121,199,1200.0],[200,800,1030.0]],"schuif_rail":[[0,349,1130.0],[350,500,970.0],[501,600,930.0],[601,700,910.0],[701,1200,890.0]],"schuif_vrijdragend":[[0,500,1310.0],[501,700,1280.0],[701,1200,1240.0]],"schuif_vrijdragend_b":[[0,500,1200.0],[501,700,1170.0],[701,1200,1130.0]],"vast_hekwerk":[[0,200,720.0],[201,500,640.0],[501,1000,580.0],[1001,2000,550.0],[2001,5000,540.0]]},"BEEKVLIET type Z":{"dubbel":[[0,250,1300.0],[251,399,1170.0],[400,800,1060.0]],"enkel":[[0,120,1510.0],[121,199,1360.0],[200,800,1170.0]],"schuif_rail":[[0,349,1230.0],[350,500,1050.0],[501,600,1010.0],[601,700,990.0],[701,1200,960.0]],"schuif_vrijdragend":[[0,500,1420.0],[501,700,1380.0],[701,1200,1340.0]],"schuif_vrijdragend_b":[[0,500,1300.0],[501,700,1270.0],[701,1200,1230.0]],"vast_hekwerk":[[0,200,790.0],[201,500,710.0],[501,1000,640.0],[1001,2000,610.0],[2001,5000,600.0]]},"BRENTA":{"dubbel":[[0,250,1660.0],[251,399,1490.0],[400,800,1350.0]],"enkel":[[0,120,1980.0],[121,199,1790.0],[200,800,1550.0]],"schuif_rail":[[0,349,1550.0],[350,500,1320.0],[501,600,1280.0],[601,700,1240.0],[701,1200,1210.0]],"schuif_vrijdragend":[[0,500,1770.0],[501,700,1720.0],[701,1200,1670.0]],"schuif_vrijdragend_b":[[0,500,1620.0],[501,700,1580.0],[701,1200,1530.0]],"vast_hekwerk":[[0,200,990.0],[201,500,890.0],[501,1000,800.0],[1001,2000,770.0],[2001,5000,750.0]]},"BRENTA type K":{"dubbel":[[0,250,1860.0],[251,399,1670.0],[400,800,1510.0]],"enkel":[[0,120,2380.0],[121,199,2150.0],[200,800,1870.0]],"schuif_rail":[[0,349,1730.0],[350,500,1480.0],[501,600,1420.0],[601,700,1390.0],[701,1200,1350.0]],"schuif_vrijdragend":[[0,500,1970.0],[501,700,1920.0],[701,1200,1860.0]],"schuif_vrijdragend_b":[[0,500,1800.0],[501,700,1750.0],[701,1200,1700.0]],"vast_hekwerk":[[0,200,1030.0],[201,500,920.0],[501,1000,830.0],[1001,2000,790.0],[2001,5000,770.0]]},"CARIBOU":{"dubbel":[[0,250,2530.0],[251,399,2270.0],[400,800,2050.0]],"enkel":[[0,120,3000.0],[121,199,2700.0],[200,800,2360.0]],"schuif_rail":[[0,349,2330.0],[350,500,1990.0],[501,600,1920.0],[601,700,1870.0],[701,1200,1820.0]],"schuif_vrijdragend":[[0,500,2630.0],[501,700,2560.0],[701,1200,2480.0]],"schuif_vrijdragend_b":[[0,500,2400.0],[501,700,2330.0],[701,1200,2260.0]],"vast_hekwerk":[[0,200,1520.0],[201,500,1360.0],[501,1000,1220.0],[1001,2000,1170.0],[2001,5000,1140.0]]},"COLUMBIA":{"dubbel":[[0,250,1280.0],[251,399,1150.0],[400,800,1040.0]],"enkel":[[0,120,1540.0],[121,199,1390.0],[200,800,1200.0]],"schuif_rail":[[0,349,1210.0],[350,500,1030.0],[501,600,1000.0],[601,700,970.0],[701,1200,950.0]],"schuif_vrijdragend":[[0,500,1400.0],[501,700,1360.0],[701,1200,1320.0]],"schuif_vrijdragend_b":[[0,500,1280.0],[501,700,1250.0],[701,1200,1210.0]],"vast_hekwerk":[[0,200,770.0],[201,500,690.0],[501,1000,620.0],[1001,2000,590.0],[2001,5000,580.0]]},"CONTESSA":{"dubbel":[[0,250,2490.0],[251,399,2240.0],[400,800,2020.0]],"enkel":[[0,120,2960.0],[121,199,2670.0],[200,800,2330.0]],"schuif_rail":[[0,349,2300.0],[350,500,1960.0],[501,600,1890.0],[601,700,1840.0],[701,1200,1800.0]],"schuif_vrijdragend":[[0,500,2590.0],[501,700,2520.0],[701,1200,2440.0]],"schuif_vrijdragend_b":[[0,500,2370.0],[501,700,2300.0],[701,1200,2230.0]],"vast_hekwerk":[[0,200,1500.0],[201,500,1350.0],[501,1000,1210.0],[1001,2000,1160.0],[2001,5000,1130.0]]},"CORNI":{"dubbel":[[0,250,2840.0],[251,399,2550.0],[400,800,2300.0]],"enkel":[[0,120,3360.0],[121,199,3030.0],[200,800,2650.0]],"schuif_rail":[[0,349,2610.0],[350,500,2220.0],[501,600,2150.0],[601,700,2090.0],[701,1200,2040.0]],"schuif_vrijdragend":[[0,500,2940.0],[501,700,2860.0],[701,1200,2770.0]],"schuif_vrijdragend_b":[[0,500,2680.0],[501,700,2600.0],[701,1200,2520.0]],"vast_hekwerk":[[0,200,1700.0],[201,500,1530.0],[501,1000,1370.0],[1001,2000,1310.0],[2001,5000,1280.0]]},"CUMBERLAND - ZSH":{"dubbel":[[0,250,1530.0],[251,399,1370.0],[400,800,1240.0]],"enkel":[[0,120,1690.0],[121,199,1530.0],[200,800,1320.0]],"schuif_rail":[[0,349,1430.0],[350,500,1220.0],[501,600,1180.0],[601,700,1150.0],[701,1200,1120.0]],"schuif_vrijdragend":[[0,500,1640.0],[501,700,1600.0],[701,1200,1550.0]],"schuif_vrijdragend_b":[[0,500,1500.0],[501,700,1460.0],[701,1200,1410.0]],"vast_hekwerk":[[0,200,920.0],[201,500,820.0],[501,1000,740.0],[1001,2000,710.0],[2001,5000,690.0]]},"CUMBERLAND type K - MSH":{"dubbel":[[0,250,1730.0],[251,399,1550.0],[400,800,1400.0]],"enkel":[[0,120,2210.0],[121,199,1990.0],[200,800,1730.0]],"schuif_rail":[[0,349,1610.0],[350,500,1370.0],[501,600,1330.0],[601,700,1290.0],[701,1200,1260.0]],"schuif_vrijdragend":[[0,500,1840.0],[501,700,1790.0],[701,1200,1730.0]],"schuif_vrijdragend_b":[[0,500,1680.0],[501,700,1630.0],[701,1200,1580.0]],"vast_hekwerk":[[0,200,1470.0],[201,500,1320.0],[501,1000,1180.0],[1001,2000,1130.0],[2001,5000,1100.0]]},"DANENBERG":{"dubbel":[[0,250,2170.0],[251,399,1950.0],[400,800,1760.0]],"enkel":[[0,120,2580.0],[121,199,2330.0],[200,800,2030.0]],"schuif_rail":[[0,349,2010.0],[350,500,1710.0],[501,600,1650.0],[601,700,1610.0],[701,1200,1570.0]],"schuif_vrijdragend":[[0,500,2280.0],[501,700,2220.0],[701,1200,2150.0]],"schuif_vrijdragend_b":[[0,500,2080.0],[501,700,2020.0],[701,1200,1960.0]],"vast_hekwerk":[[0,200,1850.0],[201,500,1660.0],[501,1000,1490.0],[1001,2000,1420.0],[2001,5000,1390.0]]},"DELAWARE":{"dubbel":[[0,250,2530.0],[251,399,2270.0],[400,800,2050.0]],"enkel":[[0,120,3000.0],[121,199,2700.0],[200,800,2360.0]],"schuif_rail":[[0,349,2330.0],[350,500,1990.0],[501,600,1920.0],[601,700,1870.0],[701,1200,1820.0]],"schuif_vrijdragend":[[0,500,2630.0],[501,700,2560.0],[701,1200,2480.0]],"schuif_vrijdragend_b":[[0,500,2400.0],[501,700,2330.0],[701,1200,2260.0]],"vast_hekwerk":[[0,200,2270.0],[201,500,2040.0],[501,1000,1830.0],[1001,2000,1750.0],[2001,5000,1700.0]]},"EBRO":{"dubbel":[[0,250,1380.0],[251,399,1240.0],[400,800,1120.0]],"enkel":[[0,120,1660.0],[121,199,1500.0],[200,800,1290.0]],"schuif_rail":[[0,349,1300.0],[350,500,1110.0],[501,600,1070.0],[601,700,1040.0],[701,1200,1020.0]],"schuif_vrijdragend":[[0,500,1490.0],[501,700,1450.0],[701,1200,1410.0]],"schuif_vrijdragend_b":[[0,500,1370.0],[501,700,1330.0],[701,1200,1290.0]],"vast_hekwerk":[[0,200,1040.0],[201,500,930.0],[501,1000,840.0],[1001,2000,800.0],[2001,5000,780.0]]},"ESLA":{"dubbel":[[0,250,1180.0],[251,399,1060.0],[400,800,960.0]],"enkel":[[0,120,1320.0],[121,199,1190.0],[200,800,1020.0]],"schuif_rail":[[0,349,1120.0],[350,500,960.0],[501,600,920.0],[601,700,900.0],[701,1200,880.0]],"schuif_vrijdragend":[[0,500,1300.0],[501,700,1270.0],[701,1200,1230.0]],"schuif_vrijdragend_b":[[0,500,1190.0],[501,700,1160.0],[701,1200,1120.0]],"vast_hekwerk":[[0,200,830.0],[201,500,740.0],[501,1000,670.0],[1001,2000,640.0],[2001,5000,620.0]]},"EUFRAAT":{"dubbel":[[0,250,1730.0],[251,399,1550.0],[400,800,1400.0]],"enkel":[[0,120,2060.0],[121,199,1860.0],[200,800,1610.0]],"schuif_rail":[[0,349,1610.0],[350,500,1370.0],[501,600,1330.0],[601,700,1290.0],[701,1200,1260.0]],"schuif_vrijdragend":[[0,500,1840.0],[501,700,1790.0],[701,1200,1730.0]],"schuif_vrijdragend_b":[[0,500,1680.0],[501,700,1630.0],[701,1200,1580.0]],"vast_hekwerk":[[0,200,1470.0],[201,500,1320.0],[501,1000,1180.0],[1001,2000,1130.0],[2001,5000,1100.0]]},"GARONNE":{"dubbel":[[0,250,1530.0],[251,399,1370.0],[400,800,1240.0]],"enkel":[[0,120,1830.0],[121,199,1650.0],[200,800,1430.0]],"schuif_rail":[[0,349,1430.0],[350,500,1220.0],[501,600,1180.0],[601,700,1150.0],[701,1200,1120.0]],"schuif_vrijdragend":[[0,500,1640.0],[501,700,1600.0],[701,1200,1550.0]],"schuif_vrijdragend_b":[[0,500,1500.0],[501,700,1460.0],[701,1200,1410.0]],"vast_hekwerk":[[0,200,920.0],[201,500,820.0],[501,1000,740.0],[1001,2000,710.0],[2001,5000,690.0]]},"GLENFIDDICH B":{"dubbel":[[0,250,2390.0],[251,399,2150.0],[400,800,1940.0]],"enkel":[[0,120,2840.0],[121,199,2560.0],[200,800,2240.0]],"schuif_rail":[[0,349,2210.0],[350,500,1880.0],[501,600,1820.0],[601,700,1770.0],[701,1200,1730.0]],"schuif_vrijdragend":[[0,500,2500.0],[501,700,2430.0],[701,1200,2350.0]],"schuif_vrijdragend_b":[[0,500,2280.0],[501,700,2220.0],[701,1200,2150.0]],"vast_hekwerk":[[0,200,2040.0],[201,500,1830.0],[501,1000,1640.0],[1001,2000,1570.0],[2001,5000,1530.0]]},"GLENFIDDICH HV - |":{"dubbel":[[0,250,1470.0],[251,399,1320.0],[400,800,1190.0]],"enkel":[[0,120,1760.0],[121,199,1590.0],[200,800,1370.0]],"schuif_rail":[[0,349,1380.0],[350,500,1180.0],[501,600,1140.0],[601,700,1110.0],[701,1200,1080.0]],"schuif_vrijdragend":[[0,500,1580.0],[501,700,1540.0],[701,1200,1490.0]],"schuif_vrijdragend_b":[[0,500,1450.0],[501,700,1410.0],[701,1200,1370.0]],"vast_hekwerk":[[0,200,1250.0],[201,500,1120.0],[501,1000,1000.0],[1001,2000,960.0],[2001,5000,940.0]]},"GLENFIDDICH PLANE 1-Z":{"dubbel":[[0,250,1770.0],[251,399,1590.0],[400,800,1440.0]],"enkel":[[0,120,2110.0],[121,199,1900.0],[200,800,1650.0]],"schuif_rail":[[0,349,1650.0],[350,500,1410.0],[501,600,1360.0],[601,700,1320.0],[701,1200,1290.0]],"schuif_vrijdragend":[[0,500,1880.0],[501,700,1830.0],[701,1200,1770.0]],"schuif_vrijdragend_b":[[0,500,1720.0],[501,700,1670.0],[701,1200,1620.0]],"vast_hekwerk":[[0,200,1500.0],[201,500,1350.0],[501,1000,1210.0],[1001,2000,1160.0],[2001,5000,1130.0]]},"GLENFIDDICH PLANE 2-Z":{"dubbel":[[0,250,2060.0],[251,399,1850.0],[400,800,1670.0]],"enkel":[[0,120,2450.0],[121,199,2210.0],[200,800,1920.0]],"schuif_rail":[[0,349,1910.0],[350,500,1630.0],[501,600,1570.0],[601,700,1530.0],[701,1200,1490.0]],"schuif_vrijdragend":[[0,500,2170.0],[501,700,2110.0],[701,1200,2040.0]],"schuif_vrijdragend_b":[[0,500,1980.0],[501,700,1930.0],[701,1200,1870.0]],"vast_hekwerk":[[0,200,1750.0],[201,500,1570.0],[501,1000,1410.0],[1001,2000,1350.0],[2001,5000,1310.0]]},"GLENFIDDICH R":{"dubbel":[[0,250,2170.0],[251,399,1950.0],[400,800,1760.0]],"enkel":[[0,120,2580.0],[121,199,2330.0],[200,800,2030.0]],"schuif_rail":[[0,349,2010.0],[350,500,1710.0],[501,600,1650.0],[601,700,1610.0],[701,1200,1570.0]],"schuif_vrijdragend":[[0,500,2280.0],[501,700,2220.0],[701,1200,2150.0]],"schuif_vrijdragend_b":[[0,500,2080.0],[501,700,2020.0],[701,1200,1960.0]],"vast_hekwerk":[[0,200,1850.0],[201,500,1660.0],[501,1000,1490.0],[1001,2000,1420.0],[2001,5000,1390.0]]},"GLENFIDDICH V / \\":{"dubbel":[[0,250,1800.0],[251,399,1620.0],[400,800,1460.0]],"enkel":[[0,120,2150.0],[121,199,1940.0],[200,800,1680.0]],"schuif_rail":[[0,349,1680.0],[350,500,1430.0],[501,600,1380.0],[601,700,1350.0],[701,1200,1320.0]],"schuif_vrijdragend":[[0,500,1910.0],[501,700,1860.0],[701,1200,1800.0]],"schuif_vrijdragend_b":[[0,500,1750.0],[501,700,1700.0],[701,1200,1650.0]],"vast_hekwerk":[[0,200,1540.0],[201,500,1380.0],[501,1000,1240.0],[1001,2000,1180.0],[2001,5000,1150.0]]},"GLEN-KWAI":{"dubbel":[[0,250,1470.0],[251,399,1320.0],[400,800,1190.0]],"enkel":[[0,120,1760.0],[121,199,1590.0],[200,800,1370.0]],"schuif_rail":[[0,349,1380.0],[350,500,1180.0],[501,600,1140.0],[601,700,1110.0],[701,1200,1080.0]],"schuif_vrijdragend":[[0,500,1580.0],[501,700,1540.0],[701,1200,1490.0]],"schuif_vrijdragend_b":[[0,500,1450.0],[501,700,1410.0],[701,1200,1370.0]],"vast_hekwerk":[[0,200,1250.0],[201,500,1120.0],[501,1000,1000.0],[1001,2000,960.0],[2001,5000,940.0]]},"IJSEL":{"dubbel":[[0,250,1820.0],[251,399,1630.0],[400,800,1470.0]],"enkel":[[0,120,2160.0],[121,199,1950.0],[200,800,1690.0]],"schuif_rail":[[0,349,1690.0],[350,500,1440.0],[501,600,1390.0],[601,700,1360.0],[701,1200,1320.0]],"schuif_vrijdragend":[[0,500,1920.0],[501,700,1870.0],[701,1200,1810.0]],"schuif_vrijdragend_b":[[0,500,1760.0],[501,700,1710.0],[701,1200,1660.0]],"vast_hekwerk":[[0,200,1000.0],[201,500,900.0],[501,1000,810.0],[1001,2000,770.0],[2001,5000,750.0]]},"JALOMITZA":{"dubbel":[[0,250,1730.0],[251,399,1550.0],[400,800,1400.0]],"enkel":[[0,120,2060.0],[121,199,1860.0],[200,800,1610.0]],"schuif_rail":[[0,349,1610.0],[350,500,1370.0],[501,600,1330.0],[601,700,1290.0],[701,1200,1260.0]],"schuif_vrijdragend":[[0,500,1840.0],[501,700,1790.0],[701,1200,1730.0]],"schuif_vrijdragend_b":[[0,500,1680.0],[501,700,1630.0],[701,1200,1580.0]],"vast_hekwerk":[[0,200,1040.0],[201,500,930.0],[501,1000,840.0],[1001,2000,800.0],[2001,5000,780.0]]},"JAPURA":{"dubbel":[[0,250,1800.0],[251,399,1620.0],[400,800,1460.0]],"enkel":[[0,120,2150.0],[121,199,1940.0],[200,800,1680.0]],"schuif_rail":[[0,349,1680.0],[350,500,1430.0],[501,600,1380.0],[601,700,1350.0],[701,1200,1320.0]],"schuif_vrijdragend":[[0,500,1910.0],[501,700,1860.0],[701,1200,1800.0]],"schuif_vrijdragend_b":[[0,500,1750.0],[501,700,1700.0],[701,1200,1650.0]],"vast_hekwerk":[[0,200,1540.0],[201,500,1380.0],[501,1000,1240.0],[1001,2000,1180.0],[2001,5000,1150.0]]},"KAMA":{"dubbel":[[0,250,1800.0],[251,399,1620.0],[400,800,1460.0]],"enkel":[[0,120,2150.0],[121,199,1940.0],[200,800,1680.0]],"schuif_rail":[[0,349,1680.0],[350,500,1430.0],[501,600,1380.0],[601,700,1350.0],[701,1200,1320.0]],"schuif_vrijdragend":[[0,500,1910.0],[501,700,1860.0],[701,1200,1800.0]],"schuif_vrijdragend_b":[[0,500,1750.0],[501,700,1700.0],[701,1200,1650.0]],"vast_hekwerk":[[0,200,1540.0],[201,500,1380.0],[501,1000,1240.0],[1001,2000,1180.0],[2001,5000,1150.0]]},"KASSAI":{"dubbel":[[0,250,1590.0],[251,399,1430.0],[400,800,1290.0]],"enkel":[[0,120,1900.0],[121,199,1710.0],[200,800,1480.0]],"schuif_rail":[[0,349,1490.0],[350,500,1270.0],[501,600,1230.0],[601,700,1200.0],[701,1200,1170.0]],"schuif_vrijdragend":[[0,500,1700.0],[501,700,1650.0],[701,1200,1600.0]],"schuif_vrijdragend_b":[[0,500,1560.0],[501,700,1520.0],[701,1200,1470.0]],"vast_hekwerk":[[0,200,800.0],[201,500,720.0],[501,1000,650.0],[1001,2000,620.0],[2001,5000,600.0]]},"KILLIAN":{"dubbel":[[0,250,1390.0],[251,399,1250.0],[400,800,1130.0]],"enkel":[[0,120,1670.0],[121,199,1510.0],[200,800,1300.0]],"schuif_rail":[[0,349,1310.0],[350,500,1120.0],[501,600,1080.0],[601,700,1050.0],[701,1200,1030.0]],"schuif_vrijdragend":[[0,500,1510.0],[501,700,1470.0],[701,1200,1420.0]],"schuif_vrijdragend_b":[[0,500,1380.0],[501,700,1340.0],[701,1200,1300.0]],"vast_hekwerk":[[0,200,970.0],[201,500,870.0],[501,1000,780.0],[1001,2000,750.0],[2001,5000,730.0]]},"KWAI (vak H 40-50cm)":{"dubbel":[[0,250,1470.0],[251,399,1320.0],[400,800,1190.0]],"enkel":[[0,120,1760.0],[121,199,1590.0],[200,800,1370.0]],"schuif_rail":[[0,349,1380.0],[350,500,1180.0],[501,600,1140.0],[601,700,1110.0],[701,1200,1080.0]],"schuif_vrijdragend":[[0,500,1580.0],[501,700,1540.0],[701,1200,1490.0]],"schuif_vrijdragend_b":[[0,500,1450.0],[501,700,1410.0],[701,1200,1370.0]],"vast_hekwerk":[[0,200,1250.0],[201,500,1120.0],[501,1000,1000.0],[1001,2000,960.0],[2001,5000,940.0]]},"KWAI AFROMOSIA (2 zijdig)":{"dubbel":[[0,250,2170.0],[251,399,1950.0],[400,800,1760.0]],"enkel":[[0,120,2580.0],[121,199,2330.0],[200,800,2030.0]],"schuif_rail":[[0,349,2010.0],[350,500,1710.0],[501,600,1650.0],[601,700,1610.0],[701,1200,1570.0]],"schuif_vrijdragend":[[0,500,2280.0],[501,700,2220.0],[701,1200,2150.0]],"schuif_vrijdragend_b":[[0,500,2080.0],[501,700,2020.0],[701,1200,1960.0]],"vast_hekwerk":[[0,200,1850.0],[201,500,1660.0],[501,1000,1490.0],[1001,2000,1420.0],[2001,5000,1390.0]]},"KWAI CEDAR / AFROMOSIA (2 zijdig)":{"dubbel":[[0,250,2170.0],[251,399,1950.0],[400,800,1760.0]],"enkel":[[0,120,2580.0],[121,199,2330.0],[200,800,2030.0]],"schuif_rail":[[0,349,2010.0],[350,500,1710.0],[501,600,1650.0],[601,700,1610.0],[701,1200,1570.0]],"schuif_vrijdragend":[[0,500,2280.0],[501,700,2220.0],[701,1200,2150.0]],"schuif_vrijdragend_b":[[0,500,2080.0],[501,700,2020.0],[701,1200,1960.0]],"vast_hekwerk":[[0,200,1850.0],[201,500,1660.0],[501,1000,1490.0],[1001,2000,1420.0],[2001,5000,1390.0]]},"KWAI GLAS":{"dubbel":[[0,250,2460.0],[251,399,2210.0],[400,800,1990.0]],"enkel":[[0,120,2920.0],[121,199,2630.0],[200,800,2300.0]],"schuif_rail":[[0,349,2270.0],[350,500,1930.0],[501,600,1870.0],[601,700,1820.0],[701,1200,1780.0]],"schuif_vrijdragend":[[0,500,2560.0],[501,700,2490.0],[701,1200,2410.0]],"schuif_vrijdragend_b":[[0,500,2340.0],[501,700,2270.0],[701,1200,2200.0]],"vast_hekwerk":[[0,200,2090.0],[201,500,1880.0],[501,1000,1680.0],[1001,2000,1610.0],[2001,5000,1570.0]]},"KWAI LASER":{"dubbel":[[0,250,1800.0],[251,399,1620.0],[400,800,1460.0]],"enkel":[[0,120,2150.0],[121,199,1940.0],[200,800,1680.0]],"schuif_rail":[[0,349,1680.0],[350,500,1430.0],[501,600,1380.0],[601,700,1350.0],[701,1200,1320.0]],"schuif_vrijdragend":[[0,500,1910.0],[501,700,1860.0],[701,1200,1800.0]],"schuif_vrijdragend_b":[[0,500,1750.0],[501,700,1700.0],[701,1200,1650.0]],"vast_hekwerk":[[0,200,1540.0],[201,500,1380.0],[501,1000,1240.0],[1001,2000,1180.0],[2001,5000,1150.0]]},"KWAI LIGNA 7/12":{"dubbel":[[0,250,2050.0],[251,399,1840.0],[400,800,1660.0]],"enkel":[[0,120,2440.0],[121,199,2200.0],[200,800,1920.0]],"schuif_rail":[[0,349,1900.0],[350,500,1620.0],[501,600,1560.0],[601,700,1520.0],[701,1200,1490.0]],"schuif_vrijdragend":[[0,500,2150.0],[501,700,2090.0],[701,1200,2030.0]],"schuif_vrijdragend_b":[[0,500,1970.0],[501,700,1920.0],[701,1200,1860.0]],"vast_hekwerk":[[0,200,1740.0],[201,500,1560.0],[501,1000,1400.0],[1001,2000,1340.0],[2001,5000,1300.0]]},"KWAI MULTI (vak H 25-35cm)":{"dubbel":[[0,250,1590.0],[251,399,1430.0],[400,800,1290.0]],"enkel":[[0,120,1900.0],[121,199,1710.0],[200,800,1480.0]],"schuif_rail":[[0,349,1490.0],[350,500,1270.0],[501,600,1230.0],[601,700,1200.0],[701,1200,1170.0]],"schuif_vrijdragend":[[0,500,1700.0],[501,700,1650.0],[701,1200,1600.0]],"schuif_vrijdragend_b":[[0,500,1560.0],[501,700,1520.0],[701,1200,1470.0]],"vast_hekwerk":[[0,200,1360.0],[201,500,1220.0],[501,1000,1090.0],[1001,2000,1050.0],[2001,5000,1020.0]]},"KWAI WOOD PADOUK (2-zijdig)":{"dubbel":[[0,250,1960.0],[251,399,1760.0],[400,800,1590.0]],"enkel":[[0,120,2330.0],[121,199,2100.0],[200,800,1830.0]],"schuif_rail":[[0,349,1820.0],[350,500,1550.0],[501,600,1500.0],[601,700,1460.0],[701,1200,1420.0]],"schuif_vrijdragend":[[0,500,2070.0],[501,700,2010.0],[701,1200,1950.0]],"schuif_vrijdragend_b":[[0,500,1890.0],[501,700,1840.0],[701,1200,1780.0]],"vast_hekwerk":[[0,200,1670.0],[201,500,1500.0],[501,1000,1340.0],[1001,2000,1290.0],[2001,5000,1250.0]]},"KWAI PLANE 1-SIDE":{"dubbel":[[0,250,1630.0],[251,399,1460.0],[400,800,1320.0]],"enkel":[[0,120,1800.0],[121,199,1620.0],[200,800,1400.0]],"schuif_rail":[[0,349,1520.0],[350,500,1300.0],[501,600,1250.0],[601,700,1220.0],[701,1200,1190.0]],"schuif_vrijdragend":[[0,500,1740.0],[501,700,1690.0],[701,1200,1640.0]],"schuif_vrijdragend_b":[[0,500,1590.0],[501,700,1550.0],[701,1200,1500.0]],"vast_hekwerk":[[0,200,1470.0],[201,500,1320.0],[501,1000,1180.0],[1001,2000,1130.0],[2001,5000,1100.0]]},"KWAI PLANE 2-SIDES":{"dubbel":[[0,250,2060.0],[251,399,1850.0],[400,800,1670.0]],"enkel":[[0,120,2260.0],[121,199,2040.0],[200,800,1770.0]],"schuif_rail":[[0,349,1910.0],[350,500,1630.0],[501,600,1570.0],[601,700,1530.0],[701,1200,1490.0]],"schuif_vrijdragend":[[0,500,2170.0],[501,700,2110.0],[701,1200,2040.0]],"schuif_vrijdragend_b":[[0,500,1980.0],[501,700,1930.0],[701,1200,1870.0]],"vast_hekwerk":[[0,200,1860.0],[201,500,1670.0],[501,1000,1500.0],[1001,2000,1430.0],[2001,5000,1400.0]]},"KWAI PLANE LIGNA 1-SIDE":{"dubbel":[[0,250,1700.0],[251,399,1530.0],[400,800,1380.0]],"enkel":[[0,120,1880.0],[121,199,1700.0],[200,800,1470.0]],"schuif_rail":[[0,349,1590.0],[350,500,1360.0],[501,600,1310.0],[601,700,1280.0],[701,1200,1250.0]],"schuif_vrijdragend":[[0,500,1810.0],[501,700,1760.0],[701,1200,1710.0]],"schuif_vrijdragend_b":[[0,500,1660.0],[501,700,1620.0],[701,1200,1570.0]],"vast_hekwerk":[[0,200,1540.0],[201,500,1380.0],[501,1000,1240.0],[1001,2000,1180.0],[2001,5000,1150.0]]},"KWAI PLANE LIGNA 2-SIDES":{"dubbel":[[0,250,2140.0],[251,399,1920.0],[400,800,1730.0]],"enkel":[[0,120,2350.0],[121,199,2120.0],[200,800,1840.0]],"schuif_rail":[[0,349,1980.0],[350,500,1690.0],[501,600,1630.0],[601,700,1590.0],[701,1200,1550.0]],"schuif_vrijdragend":[[0,500,2240.0],[501,700,2180.0],[701,1200,2110.0]],"schuif_vrijdragend_b":[[0,500,2050.0],[501,700,1990.0],[701,1200,1930.0]],"vast_hekwerk":[[0,200,1930.0],[201,500,1730.0],[501,1000,1550.0],[1001,2000,1480.0],[2001,5000,1450.0]]},"KWAI PLANE LIGNA OPEN 1-SIDE":{"dubbel":[[0,250,1780.0],[251,399,1600.0],[400,800,1440.0]],"enkel":[[0,120,2120.0],[121,199,1910.0],[200,800,1660.0]],"schuif_rail":[[0,349,1660.0],[350,500,1420.0],[501,600,1370.0],[601,700,1330.0],[701,1200,1300.0]],"schuif_vrijdragend":[[0,500,1890.0],[501,700,1840.0],[701,1200,1780.0]],"schuif_vrijdragend_b":[[0,500,1730.0],[501,700,1680.0],[701,1200,1630.0]],"vast_hekwerk":[[0,200,1600.0],[201,500,1440.0],[501,1000,1290.0],[1001,2000,1240.0],[2001,5000,1200.0]]},"KWAI PLANE LIGNA OPEN 2-SIDES":{"dubbel":[[0,250,2220.0],[251,399,1990.0],[400,800,1800.0]],"enkel":[[0,120,2630.0],[121,199,2370.0],[200,800,2070.0]],"schuif_rail":[[0,349,2050.0],[350,500,1750.0],[501,600,1690.0],[601,700,1640.0],[701,1200,1600.0]],"schuif_vrijdragend":[[0,500,2320.0],[501,700,2260.0],[701,1200,2190.0]],"schuif_vrijdragend_b":[[0,500,2120.0],[501,700,2060.0],[701,1200,2000.0]],"vast_hekwerk":[[0,200,2000.0],[201,500,1800.0],[501,1000,1610.0],[1001,2000,1540.0],[2001,5000,1500.0]]},"KWAI PLY":{"dubbel":[[0,250,1380.0],[251,399,1240.0],[400,800,1120.0]],"enkel":[[0,120,1660.0],[121,199,1500.0],[200,800,1290.0]],"schuif_rail":[[0,349,1300.0],[350,500,1110.0],[501,600,1070.0],[601,700,1040.0],[701,1200,1020.0]],"schuif_vrijdragend":[[0,500,1490.0],[501,700,1450.0],[701,1200,1410.0]],"schuif_vrijdragend_b":[[0,500,1370.0],[501,700,1330.0],[701,1200,1290.0]],"vast_hekwerk":[[0,200,1170.0],[201,500,1050.0],[501,1000,940.0],[1001,2000,900.0],[2001,5000,880.0]]},"KWAI WOOD 1-SIDE / INSIDE CEDAR/AFROMOSIA":{"dubbel":[[0,250,1960.0],[251,399,1760.0],[400,800,1590.0]],"enkel":[[0,120,2330.0],[121,199,2100.0],[200,800,1830.0]],"schuif_rail":[[0,349,1820.0],[350,500,1550.0],[501,600,1500.0],[601,700,1460.0],[701,1200,1420.0]],"schuif_vrijdragend":[[0,500,2070.0],[501,700,2010.0],[701,1200,1950.0]],"schuif_vrijdragend_b":[[0,500,1890.0],[501,700,1840.0],[701,1200,1780.0]],"vast_hekwerk":[[0,200,1670.0],[201,500,1500.0],[501,1000,1340.0],[1001,2000,1290.0],[2001,5000,1250.0]]},"KWAI WOOD 1-SIDE / INSIDE THERMO":{"dubbel":[[0,250,1480.0],[251,399,1330.0],[400,800,1200.0]],"enkel":[[0,120,1770.0],[121,199,1600.0],[200,800,1380.0]],"schuif_rail":[[0,349,1390.0],[350,500,1190.0],[501,600,1140.0],[601,700,1120.0],[701,1200,1090.0]],"schuif_vrijdragend":[[0,500,1590.0],[501,700,1550.0],[701,1200,1500.0]],"schuif_vrijdragend_b":[[0,500,1460.0],[501,700,1420.0],[701,1200,1380.0]],"vast_hekwerk":[[0,200,1260.0],[201,500,1130.0],[501,1000,1010.0],[1001,2000,970.0],[2001,5000,950.0]]},"KWAI WOOD 1-SIDE / INSIDE PADOUK":{"dubbel":[[0,250,1670.0],[251,399,1500.0],[400,800,1350.0]],"enkel":[[0,120,1990.0],[121,199,1800.0],[200,800,1560.0]],"schuif_rail":[[0,349,1560.0],[350,500,1330.0],[501,600,1280.0],[601,700,1250.0],[701,1200,1220.0]],"schuif_vrijdragend":[[0,500,1780.0],[501,700,1730.0],[701,1200,1680.0]],"schuif_vrijdragend_b":[[0,500,1630.0],[501,700,1590.0],[701,1200,1540.0]],"vast_hekwerk":[[0,200,1430.0],[201,500,1280.0],[501,1000,1150.0],[1001,2000,1100.0],[2001,5000,1070.0]]},"KWAI WOOD THERMO":{"dubbel":[[0,250,1530.0],[251,399,1370.0],[400,800,1240.0]],"enkel":[[0,120,1830.0],[121,199,1650.0],[200,800,1430.0]],"schuif_rail":[[0,349,1430.0],[350,500,1220.0],[501,600,1180.0],[601,700,1150.0],[701,1200,1120.0]],"schuif_vrijdragend":[[0,500,1640.0],[501,700,1600.0],[701,1200,1550.0]],"schuif_vrijdragend_b":[[0,500,1500.0],[501,700,1460.0],[701,1200,1410.0]],"vast_hekwerk":[[0,200,1300.0],[201,500,1170.0],[501,1000,1050.0],[1001,2000,1000.0],[2001,5000,980.0]]},"KWAI WOOD PADOUK":{"dubbel":[[0,250,1960.0],[251,399,1760.0],[400,800,1590.0]],"enkel":[[0,120,2330.0],[121,199,2100.0],[200,800,1830.0]],"schuif_rail":[[0,349,1820.0],[350,500,1550.0],[501,600,1500.0],[601,700,1460.0],[701,1200,1420.0]],"schuif_vrijdragend":[[0,500,2070.0],[501,700,2010.0],[701,1200,1950.0]],"schuif_vrijdragend_b":[[0,500,1890.0],[501,700,1840.0],[701,1200,1780.0]],"vast_hekwerk":[[0,200,1670.0],[201,500,1500.0],[501,1000,1340.0],[1001,2000,1290.0],[2001,5000,1250.0]]},"LAKE MICHIGAN":{"dubbel":[[0,250,2880.0],[251,399,2590.0],[400,800,2340.0]],"enkel":[[0,120,3410.0],[121,199,3070.0],[200,800,2690.0]],"schuif_rail":[[0,349,2650.0],[350,500,2260.0],[501,600,2180.0],[601,700,2120.0],[701,1200,2070.0]],"schuif_vrijdragend":[[0,500,2980.0],[501,700,2900.0],[701,1200,2810.0]],"schuif_vrijdragend_b":[[0,500,2720.0],[501,700,2640.0],[701,1200,2560.0]],"vast_hekwerk":[[0,200,2450.0],[201,500,2200.0],[501,1000,1970.0],[1001,2000,1890.0],[2001,5000,1840.0]]},"LAKE ONTARIO":{"dubbel":[[0,250,1370.0],[251,399,1230.0],[400,800,1110.0]],"enkel":[[0,120,1640.0],[121,199,1480.0],[200,800,1280.0]],"schuif_rail":[[0,349,1290.0],[350,500,1100.0],[501,600,1060.0],[601,700,1040.0],[701,1200,1010.0]],"schuif_vrijdragend":[[0,500,1480.0],[501,700,1440.0],[701,1200,1400.0]],"schuif_vrijdragend_b":[[0,500,1360.0],[501,700,1320.0],[701,1200,1280.0]],"vast_hekwerk":[[0,200,830.0],[201,500,740.0],[501,1000,670.0],[1001,2000,640.0],[2001,5000,620.0]]},"LASLO":{"dubbel":[[0,250,1620.0],[251,399,1450.0],[400,800,1310.0]],"enkel":[[0,120,1930.0],[121,199,1740.0],[200,800,1510.0]],"schuif_rail":[[0,349,1510.0],[350,500,1290.0],[501,600,1240.0],[601,700,1210.0],[701,1200,1180.0]],"schuif_vrijdragend":[[0,500,1730.0],[501,700,1680.0],[701,1200,1630.0]],"schuif_vrijdragend_b":[[0,500,1580.0],[501,700,1540.0],[701,1200,1490.0]],"vast_hekwerk":[[0,200,1380.0],[201,500,1240.0],[501,1000,1110.0],[1001,2000,1060.0],[2001,5000,1040.0]]},"LECH":{"dubbel":[[0,250,1360.0],[251,399,1220.0],[400,800,1100.0]],"enkel":[[0,120,1510.0],[121,199,1360.0],[200,800,1170.0]],"schuif_rail":[[0,349,1280.0],[350,500,1090.0],[501,600,1050.0],[601,700,1030.0],[701,1200,1000.0]],"schuif_vrijdragend":[[0,500,1470.0],[501,700,1430.0],[701,1200,1390.0]],"schuif_vrijdragend_b":[[0,500,1350.0],[501,700,1310.0],[701,1200,1270.0]],"vast_hekwerk":[[0,200,820.0],[201,500,730.0],[501,1000,660.0],[1001,2000,630.0],[2001,5000,610.0]]},"LEIE":{"dubbel":[[0,250,1790.0],[251,399,1610.0],[400,800,1450.0]],"enkel":[[0,120,2140.0],[121,199,1930.0],[200,800,1680.0]],"schuif_rail":[[0,349,1670.0],[350,500,1420.0],[501,600,1370.0],[601,700,1340.0],[701,1200,1310.0]],"schuif_vrijdragend":[[0,500,1900.0],[501,700,1850.0],[701,1200,1790.0]],"schuif_vrijdragend_b":[[0,500,1740.0],[501,700,1690.0],[701,1200,1640.0]],"vast_hekwerk":[[0,200,1350.0],[201,500,1210.0],[501,1000,1090.0],[1001,2000,1040.0],[2001,5000,1010.0]]},"LOCH LOMOND":{"dubbel":[[0,250,2150.0],[251,399,1930.0],[400,800,1740.0]],"enkel":[[0,120,2550.0],[121,199,2300.0],[200,800,2000.0]],"schuif_rail":[[0,349,1990.0],[350,500,1700.0],[501,600,1640.0],[601,700,1600.0],[701,1200,1560.0]],"schuif_vrijdragend":[[0,500,2250.0],[501,700,2190.0],[701,1200,2120.0]],"schuif_vrijdragend_b":[[0,500,2060.0],[501,700,2000.0],[701,1200,1940.0]],"vast_hekwerk":[[0,200,1500.0],[201,500,1350.0],[501,1000,1210.0],[1001,2000,1160.0],[2001,5000,1130.0]]},"LOIRE":{"dubbel":[[0,250,1550.0],[251,399,1390.0],[400,800,1260.0]],"enkel":[[0,120,1850.0],[121,199,1670.0],[200,800,1440.0]],"schuif_rail":[[0,349,1450.0],[350,500,1240.0],[501,600,1190.0],[601,700,1160.0],[701,1200,1140.0]],"schuif_vrijdragend":[[0,500,1660.0],[501,700,1620.0],[701,1200,1570.0]],"schuif_vrijdragend_b":[[0,500,1520.0],[501,700,1480.0],[701,1200,1430.0]],"vast_hekwerk":[[0,200,940.0],[201,500,840.0],[501,1000,750.0],[1001,2000,720.0],[2001,5000,700.0]]},"LUXUS kader 100x40":{"dubbel":[[0,250,1800.0],[251,399,1620.0],[400,800,1460.0]],"enkel":[[0,120,2150.0],[121,199,1940.0],[200,800,1680.0]],"schuif_rail":[[0,349,1680.0],[350,500,1430.0],[501,600,1380.0],[601,700,1350.0],[701,1200,1320.0]],"schuif_vrijdragend":[[0,500,1910.0],[501,700,1860.0],[701,1200,1800.0]],"schuif_vrijdragend_b":[[0,500,1750.0],[501,700,1700.0],[701,1200,1650.0]],"vast_hekwerk":[[0,200,1260.0],[201,500,1130.0],[501,1000,1010.0],[1001,2000,970.0],[2001,5000,950.0]]},"LUXUS kader 40x40":{"dubbel":[[0,250,1520.0],[251,399,1360.0],[400,800,1230.0]],"enkel":[[0,120,1810.0],[121,199,1630.0],[200,800,1410.0]],"schuif_rail":[[0,349,1420.0],[350,500,1210.0],[501,600,1170.0],[601,700,1140.0],[701,1200,1110.0]],"schuif_vrijdragend":[[0,500,1630.0],[501,700,1590.0],[701,1200,1540.0]],"schuif_vrijdragend_b":[[0,500,1490.0],[501,700,1450.0],[701,1200,1410.0]],"vast_hekwerk":[[0,200,1060.0],[201,500,950.0],[501,1000,850.0],[1001,2000,820.0],[2001,5000,800.0]]},"LUXUS kader 60x40":{"dubbel":[[0,250,1660.0],[251,399,1490.0],[400,800,1350.0]],"enkel":[[0,120,1980.0],[121,199,1790.0],[200,800,1550.0]],"schuif_rail":[[0,349,1550.0],[350,500,1320.0],[501,600,1280.0],[601,700,1240.0],[701,1200,1210.0]],"schuif_vrijdragend":[[0,500,1770.0],[501,700,1720.0],[701,1200,1670.0]],"schuif_vrijdragend_b":[[0,500,1620.0],[501,700,1580.0],[701,1200,1530.0]],"vast_hekwerk":[[0,200,1160.0],[201,500,1040.0],[501,1000,930.0],[1001,2000,890.0],[2001,5000,870.0]]},"MANITOBA":{"dubbel":[[0,250,3330.0],[251,399,2990.0],[400,800,2700.0]],"enkel":[[0,120,3930.0],[121,199,3540.0],[200,800,3110.0]],"schuif_rail":[[0,349,3050.0],[350,500,2600.0],[501,600,2510.0],[601,700,2440.0],[701,1200,2380.0]],"schuif_vrijdragend":[[0,500,3420.0],[501,700,3320.0],[701,1200,3220.0]],"schuif_vrijdragend_b":[[0,500,3120.0],[501,700,3030.0],[701,1200,2940.0]],"vast_hekwerk":[[0,200,2990.0],[201,500,2690.0],[501,1000,2410.0],[1001,2000,2300.0],[2001,5000,2250.0]]},"MERSEY":{"dubbel":[[0,250,3070.0],[251,399,2760.0],[400,800,2490.0]],"enkel":[[0,120,3910.0],[121,199,3520.0],[200,800,3090.0]],"schuif_rail":[[0,349,2820.0],[350,500,2400.0],[501,600,2320.0],[601,700,2260.0],[701,1200,2200.0]],"schuif_vrijdragend":[[0,500,3170.0],[501,700,3080.0],[701,1200,2980.0]],"schuif_vrijdragend_b":[[0,500,2890.0],[501,700,2810.0],[701,1200,2720.0]],"vast_hekwerk":[[0,200,2620.0],[201,500,2350.0],[501,1000,2100.0],[1001,2000,2010.0],[2001,5000,1960.0]]},"MISSISIPI":{"dubbel":[[0,250,1920.0],[251,399,1720.0],[400,800,1550.0]],"enkel":[[0,120,2280.0],[121,199,2060.0],[200,800,1790.0]],"schuif_rail":[[0,349,1780.0],[350,500,1520.0],[501,600,1460.0],[601,700,1430.0],[701,1200,1390.0]],"schuif_vrijdragend":[[0,500,2020.0],[501,700,1960.0],[701,1200,1900.0]],"schuif_vrijdragend_b":[[0,500,1850.0],[501,700,1800.0],[701,1200,1740.0]],"vast_hekwerk":[[0,200,1350.0],[201,500,1210.0],[501,1000,1090.0],[1001,2000,1040.0],[2001,5000,1010.0]]},"MISSOURI":{"dubbel":[[0,250,1460.0],[251,399,1310.0],[400,800,1180.0]],"enkel":[[0,120,1750.0],[121,199,1580.0],[200,800,1360.0]],"schuif_rail":[[0,349,1370.0],[350,500,1170.0],[501,600,1130.0],[601,700,1100.0],[701,1200,1070.0]],"schuif_vrijdragend":[[0,500,1570.0],[501,700,1530.0],[701,1200,1480.0]],"schuif_vrijdragend_b":[[0,500,1440.0],[501,700,1400.0],[701,1200,1360.0]],"vast_hekwerk":[[0,200,1170.0],[201,500,1050.0],[501,1000,940.0],[1001,2000,900.0],[2001,5000,880.0]]},"MONDEGO":{"dubbel":[[0,250,1730.0],[251,399,1550.0],[400,800,1400.0]],"enkel":[[0,120,2060.0],[121,199,1860.0],[200,800,1610.0]],"schuif_rail":[[0,349,1610.0],[350,500,1370.0],[501,600,1330.0],[601,700,1290.0],[701,1200,1260.0]],"schuif_vrijdragend":[[0,500,1840.0],[501,700,1790.0],[701,1200,1730.0]],"schuif_vrijdragend_b":[[0,500,1680.0],[501,700,1630.0],[701,1200,1580.0]],"vast_hekwerk":[[0,200,1040.0],[201,500,930.0],[501,1000,840.0],[1001,2000,800.0],[2001,5000,780.0]]},"NARMADA":{"dubbel":[[0,250,1940.0],[251,399,1740.0],[400,800,1570.0]],"enkel":[[0,120,2310.0],[121,199,2080.0],[200,800,1810.0]],"schuif_rail":[[0,349,1800.0],[350,500,1530.0],[501,600,1480.0],[601,700,1440.0],[701,1200,1410.0]],"schuif_vrijdragend":[[0,500,2040.0],[501,700,1980.0],[701,1200,1920.0]],"schuif_vrijdragend_b":[[0,500,1870.0],[501,700,1820.0],[701,1200,1760.0]],"vast_hekwerk":[[0,200,1160.0],[201,500,1040.0],[501,1000,930.0],[1001,2000,890.0],[2001,5000,870.0]]},"NOTEC":{"dubbel":[[0,250,1520.0],[251,399,1360.0],[400,800,1230.0]],"enkel":[[0,120,1810.0],[121,199,1630.0],[200,800,1410.0]],"schuif_rail":[[0,349,1420.0],[350,500,1210.0],[501,600,1170.0],[601,700,1140.0],[701,1200,1110.0]],"schuif_vrijdragend":[[0,500,1630.0],[501,700,1590.0],[701,1200,1540.0]],"schuif_vrijdragend_b":[[0,500,1490.0],[501,700,1450.0],[701,1200,1410.0]],"vast_hekwerk":[[0,200,1280.0],[201,500,1150.0],[501,1000,1030.0],[1001,2000,990.0],[2001,5000,960.0]]},"NOTEC G":{"dubbel":[[0,250,1660.0],[251,399,1490.0],[400,800,1350.0]],"enkel":[[0,120,1980.0],[121,199,1790.0],[200,800,1550.0]],"schuif_rail":[[0,349,1550.0],[350,500,1320.0],[501,600,1280.0],[601,700,1240.0],[701,1200,1210.0]],"schuif_vrijdragend":[[0,500,1770.0],[501,700,1720.0],[701,1200,1670.0]],"schuif_vrijdragend_b":[[0,500,1620.0],[501,700,1580.0],[701,1200,1530.0]],"vast_hekwerk":[[0,200,1400.0],[201,500,1260.0],[501,1000,1130.0],[1001,2000,1080.0],[2001,5000,1050.0]]},"ODUM":{"dubbel":[[0,250,1730.0],[251,399,1550.0],[400,800,1400.0]],"enkel":[[0,120,2060.0],[121,199,1860.0],[200,800,1610.0]],"schuif_rail":[[0,349,1610.0],[350,500,1370.0],[501,600,1330.0],[601,700,1290.0],[701,1200,1260.0]],"schuif_vrijdragend":[[0,500,1840.0],[501,700,1790.0],[701,1200,1730.0]],"schuif_vrijdragend_b":[[0,500,1680.0],[501,700,1630.0],[701,1200,1580.0]],"vast_hekwerk":[[0,200,1550.0],[201,500,1390.0],[501,1000,1250.0],[1001,2000,1190.0],[2001,5000,1160.0]]},"OHIO":{"dubbel":[[0,250,2720.0],[251,399,2440.0],[400,800,2200.0]],"enkel":[[0,120,3220.0],[121,199,2900.0],[200,800,2540.0]],"schuif_rail":[[0,349,2500.0],[350,500,2130.0],[501,600,2050.0],[601,700,2000.0],[701,1200,1950.0]],"schuif_vrijdragend":[[0,500,2810.0],[501,700,2730.0],[701,1200,2650.0]],"schuif_vrijdragend_b":[[0,500,2570.0],[501,700,2500.0],[701,1200,2420.0]],"vast_hekwerk":[[0,200,2450.0],[201,500,2200.0],[501,1000,1970.0],[1001,2000,1890.0],[2001,5000,1840.0]]},"ONEGA KEBONY":{"dubbel":[[0,250,1300.0],[251,399,1170.0],[400,800,1060.0]],"enkel":[[0,120,1570.0],[121,199,1420.0],[200,800,1220.0]],"schuif_rail":[[0,349,1230.0],[350,500,1050.0],[501,600,1010.0],[601,700,990.0],[701,1200,960.0]],"schuif_vrijdragend":[[0,500,1420.0],[501,700,1380.0],[701,1200,1340.0]],"schuif_vrijdragend_b":[[0,500,1300.0],[501,700,1270.0],[701,1200,1230.0]],"vast_hekwerk":[[0,200,1120.0],[201,500,1000.0],[501,1000,900.0],[1001,2000,860.0],[2001,5000,840.0]]},"OOSTERSCHELDE":{"dubbel":[[0,250,1640.0],[251,399,1470.0],[400,800,1330.0]],"enkel":[[0,120,1960.0],[121,199,1770.0],[200,800,1530.0]],"schuif_rail":[[0,349,1530.0],[350,500,1310.0],[501,600,1260.0],[601,700,1230.0],[701,1200,1200.0]],"schuif_vrijdragend":[[0,500,1750.0],[501,700,1700.0],[701,1200,1650.0]],"schuif_vrijdragend_b":[[0,500,1600.0],[501,700,1560.0],[701,1200,1510.0]],"vast_hekwerk":[[0,200,1070.0],[201,500,960.0],[501,1000,860.0],[1001,2000,830.0],[2001,5000,800.0]]},"OOSTERSCHELDE C":{"dubbel":[[0,250,2060.0],[251,399,1850.0],[400,800,1670.0]],"enkel":[[0,120,2450.0],[121,199,2210.0],[200,800,1920.0]],"schuif_rail":[[0,349,1910.0],[350,500,1630.0],[501,600,1570.0],[601,700,1530.0],[701,1200,1490.0]],"schuif_vrijdragend":[[0,500,2170.0],[501,700,2110.0],[701,1200,2040.0]],"schuif_vrijdragend_b":[[0,500,1980.0],[501,700,1930.0],[701,1200,1870.0]],"vast_hekwerk":[[0,200,1340.0],[201,500,1200.0],[501,1000,1080.0],[1001,2000,1030.0],[2001,5000,1000.0]]},"OPUS":{"dubbel":[[0,250,2490.0],[251,399,2240.0],[400,800,2020.0]],"enkel":[[0,120,2960.0],[121,199,2670.0],[200,800,2330.0]],"schuif_rail":[[0,349,2300.0],[350,500,1960.0],[501,600,1890.0],[601,700,1840.0],[701,1200,1800.0]],"schuif_vrijdragend":[[0,500,2590.0],[501,700,2520.0],[701,1200,2440.0]],"schuif_vrijdragend_b":[[0,500,2370.0],[501,700,2300.0],[701,1200,2230.0]],"vast_hekwerk":[[0,200,2250.0],[201,500,2020.0],[501,1000,1810.0],[1001,2000,1730.0],[2001,5000,1690.0]]},"ORINOCO":{"dubbel":[[0,250,1660.0],[251,399,1490.0],[400,800,1350.0]],"enkel":[[0,120,1980.0],[121,199,1790.0],[200,800,1550.0]],"schuif_rail":[[0,349,1550.0],[350,500,1320.0],[501,600,1280.0],[601,700,1240.0],[701,1200,1210.0]],"schuif_vrijdragend":[[0,500,1770.0],[501,700,1720.0],[701,1200,1670.0]],"schuif_vrijdragend_b":[[0,500,1620.0],[501,700,1580.0],[701,1200,1530.0]],"vast_hekwerk":[[0,200,1490.0],[201,500,1340.0],[501,1000,1200.0],[1001,2000,1150.0],[2001,5000,1120.0]]},"PO":{"dubbel":[[0,250,2490.0],[251,399,2240.0],[400,800,2020.0]],"enkel":[[0,120,2960.0],[121,199,2670.0],[200,800,2330.0]],"schuif_rail":[[0,349,2300.0],[350,500,1960.0],[501,600,1890.0],[601,700,1840.0],[701,1200,1800.0]],"schuif_vrijdragend":[[0,500,2590.0],[501,700,2520.0],[701,1200,2440.0]],"schuif_vrijdragend_b":[[0,500,2370.0],[501,700,2300.0],[701,1200,2230.0]],"vast_hekwerk":[[0,200,2120.0],[201,500,1900.0],[501,1000,1700.0],[1001,2000,1630.0],[2001,5000,1590.0]]},"RENO":{"dubbel":[[0,250,1590.0],[251,399,1430.0],[400,800,1290.0]],"enkel":[[0,120,1900.0],[121,199,1710.0],[200,800,1480.0]],"schuif_rail":[[0,349,1490.0],[350,500,1270.0],[501,600,1230.0],[601,700,1200.0],[701,1200,1170.0]],"schuif_vrijdragend":[[0,500,1700.0],[501,700,1650.0],[701,1200,1600.0]],"schuif_vrijdragend_b":[[0,500,1560.0],[501,700,1520.0],[701,1200,1470.0]],"vast_hekwerk":[[0,200,1360.0],[201,500,1220.0],[501,1000,1090.0],[1001,2000,1050.0],[2001,5000,1020.0]]},"RHONE":{"dubbel":[[0,250,1820.0],[251,399,1630.0],[400,800,1470.0]],"enkel":[[0,120,2160.0],[121,199,1950.0],[200,800,1690.0]],"schuif_rail":[[0,349,1690.0],[350,500,1440.0],[501,600,1390.0],[601,700,1360.0],[701,1200,1320.0]],"schuif_vrijdragend":[[0,500,1920.0],[501,700,1870.0],[701,1200,1810.0]],"schuif_vrijdragend_b":[[0,500,1760.0],[501,700,1710.0],[701,1200,1660.0]],"vast_hekwerk":[[0,200,1000.0],[201,500,900.0],[501,1000,810.0],[1001,2000,770.0],[2001,5000,750.0]]},"ROBSON (met plaat)":{"dubbel":[[0,250,1530.0],[251,399,1370.0],[400,800,1240.0]],"enkel":[[0,120,1830.0],[121,199,1650.0],[200,800,1430.0]],"schuif_rail":[[0,349,1430.0],[350,500,1220.0],[501,600,1180.0],[601,700,1150.0],[701,1200,1120.0]],"schuif_vrijdragend":[[0,500,1640.0],[501,700,1600.0],[701,1200,1550.0]],"schuif_vrijdragend_b":[[0,500,1500.0],[501,700,1460.0],[701,1200,1410.0]],"vast_hekwerk":[[0,200,1300.0],[201,500,1170.0],[501,1000,1050.0],[1001,2000,1000.0],[2001,5000,980.0]]},"ROBSON (zonder plaat)":{"dubbel":[[0,250,1370.0],[251,399,1230.0],[400,800,1110.0]],"enkel":[[0,120,1640.0],[121,199,1480.0],[200,800,1280.0]],"schuif_rail":[[0,349,1290.0],[350,500,1100.0],[501,600,1060.0],[601,700,1040.0],[701,1200,1010.0]],"schuif_vrijdragend":[[0,500,1480.0],[501,700,1440.0],[701,1200,1400.0]],"schuif_vrijdragend_b":[[0,500,1360.0],[501,700,1320.0],[701,1200,1280.0]],"vast_hekwerk":[[0,200,1160.0],[201,500,1040.0],[501,1000,930.0],[1001,2000,890.0],[2001,5000,870.0]]},"ROER":{"dubbel":[[0,250,1240.0],[251,399,1110.0],[400,800,1000.0]],"enkel":[[0,120,1490.0],[121,199,1350.0],[200,800,1160.0]],"schuif_rail":[[0,349,1170.0],[350,500,1000.0],[501,600,960.0],[601,700,940.0],[701,1200,920.0]],"schuif_vrijdragend":[[0,500,1350.0],[501,700,1310.0],[701,1200,1270.0]],"schuif_vrijdragend_b":[[0,500,1240.0],[501,700,1210.0],[701,1200,1170.0]],"vast_hekwerk":[[0,200,750.0],[201,500,670.0],[501,1000,600.0],[1001,2000,580.0],[2001,5000,560.0]]},"SADO":{"dubbel":[[0,250,1050.0],[251,399,940.0],[400,800,850.0]],"enkel":[[0,120,1270.0],[121,199,1150.0],[200,800,980.0]],"schuif_rail":[[0,349,1000.0],[350,500,850.0],[501,600,820.0],[601,700,800.0],[701,1200,780.0]],"schuif_vrijdragend":[[0,500,1160.0],[501,700,1130.0],[701,1200,1100.0]],"schuif_vrijdragend_b":[[0,500,1070.0],[501,700,1040.0],[701,1200,1010.0]],"vast_hekwerk":[[0,200,840.0],[201,500,750.0],[501,1000,670.0],[1001,2000,650.0],[2001,5000,630.0]]},"SAVANNAH":{"dubbel":[[0,250,2930.0],[251,399,2630.0],[400,800,2370.0]],"enkel":[[0,120,3460.0],[121,199,3120.0],[200,800,2730.0]],"schuif_rail":[[0,349,2690.0],[350,500,2290.0],[501,600,2210.0],[601,700,2160.0],[701,1200,2100.0]],"schuif_vrijdragend":[[0,500,3020.0],[501,700,2930.0],[701,1200,2840.0]],"schuif_vrijdragend_b":[[0,500,2760.0],[501,700,2680.0],[701,1200,2600.0]],"vast_hekwerk":[[0,200,2490.0],[201,500,2240.0],[501,1000,2000.0],[1001,2000,1920.0],[2001,5000,1870.0]]},"SHANNON":{"dubbel":[[0,250,1370.0],[251,399,1230.0],[400,800,1110.0]],"enkel":[[0,120,1640.0],[121,199,1480.0],[200,800,1280.0]],"schuif_rail":[[0,349,1290.0],[350,500,1100.0],[501,600,1060.0],[601,700,1040.0],[701,1200,1010.0]],"schuif_vrijdragend":[[0,500,1480.0],[501,700,1440.0],[701,1200,1400.0]],"schuif_vrijdragend_b":[[0,500,1360.0],[501,700,1320.0],[701,1200,1280.0]],"vast_hekwerk":[[0,200,960.0],[201,500,860.0],[501,1000,770.0],[1001,2000,740.0],[2001,5000,720.0]]},"SHANNON (B)":{"dubbel":[[0,250,1300.0],[251,399,1170.0],[400,800,1060.0]],"enkel":[[0,120,1570.0],[121,199,1420.0],[200,800,1220.0]],"schuif_rail":[[0,349,1230.0],[350,500,1050.0],[501,600,1010.0],[601,700,990.0],[701,1200,960.0]],"schuif_vrijdragend":[[0,500,1420.0],[501,700,1380.0],[701,1200,1340.0]],"schuif_vrijdragend_b":[[0,500,1300.0],[501,700,1270.0],[701,1200,1230.0]],"vast_hekwerk":[[0,200,920.0],[201,500,820.0],[501,1000,740.0],[1001,2000,710.0],[2001,5000,690.0]]},"SILVER CREEK":{"dubbel":[[0,250,2350.0],[251,399,2110.0],[400,800,1900.0]],"enkel":[[0,120,2790.0],[121,199,2520.0],[200,800,2200.0]],"schuif_rail":[[0,349,2170.0],[350,500,1850.0],[501,600,1780.0],[601,700,1740.0],[701,1200,1700.0]],"schuif_vrijdragend":[[0,500,2450.0],[501,700,2380.0],[701,1200,2310.0]],"schuif_vrijdragend_b":[[0,500,2240.0],[501,700,2180.0],[701,1200,2110.0]],"vast_hekwerk":[[0,200,2000.0],[201,500,1800.0],[501,1000,1610.0],[1001,2000,1540.0],[2001,5000,1500.0]]},"SIRET":{"dubbel":[[0,250,2540.0],[251,399,2280.0],[400,800,2060.0]],"enkel":[[0,120,3240.0],[121,199,2920.0],[200,800,2560.0]],"schuif_rail":[[0,349,2340.0],[350,500,1990.0],[501,600,1920.0],[601,700,1880.0],[701,1200,1830.0]],"schuif_vrijdragend":[[0,500,2640.0],[501,700,2570.0],[701,1200,2490.0]],"schuif_vrijdragend_b":[[0,500,2410.0],[501,700,2340.0],[701,1200,2270.0]],"vast_hekwerk":[[0,200,1780.0],[201,500,1600.0],[501,1000,1430.0],[1001,2000,1370.0],[2001,5000,1340.0]]},"SPIJLENPOORT":{"dubbel":[[0,250,990.0],[251,399,890.0],[400,800,810.0]],"enkel":[[0,120,980.0],[121,199,890.0],[200,800,750.0]],"schuif_rail":[[0,349,950.0],[350,500,810.0],[501,600,780.0],[601,700,760.0],[701,1200,750.0]],"schuif_vrijdragend":[[0,500,1110.0],[501,700,1080.0],[701,1200,1050.0]],"schuif_vrijdragend_b":[[0,500,1020.0],[501,700,990.0],[701,1200,960.0]],"vast_hekwerk":[[0,200,600.0],[201,500,540.0],[501,1000,490.0],[1001,2000,470.0],[2001,5000,450.0]]},"SPIJLENPOORT Dubbele Spijlen":{"dubbel":[[0,250,1080.0],[251,399,970.0],[400,800,880.0]],"enkel":[[0,120,1060.0],[121,199,960.0],[200,800,810.0]],"schuif_rail":[[0,349,1030.0],[350,500,880.0],[501,600,850.0],[601,700,830.0],[701,1200,810.0]],"schuif_vrijdragend":[[0,500,1200.0],[501,700,1170.0],[701,1200,1130.0]],"schuif_vrijdragend_b":[[0,500,1100.0],[501,700,1070.0],[701,1200,1040.0]],"vast_hekwerk":[[0,200,970.0],[201,500,870.0],[501,1000,780.0],[1001,2000,750.0],[2001,5000,730.0]]},"SPIJLENPOORT TYPE A":{"dubbel":[[0,250,1360.0],[251,399,1220.0],[400,800,1100.0]],"enkel":[[0,120,1630.0],[121,199,1470.0],[200,800,1270.0]],"schuif_rail":[[0,349,1280.0],[350,500,1090.0],[501,600,1050.0],[601,700,1030.0],[701,1200,1000.0]],"schuif_vrijdragend":[[0,500,1470.0],[501,700,1430.0],[701,1200,1390.0]],"schuif_vrijdragend_b":[[0,500,1350.0],[501,700,1310.0],[701,1200,1270.0]]},"SPIJLENPOORT TYPE B":{"dubbel":[[0,250,1390.0],[251,399,1250.0],[400,800,1130.0]],"enkel":[[0,120,1670.0],[121,199,1510.0],[200,800,1300.0]],"schuif_rail":[[0,349,1310.0],[350,500,1120.0],[501,600,1080.0],[601,700,1050.0],[701,1200,1030.0]],"schuif_vrijdragend":[[0,500,1510.0],[501,700,1470.0],[701,1200,1420.0]],"schuif_vrijdragend_b":[[0,500,1380.0],[501,700,1340.0],[701,1200,1300.0]],"vast_hekwerk":[[0,200,840.0],[201,500,750.0],[501,1000,670.0],[1001,2000,650.0],[2001,5000,630.0]]},"SPIJLENPOORT TYPE B.A.":{"dubbel":[[0,250,1360.0],[251,399,1220.0],[400,800,1100.0]],"enkel":[[0,120,1630.0],[121,199,1470.0],[200,800,1270.0]],"schuif_rail":[[0,349,1280.0],[350,500,1090.0],[501,600,1050.0],[601,700,1030.0],[701,1200,1000.0]],"schuif_vrijdragend":[[0,500,1470.0],[501,700,1430.0],[701,1200,1390.0]],"schuif_vrijdragend_b":[[0,500,1350.0],[501,700,1310.0],[701,1200,1270.0]],"vast_hekwerk":[[0,200,880.0],[201,500,790.0],[501,1000,710.0],[1001,2000,680.0],[2001,5000,660.0]]},"SPIJLENPOORT TYPE C":{"dubbel":[[0,250,1220.0],[251,399,1090.0],[400,800,990.0]],"enkel":[[0,120,1460.0],[121,199,1320.0],[200,800,1130.0]],"schuif_rail":[[0,349,1150.0],[350,500,980.0],[501,600,950.0],[601,700,920.0],[701,1200,900.0]],"schuif_vrijdragend":[[0,500,1330.0],[501,700,1300.0],[701,1200,1260.0]],"schuif_vrijdragend_b":[[0,500,1220.0],[501,700,1190.0],[701,1200,1150.0]],"vast_hekwerk":[[0,200,740.0],[201,500,660.0],[501,1000,590.0],[1001,2000,570.0],[2001,5000,550.0]]},"SPIJLENPOORT TYPE V":{"dubbel":[[0,250,1230.0],[251,399,1100.0],[400,800,990.0]],"enkel":[[0,120,1360.0],[121,199,1230.0],[200,800,1050.0]],"schuif_rail":[[0,349,1160.0],[350,500,990.0],[501,600,960.0],[601,700,930.0],[701,1200,910.0]],"schuif_vrijdragend":[[0,500,1340.0],[501,700,1300.0],[701,1200,1260.0]],"schuif_vrijdragend_b":[[0,500,1230.0],[501,700,1200.0],[701,1200,1160.0]],"vast_hekwerk":[[0,200,740.0],[201,500,660.0],[501,1000,590.0],[1001,2000,570.0],[2001,5000,550.0]]},"TAAG":{"dubbel":[[0,250,1370.0],[251,399,1230.0],[400,800,1110.0]],"enkel":[[0,120,1640.0],[121,199,1480.0],[200,800,1280.0]],"schuif_rail":[[0,349,1290.0],[350,500,1100.0],[501,600,1060.0],[601,700,1040.0],[701,1200,1010.0]],"schuif_vrijdragend":[[0,500,1480.0],[501,700,1440.0],[701,1200,1400.0]],"schuif_vrijdragend_b":[[0,500,1360.0],[501,700,1320.0],[701,1200,1280.0]],"vast_hekwerk":[[0,200,830.0],[201,500,740.0],[501,1000,670.0],[1001,2000,640.0],[2001,5000,620.0]]},"TALISKER":{"dubbel":[[0,250,1390.0],[251,399,1250.0],[400,800,1130.0]],"enkel":[[0,120,1670.0],[121,199,1510.0],[200,800,1300.0]],"schuif_rail":[[0,349,1310.0],[350,500,1120.0],[501,600,1080.0],[601,700,1050.0],[701,1200,1030.0]],"schuif_vrijdragend":[[0,500,1510.0],[501,700,1470.0],[701,1200,1420.0]],"schuif_vrijdragend_b":[[0,500,1380.0],[501,700,1340.0],[701,1200,1300.0]],"vast_hekwerk":[[0,200,840.0],[201,500,750.0],[501,1000,670.0],[1001,2000,650.0],[2001,5000,630.0]]},"TARN":{"dubbel":[[0,250,2770.0],[251,399,2490.0],[400,800,2250.0]],"schuif_rail":[[0,349,2550.0],[350,500,2170.0],[501,600,2100.0],[601,700,2040.0],[701,1200,1990.0]],"schuif_vrijdragend":[[0,500,2870.0],[501,700,2790.0],[701,1200,2700.0]],"schuif_vrijdragend_b":[[0,500,2620.0],[501,700,2550.0],[701,1200,2470.0]],"vast_hekwerk":[[0,200,1940.0],[201,500,1740.0],[501,1000,1560.0],[1001,2000,1490.0],[2001,5000,1450.0]]},"TARO":{"dubbel":[[0,250,1460.0],[251,399,1310.0],[400,800,1180.0]],"enkel":[[0,120,1750.0],[121,199,1580.0],[200,800,1360.0]],"schuif_rail":[[0,349,1370.0],[350,500,1170.0],[501,600,1130.0],[601,700,1100.0],[701,1200,1070.0]],"schuif_vrijdragend":[[0,500,1570.0],[501,700,1530.0],[701,1200,1480.0]],"schuif_vrijdragend_b":[[0,500,1440.0],[501,700,1400.0],[701,1200,1360.0]],"vast_hekwerk":[[0,200,1030.0],[201,500,920.0],[501,1000,830.0],[1001,2000,790.0],[2001,5000,770.0]]},"TIBER":{"dubbel":[[0,250,1370.0],[251,399,1230.0],[400,800,1110.0]],"enkel":[[0,120,1640.0],[121,199,1480.0],[200,800,1280.0]],"schuif_rail":[[0,349,1290.0],[350,500,1100.0],[501,600,1060.0],[601,700,1040.0],[701,1200,1010.0]],"schuif_vrijdragend":[[0,500,1480.0],[501,700,1440.0],[701,1200,1400.0]],"schuif_vrijdragend_b":[[0,500,1360.0],[501,700,1320.0],[701,1200,1280.0]],"vast_hekwerk":[[0,200,1160.0],[201,500,1040.0],[501,1000,930.0],[1001,2000,890.0],[2001,5000,870.0]]},"TIGRIS":{"dubbel":[[0,250,1520.0],[251,399,1360.0],[400,800,1230.0]],"enkel":[[0,120,1810.0],[121,199,1630.0],[200,800,1410.0]],"schuif_rail":[[0,349,1420.0],[350,500,1210.0],[501,600,1170.0],[601,700,1140.0],[701,1200,1110.0]],"schuif_vrijdragend":[[0,500,1630.0],[501,700,1590.0],[701,1200,1540.0]],"schuif_vrijdragend_b":[[0,500,1490.0],[501,700,1450.0],[701,1200,1410.0]],"vast_hekwerk":[[0,200,1360.0],[201,500,1220.0],[501,1000,1090.0],[1001,2000,1050.0],[2001,5000,1020.0]]},"TIGRIS PLANE":{"dubbel":[[0,250,2100.0],[251,399,1890.0],[400,800,1710.0]],"enkel":[[0,120,2500.0],[121,199,2250.0],[200,800,1960.0]],"schuif_rail":[[0,349,1950.0],[350,500,1660.0],[501,600,1600.0],[601,700,1560.0],[701,1200,1530.0]],"schuif_vrijdragend":[[0,500,2210.0],[501,700,2150.0],[701,1200,2080.0]],"schuif_vrijdragend_b":[[0,500,2020.0],[501,700,1960.0],[701,1200,1900.0]],"vast_hekwerk":[[0,200,1790.0],[201,500,1610.0],[501,1000,1440.0],[1001,2000,1380.0],[2001,5000,1350.0]]},"TIGRIS WOOD":{"dubbel":[[0,250,1950.0],[251,399,1750.0],[400,800,1580.0]],"enkel":[[0,120,2320.0],[121,199,2090.0],[200,800,1820.0]],"schuif_rail":[[0,349,1810.0],[350,500,1540.0],[501,600,1490.0],[601,700,1450.0],[701,1200,1420.0]],"schuif_vrijdragend":[[0,500,2060.0],[501,700,2000.0],[701,1200,1940.0]],"schuif_vrijdragend_b":[[0,500,1880.0],[501,700,1830.0],[701,1200,1770.0]],"vast_hekwerk":[[0,200,1750.0],[201,500,1570.0],[501,1000,1410.0],[1001,2000,1350.0],[2001,5000,1310.0]]},"TUINPOORT (Geonduleerd net)":{"dubbel":[[0,250,790.0],[251,399,710.0],[400,800,640.0]],"enkel":[[0,120,750.0],[121,199,680.0],[200,800,560.0]],"schuif_rail":[[0,349,770.0],[350,500,660.0],[501,600,640.0],[601,700,620.0],[701,1200,610.0]],"schuif_vrijdragend":[[0,500,910.0],[501,700,890.0],[701,1200,860.0]],"schuif_vrijdragend_b":[[0,500,840.0],[501,700,820.0],[701,1200,790.0]],"vast_hekwerk":[[0,200,720.0],[201,500,640.0],[501,1000,580.0],[1001,2000,550.0],[2001,5000,540.0]]},"TWEED 1 - ZGK":{"dubbel":[[0,250,2160.0],[251,399,1940.0],[400,800,1750.0]],"enkel":[[0,120,2570.0],[121,199,2320.0],[200,800,2020.0]],"schuif_rail":[[0,349,2000.0],[350,500,1700.0],[501,600,1640.0],[601,700,1600.0],[701,1200,1560.0]],"schuif_vrijdragend":[[0,500,2260.0],[501,700,2200.0],[701,1200,2130.0]],"schuif_vrijdragend_b":[[0,500,2070.0],[501,700,2010.0],[701,1200,1950.0]],"vast_hekwerk":[[0,200,1520.0],[201,500,1360.0],[501,1000,1220.0],[1001,2000,1170.0],[2001,5000,1140.0]]},"TWEED 2 - MGK":{"dubbel":[[0,250,2620.0],[251,399,2350.0],[400,800,2120.0]],"enkel":[[0,120,3100.0],[121,199,2790.0],[200,800,2440.0]],"schuif_rail":[[0,349,2410.0],[350,500,2050.0],[501,600,1980.0],[601,700,1930.0],[701,1200,1880.0]],"schuif_vrijdragend":[[0,500,2720.0],[501,700,2640.0],[701,1200,2560.0]],"schuif_vrijdragend_b":[[0,500,2480.0],[501,700,2410.0],[701,1200,2340.0]],"vast_hekwerk":[[0,200,1570.0],[201,500,1410.0],[501,1000,1260.0],[1001,2000,1210.0],[2001,5000,1180.0]]},"VELUWE":{"dubbel":[[0,250,1240.0],[251,399,1110.0],[400,800,1000.0]],"enkel":[[0,120,1490.0],[121,199,1350.0],[200,800,1160.0]],"schuif_rail":[[0,349,1170.0],[350,500,1000.0],[501,600,960.0],[601,700,940.0],[701,1200,920.0]],"schuif_vrijdragend":[[0,500,1350.0],[501,700,1310.0],[701,1200,1270.0]],"schuif_vrijdragend_b":[[0,500,1240.0],[501,700,1210.0],[701,1200,1170.0]],"vast_hekwerk":[[0,200,870.0],[201,500,780.0],[501,1000,700.0],[1001,2000,670.0],[2001,5000,650.0]]},"VELUWE RM":{"dubbel":[[0,250,1180.0],[251,399,1060.0],[400,800,960.0]],"enkel":[[0,120,1260.0],[121,199,1140.0],[200,800,970.0]],"schuif_rail":[[0,349,1120.0],[350,500,960.0],[501,600,920.0],[601,700,900.0],[701,1200,880.0]],"schuif_vrijdragend":[[0,500,1300.0],[501,700,1270.0],[701,1200,1230.0]],"schuif_vrijdragend_b":[[0,500,1190.0],[501,700,1160.0],[701,1200,1120.0]],"vast_hekwerk":[[0,200,830.0],[201,500,740.0],[501,1000,670.0],[1001,2000,640.0],[2001,5000,620.0]]},"VELUWE RZ":{"dubbel":[[0,250,1150.0],[251,399,1030.0],[400,800,930.0]],"enkel":[[0,120,1230.0],[121,199,1110.0],[200,800,950.0]],"schuif_rail":[[0,349,1090.0],[350,500,930.0],[501,600,900.0],[601,700,880.0],[701,1200,860.0]],"schuif_vrijdragend":[[0,500,1260.0],[501,700,1230.0],[701,1200,1190.0]],"schuif_vrijdragend_b":[[0,500,1160.0],[501,700,1130.0],[701,1200,1100.0]],"vast_hekwerk":[[0,200,980.0],[201,500,880.0],[501,1000,790.0],[1001,2000,760.0],[2001,5000,740.0]]},"VIENNE":{"dubbel":[[0,250,1370.0],[251,399,1230.0],[400,800,1110.0]],"enkel":[[0,120,1640.0],[121,199,1480.0],[200,800,1280.0]],"schuif_rail":[[0,349,1290.0],[350,500,1100.0],[501,600,1060.0],[601,700,1040.0],[701,1200,1010.0]],"schuif_vrijdragend":[[0,500,1480.0],[501,700,1440.0],[701,1200,1400.0]],"schuif_vrijdragend_b":[[0,500,1360.0],[501,700,1320.0],[701,1200,1280.0]],"vast_hekwerk":[[0,200,960.0],[201,500,860.0],[501,1000,770.0],[1001,2000,740.0],[2001,5000,720.0]]},"VIRGINIA":{"dubbel":[[0,250,1690.0],[251,399,1520.0],[400,800,1370.0]],"enkel":[[0,120,2020.0],[121,199,1820.0],[200,800,1580.0]],"schuif_rail":[[0,349,1580.0],[350,500,1350.0],[501,600,1300.0],[601,700,1270.0],[701,1200,1240.0]],"schuif_vrijdragend":[[0,500,1800.0],[501,700,1750.0],[701,1200,1700.0]],"schuif_vrijdragend_b":[[0,500,1650.0],[501,700,1610.0],[701,1200,1560.0]],"vast_hekwerk":[[0,200,1180.0],[201,500,1060.0],[501,1000,950.0],[1001,2000,910.0],[2001,5000,890.0]]},"VLEET":{"dubbel":[[0,250,3080.0],[251,399,2770.0],[400,800,2500.0]],"enkel":[[0,120,3650.0],[121,199,3290.0],[200,800,2880.0]],"schuif_rail":[[0,349,2830.0],[350,500,2410.0],[501,600,2330.0],[601,700,2270.0],[701,1200,2210.0]],"schuif_vrijdragend":[[0,500,3180.0],[501,700,3090.0],[701,1200,2990.0]],"schuif_vrijdragend_b":[[0,500,2900.0],[501,700,2820.0],[701,1200,2730.0]],"vast_hekwerk":[[0,200,2470.0],[201,500,2220.0],[501,1000,1990.0],[1001,2000,1900.0],[2001,5000,1850.0]]},"WESTERSCHELDE":{"dubbel":[[0,250,1620.0],[251,399,1450.0],[400,800,1310.0]],"enkel":[[0,120,1860.0],[121,199,1680.0],[200,800,1450.0]],"schuif_rail":[[0,349,1510.0],[350,500,1290.0],[501,600,1240.0],[601,700,1210.0],[701,1200,1180.0]],"schuif_vrijdragend":[[0,500,1730.0],[501,700,1680.0],[701,1200,1630.0]],"schuif_vrijdragend_b":[[0,500,1580.0],[501,700,1540.0],[701,1200,1490.0]],"vast_hekwerk":[[0,200,1380.0],[201,500,1240.0],[501,1000,1110.0],[1001,2000,1060.0],[2001,5000,1040.0]]},"WISLA":{"dubbel":[[0,250,1790.0],[251,399,1610.0],[400,800,1450.0]],"enkel":[[0,120,2140.0],[121,199,1930.0],[200,800,1680.0]],"schuif_rail":[[0,349,1670.0],[350,500,1420.0],[501,600,1370.0],[601,700,1340.0],[701,1200,1310.0]],"schuif_vrijdragend":[[0,500,1900.0],[501,700,1850.0],[701,1200,1790.0]],"schuif_vrijdragend_b":[[0,500,1740.0],[501,700,1690.0],[701,1200,1640.0]],"vast_hekwerk":[[0,200,1530.0],[201,500,1370.0],[501,1000,1230.0],[1001,2000,1180.0],[2001,5000,1150.0]]},"YELLOWSTONE":{"dubbel":[[0,250,3190.0],[251,399,2870.0],[400,800,2590.0]],"enkel":[[0,120,3780.0],[121,199,3410.0],[200,800,2990.0]],"schuif_rail":[[0,349,2930.0],[350,500,2500.0],[501,600,2410.0],[601,700,2350.0],[701,1200,2290.0]],"schuif_vrijdragend":[[0,500,3290.0],[501,700,3200.0],[701,1200,3100.0]],"schuif_vrijdragend_b":[[0,500,3000.0],[501,700,2910.0],[701,1200,2820.0]],"vast_hekwerk":[[0,200,2560.0],[201,500,2300.0],[501,1000,2060.0],[1001,2000,1970.0],[2001,5000,1920.0]]},"YUKON":{"dubbel":[[0,250,4260.0],[251,399,3830.0],[400,800,3450.0]],"enkel":[[0,120,5020.0],[121,199,4520.0],[200,800,3980.0]],"schuif_rail":[[0,349,3890.0],[350,500,3310.0],[501,600,3190.0],[601,700,3120.0],[701,1200,3040.0]],"schuif_vrijdragend":[[0,500,4340.0],[501,700,4210.0],[701,1200,4080.0]],"schuif_vrijdragend_b":[[0,500,3960.0],[501,700,3850.0],[701,1200,3730.0]],"vast_hekwerk":[[0,200,3400.0],[201,500,3060.0],[501,1000,2740.0],[1001,2000,2620.0],[2001,5000,2550.0]]}};</script>
+<style>
+  :root{
+    --forest-950:#0F160F; --forest-900:#141C15; --forest-800:#222E24;
+    --canvas:#FAF6EE; --surface:#FFFDF8; --raised:#F1E9D8; --sunken:#ECE3D2;
+    --ink:#141C15; --ink-body:#222E24; --ink-muted:#6E6450; --ink-faint:#9C8E72;
+    --bronze-600:#8A6A3C; --bronze-500:#A6824C; --bronze-400:#C2A36B; --bronze-300:#D9C194; --corten-600:#8E4A2E;
+    --accent:#A6824C; --accent-strong:#8A6A3C;
+    --display:'Cormorant',Georgia,'Times New Roman',serif; --serif:'Cormorant',Georgia,serif;
+    --sans:'Hanken Grotesk',-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
+    --line:rgba(20,28,21,0.07); --line-strong:rgba(20,28,21,0.15);
+  }
+  body{background:var(--canvas);font-family:var(--sans);color:var(--ink-body);}
+  h1,h2,.display,.serif{font-family:var(--display);}
+  .cijfers{font-variant-numeric:tabular-nums;}
+  /* ---- ERP topbar ---- */
+  header.erpbar{position:sticky;top:0;z-index:40;background:rgba(250,246,238,0.9);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);}
+  .logomark{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1.4px solid rgba(20,28,21,0.6);font-family:var(--display);font-size:19px;color:var(--ink);flex:none;}
+  .wordmark{font-family:var(--sans);font-weight:600;text-transform:uppercase;letter-spacing:0.3em;font-size:13px;color:var(--ink);line-height:1;}
+  .wordmark-sub{font-family:var(--sans);text-transform:uppercase;letter-spacing:0.2em;font-size:10px;color:var(--ink-muted);}
+  .eyebrow{font-family:var(--sans);font-weight:700;text-transform:uppercase;letter-spacing:0.26em;font-size:10.5px;color:var(--bronze-600);}
+  .navlink{font-family:var(--sans);font-size:14px;color:var(--ink-muted);padding:6px 4px;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;}
+  .navlink:hover{color:var(--ink);}
+  .navlink.on{color:var(--ink);border-bottom-color:var(--bronze-500);font-weight:600;}
+  /* ---- surfaces (ERP: dun kader, klein hoekje, subtiele schaduw) ---- */
+  .brand-txt{color:var(--ink);}
+  .accent-txt{color:var(--bronze-600);}
+  button.brand{background:var(--bronze-500);border-radius:5px;color:#FAF6EE;font-weight:600;}
+  button.brand:hover{background:var(--bronze-400);}
+  button.brand:active{background:var(--bronze-600);}
+  .bg-white{background-color:var(--surface)!important;}
+  .rounded-xl{border-radius:6px;}
+  section.bg-white,div.bg-white{box-shadow:0 1px 2px rgba(15,22,15,0.05);}
+  .border-gray-200,.border-gray-100{border-color:var(--line)!important;}
+  .border-gray-50{border-color:rgba(20,28,21,0.05)!important;}
+  .text-gray-500,.text-gray-600{color:var(--ink-muted)!important;}
+  .text-gray-800{color:var(--ink-body)!important;}
+  .text-gray-400{color:var(--ink-faint)!important;}
+  /* ---- bloktitel: sans, genummerd, met onderlijn (zoals ERP-paneel) ---- */
+  .bloktitel{display:flex;align-items:baseline;gap:8px;font-family:var(--sans);font-size:15px;font-weight:600;color:var(--ink);border-bottom:1px solid var(--line);padding-bottom:10px;}
+  .bloktitel .badge{font-family:var(--sans);font-size:11px;font-weight:700;color:var(--bronze-600);letter-spacing:0.08em;flex:none;}
+  input,select{outline:none;}
+  .cel{border:1px solid var(--line-strong);border-radius:5px;padding:7px 11px;width:100%;background:var(--surface);font-family:var(--sans);font-size:15px;color:var(--ink);}
+  .cel:focus{border-color:var(--bronze-500);box-shadow:0 0 0 4px rgba(166,130,76,0.18);}
+  ::-webkit-scrollbar{height:8px;width:8px;}
+  ::-webkit-scrollbar-thumb{background:var(--sunken);border-radius:8px;}
+  /* ================= Offerte-layout (ontwerp Poortland) ================= */
+  .oblad{width:210mm;max-width:100%;margin:0 auto;background:var(--papier,#FAF6EE);border:1px solid var(--line);border-radius:8px;box-shadow:0 14px 40px rgba(15,22,15,0.13);box-sizing:border-box;padding:14mm 16mm 12mm;position:relative;font-family:var(--sans);color:var(--ink-body);}
+  .oblad .oeyebrow{font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--bronze-600);}
+  .oblad .olabel{font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-muted);}
+  .okop{display:flex;justify-content:space-between;align-items:flex-start;}
+  .omono{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1.4px solid var(--ink);position:relative;box-sizing:border-box;flex:none;margin-right:14px;}
+  .omono::before{content:"";position:absolute;top:3px;left:3px;right:3px;bottom:3px;border:1px solid var(--ink);opacity:.3;}
+  .omono b{font-family:var(--display);font-weight:600;font-size:24px;color:var(--ink);line-height:1;}
+  .owoordmerk{font-family:var(--sans);font-size:17px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--ink);line-height:1;}
+  .osub{font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-muted);}
+  .obedrijf{text-align:right;font-size:11px;color:var(--ink-muted);line-height:1.75;}
+  .ohairline{height:1px;background:rgba(166,130,76,.45);margin:8mm 0 6mm;}
+  .oh1{font-family:var(--display);font-weight:500;font-size:34px;line-height:.95;letter-spacing:-.01em;color:var(--ink);margin:0;}
+  .ometaband{display:grid;grid-template-columns:repeat(4,1fr);gap:6mm;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:4mm 6mm;margin:5mm 0 6mm;}
+  .owaarde{font-size:13px;font-weight:600;color:var(--ink);margin-top:3px;font-variant-numeric:tabular-nums;}
+  .opartijen{display:grid;grid-template-columns:1fr 1fr;gap:8mm;margin-bottom:6mm;}
+  .opartij{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:5mm 6mm;}
+  .opartij .onaam{font-weight:600;color:var(--ink);margin-top:3.5mm;}
+  .oblad table{width:100%;border-collapse:collapse;}
+  .oblad th{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-muted);text-align:left;padding:0 3mm 2.5mm 0;border-bottom:1.2px solid var(--ink);}
+  .oblad th.r,.oblad td.r{text-align:right;}
+  .oblad td{padding:2.6mm 3mm;border-bottom:1px solid var(--line);vertical-align:top;font-size:13px;color:var(--ink-body);}
+  .oblad tr.osectie td{padding-top:4mm;border-bottom:0;}
+  .oonder{display:grid;grid-template-columns:1fr 72mm;gap:10mm;margin-top:6mm;}
+  .ototalen{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:5mm 6mm;height:fit-content;}
+  .ototalen .orij{display:flex;justify-content:space-between;gap:8mm;padding:1.9mm 0;font-size:13px;color:var(--ink-muted);font-variant-numeric:tabular-nums;}
+  .ototalen .oeind{border-top:1.2px solid var(--ink);margin-top:2mm;padding-top:3mm;display:flex;justify-content:space-between;align-items:center;}
+  .ototalen .oeind .olabel{color:var(--ink);}
+  .ototalen .obedrag{font-family:var(--display);font-weight:600;font-size:22px;color:var(--bronze-600);font-variant-numeric:tabular-nums;}
+  .ovoorschot{margin-top:3mm;padding-top:2.5mm;border-top:1px dashed var(--line-strong);display:flex;justify-content:space-between;font-size:11px;color:var(--ink-muted);}
+  .ovoorwaarden .oregels{display:grid;gap:6px;margin-top:4mm;font-size:12px;color:var(--ink-muted);line-height:1.5;}
+  .ogoedkeuring{display:grid;grid-template-columns:1fr 1fr;gap:10mm;margin-top:7mm;}
+  .otekenvak{border:1px solid var(--line-strong);border-radius:6px;padding:5mm 6mm;min-height:22mm;position:relative;background:var(--surface);}
+  .otekenvak .odatumlijn{position:absolute;left:6mm;right:6mm;bottom:5mm;border-top:1px solid var(--line-strong);padding-top:2mm;font-size:9px;color:var(--ink-faint);display:flex;justify-content:space-between;}
+  .ovoet{margin-top:7mm;padding-top:4mm;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-size:9px;color:var(--ink-faint);}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" data-presets="react">
+const { useState, useMemo, useRef } = React;
+const D = window.PL_DATA;
+
+const euro = (n) => (isNaN(n)?0:n).toLocaleString('nl-BE',{style:'currency',currency:'EUR'});
+const num = (v) => { const n = parseFloat(String(v).replace(',','.')); return isNaN(n)?0:n; };
+const uid = () => Math.random().toString(36).slice(2,9);
+
+// ---------- standaardinstellingen (alles aanpasbaar in de tool) ----------
+const STANDAARD = {
+  families: {
+    open:      { label:'Open / spijlen',      basis: 700,  perM2: 380 },
+    halfopen:  { label:'Halfopen',            basis: 950,  perM2: 560 },
+    dicht:     { label:'Dicht / plaat / hout', basis: 1240, perM2: 760 },
+    standaard: { label:'Standaard',           basis: 900,  perM2: 500 },
+  },
+  uitvoering: {
+    enkel:              { label:'Enkele draaipoort', factor: 1.0 },
+    dubbel:             { label:'Dubbele draaipoort', factor: 1.9 },
+    schuif_rail:        { label:'Schuifpoort op rail', factor: 1.2 },
+    schuif_vrijdragend: { label:'Schuifpoort vrijdragend', factor: 1.4 },
+    vast_hekwerk:       { label:'Vast hekwerk', factor: 0.8 },
+  },
+  // Prijslijst 2020: de echte tabellen per model, uitvoering en breedteklasse
+  // (EUR per lopende meter). Indexatie staat op 0 tot Jef een percentage
+  // opgeeft; de flow wordt voorlopig getest zonder finale prijsberekening.
+  indexatie2020: 0,
+  // Jef 2026-08-11: tarieven worden per kwartier verrekend en enkel gebruikt
+  // voor transport en interventies. Technieker 24,50 en monteur 20,00 per 15 min.
+  kwartier: { technieker: 24.5, monteur: 20 },
+  // Jef 2026-08-11: bij Faac is de catalogusprijs de verkoopprijs en is de
+  // inkoop een korting op die catalogusprijs: 50% standaard, 53% bij grotere
+  // bestellingen. De marge volgt daar vanzelf uit.
+  faacKorting: { standaard: 50, grootbestelling: 53 },
+  marges: { poort: 30, paal: 30, toebehoren: 30, plaatsing: 30, transport: 0 },
+  plaatsing: { poort: 450, automatisering: 650, ondergronds: 250 },
+  // Jef 2026-08-12: de echte regiotabel uit de prijslijst (vervoerskosten per
+  // regio, per voertuig en aantal personen). Boven 150 km rekent de formule
+  // met de parameters die in het bestand geel staan.
+  transport: {
+    regios: [
+      { van: 0,   tot: 5,   b1: 0,   b2: 0,   v1: 0,   v2: 0,   v3: 0 },
+      { van: 5,   tot: 15,  b1: 41,  b2: 71,  v1: 47,  v2: 79,  v3: 111 },
+      { van: 15,  tot: 20,  b1: 71,  b2: 121, v1: 88,  v2: 145, v3: 203 },
+      { van: 20,  tot: 40,  b1: 104, b2: 168, v1: 136, v2: 211, v3: 286 },
+      { van: 40,  tot: 60,  b1: 147, b2: 233, v1: 194, v2: 298, v3: 402 },
+      { van: 60,  tot: 80,  b1: 186, b2: 292, v1: 249, v2: 378, v3: 507 },
+      { van: 80,  tot: 100, b1: 216, b2: 332, v1: 292, v2: 434, v3: 576 },
+      { van: 100, tot: 150, b1: 284, b2: 417, v1: 390, v2: 554, v3: 718 }
+    ],
+    parameters: { snelheidBestelwagen: 45, snelheidVrachtwagen: 35, kmBestelwagen: 1, kmVrachtwagen: 1.5, startkost: 25 }
+  },
+  btwOpties: [ {v:21,label:'21% (standaard)'}, {v:6,label:'6% (renovatie > 10 jaar)'}, {v:0,label:'Verlegd / medecontractant (0%)'} ],
+  kortingMax: 20,
+};
+
+function App(){
+  const [tab,setTab] = useState('calc');
+  const [S,setS] = useState(STANDAARD);
+  const [regels,setRegels] = useState([]);
+  const [klant,setKlant] = useState({naam:'',adres:'',offertenr:'OFF-'+new Date().getFullYear()+'-001',datum:new Date().toISOString().slice(0,10),geldig:'30 dagen'});
+  const [btw,setBtw] = useState(21);
+  const [korting,setKorting] = useState(0);
+
+  const add = (r) => setRegels(rs=>[...rs,{id:uid(),...r}]);
+  const del = (id) => setRegels(rs=>rs.filter(r=>r.id!==id));
+  const upd = (id,patch) => setRegels(rs=>rs.map(r=>r.id===id?{...r,...patch}:r));
+
+  const T = useMemo(()=>berekenTotalen(regels,korting,btw),[regels,korting,btw]);
+
+  return (
+    <div className="min-h-screen">
+      <header className="erpbar">
+        <div className="max-w-6xl mx-auto px-8 h-14 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="logomark">P</span>
+            <div>
+              <div className="wordmark">Poortland</div>
+              <div className="wordmark-sub">Operations</div>
+            </div>
+          </div>
+          <nav className="flex gap-6 items-center">
+            {[['calc','Calculator'],['offerte','Klantofferte'],['instel','Instellingen']].map(([k,l])=>(
+              <button key={k} onClick={()=>setTab(k)} className={"navlink "+(tab===k?'on':'')}>{l}</button>
+            ))}
+          </nav>
+        </div>
+      </header>
+      <main className="max-w-6xl mx-auto px-8 py-7">
+        <div className="mb-6 flex items-end justify-between gap-4">
+          <div>
+            <div className="eyebrow">Operations · offerte</div>
+            <h1 className="mt-1 leading-none tracking-tight" style={{fontSize:'32px',fontWeight:500,color:'var(--ink)'}}>{({calc:'Offertecalculator',offerte:'Klantofferte',instel:'Instellingen'})[tab]}</h1>
+          </div>
+          <span className="eyebrow" style={{color:'var(--ink-faint)'}}>Prototype</span>
+        </div>
+        {tab==='calc'   && <Calc S={S} regels={regels} add={add} del={del} upd={upd} T={T} btw={btw} setBtw={setBtw} korting={korting} setKorting={setKorting} klant={klant} setKlant={setKlant}/>}
+        {tab==='offerte'&& <Offerte regels={regels} T={T} btw={btw} korting={korting} klant={klant}/>}
+        {tab==='instel' && <Instellingen S={S} setS={setS}/>}
+      </main>
+      <footer className="max-w-6xl mx-auto px-5 py-6 text-xs text-gray-400">
+        Prototype. Prijsparameters zijn voorlopige schattingen en volledig aanpasbaar onder Instellingen. Vul Jefs definitieve cijfers daar in.
+      </footer>
+    </div>
+  );
+}
+
+// ---------- rekenkern ----------
+function regelVerkoop(r){ return r.kost*(1+ (r.marge||0)/100 )*(r.aantal||1); }
+function regelKost(r){ return r.kost*(r.aantal||1); }
+const MATERIAAL = ['poort','automatisering','paal','toebehoren'];
+
+function berekenTotalen(regels,korting,btw){
+  let mat=0,matKost=0,plaats=0,trans=0,kostTot=0;
+  regels.forEach(r=>{
+    const v=regelVerkoop(r), k=regelKost(r); kostTot+=k;
+    if(MATERIAAL.includes(r.cat)){mat+=v;matKost+=k;}
+    else if(r.cat==='plaatsing') plaats+=v;
+    else if(r.cat==='transport') trans+=v;
+  });
+  const kortBedrag = mat*(korting/100);
+  const subtotaal = mat - kortBedrag + plaats + trans;
+  const btwBedrag = subtotaal*(btw/100);
+  const totaal = subtotaal + btwBedrag;
+  const margeE = (mat+plaats+trans) - kostTot - kortBedrag;
+  const margePct = (mat+plaats+trans)>0 ? margeE/((mat+plaats+trans))*100 : 0;
+  return {mat,matKost,plaats,trans,kortBedrag,subtotaal,btwBedrag,totaal,kostTot,margeE,margePct};
+}
+
+// ---------- Calculator-tab ----------
+function Calc({S,regels,add,del,upd,T,btw,setBtw,korting,setKorting,klant,setKlant}){
+  return (
+    <div className="grid lg:grid-cols-3 gap-6">
+      <div className="lg:col-span-2 space-y-5">
+        <PoortBlok S={S} add={add}/>
+        <AutoBlok S={S} add={add}/>
+        <PalenToebehorenBlok S={S} add={add}/>
+        <PlaatsingBlok S={S} add={add}/>
+        <TransportBlok S={S} add={add}/>
+      </div>
+      <div className="space-y-4">
+        <KlantKaart klant={klant} setKlant={setKlant}/>
+        <RegelLijst regels={regels} del={del} upd={upd}/>
+        <TotaalKaart T={T} btw={btw} setBtw={setBtw} korting={korting} setKorting={setKorting} S={S}/>
+      </div>
+    </div>
+  );
+}
+
+function Blok({titel,children}){
+  const m = /^(\d+)\.\s*(.*)$/.exec(titel||'');
+  return (
+    <section className="bg-white rounded-xl border border-gray-200 p-5">
+      <div className="bloktitel mb-4">{m && <span className="badge">{m[1]}</span>}<span>{m?m[2]:titel}</span></div>
+      {children}
+    </section>
+  );
+}
+const Veld = ({label,children}) => (
+  <label className="block"><span className="block text-[11px] font-bold uppercase tracking-[0.14em] text-gray-600">{label}</span>{children}</label>
+);
+
+function PoortBlok({S,add}){
+  const [modelN,setModelN] = useState(D.models[0].n);
+  const model = D.models.find(m=>m.n===modelN) || D.models[0];
+  const uitvKeys = Object.keys(S.uitvoering);
+  const beschikbaar = (k)=>({enkel:model.e,dubbel:model.d,schuif_rail:model.sr,schuif_vrijdragend:model.sv,vast_hekwerk:model.vh})[k];
+  const eersteBeschik = uitvKeys.find(beschikbaar) || 'enkel';
+  const [uitv,setUitv] = useState(eersteBeschik);
+  const [b,setB] = useState(3000);
+  const [h,setH] = useState(1600);
+  const [vul,setVul] = useState(model.f);
+  const [ral,setRal] = useState('7016');
+  const [extra,setExtra] = useState(0);
+  // Jef: bij een vrijdragende schuifpoort kan de achterbouw een kader of een
+  // stijl zijn; de prijslijst heeft daarvoor twee sets. Aanname: de duurdere
+  // set A is het kader en de goedkopere set B de stijl (te bevestigen).
+  const [achterbouw,setAchterbouw] = useState('kader');
+  React.useEffect(()=>{ setVul(model.f); if(!beschikbaar(uitv)) setUitv(eersteBeschik); },[modelN]);
+
+  const opp = (num(b)/1000)*(num(h)/1000);
+  const fam = S.families[vul];
+  const factor = S.uitvoering[uitv].factor;
+  // Eerst de echte prijslijst 2020 (per model, uitvoering en breedteklasse,
+  // EUR per lopende meter) plus indexatie; pas als het model daar niet in
+  // staat valt de berekening terug op de familieschatting.
+  const bCm = num(b)/10, bM = num(b)/1000;
+  const gridSleutel = uitv === 'schuif_vrijdragend' && achterbouw === 'stijl' ? 'schuif_vrijdragend_b' : uitv;
+  const grid = (window.PL_PRIJZEN2020?.[model.n]||{})[gridSleutel];
+  const klasse = grid ? (grid.find(k=>bCm>=k[0]&&bCm<=k[1]) || grid[grid.length-1]) : null;
+  const uitLijst = klasse != null;
+  const kost = uitLijst
+    ? Math.round((klasse[2]*(1+S.indexatie2020/100)*bM + num(extra))*100)/100
+    : (fam.basis + opp*fam.perM2)*factor + num(extra);
+  const verkoop = kost*(1+S.marges.poort/100);
+
+  const toevoegen = () => add({
+    cat:'poort', kost:Math.round(kost*100)/100, marge:S.marges.poort, aantal:1,
+    omschrijving:`Poort ${model.n} — ${S.uitvoering[uitv].label}${uitv==='schuif_vrijdragend' ? ` (achterbouw ${achterbouw})` : ''}, ${num(b)}×${num(h)} mm, RAL ${ral}`,
+  });
+
+  return (
+    <Blok titel="1. Poort configureren" filo="De prijs komt uit de prijslijst 2020 per model, uitvoering en breedteklasse (per lopende meter) plus de indexatie. Dure bewerkingen zoals een groef zitten in de basisprijs per model. Enkel modellen buiten de lijst vallen terug op de familieschatting.">
+      <div className="grid sm:grid-cols-3 gap-3">
+        <Veld label="Model">
+          <select className="cel mt-1" value={modelN} onChange={e=>setModelN(e.target.value)}>
+            {D.models.map(m=><option key={m.n} value={m.n}>{m.n}{m.g?'  (beschikbaarheid nog te bevestigen)':''}</option>)}
+          </select>
+        </Veld>
+        <Veld label="Uitvoering">
+          <select className="cel mt-1" value={uitv} onChange={e=>setUitv(e.target.value)}>
+            {uitvKeys.map(k=><option key={k} value={k} disabled={!beschikbaar(k)}>{S.uitvoering[k].label}{beschikbaar(k)?'':' — niet beschikbaar'}</option>)}
+          </select>
+        </Veld>
+        <Veld label="Vulling / prijsfamilie">
+          <select className="cel mt-1" value={vul} onChange={e=>setVul(e.target.value)}>
+            {Object.entries(S.families).map(([k,f])=><option key={k} value={k}>{f.label}</option>)}
+          </select>
+        </Veld>
+      </div>
+      <div className="grid sm:grid-cols-4 gap-3 mt-3">
+        <Veld label="Breedte (mm)"><input className="cel mt-1" value={b} onChange={e=>setB(e.target.value)} inputMode="numeric"/></Veld>
+        <Veld label="Hoogte (mm)"><input className="cel mt-1" value={h} onChange={e=>setH(e.target.value)} inputMode="numeric"/></Veld>
+        <Veld label="RAL kleur"><input className="cel mt-1" value={ral} onChange={e=>setRal(e.target.value)}/></Veld>
+        <Veld label="Meerprijs opties (€)"><input className="cel mt-1" value={extra} onChange={e=>setExtra(e.target.value)} inputMode="numeric"/></Veld>
+      </div>
+      {uitv==='schuif_vrijdragend' && (
+        <div className="flex items-center gap-4 mt-3 text-sm text-gray-600">
+          Achterbouw:
+          {['kader','stijl'].map(k=>(
+            <label key={k} className="flex items-center gap-1.5">
+              <input type="radio" name="achterbouw" checked={achterbouw===k} onChange={()=>setAchterbouw(k)}/> {k}
+            </label>
+          ))}
+          <span className="text-xs text-gray-400">(kader = prijsset A, stijl = prijsset B — aanname, te bevestigen)</span>
+        </div>
+      )}
+      <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
+        <div className="text-sm text-gray-600">Oppervlakte <b>{opp.toFixed(2)} m²</b> · kostprijs <b>{euro(kost)}</b> · verkoop <b className="brand-txt">{euro(verkoop)}</b>
+          <div className="text-xs text-gray-400 mt-0.5">{uitLijst
+            ? `Bron: prijslijst 2020 (${euro(klasse[2])}/m) + ${S.indexatie2020}% indexatie`
+            : 'Bron: familieschatting (model staat niet in de prijslijst 2020)'}</div>
+        </div>
+        <button onClick={toevoegen} className="brand text-white text-sm font-semibold rounded-lg px-4 py-2">Toevoegen</button>
+      </div>
+    </Blok>
+  );
+}
+
+function AutoBlok({S,add}){
+  const [zoek,setZoek] = useState('');
+  const [sel,setSel] = useState('');
+  const [aant,setAant] = useState(1);
+  const lijst = useMemo(()=>{
+    const q=zoek.toLowerCase();
+    return D.auto.filter(a=>a.n.toLowerCase().includes(q)).slice(0,200);
+  },[zoek]);
+  const art = D.auto.find(a=>a.n===sel);
+  const [grootbestelling,setGrootbestelling] = useState(false);
+  const [margeInvoer,setMargeInvoer] = useState(50);
+  const isFaac = art && art.fab === 'FAAC';
+  // Jef 2026-08-12: de kortingsregel geldt enkel voor Faac (catalogusprijs =
+  // verkoopprijs, inkoop = catalogusprijs min de korting). Bij andere
+  // leveranciers geef je de marge gewoon op bij het ingeven.
+  const toevoegen = () => { if(!art) return;
+    if (isFaac) {
+      const kortPct = grootbestelling ? S.faacKorting.grootbestelling : S.faacKorting.standaard;
+      const kost = Math.round(art.p*(1-kortPct/100)*100)/100;
+      const marge = kost>0 ? Math.round((art.p/kost-1)*1000)/10 : 0;
+      add({ cat:'automatisering', kost, marge, aantal:num(aant)||1, omschrijving:art.n });
+    } else {
+      add({ cat:'automatisering', kost:art.p, marge:num(margeInvoer), aantal:num(aant)||1, omschrijving:art.n });
+    } };
+  return (
+    <Blok titel="2. Automatisering" filo="Faac: de catalogusprijs is de verkoopprijs en de inkoop is die prijs min 50% (of min 53% bij grotere bestellingen); de marge rekent vanzelf. Andere leveranciers: de lijstprijs geldt als aankoopprijs en je geeft de marge op bij het ingeven. Denk bij een magneetlus aan de plaatsingsuren volgens de ondergrond (blok Plaatsing).">
+      <input className="cel mb-2" placeholder="Zoek een motor, bediening, fotocel…" value={zoek} onChange={e=>setZoek(e.target.value)}/>
+      <div className="grid sm:grid-cols-[1fr_84px_auto] gap-2 items-end">
+        <Veld label="Artikel">
+          <select className="cel mt-1" value={sel} onChange={e=>setSel(e.target.value)}>
+            <option value="">— kies een artikel ({lijst.length}) —</option>
+            {lijst.map(a=><option key={a.n} value={a.n}>{a.n} · {euro(a.p)}</option>)}
+          </select>
+        </Veld>
+        <Veld label="Aantal"><input className="cel mt-1" value={aant} onChange={e=>setAant(e.target.value)} inputMode="numeric"/></Veld>
+        <button onClick={toevoegen} disabled={!art} className="brand text-white text-sm font-semibold rounded-lg px-4 py-2 disabled:opacity-40">Toevoegen</button>
+      </div>
+      {isFaac ? (
+        <label className="flex items-center gap-1.5 text-sm text-gray-600 mt-2">
+          <input type="checkbox" checked={grootbestelling} onChange={e=>setGrootbestelling(e.target.checked)}/>
+          grotere bestelling (inkoop -{S.faacKorting.grootbestelling}% in plaats van -{S.faacKorting.standaard}%)
+        </label>
+      ) : art ? (
+        <label className="flex items-center gap-2 text-sm text-gray-600 mt-2">
+          Marge op dit artikel ({art.fab || 'leverancier onbekend'}):
+          <input className="cel !py-1 w-20 text-right" value={margeInvoer} onChange={e=>setMargeInvoer(e.target.value)} inputMode="numeric"/> %
+        </label>
+      ) : null}
+      <p className="text-xs text-gray-400 mt-2">Voeg gerust meerdere artikelen na elkaar toe, elk komt als aparte lijn in Offerteregels links.</p>
+    </Blok>
+  );
+}
+
+function PalenToebehorenBlok({S,add}){
+  const [paal,setPaal] = useState('');
+  const p = D.palen.find(x=>x.n===paal);
+  const [oms,setOms] = useState(''); const [bedr,setBedr] = useState(''); const [aant,setAant] = useState(1);
+  return (
+    <Blok titel="3. Palen en toebehoren" filo="Voeg palen uit de lijst toe of een vrije regel voor toebehoren.">
+      <div className="grid sm:grid-cols-[1fr_auto] gap-2 mb-3">
+        <select className="cel" value={paal} onChange={e=>setPaal(e.target.value)}>
+          <option value="">— kies een paal —</option>
+          {D.palen.map(x=><option key={x.n} value={x.n}>{x.n}{x.p?` · ${euro(x.p)}`:''}</option>)}
+        </select>
+        <button disabled={!p} onClick={()=>add({cat:'paal',kost:p.p||0,marge:S.marges.paal,aantal:1,omschrijving:p.n})}
+          className="brand text-white text-sm font-semibold rounded-lg px-4 py-2 disabled:opacity-40">Toevoegen</button>
+      </div>
+      <div className="grid sm:grid-cols-[1fr_120px_70px_auto] gap-2 items-end">
+        <Veld label="Vrije toebehorenregel"><input className="cel mt-1" value={oms} onChange={e=>setOms(e.target.value)} placeholder="omschrijving"/></Veld>
+        <Veld label="Kostprijs (€)"><input className="cel mt-1" value={bedr} onChange={e=>setBedr(e.target.value)} inputMode="numeric"/></Veld>
+        <Veld label="Aantal"><input className="cel mt-1" value={aant} onChange={e=>setAant(e.target.value)} inputMode="numeric"/></Veld>
+        <button disabled={!oms} onClick={()=>{add({cat:'toebehoren',kost:num(bedr),marge:S.marges.toebehoren,aantal:num(aant)||1,omschrijving:oms});setOms('');setBedr('');setAant(1);}}
+          className="brand text-white text-sm font-semibold rounded-lg px-4 py-2 disabled:opacity-40">Toevoegen</button>
+      </div>
+    </Blok>
+  );
+}
+
+function PlaatsingBlok({S,add}){
+  const [ondergronds,setOndergronds] = useState(false);
+  const [uren,setUren] = useState(0); const [rol,setRol] = useState('technieker');
+  return (
+    <Blok titel="4. Plaatsing" filo="Prijzen zijn franco Mechelen, dus plaatsing is een aparte lijn. Korting geldt niet op plaatsing.">
+      <div className="flex flex-wrap gap-2">
+        <button onClick={()=>add({cat:'plaatsing',kost:S.plaatsing.poort,marge:S.marges.plaatsing,aantal:1,omschrijving:'Plaatsing poort'})}
+          className="border border-[#141C15] brand-txt text-sm rounded-lg px-3 py-2">+ Plaatsing poort ({euro(S.plaatsing.poort)})</button>
+        <button onClick={()=>add({cat:'plaatsing',kost:S.plaatsing.automatisering+(ondergronds?S.plaatsing.ondergronds:0),marge:S.marges.plaatsing,aantal:1,omschrijving:'Plaatsing automatisering'+(ondergronds?' (ondergronds)':'')})}
+          className="border border-[#141C15] brand-txt text-sm rounded-lg px-3 py-2">+ Plaatsing automatisering ({euro(S.plaatsing.automatisering+(ondergronds?S.plaatsing.ondergronds:0))})</button>
+        <label className="flex items-center gap-1.5 text-sm text-gray-600"><input type="checkbox" checked={ondergronds} onChange={e=>setOndergronds(e.target.checked)}/> ondergronds (+{euro(S.plaatsing.ondergronds)})</label>
+      </div>
+      <div className="grid sm:grid-cols-[120px_1fr_auto] gap-2 items-end mt-3">
+        <Veld label="Uren"><input className="cel mt-1" value={uren} onChange={e=>setUren(e.target.value)} inputMode="numeric"/></Veld>
+        <Veld label="Rol"><select className="cel mt-1" value={rol} onChange={e=>setRol(e.target.value)}>{Object.keys(S.kwartier).map(k=><option key={k} value={k}>{k} ({euro(S.kwartier[k])}/15 min)</option>)}</select></Veld>
+        <button disabled={!num(uren)} onClick={()=>{
+          // Jef: verrekend per begonnen kwartier
+          const kwartieren = Math.ceil(num(uren)*4);
+          add({cat:'plaatsing',kost:Math.round(kwartieren*S.kwartier[rol]*100)/100,marge:S.marges.plaatsing,aantal:1,
+            omschrijving:`Werkuren ${rol} (${kwartieren} kwartier)`});
+        }} className="brand text-white text-sm font-semibold rounded-lg px-4 py-2 disabled:opacity-40">Toevoegen</button>
+      </div>
+    </Blok>
+  );
+}
+
+function TransportBlok({S,add}){
+  const [km,setKm] = useState(20);
+  const [voertuig,setVoertuig] = useState('bestelwagen');
+  const [personen,setPersonen] = useState(1);
+  // De regiotabel van Jef bepaalt de prijs; boven de tabel (150 km) rekent
+  // de formule met de gele parameters uit het prijslijstbestand.
+  const bestel = voertuig==='bestelwagen';
+  const maxP = bestel ? 2 : 3;
+  const p = Math.min(personen, maxP);
+  const regio = S.transport.regios.find(r=>num(km)>=r.van && num(km)<=r.tot);
+  const kolom = bestel ? ('b'+p) : ('v'+p);
+  let kost, bron;
+  if (regio) { kost = regio[kolom]; bron = `regiotabel ${regio.van} tot ${regio.tot} km`; }
+  else {
+    const par = S.transport.parameters;
+    const snelheid = bestel ? par.snelheidBestelwagen : par.snelheidVrachtwagen;
+    const rijkost = bestel ? par.kmBestelwagen : par.kmVrachtwagen;
+    const retour = num(km)*2;
+    const kwartieren = Math.ceil((retour/snelheid)*4);
+    kost = Math.round((par.startkost + retour*rijkost + kwartieren*S.kwartier.monteur*p)*100)/100;
+    bron = 'boven de regiotabel: formule met de lijstparameters';
+  }
+  return (
+    <Blok titel="5. Transport" filo="Vervoerskosten volgens de regiotabel uit de prijslijst, per voertuig en aantal personen. Boven 150 km rekent de formule met de gele lijstparameters (gemiddelde snelheid, rijkost per km en startkost).">
+      <div className="grid sm:grid-cols-[110px_1fr_110px_auto] gap-2 items-end">
+        <Veld label="Afstand enkel (km)"><input className="cel mt-1" value={km} onChange={e=>setKm(e.target.value)} inputMode="numeric"/></Veld>
+        <Veld label="Voertuig"><select className="cel mt-1" value={voertuig} onChange={e=>{setVoertuig(e.target.value); if(e.target.value==='bestelwagen'&&personen>2)setPersonen(2);}}>
+          <option value="bestelwagen">Bestelwagen</option>
+          <option value="vrachtwagen">Vrachtwagen</option>
+        </select></Veld>
+        <Veld label="Personen"><select className="cel mt-1" value={p} onChange={e=>setPersonen(num(e.target.value))}>
+          {Array.from({length:maxP},(_,i)=><option key={i+1} value={i+1}>{i+1}</option>)}
+        </select></Veld>
+        <button onClick={()=>add({cat:'transport',kost:Math.round(kost*100)/100,marge:S.marges.transport,aantal:1,
+          omschrijving:`Transport ${voertuig} (${num(km)} km, ${p} ${p===1?'persoon':'personen'})`})}
+          className="brand text-white text-sm font-semibold rounded-lg px-4 py-2">Toevoegen ({euro(kost)})</button>
+      </div>
+      <p className="text-xs text-gray-400 mt-2">Bron: {bron}</p>
+    </Blok>
+  );
+}
+
+const CAT_LABEL = {poort:'Poort',automatisering:'Automatisering',paal:'Paal',toebehoren:'Toebehoren',plaatsing:'Plaatsing',transport:'Transport'};
+function RegelLijst({regels,del,upd}){
+  if(!regels.length) return <div className="bg-white rounded-xl border border-gray-200 p-4 text-sm text-gray-500">Nog geen regels. Voeg links producten toe.</div>;
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 p-3">
+      <h3 className="font-semibold brand-txt text-sm mb-2 px-1">Offerteregels</h3>
+      <div className="space-y-2 max-h-[420px] overflow-auto">
+        {regels.map(r=>(
+          <div key={r.id} className="border border-gray-100 rounded-lg p-2">
+            <div className="flex justify-between gap-2">
+              <span className="text-[11px] uppercase tracking-wide text-gray-400">{CAT_LABEL[r.cat]}</span>
+              <button onClick={()=>del(r.id)} className="text-gray-300 hover:text-red-500 text-sm">✕</button>
+            </div>
+            <div className="text-sm text-gray-800 leading-snug">{r.omschrijving}</div>
+            <div className="grid grid-cols-3 gap-1 mt-1.5">
+              <label className="text-[11px] text-gray-500">kost €<input className="cel !py-1 mt-0.5" value={r.kost} onChange={e=>upd(r.id,{kost:num(e.target.value)})}/></label>
+              <label className="text-[11px] text-gray-500">marge %<input className="cel !py-1 mt-0.5" value={r.marge} onChange={e=>upd(r.id,{marge:num(e.target.value)})}/></label>
+              <label className="text-[11px] text-gray-500">aantal<input className="cel !py-1 mt-0.5" value={r.aantal} onChange={e=>upd(r.id,{aantal:num(e.target.value)})}/></label>
+            </div>
+            <div className="text-right text-sm mt-1 brand-txt font-semibold">{euro(regelVerkoop(r))}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function KlantKaart({klant,setKlant}){
+  const f=(k,v)=>setKlant({...klant,[k]:v});
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 p-3 space-y-2">
+      <h3 className="font-semibold brand-txt text-sm">Klant</h3>
+      <input className="cel !py-1.5 text-sm" placeholder="Naam klant" value={klant.naam} onChange={e=>f('naam',e.target.value)}/>
+      <input className="cel !py-1.5 text-sm" placeholder="Adres" value={klant.adres} onChange={e=>f('adres',e.target.value)}/>
+      <div className="grid grid-cols-2 gap-2">
+        <input className="cel !py-1.5 text-sm" value={klant.offertenr} onChange={e=>f('offertenr',e.target.value)}/>
+        <input className="cel !py-1.5 text-sm" value={klant.datum} onChange={e=>f('datum',e.target.value)}/>
+      </div>
+    </div>
+  );
+}
+
+function TotaalKaart({T,btw,setBtw,korting,setKorting,S}){
+  const R = ({l,v,b,groen}) => <div className={"flex justify-between "+(b?'font-semibold':'')+(groen?' brand-txt':'')}><span>{l}</span><span>{v}</span></div>;
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 p-4 text-sm space-y-1.5 sticky top-4">
+      <R l="Materiaal" v={euro(T.mat)}/>
+      <div className="flex justify-between items-center text-gray-600">
+        <span>Korting op materiaal</span>
+        <span className="flex items-center gap-1">
+          <input className="cel !py-1 w-16 text-right" value={korting} onChange={e=>setKorting(Math.min(num(e.target.value),S.kortingMax))}/>%
+        </span>
+      </div>
+      {T.kortBedrag>0 && <R l="" v={'– '+euro(T.kortBedrag)}/>}
+      <R l="Plaatsing" v={euro(T.plaats)}/>
+      <R l="Transport" v={euro(T.trans)}/>
+      <div className="border-t border-gray-100 my-1"></div>
+      <R l="Subtotaal excl. btw" v={euro(T.subtotaal)} b/>
+      <div className="flex justify-between items-center text-gray-600">
+        <span>Btw</span>
+        <select className="cel !py-1 w-auto" value={btw} onChange={e=>setBtw(num(e.target.value))}>
+          {S.btwOpties.map(o=><option key={o.v} value={o.v}>{o.label}</option>)}
+        </select>
+      </div>
+      <R l="Btw-bedrag" v={euro(T.btwBedrag)}/>
+      <div className="border-t border-gray-200 my-1"></div>
+      <R l="Totaal incl. btw" v={euro(T.totaal)} b groen/>
+      <div className="mt-3 pt-3 border-t border-dashed border-gray-200 text-xs text-gray-500 space-y-1">
+        <div className="font-semibold text-gray-600">Interne calculatie</div>
+        <R l="Totale kostprijs" v={euro(T.kostTot)}/>
+        <R l="Brutomarge" v={euro(T.margeE)+' ('+T.margePct.toFixed(1)+'%)'}/>
+      </div>
+    </div>
+  );
+}
+
+// ---------- Klantofferte ----------
+const OGROEP = {poort:'Poorten',automatisering:'Automatisering',paal:'Palen',toebehoren:'Toebehoren',plaatsing:'Plaatsing',transport:'Transport'};
+function Offerte({regels,T,btw,korting,klant}){
+  const volgorde = ['poort','automatisering','paal','toebehoren','plaatsing','transport'];
+  const gesorteerd = volgorde.flatMap(g=>regels.filter(r=>r.cat===g));
+  const voorschot = T.totaal*0.30;
+  return (
+    <div className="oblad">
+      <div className="okop">
+        <div style={{display:'flex',alignItems:'center'}}>
+          <span className="omono"><b>P</b></span>
+          <div>
+            <div className="owoordmerk">Poortland</div>
+            <div className="osub" style={{marginTop:'4px'}}>Poorten en overkappingen</div>
+            <div className="osub" style={{marginTop:'2px'}}>op maat</div>
+          </div>
+        </div>
+        <div className="obedrijf">
+          Poortland BV<br/>
+          Hombeeksesteenweg 164-166<br/>
+          2800 Mechelen<br/>
+          +32 15 43 21 11 · info@poortland.be<br/>
+          BE 0464.838.351
+        </div>
+      </div>
+
+      <div className="ohairline"></div>
+
+      <div>
+        <div className="oeyebrow">Vrijblijvende prijsopgave</div>
+        <h1 className="oh1">Offerte</h1>
+      </div>
+
+      <div className="ometaband">
+        <div><div className="olabel">Nummer</div><div className="owaarde">{klant.offertenr}</div></div>
+        <div><div className="olabel">Datum</div><div className="owaarde">{klant.datum}</div></div>
+        <div><div className="olabel">Versie</div><div className="owaarde">v1</div></div>
+        <div><div className="olabel">Geldig tot</div><div className="owaarde">{klant.geldig}</div></div>
+      </div>
+
+      <div className="opartijen">
+        <div className="opartij">
+          <div className="oeyebrow">Klant</div>
+          <div className="onaam">{klant.naam||'—'}</div>
+          <div style={{color:'var(--ink-muted)',fontSize:'13px'}}>{klant.adres}</div>
+        </div>
+        <div className="opartij">
+          <div className="oeyebrow">Werf</div>
+          <div className="onaam">{klant.naam||'—'}</div>
+          <div style={{color:'var(--ink-muted)',fontSize:'13px'}}>{klant.adres}</div>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th style={{width:'8mm'}}>Nr</th>
+            <th>Omschrijving</th>
+            <th className="r" style={{width:'16mm'}}>Aantal</th>
+            <th style={{width:'16mm'}}>Eenheid</th>
+            <th className="r" style={{width:'26mm'}}>Eenheidsprijs</th>
+            <th className="r" style={{width:'26mm'}}>Totaal</th>
+          </tr>
+        </thead>
+        <tbody>
+          {gesorteerd.map((r,i)=>(
+            <tr key={r.id}>
+              <td style={{color:'var(--ink-faint)'}}>{i+1}</td>
+              <td>{r.omschrijving}<div style={{fontSize:'10px',letterSpacing:'.12em',textTransform:'uppercase',color:'var(--ink-faint)',marginTop:'2px'}}>{OGROEP[r.cat]}</div></td>
+              <td className="r">{r.aantal}</td>
+              <td>{r.cat==='transport'?'forfait':(r.cat==='plaatsing'?'post':'stuk')}</td>
+              <td className="r" style={{whiteSpace:'nowrap'}}>{euro(r.kost*(1+r.marge/100))}</td>
+              <td className="r" style={{whiteSpace:'nowrap'}}>{euro(regelVerkoop(r))}</td>
+            </tr>
+          ))}
+          {!gesorteerd.length && <tr><td colSpan="6" style={{textAlign:'center',padding:'10mm',color:'var(--ink-faint)'}}>Nog geen regels toegevoegd</td></tr>}
+        </tbody>
+      </table>
+
+      <div className="oonder">
+        <div className="ovoorwaarden">
+          <div className="oeyebrow">Voorwaarden</div>
+          <div className="oregels">
+            <div>Prijzen franco Mechelen. Plaatsing als aparte post vermeld.</div>
+            <div>Deze offerte is geldig gedurende {klant.geldig} na offertedatum.</div>
+            <div>Levertijd in overleg, gemiddeld acht tot twaalf weken na bestelling.</div>
+            <div>Tien jaar garantie op lakkwaliteit en roestvorming.</div>
+            <div>Btw-regeling volgens toepassing (21%, 6% of verlegd).</div>
+          </div>
+        </div>
+        <div className="ototalen">
+          <div className="orij"><span>Materiaal</span><span>{euro(T.mat)}</span></div>
+          {T.kortBedrag>0 && <div className="orij"><span>Korting {korting}%</span><span>– {euro(T.kortBedrag)}</span></div>}
+          <div className="orij"><span>Plaatsing</span><span>{euro(T.plaats)}</span></div>
+          <div className="orij"><span>Transport</span><span>{euro(T.trans)}</span></div>
+          <div className="orij" style={{color:'var(--ink)',fontWeight:600,borderTop:'1px solid var(--line)',paddingTop:'2.5mm'}}><span>Totaal excl. btw</span><span>{euro(T.subtotaal)}</span></div>
+          <div className="orij"><span>Btw {btw}%</span><span>{euro(T.btwBedrag)}</span></div>
+          <div className="oeind"><span className="olabel">Totaal incl. btw</span><span className="obedrag">{euro(T.totaal)}</span></div>
+          <div className="ovoorschot"><span>Voorschot bij bestelling (30%)</span><span>{euro(voorschot)}</span></div>
+        </div>
+      </div>
+
+      <div className="ogoedkeuring">
+        <div className="otekenvak">
+          <div className="olabel">Voor akkoord · de klant</div>
+          <div className="odatumlijn"><span>Handtekening</span><span>Datum</span></div>
+        </div>
+        <div className="otekenvak">
+          <div className="olabel">Poortland · de zaakvoerder</div>
+          <div className="odatumlijn"><span>Handtekening</span><span>Datum</span></div>
+        </div>
+      </div>
+
+      <div className="ovoet">
+        <span>Poortland BV · Mechelen</span>
+        <span>{klant.offertenr} · blad 1 van 1</span>
+      </div>
+    </div>
+  );
+}
+
+// ---------- Instellingen ----------
+function Instellingen({S,setS}){
+  const set = (path,val) => { const c=JSON.parse(JSON.stringify(S)); let o=c; for(let i=0;i<path.length-1;i++)o=o[path[i]]; o[path[path.length-1]]=val; setS(c); };
+  const N = ({path}) => <input className="cel !py-1 w-24 text-right" value={path.reduce((o,k)=>o[k],S)} onChange={e=>set(path,num(e.target.value))}/>;
+  return (
+    <div className="grid md:grid-cols-2 gap-5">
+      <Card titel="Prijsfamilies (poort)" filo="Basisbedrag plus prijs per m². Dit is de kostprijsbasis waarop de marge komt.">
+        <table className="w-full text-sm"><thead><tr className="text-gray-400 text-xs"><th className="text-left">Familie</th><th>Basis €</th><th>€ / m²</th></tr></thead>
+        <tbody>{Object.entries(S.families).map(([k,f])=>(
+          <tr key={k}><td className="py-1">{f.label}</td><td className="text-center"><N path={['families',k,'basis']}/></td><td className="text-center"><N path={['families',k,'perM2']}/></td></tr>
+        ))}</tbody></table>
+      </Card>
+      <Card titel="Uitvoeringsfactoren" filo="Vermenigvuldiger op de poortprijs per uitvoering.">
+        <table className="w-full text-sm"><tbody>{Object.entries(S.uitvoering).map(([k,u])=>(
+          <tr key={k}><td className="py-1">{u.label}</td><td className="text-right"><N path={['uitvoering',k,'factor']}/></td></tr>
+        ))}</tbody></table>
+      </Card>
+      <Card titel="Tarieven 2026 (per kwartier)" filo="Jef: verrekend per 15 minuten, enkel gebruikt voor transport en interventies. Aanpasbaar zodra de tarieven stijgen.">
+        <table className="w-full text-sm"><tbody>{Object.keys(S.kwartier).map(k=>(
+          <tr key={k}><td className="py-1 capitalize">{k}</td><td className="text-right"><N path={['kwartier',k]}/> €/15 min</td></tr>
+        ))}</tbody></table>
+      </Card>
+      <Card titel="Indexatie prijslijst 2020 (%)" filo="De poortprijzen komen uit de echte prijslijst 2020 (per model, uitvoering en breedteklasse, per lopende meter). Staat op 0 tot Jef een percentage opgeeft; de flow wordt getest zonder finale prijsberekening.">
+        <table className="w-full text-sm"><tbody>
+          <tr><td className="py-1">Verhoging op de 2020 prijzen</td><td className="text-right"><N path={['indexatie2020']}/> %</td></tr>
+        </tbody></table>
+      </Card>
+      <Card titel="Faac inkoopkorting (%)" filo="Catalogusprijs is de verkoopprijs; de inkoop is de catalogusprijs min deze korting.">
+        <table className="w-full text-sm"><tbody>
+          <tr><td className="py-1">Standaard</td><td className="text-right"><N path={['faacKorting','standaard']}/> %</td></tr>
+          <tr><td className="py-1">Grotere bestelling</td><td className="text-right"><N path={['faacKorting','grootbestelling']}/> %</td></tr>
+        </tbody></table>
+      </Card>
+      <Card titel="Marges per categorie (%)" filo="Standaardmarge per producttype.">
+        <table className="w-full text-sm"><tbody>{Object.keys(S.marges).map(k=>(
+          <tr key={k}><td className="py-1 capitalize">{k}</td><td className="text-right"><N path={['marges',k]}/> %</td></tr>
+        ))}</tbody></table>
+      </Card>
+      <Card titel="Plaatsing (forfaits €)" filo="Automatisering standaard 650, ondergronds +250.">
+        <table className="w-full text-sm"><tbody>
+          <tr><td className="py-1">Poort</td><td className="text-right"><N path={['plaatsing','poort']}/></td></tr>
+          <tr><td className="py-1">Automatisering</td><td className="text-right"><N path={['plaatsing','automatisering']}/></td></tr>
+          <tr><td className="py-1">Supplement ondergronds</td><td className="text-right"><N path={['plaatsing','ondergronds']}/></td></tr>
+        </tbody></table>
+      </Card>
+      <Card titel="Vervoerskosten per regio (€)" filo="De regiotabel uit de prijslijst: prijs per rit per voertuig en aantal personen.">
+        <table className="w-full text-xs"><thead><tr className="text-gray-400">
+          <th className="text-left">km</th><th>Bestel 1p</th><th>Bestel 2p</th><th>Vracht 1p</th><th>Vracht 2p</th><th>Vracht 3p</th>
+        </tr></thead>
+        <tbody>{S.transport.regios.map((r,i)=>(
+          <tr key={i}><td className="py-0.5 whitespace-nowrap">{r.van} tot {r.tot}</td>
+            {['b1','b2','v1','v2','v3'].map(k=>(
+              <td key={k} className="text-center"><input className="cel !py-0.5 !px-1 w-14 text-right"
+                value={r[k]} onChange={e=>set(['transport','regios',i,k],num(e.target.value))}/></td>
+            ))}
+          </tr>
+        ))}</tbody></table>
+      </Card>
+      <Card titel="Transportformule boven 150 km en korting" filo="De gele parameters uit het prijslijstbestand; gebruikt zodra de afstand boven de regiotabel uitkomt.">
+        <table className="w-full text-sm"><tbody>
+          <tr><td className="py-1">Gemiddelde snelheid bestelwagen</td><td className="text-right"><N path={['transport','parameters','snelheidBestelwagen']}/> km/u</td></tr>
+          <tr><td className="py-1">Gemiddelde snelheid vrachtwagen</td><td className="text-right"><N path={['transport','parameters','snelheidVrachtwagen']}/> km/u</td></tr>
+          <tr><td className="py-1">Rijkost bestelwagen</td><td className="text-right"><N path={['transport','parameters','kmBestelwagen']}/> €/km</td></tr>
+          <tr><td className="py-1">Rijkost vrachtwagen</td><td className="text-right"><N path={['transport','parameters','kmVrachtwagen']}/> €/km</td></tr>
+          <tr><td className="py-1">Startkost</td><td className="text-right"><N path={['transport','parameters','startkost']}/> €</td></tr>
+          <tr><td className="py-1">Max korting %</td><td className="text-right"><N path={['kortingMax']}/></td></tr>
+        </tbody></table>
+      </Card>
+    </div>
+  );
+}
+function Card({titel,filo,children}){
+  return <section className="bg-white rounded-xl border border-gray-200 p-4"><h3 className="font-semibold brand-txt mb-3">{titel}</h3>{children}</section>;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

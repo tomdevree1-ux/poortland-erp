@@ -8,6 +8,14 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      workbox: {
+        // De service worker mag enkel de app zelf afvangen. De API, de
+        // gezondheidscheck en het publieke uploadportaal zijn serverroutes;
+        // zonder deze uitzonderingen serveert de service worker daar de app-index
+        // (waardoor bv. een uploadlink op dit domein de app toont in plaats van
+        // de uploadpagina).
+        navigateFallbackDenylist: [/^\/api\//, /^\/gezond/, /^\/upload\//]
+      },
       manifest: {
         name: 'Poortland ERP',
         short_name: 'Poortland',

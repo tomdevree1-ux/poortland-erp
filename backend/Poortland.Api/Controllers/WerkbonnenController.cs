@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Poortland.Api.Adapters;
 using Poortland.Api.Auth;
 using Poortland.Api.Data;
+using Poortland.Api.Domein;
 
 namespace Poortland.Api.Controllers;
 
@@ -21,7 +22,8 @@ public class WerkbonnenController(PoortlandDbContext db, ClaimsContext claims, S
 
     public record WerkbonInvoer(Guid ProjectId, WerkbonType Type, Guid? PlaatserId, Guid? PlanningsitemId, DateOnly? Uitvoeringsdatum);
     public record WerkbonWijziging(DateOnly? Uitvoeringsdatum, TimeOnly? UrenBegin, TimeOnly? UrenEinde, string? Opmerkingen);
-    public record RegelInvoer(string Soort, string Omschrijving, decimal? Aantal, string? Eenheid, bool? AfwijkingVanStuklijst);
+    public record RegelInvoer(string Soort, string Omschrijving, decimal? Aantal, string? Eenheid,
+        bool? AfwijkingVanStuklijst, Guid? ArtikelId);
     public record TekenInvoer(string HandtekeningPng, decimal? GpsLat, decimal? GpsLon);
 
     // Plaatsersnamen in een keer laden zodat de lijstprojectie geen query per bon doet
@@ -48,7 +50,7 @@ public class WerkbonnenController(PoortlandDbContext db, ClaimsContext claims, S
             try { handtekeningUrl = await opslag.SignedUrl(Bucket, w.KlanthandtekeningPad, 600); } catch { }
         return new
         {
-            w.Id, w.ProjectId, w.PlaatserId, w.Type, w.Status, w.Uitvoeringsdatum, w.UrenBegin, w.UrenEinde,
+            w.Id, w.ProjectId, w.PlaatserId, w.Type, w.PlaatsingNummer, w.Status, w.Uitvoeringsdatum, w.UrenBegin, w.UrenEinde,
             w.Opmerkingen, w.GetekendOp, handtekeningUrl,
             plaatser = plaatsers.GetValueOrDefault(w.PlaatserId, "—"),
             project = w.Project is null ? null : new
@@ -57,7 +59,8 @@ public class WerkbonnenController(PoortlandDbContext db, ClaimsContext claims, S
                 klant = new { w.Project.Klant!.Naam, w.Project.Klant.Voornaam, w.Project.Klant.Bedrijfsnaam }
             },
             regels = w.Regels.Where(r => r.VerwijderdOp == null).OrderBy(r => r.AangemaaktOp)
-                .Select(r => new { r.Id, r.Soort, r.Omschrijving, r.Aantal, r.Eenheid, r.AfwijkingVanStuklijst }),
+                .Select(r => new { r.Id, r.Soort, r.Omschrijving, r.Aantal, r.Eenheid,
+                    r.AfwijkingVanStuklijst, r.ArtikelId, r.ArtikelCode }),
             fotos
         };
     }
@@ -118,6 +121,15 @@ public class WerkbonnenController(PoortlandDbContext db, ClaimsContext claims, S
             Uitvoeringsdatum = invoer.Uitvoeringsdatum ?? DateOnly.FromDateTime(DateTime.Today),
             AangemaaktDoor = claims.MedewerkerId
         };
+        // Elke plaatsing krijgt automatisch het volgende nummer binnen het dossier.
+        // Verwijderde bonnen tellen mee zodat een nummer nooit hergebruikt wordt.
+        if (invoer.Type == WerkbonType.Plaatsing)
+        {
+            var hoogste = await db.Werkbonnen
+                .Where(w => w.ProjectId == invoer.ProjectId && w.Type == WerkbonType.Plaatsing)
+                .MaxAsync(w => (int?)w.PlaatsingNummer);
+            bon.PlaatsingNummer = (hoogste ?? 0) + 1;
+        }
         db.Werkbonnen.Add(bon);
         await db.SaveChangesAsync();
         return Ok(new { bon.Id });
@@ -150,11 +162,34 @@ public class WerkbonnenController(PoortlandDbContext db, ClaimsContext claims, S
         if (bon is null) return NotFound();
         if (bon.Status is WerkbonStatus.KlantGetekend or WerkbonStatus.VerwerktInFacturatie)
             return BadRequest(new { fout = "Een getekende werkbon wijzigt niet meer." });
+        // Bij een gekozen artikel nemen wij naam, code en eenheid over, zodat de
+        // bon leesbaar blijft wanneer het artikel later hernoemd of geschrapt wordt.
+        var omschrijving = invoer.Omschrijving;
+        string? artikelCode = null;
+        var eenheid = invoer.Eenheid;
+        if (invoer.ArtikelId is { } artikelId)
+        {
+            var artikel = await db.Artikelen.AsNoTracking()
+                .FirstOrDefaultAsync(a => a.Id == artikelId && a.VerwijderdOp == null);
+            if (artikel is null) return BadRequest(new { fout = "Dat artikel bestaat niet." });
+            artikelCode = artikel.Code;
+            if (string.IsNullOrWhiteSpace(omschrijving)) omschrijving = artikel.Naam;
+            eenheid ??= artikel.Eenheid switch
+            {
+                ArtikelEenheid.LopendeMeter => "m",
+                ArtikelEenheid.VierkanteMeter => "m2",
+                _ => "stuk"
+            };
+        }
+        if (string.IsNullOrWhiteSpace(omschrijving))
+            return BadRequest(new { fout = "Een regel heeft een omschrijving of een artikel nodig." });
+
         var regel = new Werkbonregel
         {
-            WerkbonId = id, Soort = invoer.Soort, Omschrijving = invoer.Omschrijving,
-            Aantal = invoer.Aantal, Eenheid = invoer.Eenheid,
+            WerkbonId = id, Soort = invoer.Soort, Omschrijving = omschrijving.Trim(),
+            Aantal = invoer.Aantal, Eenheid = eenheid,
             AfwijkingVanStuklijst = invoer.AfwijkingVanStuklijst ?? false,
+            ArtikelId = invoer.ArtikelId, ArtikelCode = artikelCode,
             AangemaaktDoor = claims.MedewerkerId
         };
         db.Werkbonregels.Add(regel);
@@ -237,8 +272,63 @@ public class WerkbonnenController(PoortlandDbContext db, ClaimsContext claims, S
         bon.GpsLat = invoer.GpsLat;
         bon.GpsLon = invoer.GpsLon;
         bon.Status = WerkbonStatus.KlantGetekend;
+        // Zonder dit bleef het moment van tekenen leeg en drukte de pdf
+        // "digitaal getekend op" af zonder datum.
+        bon.GetekendOp = DateTimeOffset.UtcNow;
+
+        // Een getekende plaatsingsbon betekent dat de montage achter de rug is.
+        // Zonder deze stap kwam het dossier nooit in de lijst factuurklaar,
+        // want die vraagt de status Gemonteerd en niemand kende ze ooit toe.
+        if (bon.Type == WerkbonType.Plaatsing)
+        {
+            var project = await db.Projecten.FirstOrDefaultAsync(p => p.Id == bon.ProjectId);
+            if (project is { Status: OrderStatus.Aangemaakt or OrderStatus.InProductie
+                or OrderStatus.ExterneBehandeling or OrderStatus.KlaarVoorMontage })
+                project.Status = OrderStatus.Gemonteerd;
+        }
         await db.SaveChangesAsync();
         return Ok(new { bon.Id, bon.Status, bon.GetekendOp });
+    }
+
+    // De werkbon als pdf: vervangt de papieren doorslagbon richting klant en
+    // facturatie, met regels, foto's en de digitale handtekening erop.
+    [HttpGet("werkbonnen/{id:guid}/pdf")]
+    public async Task<IActionResult> Pdf(Guid id,
+        [FromServices] WerkbonPdfService pdfService, [FromServices] OfferteService offerteService)
+    {
+        var bon = await db.Werkbonnen.AsNoTracking()
+            .Include(w => w.Project!).ThenInclude(p => p.Klant)
+            .Include(w => w.Regels).Include(w => w.Fotos)
+            .FirstOrDefaultAsync(w => w.Id == id && w.VerwijderdOp == null);
+        if (bon is null) return NotFound();
+
+        var namen = await LaadPlaatsers([bon]);
+        var (bedrijf, _, _) = await offerteService.LaadSjabloonGegevens();
+
+        byte[]? handtekening = null;
+        if (bon.KlanthandtekeningPad is not null)
+            try { handtekening = await opslag.Download(Bucket, bon.KlanthandtekeningPad); } catch { }
+
+        var fotos = new List<WerkbonPdfService.FotoBijlage>();
+        foreach (var f in bon.Fotos.Where(f => f.VerwijderdOp == null).OrderBy(f => f.AangemaaktOp))
+            try { fotos.Add(new(f.Moment, f.Bestandsnaam, await opslag.Download(Bucket, f.BestandPad))); } catch { }
+
+        // De contactpersoon van de klant hoort bij Tel op de bon. Die stond er
+        // nooit op, al bestaat het veld. Eerste contactpersoon met een nummer.
+        string? contact = null;
+        if (bon.Project?.KlantId is { } klantId)
+        {
+            var cp = await db.Contactpersonen.AsNoTracking()
+                .Where(c => c.KlantId == klantId && c.VerwijderdOp == null && c.Telefoon != null)
+                .OrderBy(c => c.AangemaaktOp)
+                .Select(c => new { c.Naam, c.Telefoon }).FirstOrDefaultAsync();
+            if (cp is not null) contact = $"{cp.Naam} · {cp.Telefoon}";
+        }
+
+        var bytes = pdfService.Genereer(bon, namen.GetValueOrDefault(bon.PlaatserId, "—"), bedrijf,
+            handtekening, fotos, contact: contact, bonOpmerking: bon.Opmerkingen);
+        var naam = $"LSB_{WerkbonPdfService.TypeTekst(bon).Replace(' ', '_')}_dossier_{bon.Project?.Nummer.ToString() ?? "onbekend"}.pdf";
+        return File(bytes, "application/pdf", naam);
     }
 
     [HttpPost("werkbonnen/{id:guid}/naar-facturatie")]

@@ -169,17 +169,51 @@ conform het voorbeeldscherm van de huisstijlgids (blad 08): de sidebar op net ie
 dieper papier met een bronzen accentrand. Bosgroen blijft beschikbaar voor tekst
 en accenten maar nooit als achtergrondvlak.
 
+**Documentexports** (vastgelegd 2026-08-18): de offerte pdf staat op het warme
+perkament van de huisstijl; de LSB werkbon pdf is een werkdocument en staat op
+wit, met het P monogram in de kop naast de bedrijfsgegevens en de kaders
+(titelband, typeband en akkoordvak) in het lichtbruin van Poortland. De opmaak
+volgt een op een de papieren Leverings en Servicebon; zie
+`backend/Poortland.Api/Domein/WerkbonPdfService.cs`.
+
+## Prijsdata en offertecalculator
+
+De offertecalculator (prototype, `website_test/calculator/`, live op de
+verborgen slug /calculator met noindex) rekent met de echte prijslijst 2020:
+125 metalen modellen met 2742 prijsregels per model, uitvoering en
+breedteklasse (EUR per lopende meter), ingebed als `window.PL_PRIJZEN2020`.
+De tarieven komen van Jef (2026-08-12): kwartiertarieven technieker 24,50 en
+monteur 20,00 (enkel voor transport en interventies), de transportregiotabel
+per voertuig en 1 tot 3 personen met de formule boven 150 km, en de Faac
+kortingsregel (catalogusprijs is verkoop, inkoop min 50 of 53 procent) die
+enkel voor Faac geldt; andere merken krijgen een margeveld bij ingave.
+
+De bron van waarheid voor artikelen en prijzen is de spreadsheet
+`../offertes_analyse/Poortland_producten_SSOT_bijgewerkt_05082026.xlsx`:
+poorten en overige producten in gescheiden tabbladen, subcategorieën volgens
+de website (Metalen, Houten, Alu en Combinatie metaal/hout), twaalf
+invulkolommen voor de toekomstige prijsstructuur (startprijs en meerprijs per
+meter breedte en hoogte voor draai enkel, draai dubbel, schuif en schuif
+vrijdragend) en eigen tabbladen Tarieven, Transport en Prijzen 2020 metalen
+lijst. De finale prijsberekening is bewust geparkeerd (indexatie staat op
+nul): de flow wordt eerst getest zonder definitieve prijzen.
+
 ## Migratiewachtrij
 
-Alle migraties tot en met 0034 staan toegepast op het dev project (Poortland ERP
-dev, `rbttjhjrdnndamagqmui`). Op 2026-07-23 werd de Supabase koppeling hersteld
-en zijn 0029 (werkbon), 0030 (servicedossier), 0031 (facturatie), 0032 (bewaking
-en rechtenfixes), 0033 (indexen en constraints) en 0034 (popup index) toegepast.
-Veld, Service en Facturatie werken nu op dev, planningsitems staan onder
-statusbewaking en de te strikte banner-index is weg zodat de overlapregel werkt.
-De beveiligingsadvisor is schoon op twee bewuste punten na: `offerte_reeks` heeft
-RLS zonder policy (default deny, gewild) en de leaked password protection in Auth
-staat nog uit (aanrader voor productie).
+Alle migraties tot en met 0042 staan toegepast op het dev project (Poortland ERP
+dev, `rbttjhjrdnndamagqmui`). De recentste reeks (sprint 2026-08): 0038 versoepelt
+alle 28 select policies zodat een zachte verwijdering niet langer op de eigen
+select policy strandt (de wortel van de hardnekkige verwijderbug), 0039 hangt
+contactpersonen aan een lead met klanttype en offerteontvanger, 0040 zet het
+uploadtoken voor de foto opvraag op de lead, 0041 laat de systeemrol een
+notificatie met RETURNING invoegen en 0042 vervangt de werkbontypes door de vier
+LSB types (plaatsing met teller per dossier, automatisatie, onderhoud,
+herstelling) en voegt de planningfases plaatsing_1 en _2 samen tot plaatsing.
+Let op: de Supabase MCP koppeling weigert sinds 2026-08-11 acties (0042 is
+handmatig via de SQL editor uitgevoerd); herstel de koppeling vóór een volgende
+migratie. De beveiligingsadvisor is schoon op twee bewuste punten na:
+`offerte_reeks` heeft RLS zonder policy (default deny, gewild) en de leaked
+password protection in Auth staat nog uit (aanrader voor productie).
 
 ## Lokaal draaien
 
@@ -219,6 +253,12 @@ Privacy (TS-03): de bewaartermijn `bewaren_tot` wordt nergens gezet of opgeruimd
 **2026-07-23 staging bijsturing na de klanttest.** Bevindingen uit het testen door de klant, meteen gefixt. Formulieren: het contact en offerteformulier gaven Verificatie mislukt omdat Turnstile in productie dicht faalde terwijl er geen Turnstile geheim is ingesteld, waardoor élke inzending werd geweigerd. Bewust teruggedraaid: zonder geheim laat de server nu door zodat de klant kan testen en de snelheidsbegrenzer van vijf per minuut per IP blijft de basisbescherming. **Actie voor productie: stel `Turnstile:Secret` in voor volwaardige botbescherming** (dit heft de eerdere dichtfaal uit de diepteronde bewust op zolang er geen sleutel is). Leads: de leadlijst opent standaard op Nieuw en verwijderen gebeurt inline vanuit de tabel met bevestiging en melding in plaats van de fiche te openen. Bij het verwijderen kwam op staging een databankweigering (42501). Op 2026-07-23 tegen de dev database nagekeken: beheerder heeft RCUDS op lead, `mag('lead','U')` en `mag('lead','D')` geven beide true voor het account, de RLS-policy klopt (update vraagt enkel `mag('lead','U')`) en de zachte verwijdering loopt foutloos (getest met rollback). Er staan bovendien al eerder verwijderde leads in de data. De weigering was dus niet reproduceerbaar en wijst op een tijdelijk of verouderd-uitgerold artefact; met de huidige code werkt verwijderen. Marketingsite en juridische pagina's (contactpillen, Over cijfer 320 werven, procesregel weg, realisaties met productkeuze Poort of Overkapping, onderhoudsknop preselecteert de pill, footer btw, privacy en cookiebeleid): zie het masterdocument v2.0.
 
 **2026-07-24 functionele end tot end audit (captatie tot dossier, bewerken en verwijderen).** Getest tegen de dev database met leesqueries op echte data. Velddoorstroming: het contactformulier en de offertewizard zetten elk veld gescheiden in de lead, voor zowel particulier als bedrijf (bedrijfsnaam en btw inbegrepen), met het juiste kanaal en de eigenaar. Omzetten: de overgang nieuw naar omgezet bestaat, verkoop heeft C op klant en project, en de klant en het project krijgen alle gegevens mee (naam en voornaam apart, adres, bedrijfsnaam en btw, type aanvraag en timing in de omschrijving); geen weesprojecten en alle omgezette leads correct gelinkt. Bewerken: de lead-patch is partieel en wist niets, de klant-patch is een volledige vervanging maar behoudt de communicatievoorkeur, en de klant is bewerkbaar vanaf het dossier (SSOT). Verwijderen: leads verwijderen werkte al (zacht, beheerder). Gevonden gat en gefixt: klanten en dossiers hadden geen verwijder-endpoint hoewel de rechtenmatrix beheerder D geeft. Toegevoegd: een beheerder-only zachte verwijdering voor klant (geweigerd zolang er lopende dossiers zijn) en voor project, met een bevestigknop op de klant- en dossierfiche. Integriteit: geen weesrecords en de audit trail registreert de operaties. Bewust open: dossiervelden zelf (werfadres, omschrijving, garantie) zijn niet direct bewerkbaar; genoteerd als mogelijke uitbreiding. Herbruikbare prompt: `../Auditprompt_functioneel.md`.
+
+**2026-08-08 wortelanalyse verwijderbug (RLS).** De al maanden terugkerende weigering "onvoldoende rechten" bij verwijderen is definitief opgelost. Bewezen via databankbisectie (set local role met testclaims en rollback): de zachte verwijdering zet `verwijderd_op`, waarna de select policy (`verwijderd_op is null`) de eigen bijgewerkte rij weigert en postgres dat als een RLS schending meldt. Migratie 0038 versoepelt alle 28 select policies naar `verwijderd_op is null or mag(x,'U')`. Zelfde familie later gevonden en gefixt op de notificatie insert met RETURNING door de systeemrol (0041). Les: bij een RLS weigering op een update of insert ook altijd de sélect policy nalezen, want die evalueert mee over de nieuwe rijversie.
+
+**2026-08-10 platformbrede e2e suite.** 21 Playwright tests over 10 bestanden dekken login, leadbeheer (bewerken, archiveren, verwijderen), klanten en omzetten, de klantfeedbackpunten, planning, service, facturatie, de uploadflow met publiek portaal en dwarscontroles plus een rooktest van elke hoofdpagina. Draaien: eenmalig `bash zet_login.sh` in `e2e/` (controleert het wachtwoord echt tegen de loginserver en schrijft `e2e/.env`), daarna volstaat `npx playwright test`. De uploadtests lopen bewust via het www domein omdat de ERP service worker op het beheerdomein navigaties afvangt.
+
+**2026-08-11 mobiele audit website en ERP.** Geautomatiseerde audit met mobiele emulatie op vier viewports plus codeanalyse; volledig rapport met scores en prioriteiten in `../Audit_mobiel_website_en_ERP_2026-08-11.md`. Kritiek gevonden en dezelfde dag gefixt: het mobiele websitemenu bleef onzichtbaar (de blur op de kop maakte de kop het referentiekader voor het fixed menupaneel), het ERP had geen mobiele layout (zijbalk nu een uitschuifpaneel met hamburger, tabellen scrollen binnen het werkvlak) en het contactformulier stak buiten het scherm. Verder: noindex op de testomgeving en permanent op het ERP domein, een echte 404 status voor onbekende paden, /offerte leidt door naar contact, aria en autocomplete aanvullingen en de testpopups gedepubliceerd. Als vervolg bundelt en minifieert de Docker bouwfase de sitescripts (`infra/bouw_website.mjs`) en genereert ze per route een index.html met eigen titel, beschrijving, canonical en Open Graph. Nog open als vervolgwerk: prerendering van de volledige paginainhoud.
 
 ### Staande auditchecklist (herbruikbare prompts)
 
