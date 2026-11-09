@@ -4,6 +4,8 @@ bin/
 obj/
 .env
 .env.*
+!*.env.example
+!.env.example
 !.env.example
 *.user
 .DS_Store
