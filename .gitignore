@@ -16,3 +16,6 @@ appsettings.Development.json
 infra/.env.deploy
 infra/.env.build
 infra/server.env
+
+# Bouwrestant van TypeScript, hoort niet in versiebeheer.
+*.tsbuildinfo
