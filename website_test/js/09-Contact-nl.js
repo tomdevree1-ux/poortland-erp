@@ -277,6 +277,8 @@ function ContactNL({
           email: fd.get('email') || '',
           telefoon: fd.get('telefoon') || '',
           straat: fd.get('straat') || '',
+          postcode: fd.get('postcode') || '',
+          gemeente: fd.get('gemeente') || '',
           typeAanvraag: types.join(','),
           vraag: vraag
         },
@@ -437,10 +439,32 @@ function ContactNL({
   })), /*#__PURE__*/React.createElement(CoInput, {
     label: t('Straat en huisnummer'),
     name: "straat",
-    autoComplete: "street-address",
+    autoComplete: "address-line1",
     dark: true,
     placeholder: t('bv. Dorpsstraat 12')
+  }),
+  /* Postcode en gemeente ontbraken, waardoor bezoekers ze bij de straat of in
+     de omschrijving typten (gemeld 2026-11-09). */
+  /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: mobiel ? 'minmax(0, 1fr)' : '160px 1fr',
+      gap: mobiel ? 16 : 24
+    }
+  }, /*#__PURE__*/React.createElement(CoInput, {
+    label: t('Postcode'),
+    name: "postcode",
+    autoComplete: "postal-code",
+    dark: true,
+    inputMode: "numeric",
+    placeholder: "2800"
   }), /*#__PURE__*/React.createElement(CoInput, {
+    label: t('Gemeente of stad'),
+    name: "gemeente",
+    autoComplete: "address-level2",
+    dark: true,
+    placeholder: t('bv. Mechelen')
+  })), /*#__PURE__*/React.createElement(CoInput, {
     label: t('Omschrijving van uw project'),
     name: "vraag",
     dark: true,

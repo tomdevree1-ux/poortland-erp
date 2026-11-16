@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import { keepPreviousData, useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
-import { FolderPlus, TrendingDown, Archive, Trash2, RotateCcw } from 'lucide-react'
+import { FolderPlus, TrendingDown, Archive, Trash2, RotateCcw, Columns3, List } from 'lucide-react'
+import { clsx } from 'clsx'
 import { api } from '../lib/api'
 import { useZoekterm } from '../lib/zoek'
 import { datum, leeg, weergaveNaam } from '../lib/formaat'
-import type { Lead } from '../lib/types'
-import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Selecteer, Selectievak, TekstVak, Th, Td, rijKlik } from '../ui'
+import type { Lead, LeadStatus } from '../lib/types'
+import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Schakelaar, Selecteer, Selectievak, TekstVak, Th, Td, rijKlik, statusTekst } from '../ui'
 
 // Snelknop in de leadtabel: rustig gedempt, kleurt op bij hover, met tooltip.
 const actieBtn = 'inline-flex h-8 w-8 items-center justify-center rounded-control text-inkt-faint transition'
@@ -25,6 +26,29 @@ export const timingOpties = [
   ['6-maand', 'Binnen zes maanden'], ['orientatie', 'Nog in oriëntatie']
 ] as const
 
+// De vier kolommen van het bord, in de volgorde van de verkoopweg.
+const kolommen: LeadStatus[] = ['nieuw', 'gekwalificeerd', 'omgezet', 'verloren']
+const BEWAARDE_WEERGAVE = 'pl-leads-aanzicht'
+
+/* Wat er gebeurt als een kaart in een andere kolom valt. Apart gehouden zodat
+   de regels los van de knoppen getest kunnen worden.
+   - server: de server kan het rechtstreeks, zonder extra invoer
+   - fiche:  er is meer nodig (projectgegevens of een verliesreden), dus we
+             openen de fiche met die actie al gestart
+   - nee:    deze stap bestaat niet in het domein */
+export type Sleepstap =
+  | { soort: 'server'; pad: 'kwalificeer' | 'heractiveer' }
+  | { soort: 'fiche'; actie: 'omzetten' | 'verliezen' }
+  | { soort: 'nee' }
+export function sleepstap(van: LeadStatus, naar: LeadStatus): Sleepstap {
+  if (van === naar) return { soort: 'nee' }
+  if (naar === 'gekwalificeerd' && van === 'nieuw') return { soort: 'server', pad: 'kwalificeer' }
+  if (naar === 'nieuw' && van === 'verloren') return { soort: 'server', pad: 'heractiveer' }
+  if ((naar === 'omgezet' || naar === 'verloren') && (van === 'nieuw' || van === 'gekwalificeerd'))
+    return { soort: 'fiche', actie: naar === 'omgezet' ? 'omzetten' : 'verliezen' }
+  return { soort: 'nee' }
+}
+
 export default function Leads() {
   const qc = useQueryClient()
   const navigeer = useNavigate()
@@ -38,10 +62,17 @@ export default function Leads() {
   const { invoer, zetInvoer, term } = useZoekterm()
   const [weergave, zetWeergave] = useState('actief')
   const [nieuwOpen, zetNieuwOpen] = useState(false)
+  // Lijst of bord. De keuze blijft bewaard per toestel, zodat wie met het bord
+  // werkt het bord terugvindt na een herlaad (vraag Tom 2026-11-09).
+  const [aanzicht, zetAanzicht] = useState<'lijst' | 'kanban'>(() =>
+    (localStorage.getItem(BEWAARDE_WEERGAVE) === 'kanban' ? 'kanban' : 'lijst'))
+  useEffect(() => { localStorage.setItem(BEWAARDE_WEERGAVE, aanzicht) }, [aanzicht])
+  // Het bord toont alle statussen naast elkaar; de statusfilter hoort dan niet mee.
+  const statusVraag = aanzicht === 'kanban' ? '' : status
   const { data: leads, isFetching } = useQuery({
-    queryKey: ['leads', status, term, weergave],
+    queryKey: ['leads', statusVraag, term, weergave],
     queryFn: () => api.get<Lead[]>(`/leads?${new URLSearchParams({
-      ...(status ? { status } : {}), ...(term ? { zoek: term } : {}),
+      ...(statusVraag ? { status: statusVraag } : {}), ...(term ? { zoek: term } : {}),
       ...(weergave === 'archief' ? { archief: 'true' } : {}) })}`),
     placeholderData: keepPreviousData
   })
@@ -95,6 +126,60 @@ export default function Leads() {
     }
   })
 
+  /* Slepen op het bord. Twee overgangen kunnen rechtstreeks, omdat de server
+     daar niets extra voor nodig heeft: kwalificeren en heractiveren. Omzetten
+     vraagt projectgegevens en verliezen vraagt een reden, dus die twee openen
+     de fiche met de juiste actie al klaar. */
+  const verzet = useMutation({
+    mutationFn: ({ id, pad }: { id: string; pad: string }) => api.post(`/leads/${id}/${pad}`, {}),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['leads'] }),
+    onError: (f: unknown) =>
+      zetMelding({ soort: 'fout', tekst: f instanceof Error ? f.message : 'Verplaatsen mislukt.' })
+  })
+  const [sleept, zetSleept] = useState<string | null>(null)
+  const [boven, zetBoven] = useState<LeadStatus | null>(null)
+  function laatVallen(doel: LeadStatus) {
+    const lead = leads?.find(l => l.id === sleept)
+    zetSleept(null); zetBoven(null)
+    if (!lead || lead.status === doel) return
+    if (lead.gearchiveerdOp) {
+      zetMelding({ soort: 'fout', tekst: 'Herstel de lead eerst uit het archief.' })
+      return
+    }
+    const stap = sleepstap(lead.status, doel)
+    if (stap.soort === 'server') verzet.mutate({ id: lead.id, pad: stap.pad })
+    else if (stap.soort === 'fiche') ga(lead.id, stap.actie)
+    else zetMelding({ soort: 'fout', tekst: `Van ${statusTekst[lead.status]} naar ${statusTekst[doel]} kan niet door slepen. Open de fiche.` })
+  }
+
+  // Dezelfde snelknoppen in de lijst en op de kaarten.
+  const Acties = ({ lead }: { lead: Lead }) => (
+    <div className="flex items-center gap-0.5" onClick={e => e.stopPropagation()}>
+      {(lead.status === 'nieuw' || lead.status === 'gekwalificeerd') && !lead.gearchiveerdOp && (
+        <>
+          <button type="button" title="Dossier aanmaken" aria-label="Dossier aanmaken"
+            onClick={() => ga(lead.id, 'omzetten')}
+            className={`${actieBtn} hover:bg-bronze-500/10 hover:text-bronze-600`}><FolderPlus size={17} /></button>
+          <button type="button" title="Verliezen" aria-label="Verliezen"
+            onClick={() => ga(lead.id, 'verliezen')}
+            className={`${actieBtn} hover:bg-inkt/[.06] hover:text-inkt`}><TrendingDown size={17} /></button>
+        </>
+      )}
+      {lead.gearchiveerdOp
+        ? <button type="button" title="Herstellen" aria-label="Herstellen"
+            onClick={() => ga(lead.id, 'herstellen')}
+            className={`${actieBtn} hover:bg-inkt/[.06] hover:text-inkt-body`}><RotateCcw size={17} /></button>
+        : <button type="button" title="Archiveren" aria-label="Archiveren"
+            onClick={() => ga(lead.id, 'archiveren')}
+            className={`${actieBtn} hover:bg-inkt/[.06] hover:text-inkt-body`}><Archive size={17} /></button>}
+      {isBeheerder && (
+        <button type="button" title="Verwijderen" aria-label="Verwijderen"
+          onClick={() => zetTeVerwijderen(lead)}
+          className={`${actieBtn} hover:bg-corten-500/10 hover:text-corten-600`}><Trash2 size={17} /></button>
+      )}
+    </div>
+  )
+
   return (
     <>
       <PaginaKop eyebrow="Verkoop · leadinbox" titel="Leads"
@@ -104,13 +189,21 @@ export default function Leads() {
           <Melding soort={melding.soort}>{melding.tekst}</Melding>
         </div>
       )}
-      <div className="mb-4 flex gap-3">
-        <Selecteer value={status} onChange={e => zetStatus(e.target.value)} className="w-48">
-          <option value="">Alle statussen</option>
-          <option value="nieuw">Nieuw</option>
-          <option value="omgezet">Omgezet</option>
-          <option value="verloren">Verloren</option>
-        </Selecteer>
+      <div className="mb-4 flex flex-wrap items-center gap-3">
+        <Schakelaar<'lijst' | 'kanban'> waarde={aanzicht} onKies={zetAanzicht} label="Weergave"
+          opties={[
+            { waarde: 'lijst', label: 'Lijst', icoon: <List size={15} /> },
+            { waarde: 'kanban', label: 'Kanban', icoon: <Columns3 size={15} /> }
+          ]} />
+        {aanzicht === 'lijst' && (
+          <Selecteer value={status} onChange={e => zetStatus(e.target.value)} className="w-48">
+            <option value="">Alle statussen</option>
+            <option value="nieuw">Nieuw</option>
+            <option value="gekwalificeerd">Gekwalificeerd</option>
+            <option value="omgezet">Omgezet</option>
+            <option value="verloren">Verloren</option>
+          </Selecteer>
+        )}
         <Selecteer value={weergave} onChange={e => zetWeergave(e.target.value)} className="w-36">
           <option value="actief">Actief</option>
           <option value="archief">Archief</option>
@@ -121,7 +214,55 @@ export default function Leads() {
           {isFetching ? 'Bezig…' : 'Vernieuwen'}
         </Knop>
       </div>
-      {(
+      {aanzicht === 'kanban' ? (
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {kolommen.map(kol => {
+            const kaarten = (leads ?? []).filter(l => l.status === kol)
+            return (
+              <section key={kol}
+                onDragOver={e => { e.preventDefault(); zetBoven(kol) }}
+                onDragLeave={() => zetBoven(b => (b === kol ? null : b))}
+                onDrop={e => { e.preventDefault(); laatVallen(kol) }}
+                className={clsx('flex min-h-48 flex-col rounded-card border bg-vlak-sunken p-3 transition',
+                  boven === kol && sleept ? 'border-bronze-500 bg-bronze-500/[.06]' : 'border-inkt/10')}>
+                <header className="mb-3 flex items-center justify-between px-1">
+                  <span className="text-xs font-bold uppercase tracking-[0.14em] text-inkt-muted">{statusTekst[kol]}</span>
+                  <span className="cijfers text-xs text-inkt-faint">{kaarten.length}</span>
+                </header>
+                <div className="space-y-2">
+                  {kaarten.map(lead => (
+                    <article key={lead.id} draggable={!lead.gearchiveerdOp}
+                      onDragStart={() => zetSleept(lead.id)}
+                      onDragEnd={() => { zetSleept(null); zetBoven(null) }}
+                      onClick={() => navigeer({ to: '/leads/$leadId', params: { leadId: lead.id } })}
+                      className={clsx('cursor-pointer rounded-card border border-inkt/10 bg-vlak-surface p-3 shadow-sm transition hover:border-bronze-500/40',
+                        sleept === lead.id && 'opacity-40')}>
+                      <div className="flex items-start justify-between gap-2">
+                        <span className="text-sm font-semibold leading-snug text-inkt">
+                          {weergaveNaam(lead) || leeg(lead.email)}
+                        </span>
+                        <span className="cijfers whitespace-nowrap text-xs text-inkt-faint">{datum(lead.aangemaaktOp)}</span>
+                      </div>
+                      {lead.eersteVraag && (
+                        <p className="mt-1.5 line-clamp-2 text-xs leading-snug text-inkt-muted">{lead.eersteVraag}</p>
+                      )}
+                      <div className="mt-2 flex items-center justify-between gap-2">
+                        <span className="text-2xs uppercase tracking-[0.12em] text-inkt-faint">
+                          {kanaalTekst[lead.kanaal] ?? lead.kanaal}{lead.gemeente ? ` · ${lead.gemeente}` : ''}
+                        </span>
+                        <Acties lead={lead} />
+                      </div>
+                    </article>
+                  ))}
+                  {kaarten.length === 0 && (
+                    <p className="px-1 py-6 text-center text-xs text-inkt-faint">Niets in deze kolom.</p>
+                  )}
+                </div>
+              </section>
+            )
+          })}
+        </div>
+      ) : (
         <table className="w-full border-separate border-spacing-0">
           <thead><tr>
             <Th>Naam</Th><Th>Kanaal</Th><Th>Eerste vraag</Th><Th>Status</Th><Th>Datum</Th><Th rechts>Acties</Th>
@@ -136,30 +277,7 @@ export default function Leads() {
                 <Td><Badge status={lead.status} /></Td>
                 <Td className="whitespace-nowrap">{datum(lead.aangemaaktOp)}</Td>
                 <Td>
-                  <div className="flex items-center justify-end gap-0.5" onClick={e => e.stopPropagation()}>
-                    {(lead.status === 'nieuw' || lead.status === 'gekwalificeerd') && !lead.gearchiveerdOp && (
-                      <>
-                        <button type="button" title="Dossier aanmaken" aria-label="Dossier aanmaken"
-                          onClick={() => ga(lead.id, 'omzetten')}
-                          className={`${actieBtn} hover:bg-bronze-500/10 hover:text-bronze-600`}><FolderPlus size={17} /></button>
-                        <button type="button" title="Verliezen" aria-label="Verliezen"
-                          onClick={() => ga(lead.id, 'verliezen')}
-                          className={`${actieBtn} hover:bg-inkt/[.06] hover:text-inkt`}><TrendingDown size={17} /></button>
-                      </>
-                    )}
-                    {lead.gearchiveerdOp
-                      ? <button type="button" title="Herstellen" aria-label="Herstellen"
-                          onClick={() => ga(lead.id, 'herstellen')}
-                          className={`${actieBtn} hover:bg-inkt/[.06] hover:text-inkt-body`}><RotateCcw size={17} /></button>
-                      : <button type="button" title="Archiveren" aria-label="Archiveren"
-                          onClick={() => ga(lead.id, 'archiveren')}
-                          className={`${actieBtn} hover:bg-inkt/[.06] hover:text-inkt-body`}><Archive size={17} /></button>}
-                    {isBeheerder && (
-                      <button type="button" title="Verwijderen" aria-label="Verwijderen"
-                        onClick={() => zetTeVerwijderen(lead)}
-                        className={`${actieBtn} hover:bg-corten-500/10 hover:text-corten-600`}><Trash2 size={17} /></button>
-                    )}
-                  </div>
+                  <div className="flex justify-end"><Acties lead={lead} /></div>
                 </Td>
               </tr>
             ))}

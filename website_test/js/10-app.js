@@ -15,11 +15,10 @@ function Lightbox({
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', onKey);
-    const vorige = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    window.plVergrendelScroll(true);
     return () => {
       window.removeEventListener('keydown', onKey);
-      document.body.style.overflow = vorige;
+      window.plVergrendelScroll(false);
     };
   }, [src, onClose]);
   if (!src) return null;
@@ -223,26 +222,38 @@ function App() {
     document.addEventListener('click', onDocClick);
     return () => document.removeEventListener('click', onDocClick);
   }, []);
+  // Bovenaan beginnen na een paginawissel. Het document scrollt zelf, dus
+  // eerst het venster en voor de zekerheid ook het kader.
+  const naarBoven = () => {
+    window.scrollTo(0, 0);
+    if (scrollRef.current && scrollRef.current.scrollTop) scrollRef.current.scrollTop = 0;
+  };
   const onNav = (r, payload) => {
     if (r === 'contact') setContactType(payload && payload.type ? payload.type : null);
     setRoute(r);
     const pad = padVoorRoute(r);
     if (window.location.pathname !== pad) window.history.pushState({}, '', pad);
-    if (scrollRef.current) scrollRef.current.scrollTo({
-      top: 0,
-      behavior: 'auto'
-    });
+    naarBoven();
   };
+
+  /* Vensters die buiten de paginaboom leven, zoals de poortadvieswizard,
+     kunnen zo toch naar een pagina sturen. */
+  React.useEffect(() => {
+    const gaNaar = e => {
+      const doel = e && e.detail ? e.detail : null;
+      if (!doel || !doel.route) return;
+      onNav(doel.route, doel.payload);
+    };
+    window.addEventListener('pl-ga-naar', gaNaar);
+    return () => window.removeEventListener('pl-ga-naar', gaNaar);
+  });
 
   // Terug- en vooruitknop van de browser.
   React.useEffect(() => {
     const onPop = () => {
       const doel = routeUitPad(window.location.pathname);
       setRoute(doel.route);
-      if (scrollRef.current) scrollRef.current.scrollTo({
-        top: 0,
-        behavior: 'auto'
-      });
+      naarBoven();
     };
     window.addEventListener('popstate', onPop);
     return () => window.removeEventListener('popstate', onPop);
@@ -425,11 +436,14 @@ function App() {
       });
   }
   const routeKey = route + (route === 'product' ? productKey : '');
+  /* De pagina scrolde vroeger in een eigen kader van 100vh hoog. Op een iPhone
+     is 100vh groter dan het zichtbare venster, waardoor de site meeschoof bij
+     het verschijnen van de adresbalk (melding testster 10-11-2026). Nu scrollt
+     het document zelf, zoals de browser het bedoelt. */
   return /*#__PURE__*/React.createElement("div", {
     ref: scrollRef,
     style: {
-      height: '100vh',
-      overflowY: 'auto',
+      minHeight: '100vh',
       background: 'var(--surface-ground)'
     }
   }, /*#__PURE__*/React.createElement(TaalBanner, {
@@ -445,7 +459,10 @@ function App() {
     tabIndex: -1,
     className: "pl-page",
     "data-route": route
-  }, Screen), /*#__PURE__*/React.createElement(Footer, {
+  }, /*#__PURE__*/React.createElement(window.Kruimelpad, {
+    route: route,
+    onNav: onNav
+  }), Screen), /*#__PURE__*/React.createElement(Footer, {
     onNav: onNav,
     lang: lang,
     onLang: kiesTaal

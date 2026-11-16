@@ -396,6 +396,13 @@ body {
 </style>
 <style>
   html, body { margin: 0; background: var(--surface-ground); }
+  /* Vangnet tegen zijwaarts schuiven: één te breed element mag nooit de hele
+     pagina laten meeschuiven (melding testster 10-11-2026). clip in plaats
+     van hidden, zodat de plakkende kopbalk blijft werken. */
+  html, body { max-width: 100%; overflow-x: clip; }
+  @supports not (overflow: clip) { body { overflow-x: hidden; } }
+  /* Safari klemt een laag met een masker niet altijd af; contain doet dat wel. */
+  .pl-marquee { contain: paint; }
   #root { min-height: 100vh; }
   button { font-family: inherit; }
   /* Lichte hover zoom op beelden */
@@ -469,6 +476,7 @@ body {
   .pl-cards3{ grid-template-columns: 1fr !important; }
   .pl-cards4{ grid-template-columns: 1fr 1fr !important; }
   .pl-grid2, .pl-grid3{ grid-template-columns: 1fr !important; }
+  .pl-kruimel{ padding: 12px 20px !important; }
   .pl-grid4{ grid-template-columns: 1fr 1fr !important; }
   /* Homepagina hero: tekst en daaronder de foto op volle breedte. */
   .pl-herohome{ grid-template-columns: 1fr !important; padding-bottom: 32px !important; }
@@ -486,6 +494,8 @@ body {
   #root h1{ font-size: 40px !important; }
   /* Modellengalerij: geen scroll in scroll op touch, gewoon paginascroll. */
   .pl-modelscroll{ max-height: none !important; overflow: visible !important; padding-right: 0 !important; margin-right: 0 !important; }
+  /* Fotobanner: een kaart van 420px is breder dan een telefoon. */
+  .pl-marquee figure { width: min(420px, 82vw) !important; }
   /* Stijltabs: een zijwaarts veegbare rij in plaats van wrappen. */
   .pl-modeltabs{ flex-wrap: nowrap !important; overflow-x: auto; justify-content: flex-start !important; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
   .pl-modeltabs::-webkit-scrollbar{ display: none; }

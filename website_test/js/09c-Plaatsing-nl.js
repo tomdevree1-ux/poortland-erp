@@ -110,8 +110,13 @@ function Wistudat({ children }) {
 function PlaatsingNL({ onNav }) {
   const { Reveal, FAQ, CTASectie } = window;
 
-  const hero = React.createElement("section", { style: sectie(false, { padding: '72px 44px 40px' }) },
-    React.createElement("div", { style: binnen },
+  // Dezelfde kop als bij Automatisering en Onderhoud: surface-ground over de
+  // volle breedte. Deze pagina stond op surface-paper en week dus af
+  // (gemeld 2026-11-09).
+  const hero = React.createElement("section", {
+    style: { background: 'var(--surface-ground)', padding: '84px 44px 48px' }
+  },
+    React.createElement("div", { style: { maxWidth: 1320, margin: '0 auto' } },
       React.createElement(Reveal, null,
         React.createElement(Eyebrow, null, t('Plaatsing')),
         React.createElement("h1", {

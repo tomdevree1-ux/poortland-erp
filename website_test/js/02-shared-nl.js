@@ -38,6 +38,14 @@ function t(s) {
 }
 window.plT = t;
 
+/* Achtergrond vastzetten zolang een venster open staat. Sinds de pagina zelf
+   scrollt moet ook het html element mee: met enkel body blijft de achtergrond
+   doorschuiven (nagekeken 10-11-2026). */
+window.plVergrendelScroll = function (aan) {
+  document.documentElement.style.overflow = aan ? 'hidden' : '';
+  document.body.style.overflow = aan ? 'hidden' : '';
+};
+
 /* ---- Veldvalidatie in huisstijl: geen browserballonnen ----
    plToonVeldfouten(form): toont foutregels in de huisstijl onder de velden,
    schuift het eerste foute veld in beeld en geeft het een subtiele
@@ -735,6 +743,7 @@ function DesktopNav({
     fontSize: 16,
     fontWeight: active ? 600 : 400,
     color: active ? fg : faint,
+    whiteSpace: 'nowrap',
     borderBottom: active ? '1px solid var(--accent)' : '1px solid transparent'
   });
   const Caret = ({
@@ -825,6 +834,11 @@ function DesktopNav({
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
+      /* De Duitse menuteksten zijn langer dan de Nederlandse. Zonder vaste
+         tussenruimte schoof het menu tot tegen het woordmerk, waardoor
+         "Tore" tegen POORTLAND plakte (gemeld 2026-11-09). */
+      gap: 36,
+      flexWrap: 'nowrap',
       padding: '18px 44px',
       maxWidth: 1320,
       margin: '0 auto'
@@ -841,7 +855,8 @@ function DesktopNav({
       background: 'none',
       border: 0,
       cursor: 'pointer',
-      padding: 0
+      padding: 0,
+      flex: '0 0 auto'
     }
   }, /*#__PURE__*/React.createElement(Monogram, {
     size: 30,
@@ -854,13 +869,17 @@ function DesktopNav({
       letterSpacing: '0.34em',
       textTransform: 'uppercase',
       color: fg,
+      whiteSpace: 'nowrap',
       paddingLeft: '0.34em'
     }
   }, "Poortland")), /*#__PURE__*/React.createElement("nav", {
     style: {
       display: 'flex',
       alignItems: 'center',
-      gap: 28
+      /* Krimpt mee op smallere schermen en in talen met lange woorden. */
+      gap: 'clamp(14px, 1.7vw, 28px)',
+      flex: '0 1 auto',
+      minWidth: 0
     }
   }, /*#__PURE__*/React.createElement("button", {
     onMouseEnter: () => setOpenMenu('poorten'),
@@ -1435,9 +1454,13 @@ function Footer({
       color: 'var(--text-on-dark-faint)'
     }
   }, /*#__PURE__*/React.createElement("span", null, t('© 2026 Poortland — Uit eigen atelier in Mechelen sinds 1999')), /*#__PURE__*/React.createElement("div", {
+    /* Deze regel liep op een telefoon zestien pixels buiten het scherm en
+       veroorzaakte zijwaarts schuiven (melding testster 10-11-2026). */
     style: {
       display: 'flex',
-      gap: 22,
+      flexWrap: 'wrap',
+      columnGap: 22,
+      rowGap: 8,
       letterSpacing: '0.06em'
     }
   }, /*#__PURE__*/React.createElement("button", {
@@ -1749,12 +1772,22 @@ function PaginaNL({
   }, /*#__PURE__*/React.createElement(SButton, {
     variant: "primary",
     arrow: true,
-    onClick: () => onNav(c.cta && c.cta.route || 'contact', c.cta && c.cta.params)
-  }, t(c.cta && c.cta.label || 'Vraag een offerte aan')), c.cta2 && /*#__PURE__*/React.createElement(SButton, {
+    // Met wizard opent de knop meteen de prijsramingwizard, eventueel al op de
+    // juiste dienst. Zonder wizard navigeert hij naar een pagina.
+    onClick: () => (c.cta && c.cta.wizard)
+      ? window.dispatchEvent(new CustomEvent('pl-offerte-open', {
+          detail: typeof c.cta.wizard === 'string' ? { service: c.cta.wizard } : {}
+        }))
+      : onNav(c.cta && c.cta.route || 'contact', c.cta && c.cta.params)
+  }, t(c.cta && c.cta.label || 'Vraag een prijsraming aan')), c.cta2 && /*#__PURE__*/React.createElement(SButton, {
     variant: "ghost",
     dark: true,
     arrow: true,
-    onClick: () => onNav(c.cta2.route)
+    onClick: () => c.cta2.wizard
+      ? window.dispatchEvent(new CustomEvent('pl-offerte-open', {
+          detail: typeof c.cta2.wizard === 'string' ? { service: c.cta2.wizard } : {}
+        }))
+      : onNav(c.cta2.route)
   }, t(c.cta2.label)))), c.beeld && /*#__PURE__*/React.createElement(Reveal, {
     delay: 80
   }, /*#__PURE__*/React.createElement("div", {
@@ -1898,8 +1931,8 @@ var PAGINAS = {
     beeld: 'media/hero.jpg',
     intro: 'Poortland ontwerpt, maakt en plaatst tuinpoorten volledig op maat. Alles gebeurt in eigen atelier in Mechelen, van het eerste ontwerp tot de plaatsing.',
     cta: {
-      label: 'Vraag een offerte aan',
-      route: 'contact'
+      label: 'Vraag een prijsraming aan',
+      wizard: true
     },
     cta2: {
       label: 'Bekijk onze modellen',
@@ -1941,8 +1974,8 @@ var PAGINAS = {
     beeld: 'media/stalen-poort.jpg',
     intro: 'Poortland maakt metalen poorten volledig op maat, in staal van hoge kwaliteit. Sterk, strak en jarenlang betrouwbaar.',
     cta: {
-      label: 'Vraag een offerte aan',
-      route: 'contact'
+      label: 'Vraag een prijsraming aan',
+      wizard: true
     },
     cta2: {
       label: 'Laat automatiseren',
@@ -1969,8 +2002,8 @@ var PAGINAS = {
     beeld: 'media/houten-poort.jpg',
     intro: 'Een massief houten poort geeft uw woning een warme, natuurlijke uitstraling. Poortland maakt massief houten poorten volledig op maat.',
     cta: {
-      label: 'Vraag een offerte aan',
-      route: 'contact'
+      label: 'Vraag een prijsraming aan',
+      wizard: true
     },
     cta2: {
       label: 'Laat automatiseren',
@@ -1997,8 +2030,8 @@ var PAGINAS = {
     beeld: 'media/staal-hout.jpg',
     intro: 'Een combinatiepoort verenigt een stevige metalen structuur met een warme houten invulling.',
     cta: {
-      label: 'Vraag een offerte aan',
-      route: 'contact'
+      label: 'Vraag een prijsraming aan',
+      wizard: true
     },
     cta2: {
       label: 'Bekijk onze modellen',
@@ -2073,12 +2106,14 @@ var PAGINAS = {
     h1: 'Automatisering van poorten',
     intro: 'Open en sluit uw poort comfortabel met een druk op de knop of op afstand. Poortland automatiseert nieuwe en bestaande poorten.',
     cta: {
-      label: 'Vraag een offerte aan',
-      route: 'contact'
+      label: 'Vraag een prijsraming aan',
+      wizard: true
     },
     cta2: {
+      // Opende eerst de onderhoudspagina, waar de bezoeker nog eens moest
+      // klikken (gemeld 2026-11-09). Nu meteen de aanvraag.
       label: 'Plan onderhoud',
-      route: 'onderhoud'
+      wizard: 'onderhoud'
     },
     secties: [{
       h2: 'Voor draaipoorten, schuifpoorten en garagepoorten',
@@ -2140,8 +2175,8 @@ var PAGINAS = {
     h1: 'Veelgestelde vragen over poorten',
     intro: 'Antwoorden over poorten op maat, materialen, automatisering, onderhoud en garantie.',
     cta: {
-      label: 'Vraag een offerte aan',
-      route: 'contact'
+      label: 'Vraag een prijsraming aan',
+      wizard: true
     },
     secties: [{
       h2: 'Poorten op maat',
@@ -2259,13 +2294,13 @@ function OfferteModal({
     return () => window.removeEventListener('pl-offerte-open', on);
   }, []);
   React.useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : '';
+    window.plVergrendelScroll(open);
     const onKey = e => {
       if (e.key === 'Escape') setOpen(false);
     };
     if (open) window.addEventListener('keydown', onKey);
     return () => {
-      document.body.style.overflow = '';
+      window.plVergrendelScroll(false);
       window.removeEventListener('keydown', onKey);
     };
   }, [open]);
@@ -4316,44 +4351,8 @@ function CategoriePagina({
     fontSize: 13,
     color: 'var(--text-muted)'
   };
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("nav", {
-    "aria-label": "Kruimelpad",
-    style: {
-      background: 'var(--surface-paper)',
-      borderBottom: '1px solid var(--line-on-light-soft)'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      maxWidth: 1320,
-      margin: '0 auto',
-      padding: '15px 44px',
-      fontFamily: 'var(--font-sans)',
-      fontSize: 13,
-      color: 'var(--text-muted)'
-    }
-  }, /*#__PURE__*/React.createElement("button", {
-    onClick: () => onNav('home'),
-    style: bc
-  }, t('Home')), /*#__PURE__*/React.createElement("span", {
-    style: {
-      margin: '0 9px',
-      color: 'var(--line-on-light)'
-    }
-  }, "/"), /*#__PURE__*/React.createElement("span", {
-    style: {
-      ...bc,
-      cursor: 'default'
-    }
-  }, t('Poorten')), /*#__PURE__*/React.createElement("span", {
-    style: {
-      margin: '0 9px',
-      color: 'var(--line-on-light)'
-    }
-  }, "/"), /*#__PURE__*/React.createElement("span", {
-    style: {
-      color: 'var(--text-heading)'
-    }
-  }, t(d.eyebrow)))), /*#__PURE__*/React.createElement("section", {
+  // Het kruimelpad staat sinds 2026-11-09 centraal in de app, zie Kruimelpad.
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-ground)',
       color: 'var(--text-on-dark)',
@@ -4367,7 +4366,10 @@ function CategoriePagina({
       display: 'grid',
       gridTemplateColumns: '1.02fr 0.98fr',
       gap: 60,
-      alignItems: 'center'
+      // Boven uitlijnen in plaats van in het midden: bij een titel over twee
+      // regels schoof de eyebrow anders omhoog en stond massief houten poorten
+      // hoger dan de twee andere (gemeld 2026-11-09).
+      alignItems: 'start'
     }
   }, /*#__PURE__*/React.createElement(Reveal, null, /*#__PURE__*/React.createElement(SEyebrow, {
     dark: true,
@@ -4378,7 +4380,8 @@ function CategoriePagina({
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 500,
-      fontSize: 64,
+      // Meeschalend, een vaste 64 liep bij de langste titel uit het kader.
+      fontSize: 'clamp(38px, 4.4vw, 64px)',
       lineHeight: 1.03,
       letterSpacing: '-0.01em',
       color: 'var(--stone-100)',
@@ -7912,34 +7915,8 @@ function OverOnsNL({
   const mijlpalen = [['1999', 'De start van Poortland NV', 'Poortland NV gaat van start. We nemen materiaal, materieel en ervaren vakmensen over van een stopgezette zaak en zetten de dienstverlening zonder onderbreking verder. Een volledig nieuw bedrijf met een eigen visie, los van het verleden.'], ['2000', 'Eigen transport en plaatsing', 'Een eerste grote investering: een vrachtwagen met hydraulische kraan en een laadbak van 9 meter. Zo plaatsen we ook grotere poorten volledig in eigen beheer.'], ['2001–2003', 'Een sterker atelier', 'Nieuwe las- en bewerkingsmachines, van halfautomaat en TIG tot profielwals, lintzaag en freesmachine. Meer capaciteit, meer precisie en een fijnere afwerking.'], ['2004', 'Meer hefkracht', 'Een krachtiger kraanvoertuig heft 750 kilogram op 10 meter afstand, zodat ook grotere en zwaardere poorten vlot geplaatst worden.'], ['2005', 'Eigen gebouwen en FAAC', 'We kopen de gehuurde gebouwen en terreinen, samen zo\'n 3.000 m². Tegelijk breiden we de samenwerking uit met FAAC, een wereldspeler in professionele poortautomatisering.'], ['2006', 'Ontwerpen met CAD', 'Een professioneel CAD-programma doet zijn intrede. Complexe projecten worden vooraf tot in detail uitgetekend, met nauwkeurige productietekeningen voor het atelier.'], ['Vanaf 2007', 'Van staal naar aluminium', 'Geleidelijk verschuift het accent van staal naar aluminium, voor onderhoudsgemak en corrosiebestendigheid. Waar staal begin de jaren 2000 nog overheerste, is die verhouding vandaag omgekeerd. Toch blijft Poortland een van de weinige Belgische makers van klassieke sierpoorten, van landelijke stijl tot kasteelpoort.'], ['Doorlopend', 'Blijven vernieuwen', 'De atelieruitrusting wordt voortdurend vernieuwd waar nodig, zodat kwaliteit en afwerking mee blijven evolueren.'], ['2024', 'Laserlassen', 'Een laserlasser levert veel fijnere lasnaden op: een strakkere, mooiere afwerking met nauwelijks zichtbare lassen en veel minder nabewerking.'], ['2026', 'Nieuwe kraanwagen', 'Een nieuwe Euro 6 vrachtwagen met een kraan tot 11,5 meter en een mobiele werkunit. Nauwkeuriger plaatsen, ook op moeilijk bereikbare werven, en lichter werk voor het team.']];
   const beheer = [['Eigen productie', 'Poortland beschikt over een eigen atelier in Mechelen. Alle poorten en overkappingen worden er door ervaren vakmensen gemaakt, met voortdurende aandacht voor kwaliteit en afwerking.'], ['Eigen plaatsingsdienst', 'Poortland heeft een eigen plaatsingsteam en professioneel transport en plaatsingsmaterieel. Zo zetten wij onder meer een telescopische kraan in die tot 1.500 kilogram heft op 10 meter afstand. Elke poort wordt veilig en duurzaam geplaatst.'], ['Eigen techniekers', 'Onze eigen techniekers verzorgen de automatisatie van de poorten. Zij staan ook in voor technische ondersteuning, onderhoud en naverkoop.'], ['Afwerking van de werf', 'Na de plaatsing werken wij de werf netjes af. Waar nodig herstellen wij de bestrating en ruimen wij de volledige werkzone op.']];
   const kwaliteit = [['Sterke constructie', 'Poortland verwerkt staal, aluminium en inox. Voor stalen constructies gebruiken wij dikwandig staal, afhankelijk van de toepassing en de constructie van 2 tot 5 millimeter.'], ['Roestvrije bevestiging', 'Bouten, schroeven en scharnieren voert Poortland uit in roestvrij staal, zodat de bevestiging betrouwbaar blijft.'], ['Kwaliteitsgerichte leveranciers', 'Poortland kiest leveranciers op de verhouding tussen kwaliteit en prijs, niet enkel op de laagste aankoopprijs.']];
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("nav", {
-    "aria-label": "Kruimelpad",
-    style: {
-      background: 'var(--surface-paper)',
-      borderBottom: '1px solid var(--line-on-light-soft)'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      maxWidth: 1320,
-      margin: '0 auto',
-      padding: '15px 44px',
-      fontFamily: 'var(--font-sans)',
-      fontSize: 13,
-      color: 'var(--text-muted)'
-    }
-  }, /*#__PURE__*/React.createElement("button", {
-    onClick: () => onNav('home'),
-    style: bc
-  }, t('Home')), /*#__PURE__*/React.createElement("span", {
-    style: {
-      margin: '0 9px',
-      color: 'var(--line-on-light)'
-    }
-  }, "/"), /*#__PURE__*/React.createElement("span", {
-    style: {
-      color: 'var(--text-heading)'
-    }
-  }, t('Over ons')))), /*#__PURE__*/React.createElement("section", {
+  // Het kruimelpad staat sinds 2026-11-09 centraal in de app, zie Kruimelpad.
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("section", {
     style: {
       background: 'var(--surface-ground)',
       color: 'var(--text-on-dark)',
@@ -9825,10 +9802,10 @@ function PoortAdviesModal() {
       if (e.key === 'Escape') setOpen(false);
     };
     document.addEventListener('keydown', esc);
-    document.body.style.overflow = 'hidden';
+    window.plVergrendelScroll(true);
     return function () {
       document.removeEventListener('keydown', esc);
-      document.body.style.overflow = '';
+      window.plVergrendelScroll(false);
     };
   }, [open]);
   if (!open) return null;
@@ -10399,8 +10376,12 @@ function PoortAdviesModal() {
     }
   }, t('Opnieuw starten')), /*#__PURE__*/React.createElement("button", {
     onClick: function () {
+      // Een opmeting ter plaatse is een contactvraag, geen prijsraming.
+      // Deze knop opende de prijsramingwizard (gemeld 2026-11-09).
       setOpen(false);
-      window.dispatchEvent(new CustomEvent('pl-offerte-open'));
+      window.dispatchEvent(new CustomEvent('pl-ga-naar', {
+        detail: { route: 'contact', payload: { type: 'poorten' } }
+      }));
     },
     style: {
       fontFamily: 'var(--font-sans)',
@@ -10415,8 +10396,87 @@ function PoortAdviesModal() {
     }
   }, t('Vraag een technische opmeting aan'))))));
 }
+
+/* ---- Kruimelpad ------------------------------------------------------
+   Een pad op elke onderliggende pagina, altijd in dezelfde vorm:
+   Home / groep / pagina. Het stond eerder alleen op de poortenpaginas en
+   op Over ons, en dus niet bij Service, Garantie, FAQ, Jobs en Koopjes
+   (gemeld 2026-11-09). Daarom nu een keer centraal in plaats van per
+   pagina, zodat het niet opnieuw uiteen kan lopen.
+
+   De groep is geen link: er bestaat geen overzichtspagina per groep.
+   Komt die er, dan volstaat hier een route toevoegen. */
+const KRUIMELS = {
+  metalen:        ['Poorten', 'Metalen poorten'],
+  houten:         ['Poorten', 'Massief houten poorten'],
+  combinatie:     ['Poorten', 'Combinatie hout en metaal'],
+  overkappingen:  [null, 'Overkappingen'],
+  koopjes:        [null, 'Koopjes'],
+  plaatsing:      ['Service', 'Plaatsing'],
+  automatisering: ['Service', 'Automatisering'],
+  onderhoud:      ['Service', 'Onderhoud'],
+  atelier:        ['Over', 'Over ons'],
+  garantie:       ['Over', 'Garantie'],
+  faq:            ['Over', 'FAQ'],
+  jobs:           ['Over', 'Jobs'],
+  werkwijze:      ['Over', 'Werkwijze'],
+  contact:        [null, 'Contact'],
+  voorwaarden:    [null, 'Algemene voorwaarden'],
+  privacy:        [null, 'Privacybeleid'],
+  cookie:         [null, 'Cookiebeleid']
+};
+
+function Kruimelpad({ route, onNav }) {
+  const pad = KRUIMELS[route];
+  if (!pad) return null;
+  const groep = pad[0];
+  const pagina = pad[1];
+  const streep = sleutel => React.createElement("span", {
+    key: sleutel,
+    "aria-hidden": "true",
+    style: { margin: '0 9px', color: 'var(--line-on-light)' }
+  }, "/");
+  const knopSt = {
+    background: 'none',
+    border: 0,
+    padding: 0,
+    cursor: 'pointer',
+    fontFamily: 'var(--font-sans)',
+    fontSize: 13,
+    color: 'var(--text-muted)'
+  };
+  const delen = [
+    React.createElement("button", { key: 'home', onClick: () => onNav('home'), style: knopSt }, t('Home'))
+  ];
+  if (groep) {
+    delen.push(streep('s1'));
+    delen.push(React.createElement("span", {
+      key: 'groep',
+      style: { fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--text-muted)' }
+    }, t(groep)));
+  }
+  delen.push(streep('s2'));
+  delen.push(React.createElement("span", {
+    key: 'pagina',
+    "aria-current": "page",
+    style: { fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--text-heading)' }
+  }, t(pagina)));
+
+  return React.createElement("nav", {
+    "aria-label": t('Kruimelpad'),
+    style: {
+      background: 'var(--surface-paper)',
+      borderBottom: '1px solid var(--line-on-light-soft)'
+    }
+  }, React.createElement("div", {
+    className: "pl-kruimel",
+    style: { maxWidth: 1320, margin: '0 auto', padding: '15px 44px' }
+  }, delen));
+}
+
 Object.assign(window, {
   OfferteModal,
+  Kruimelpad,
   PoortAdviesModal,
   PaginaNL,
   PAGINAS,

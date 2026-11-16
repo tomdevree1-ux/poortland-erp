@@ -110,7 +110,9 @@ function HomeNL({
   }, /*#__PURE__*/React.createElement(HButton, {
     variant: "primary",
     arrow: true,
-    onClick: () => onNav('contact')
+    // De knop heet prijsraming, dus hij opent de prijsramingwizard. Hij ging
+    // naar het contactformulier (gemeld 2026-11-09).
+    onClick: () => window.dispatchEvent(new CustomEvent('pl-offerte-open'))
   }, t('Vraag een prijsraming aan')), /*#__PURE__*/React.createElement(HButton, {
     variant: "ghost",
     dark: true,

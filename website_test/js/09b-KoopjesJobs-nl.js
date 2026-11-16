@@ -31,9 +31,11 @@ const euro = n => {
   catch (e) { return '€ ' + n; }
 };
 
+/* De kop stond hier gecentreerd terwijl elke andere pagina links uitlijnt
+   (gemeld 2026-11-09). Nu dezelfde vorm: links, volle breedte. */
 function Kop({ eyebrow, titel, intro }) {
   return /*#__PURE__*/React.createElement("div", {
-    style: { maxWidth: 720, margin: '0 auto 40px', textAlign: 'center' }
+    style: { maxWidth: 1320, margin: '0 auto 40px' }
   }, /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-label)', fontSize: 11, letterSpacing: '0.18em',
@@ -47,12 +49,12 @@ function Kop({ eyebrow, titel, intro }) {
   }, t(titel)), /*#__PURE__*/React.createElement("p", {
     style: {
       fontFamily: 'var(--font-sans)', fontSize: 16.5, lineHeight: 1.7,
-      color: 'var(--text-body)', margin: 0
+      color: 'var(--text-body)', margin: 0, maxWidth: '68ch'
     }
   }, t(intro)));
 }
 
-const sectieStijl = { padding: '72px 44px 96px', background: 'var(--surface-paper)' };
+const sectieStijl = { padding: '84px 44px 96px', background: 'var(--surface-ground)' };
 const kaartStijl = {
   display: 'flex', flexDirection: 'column', textAlign: 'left', padding: 0, cursor: 'pointer',
   background: 'var(--surface-card)', border: '1px solid var(--line-on-light)',

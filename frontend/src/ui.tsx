@@ -26,6 +26,29 @@ export function Knop({ variant = 'secundair', className, ...rest }:
   )
 }
 
+/* Segmentschakelaar: de weergaven staan naast elkaar in één kader, zodat in
+   één oogopslag zichtbaar is welke aan staat en wat de andere keuze is. */
+export function Schakelaar<T extends string>({ waarde, onKies, opties, label = 'Weergave' }:
+  { waarde: T; onKies: (v: T) => void; opties: { waarde: T; label: string; icoon?: ReactNode }[]; label?: string }) {
+  return (
+    <div role="group" aria-label={label}
+      className="inline-flex h-10 shrink-0 items-center gap-1 rounded-control border border-inkt/15 bg-vlak-sunken p-1">
+      {opties.map(o => {
+        const actief = o.waarde === waarde
+        return (
+          <button key={o.waarde} type="button" aria-pressed={actief} onClick={() => onKies(o.waarde)}
+            className={clsx('focusring inline-flex h-8 items-center gap-1.5 rounded-control px-3 text-sm font-semibold transition',
+              actief
+                ? 'bg-vlak-canvas text-forest-900 shadow-sm ring-1 ring-bronze-500/40'
+                : 'text-inkt-muted hover:text-inkt')}>
+            {o.icoon}{o.label}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
 export function VeldLabel({ children, optioneel, htmlFor }: { children: ReactNode; optioneel?: boolean; htmlFor?: string }) {
   return (
     <label htmlFor={htmlFor} className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.14em] text-inkt-muted">
