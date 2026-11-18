@@ -41,6 +41,8 @@ public class Werkbonregel : BasisEntiteit
     // bewaard zodat de bon leesbaar blijft als het artikel later verdwijnt.
     public Guid? ArtikelId { get; set; }
     public string? ArtikelCode { get; set; }
+    // Uit welke regel van het globaal overzicht deze regel komt (migratie 0051).
+    public Guid? ProjectregelId { get; set; }
 }
 
 public class Werkbonfoto : BasisEntiteit

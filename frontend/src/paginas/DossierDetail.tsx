@@ -9,6 +9,7 @@ import { faseTekst } from './Planning'
 import { werkbonTitel } from './Veld'
 import { Badge, Invoer, Knop, Melding, Modaal, PaginaKop, Paneel, PotloodKnop, Selecteer, Selectievak, Th, Td, VuilbakKnop, rijKlik, statusTekst } from '../ui'
 import ProductieTab from './dossier/ProductieTab'
+import GlobaalOverzichtTab from './dossier/GlobaalOverzichtTab'
 
 interface Dossier {
   project: { id: string; nummer?: number; werfadres: string; omschrijving?: string; status: string; garantieMaanden: number; klant: Klant }
@@ -22,7 +23,7 @@ export default function DossierDetail() {
   const { projectId } = useParams({ from: '/app/dossiers/$projectId' })
   const navigeer = useNavigate()
   const qc = useQueryClient()
-  const [tab, zetTab] = useState<'overzicht' | 'productie' | 'offertes' | 'communicatie'>('overzicht')
+  const [tab, zetTab] = useState<'globaal' | 'overzicht' | 'productie' | 'offertes' | 'communicatie'>('globaal')
   const { data } = useQuery({ queryKey: ['dossier', projectId], queryFn: () => api.get<Dossier>(`/projecten/${projectId}`) })
   const { data: mij } = useQuery({ queryKey: ['mij'], queryFn: () => api.get<{ rollen: string[] }>('/medewerkers/mij'), staleTime: 5 * 60 * 1000 })
   const isBeheerder = mij?.rollen.includes('beheerder') ?? false
@@ -109,10 +110,18 @@ export default function DossierDetail() {
     },
     onError: f => zetKlantFout((f as Error).message)
   })
+  // Het klantendossier: alle projecten van dezelfde klant, om snel te wisselen.
+  const klantId = data?.project.klant.id
+  const { data: klantData } = useQuery({
+    queryKey: ['klant-projecten', klantId],
+    queryFn: () => api.get<{ projecten: { id: string; nummer?: number; werfadres: string; status: string }[] }>(`/klanten/${klantId}`),
+    enabled: !!klantId
+  })
   if (!data) return null
   const { project, offertes, order, communicatie, contactmomenten } = data
+  const klantProjecten = klantData?.projecten ?? []
   const tabs = [
-    ['overzicht', 'Overzicht'], ['productie', 'Productie'],
+    ['globaal', 'Globaal overzicht'], ['overzicht', 'Klant en planning'], ['productie', 'Productie'],
     ['offertes', `Offertes en order (${offertes.length})`],
     ['communicatie', 'Communicatie']
   ] as const
@@ -134,6 +143,18 @@ export default function DossierDetail() {
           <Knop variant="destructief" disabled={verwijderDossier.isPending} onClick={() => verwijderDossier.mutate()}>{verwijderDossier.isPending ? 'Bezig…' : 'Verwijderen'}</Knop>
         </div>
       </Modaal>
+      {klantProjecten.length > 1 && (
+        <div className="mb-4 flex flex-wrap items-center gap-2 text-sm">
+          <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-inkt-muted">Projecten van deze klant</span>
+          {klantProjecten.map(p => (
+            <Link key={p.id} to="/dossiers/$projectId" params={{ projectId: p.id }}
+              className={clsx('focusring rounded-control border px-3 py-1 font-semibold',
+                p.id === projectId ? 'border-bronze-500 bg-bronze-500/10 text-bronze-600' : 'border-inkt/15 text-inkt-muted hover:text-inkt')}>
+              {p.nummer ? `${p.nummer} · ` : ''}{p.werfadres}
+            </Link>
+          ))}
+        </div>
+      )}
       <div className="mb-5 flex gap-1 border-b border-inkt/10">
         {tabs.map(([sleutel, tekst]) => (
           <button key={sleutel} onClick={() => zetTab(sleutel)}
@@ -231,6 +252,8 @@ export default function DossierDetail() {
           </Paneel>
         </div>
       )}
+
+      {tab === 'globaal' && <GlobaalOverzichtTab projectId={projectId} />}
 
       {tab === 'productie' && <ProductieTab projectId={projectId} />}
 

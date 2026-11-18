@@ -215,6 +215,13 @@ migratie. De beveiligingsadvisor is schoon op twee bewuste punten na:
 `offerte_reeks` heeft RLS zonder policy (default deny, gewild) en de leaked
 password protection in Auth staat nog uit (aanrader voor productie).
 
+**0051 samenstelling van een dossier (2026-11-18).** Subprojecten met locatie,
+onderdelen met vleugelmaten (`subproject`, `subproject_onderdeel`), de regels van
+het globaal overzicht (`projectregel`) met de LSB per regel, `project.lsb_plaatsingen`
+en `werkbonregel.projectregel_id`. Eerst deze migratie toepassen en pas daarna de
+backend uitrollen: de backend leest de nieuwe kolommen. Specificatie: TS-06 sectie 9,
+logregel L01. Test van de vinkjesregels: `cd frontend && node ../scripts/test_lsb.mjs`.
+
 ## Lokaal draaien
 
 1. **Databank.** De migraties staan al op het dev project (of speel ze af met de Supabase CLI:

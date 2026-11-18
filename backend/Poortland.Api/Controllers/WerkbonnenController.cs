@@ -131,6 +131,9 @@ public class WerkbonnenController(PoortlandDbContext db, ClaimsContext claims, S
             bon.PlaatsingNummer = (hoogste ?? 0) + 1;
         }
         db.Werkbonnen.Add(bon);
+        // De regels uit het globaal overzicht die voor deze LSB gekozen zijn,
+        // komen meteen op de nieuwe bon (migratie 0051).
+        await Domein.SamenstellingService.ZetOverNaarBon(db, bon, claims.MedewerkerId);
         await db.SaveChangesAsync();
         return Ok(new { bon.Id });
     }

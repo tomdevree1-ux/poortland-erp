@@ -19,6 +19,9 @@ public class PoortlandDbContext(DbContextOptions<PoortlandDbContext> opties) : D
     public DbSet<Vacature> Vacatures => Set<Vacature>();
     public DbSet<FotoberichtBijlage> FotoberichtBijlagen => Set<FotoberichtBijlage>();
     public DbSet<Project> Projecten => Set<Project>();
+    public DbSet<Subproject> Subprojecten => Set<Subproject>();
+    public DbSet<SubprojectOnderdeel> SubprojectOnderdelen => Set<SubprojectOnderdeel>();
+    public DbSet<Projectregel> Projectregels => Set<Projectregel>();
     public DbSet<Artikel> Artikelen => Set<Artikel>();
     public DbSet<Offerte> Offertes => Set<Offerte>();
     public DbSet<Offerteregel> Offerteregels => Set<Offerteregel>();
@@ -174,6 +177,18 @@ public class PoortlandDbContext(DbContextOptions<PoortlandDbContext> opties) : D
         model.Entity<Project>().HasOne(p => p.Klant).WithMany().HasForeignKey(p => p.KlantId);
         model.Entity<Project>().Property(p => p.Nummer).ValueGeneratedOnAdd();
         model.Entity<Project>().HasMany(p => p.Offertes).WithOne(o => o.Project).HasForeignKey(o => o.ProjectId);
+        model.Entity<Subproject>().ToTable("subproject");
+        model.Entity<SubprojectOnderdeel>().ToTable("subproject_onderdeel");
+        model.Entity<Projectregel>().ToTable("projectregel");
+        // Relaties expliciet, zodat EF bij een save eerst het subproject en dan
+        // zijn onderdelen en regels invoegt (anders breekt de foreign key).
+        model.Entity<Subproject>().HasOne<Project>().WithMany().HasForeignKey(s => s.ProjectId);
+        model.Entity<SubprojectOnderdeel>().HasOne<Subproject>().WithMany().HasForeignKey(o => o.SubprojectId);
+        model.Entity<SubprojectOnderdeel>().HasOne<SubprojectOnderdeel>().WithMany().HasForeignKey(o => o.OuderId);
+        model.Entity<Projectregel>().HasOne<Project>().WithMany().HasForeignKey(r => r.ProjectId);
+        model.Entity<Projectregel>().HasOne<Subproject>().WithMany().HasForeignKey(r => r.SubprojectId);
+        model.Entity<Projectregel>().HasOne<SubprojectOnderdeel>().WithMany().HasForeignKey(r => r.OnderdeelId);
+        model.Entity<Werkbonregel>().HasOne<Projectregel>().WithMany().HasForeignKey(w => w.ProjectregelId);
         model.Entity<Artikel>().ToTable("artikel");
         // De kolomnamen uit migratie 0048 expliciet vastleggen. De snake case
         // conventie weet niet wat ze met een cijfer in Categorie1 moet doen, en

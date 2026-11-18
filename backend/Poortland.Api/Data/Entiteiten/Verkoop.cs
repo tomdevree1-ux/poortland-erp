@@ -12,6 +12,8 @@ public class Project : BasisEntiteit
     public OrderStatus Status { get; set; } = OrderStatus.Aangemaakt;
     public int GarantieMaanden { get; set; } = 24;
     public DateOnly? VerwachteOpleverdatum { get; set; }
+    // Aantal plaatsingskolommen in het globaal overzicht (migratie 0051).
+    public int LsbPlaatsingen { get; set; } = 1;
     public Klant? Klant { get; set; }
     public List<Offerte> Offertes { get; set; } = new();
 }
