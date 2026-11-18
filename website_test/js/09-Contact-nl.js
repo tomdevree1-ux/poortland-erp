@@ -180,7 +180,7 @@ function ContactNL({
       color: 'var(--stone-200)',
       whiteSpace: 'pre-line'
     }
-  }, t(v)))))), /*#__PURE__*/React.createElement(Reveal, {
+  }, k === 'Telefoon' ? /*#__PURE__*/React.createElement("a", { href: 'tel:+3215432111', style: { color: 'inherit', textDecoration: 'none' } }, t(v)) : k === 'Email' ? /*#__PURE__*/React.createElement("a", { href: 'mailto:info@poortland.be', style: { color: 'inherit', textDecoration: 'none' } }, t(v)) : t(v)))))), /*#__PURE__*/React.createElement(Reveal, {
     delay: 90
   }, /*#__PURE__*/React.createElement("div", {
     style: {

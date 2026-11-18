@@ -1440,7 +1440,7 @@ function Footer({
     links: [['Plaatsing', () => onNav('plaatsing')], ['Automatisering', () => onNav('automatisering')], ['Onderhoud', () => onNav('onderhoud')], ['Over ons', () => onNav('atelier')], ['Garantie', () => onNav('garantie')], ['FAQ', () => onNav('faq')], ['Jobs', () => onNav('jobs')]]
   }), /*#__PURE__*/React.createElement(FooterKol, {
     title: "Atelier en showroom",
-    links: [[/*#__PURE__*/React.createElement("span", null, "Hombeeksesteenweg 164-166", /*#__PURE__*/React.createElement("br", null), t('2800\xA0Mechelen'))], ['+32 (0)15 432 111'], ['info@poortland.be'], [/*#__PURE__*/React.createElement("span", null, t('Ma tot vr 9 tot 17 uur'), /*#__PURE__*/React.createElement("br", null), t('Za 10 tot 16 uur'))]]
+    links: [[/*#__PURE__*/React.createElement("span", null, "Hombeeksesteenweg 164-166", /*#__PURE__*/React.createElement("br", null), t('2800\xA0Mechelen'))], ['+32 (0)15 432 111', () => { window.location.href = 'tel:+3215432111'; }], ['info@poortland.be', () => { window.location.href = 'mailto:info@poortland.be'; }], [/*#__PURE__*/React.createElement("span", null, t('Ma tot vr 9 tot 17 uur'), /*#__PURE__*/React.createElement("br", null), t('Za 10 tot 16 uur'))]]
   })), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
