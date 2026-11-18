@@ -14,7 +14,18 @@ DOMEIN="${DOMEIN:-$IP_STREEPJES.nip.io}"
 DOEL="root@$SERVER_IP"
 
 echo "1/4 Omgevingsbestand opbouwen uit je lokale instellingen"
-python3 - "$DOMEIN" <<'PY'
+# Op een tweede machine staat appsettings.Development.json er niet (sleutels blijven
+# lokaal). Dan gebruiken we de .env.deploy en .env.build die je met de hand overzette.
+if [ ! -f ../backend/Poortland.Api/appsettings.Development.json ]; then
+  if [ -f .env.deploy ] && [ -f .env.build ]; then
+    echo "   appsettings.Development.json ontbreekt, de bestaande .env.deploy en .env.build worden gebruikt"
+    SLA_OVER=ja
+  else
+    echo "appsettings.Development.json ontbreekt en .env.deploy of .env.build ook. Zet ze over vanaf de eerste MacBook."
+    exit 1
+  fi
+fi
+[ -n "${SLA_OVER:-}" ] || python3 - "$DOMEIN" <<'PY'
 import json, sys
 domein = sys.argv[1]
 site_domein = f"www.{domein}"  # marketingsite (testwebsite) naast de beheerapp
