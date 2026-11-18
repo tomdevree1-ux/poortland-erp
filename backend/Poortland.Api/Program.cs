@@ -41,7 +41,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             ValidateIssuer = true,
             ValidIssuer = uitgever,
-            ValidateAudience = false,
+            // Supabase geeft toegangstokens het publiek "authenticated". Vastzetten
+            // zodat een token dat voor iets anders bedoeld is, hier niet geldt.
+            ValidateAudience = true,
+            ValidAudiences = ["authenticated"],
             ValidateLifetime = true,
             ClockSkew = TimeSpan.FromSeconds(30)
         };
@@ -49,12 +52,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         if (!string.IsNullOrWhiteSpace(jwtSecret))
         {
             parameters.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret));
+            // Het algoritme vastpinnen: met een symmetrische sleutel enkel HS256,
+            // zodat niemand het type kan wisselen (algoritmeverwarring).
+            parameters.ValidAlgorithms = ["HS256"];
         }
         else if (!string.IsNullOrWhiteSpace(supabaseUrl))
         {
             using var http = new HttpClient();
             var jwksJson = http.GetStringAsync($"{uitgever}/.well-known/jwks.json").GetAwaiter().GetResult();
             parameters.IssuerSigningKeys = new JsonWebKeySet(jwksJson).GetSigningKeys();
+            // Nieuwe Supabase-sleutels zijn asymmetrisch; enkel die algoritmes toelaten.
+            parameters.ValidAlgorithms = ["RS256", "ES256"];
         }
         o.TokenValidationParameters = parameters;
     });

@@ -219,8 +219,16 @@ password protection in Auth staat nog uit (aanrader voor productie).
 onderdelen met vleugelmaten (`subproject`, `subproject_onderdeel`), de regels van
 het globaal overzicht (`projectregel`) met de LSB per regel, `project.lsb_plaatsingen`
 en `werkbonregel.projectregel_id`. Eerst deze migratie toepassen en pas daarna de
-backend uitrollen: de backend leest de nieuwe kolommen. Specificatie: TS-06 sectie 9,
+backend uitrollen: de backend leest de nieuwe kolommen. Toegepast op het dev project op
+2026-11-18 via de Supabase koppeling; de beveiligingsadvisor bleef schoon. Specificatie: TS-06 sectie 9,
 logregel L01. Test van de vinkjesregels: `cd frontend && node ../scripts/test_lsb.mjs`.
+
+**0052 identiteit uit auth.uid() (2026-11-18, veiligheidsreview).** huidige_medewerker_id()
+en huidige_rollen() leiden de identiteit nu altijd af uit auth.uid() in plaats van uit
+zelf meegestuurde claims. De terugval op tokenrollen (systeempad) laat enkel nog de rol
+systeem door. Zo wordt een lek van de JWT-sleutel niet langer meteen god-modus met een
+zelfgekozen medewerker. Toegepast op dev op 2026-11-18 en getest: een vervalste beheerder
+krijgt niets, een echte medewerker houdt zijn rol.
 
 ## Lokaal draaien
 
